@@ -6,7 +6,7 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Head, Link, useForm } from '@inertiajs/react';
-import './Login.css';
+//import './Login.css';
 import logo from './images/COOPCONNECTLOGO.png';
 
 export default function Login({ status, canResetPassword }) {
