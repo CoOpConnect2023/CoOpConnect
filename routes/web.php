@@ -65,3 +65,16 @@ Route::get('/profile/edit', [ProfileController::class, 'edit'])
 Route::get('/messaging', [MessagingController::class, 'index'])
     ->name('messaging')
     ->middleware('auth');
+
+
+
+    use App\Http\Controllers\DocumentsController;
+use App\Http\Controllers\ReflectionsController;
+
+// Existing route for documents
+Route::get('/documents', [DocumentsController::class, 'index'])->name('documents');
+
+// Add a route for reflections
+Route::get('/reflections', [ReflectionsController::class, 'index'])->name('reflections');
+
+

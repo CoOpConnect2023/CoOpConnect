@@ -21,3 +21,4 @@ class JobSeeder extends Seeder
     // Add more jobs as needed
 }
 }
+
