@@ -78,3 +78,7 @@ Route::get('/documents', [DocumentsController::class, 'index'])->name('documents
 Route::get('/reflections', [ReflectionsController::class, 'index'])->name('reflections');
 
 
+use App\Http\Controllers\TeacherAuthController;
+
+Route::get('/teacher/login', [TeacherAuthController::class, 'showLoginForm'])->name('teacher.login');
+Route::post('/teacher/login', [TeacherAuthController::class, 'login']);

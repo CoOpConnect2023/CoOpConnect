@@ -1,15 +1,23 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
-import React from 'react';
+import React, { useState } from 'react';
 
 export default function Messaging({ auth }) {
-    // Dummy conversations data
-    const conversations = [
+    const [conversations, setConversations] = useState([
         { id: 1, name: 'Testing User', message: 'Hello, how are you?' },
         // ... other conversation data
-    ];
+    ]);
 
-    // Function to render each conversation item
+    const [newMessage, setNewMessage] = useState('');
+
+    const handleSendMessage = () => {
+        // Assuming you want to add the message to an existing conversation for simplicity
+        // In a real app, you'd likely send this to the server to process and then update state based on the response
+        const newConversation = { id: Date.now(), name: 'You', message: newMessage }; // Simplified example
+        setConversations([...conversations, newConversation]);
+        setNewMessage(''); // Clear input after sending
+    };
+
     const renderConversationItem = (conversation) => (
         <div key={conversation.id} className="p-4 border-b border-gray-300">
             <h3 className="text-lg font-bold">{conversation.name}</h3>
@@ -41,7 +49,7 @@ export default function Messaging({ auth }) {
                         <div className="p-6">
                             {/* Message Area */}
                             <div className="h-96 border-b border-gray-300 overflow-y-scroll">
-                                {/* Messages will go here */}
+                                {/* Additional UI for displaying messages could be added here */}
                             </div>
 
                             {/* Message Input */}
@@ -50,8 +58,13 @@ export default function Messaging({ auth }) {
                                     type="text"
                                     placeholder="Type your message here"
                                     className="border p-2 w-full"
+                                    value={newMessage}
+                                    onChange={(e) => setNewMessage(e.target.value)}
                                 />
-                                <button className="px-4 py-2 bg-blue-500 text-white rounded float-right mt-2">
+                                <button
+                                    onClick={handleSendMessage}
+                                    className="px-4 py-2 bg-blue-500 text-white rounded float-right mt-2"
+                                >
                                     Send
                                 </button>
                             </div>
