@@ -5,7 +5,7 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Head, Link, useForm } from '@inertiajs/react';
-import logo from './images/COOPCONNECTLOGO.png';
+import logo from './Images/COOPCONNECTLOGO.png';
 
 
 export default function Register() {
@@ -39,7 +39,7 @@ export default function Register() {
                 <Link href="/">
                     <img src={logo} alt="CO-OP CONNECT Logo" className="mb-8" />
                 </Link>
-                
+
                 <div className="w-full max-w-md">
                     <h2 className="font-semibold text-xl text-black mb-4 text-center">Sign up to CO-OP CONNECT</h2>
 
@@ -121,14 +121,14 @@ export default function Register() {
                                 Sign Up
                             </PrimaryButton>
                         </div>
-                        
+
                         <div className="mt-4 w-full">
                             <div className="flex justify-between">
                                 <Link href={route('login')} className="underline text-sm text-gray-600 hover:text-gray-900">
                                     Already registered?
                                 </Link>
                                 {/* Empty div to maintain space between the link and the button */}
-                                <div></div> 
+                                <div></div>
                             </div>
                         </div>
                     </form>
