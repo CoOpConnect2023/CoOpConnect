@@ -18,5 +18,13 @@
     </head>
     <body class="font-sans antialiased">
         @inertia
-    </body>
-</html>
+
+        <!-- Success Message Alert Script -->
+        @if(session('success'))
+        <script>
+            window.onload = function() {
+                alert('{{ session("success") }}');
+            };
+        </script>
+        @endif
+    </html>

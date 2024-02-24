@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\MessagingController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\JobController;
 
 
 
@@ -82,3 +83,8 @@ use App\Http\Controllers\TeacherAuthController;
 
 Route::get('/teacher/login', [TeacherAuthController::class, 'showLoginForm'])->name('teacher.login');
 Route::post('/teacher/login', [TeacherAuthController::class, 'login']);
+
+
+Route::post('/jobs', [JobController::class, 'store'])->name('jobs.store');
+
+
