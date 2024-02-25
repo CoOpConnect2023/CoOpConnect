@@ -6,7 +6,11 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\MessagingController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EmailController;
+use App\Http\Controllers\ContactusController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\JobController;
+
 
 
 
@@ -21,6 +25,11 @@ use App\Http\Controllers\JobController;
 |
 */
 
+
+
+
+
+
 Route::get('/', function () {
     return Inertia::render('Landing', [
         'canLogin' => Route::has('login'),
@@ -29,6 +38,7 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+
 
 
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
@@ -69,8 +79,13 @@ Route::get('/messaging', [MessagingController::class, 'index'])
 
 
 
-    use App\Http\Controllers\DocumentsController;
+use App\Http\Controllers\DocumentsController;
 use App\Http\Controllers\ReflectionsController;
+
+Route::get('/contactus', [ContactController::class, 'show'])->name('contact.show');
+Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
+
+
 
 // Existing route for documents
 Route::get('/documents', [DocumentsController::class, 'index'])->name('documents');

@@ -114,8 +114,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
 
 
             <div class="Box">
-              <a href="#co-op-info" class="CO-OP">What is CO-OP?</a>
-              <a href="#contact-us" class="Contact">Contact us</a>
+              <a href='/contactus' class="Contact"> Contact us </a>
               <a href="#more-info" class="Info">More Info about us</a>
             </div>
 

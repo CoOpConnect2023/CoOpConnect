@@ -1,3 +1,7 @@
+
+//resources/js/Pages/DocumentsPage.jsx
+
+
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import React, { useState } from 'react';
