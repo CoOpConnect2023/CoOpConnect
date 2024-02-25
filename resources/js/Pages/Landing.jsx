@@ -1,5 +1,4 @@
 import { Link, Head } from '@inertiajs/react';
-import './Welcome.css';
 import { Container } from 'postcss';
 import logo from './Images/COOPCONNECTLOGO.png';
 import landing from './Images/Landing.png';
@@ -10,6 +9,8 @@ export default function Landing({ auth, laravelVersion, phpVersion }) {
         <>
             <Head title="Welcome" />
 
+            
+            
             <div className="">
                 <div className="flex flex-row items-center justify-between text-center">
                     <div>
@@ -17,7 +18,7 @@ export default function Landing({ auth, laravelVersion, phpVersion }) {
                     </div>
                     <div>
                         <div className="flex flex-row gap-10 text-purple-700">
-                            <Link>Home</Link>
+                            <Link href='./contactus'>Contact Us</Link>
                             <Link>About Us</Link>
                             <Link>Guide</Link>
                         </div>
