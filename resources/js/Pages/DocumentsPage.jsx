@@ -1,4 +1,4 @@
-// resources/js/Pages/DocumentsPage.jsx
+//resources/js/Pages/DocumentsPage.jsx
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';

@@ -1,7 +1,7 @@
 import { Link, Head } from '@inertiajs/react';
 import './Welcome.css';
 import { Container } from 'postcss';
-import logo from './images/COOPCONNECTLOGO.png';
+import logo from './Images/COOPCONNECTLOGO.png';
 
 export default function Welcome({ auth, laravelVersion, phpVersion }) {
     return (
@@ -114,8 +114,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
 
                   
             <div class="Box">
-              <a href="#co-op-info" class="CO-OP">What is CO-OP?</a>
-              <a href="#contact-us" class="Contact">Contact us</a>
+              <a href='/contactus' class="Contact"> Contact us </a>
               <a href="#more-info" class="Info">More Info about us</a>
             </div>
 

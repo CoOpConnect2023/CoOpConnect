@@ -36,16 +36,23 @@ export default function Dashboard({ auth, jobs }) {
                                     <h3 className="text-lg font-bold">{job.title}</h3>
                                     <p className="text-sm">{job.location}</p>
                                     <p className="text-sm mt-2">{job.description}</p>
-                                    <Link
-                                        href={`/jobs/${job.id}`} // Update the URL to your job detail page
-                                        className="inline-block mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-                                    >
-                                        Apply Now
-                                    </Link>
+                                  
                                 </div>
                             ))}
+                            
+                            
+                            
+
+                            
                         </div>
+                        
                     </div>
+
+                   {/* Apply Now Button */}
+                   <Link href="/applyjob" className="inline-block mt-4 px-4 py-2 bg-blue-500 text-white rounded">
+                        Apply Now
+                    </Link>
+
                 </div>
             </div>
         </AuthenticatedLayout>
