@@ -9,6 +9,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\ContactusController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\JobController;
 
 
 
@@ -30,7 +31,7 @@ use App\Http\Controllers\ContactController;
 
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
+    return Inertia::render('Landing', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
@@ -55,7 +56,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    
+
 });
 
 
@@ -91,5 +92,14 @@ Route::get('/documents', [DocumentsController::class, 'index'])->name('documents
 
 // Add a route for reflections
 Route::get('/reflections', [ReflectionsController::class, 'index'])->name('reflections');
+
+
+use App\Http\Controllers\TeacherAuthController;
+
+Route::get('/teacher/login', [TeacherAuthController::class, 'showLoginForm'])->name('teacher.login');
+Route::post('/teacher/login', [TeacherAuthController::class, 'login']);
+
+
+Route::post('/jobs', [JobController::class, 'store'])->name('jobs.store');
 
 

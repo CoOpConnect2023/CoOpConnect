@@ -38,12 +38,12 @@ export default function Login({ status, canResetPassword }) {
                 <Link href="/">
                     <img src={logo} alt="CO-OP CONNECT Logo" className="mb-8" />
                 </Link>
-                
+
                 <div className="w-full max-w-md">
                     <h2 className="font-semibold text-xl text-black mb-4 text-center">Sign in to CO-OP CONNECT</h2>
 
 
-                    
+
                     <form onSubmit={submit}>
                         <div>
                             <InputLabel htmlFor="email" value="Email" className="text-left" />
