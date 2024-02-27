@@ -55,8 +55,8 @@ export default function Dashboard({ auth, jobs }) {
                                     <p className="text-sm">{job.location}</p>
                                     <p className="text-sm mt-2">{job.description}</p>
 
-                                
-                                    <Link href={`/jobs/${job.id}`} className="inline-block mt-4 px-4 py-2 bg-blue-500 text-white rounded">Apply Now</Link>
+
+                                   {/* <Link href={`/jobs/${job.id}`} className="inline-block mt-4 px-4 py-2 bg-blue-500 text-white rounded">Apply Now</Link> */} 
 
                                 </div>
                             ))}
@@ -69,11 +69,7 @@ export default function Dashboard({ auth, jobs }) {
                         
                     </div>
 
-                   {/* Apply Now Button */}
-                   <Link href="/applyjob" className="inline-block mt-4 px-4 py-2 bg-blue-500 text-white rounded">
-                        Apply Now
-                    </Link>
-
+                 
                 </div>
             </div>
         </AuthenticatedLayout>
