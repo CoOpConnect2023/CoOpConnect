@@ -32,15 +32,14 @@ export default function Dashboard({ auth, jobs }) {
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="mb-6 flex flex-wrap gap-4">
-                        <button className="px-4 py-2 bg-green-500 text-white rounded" onClick={() => setShowForm(!showForm)}>Post a Job</button>
+                        <button className="px-4 py-2 bg-green-500 text-white rounded" onClick={() => setShowForm(!showForm)}>Add a student</button>
                     </div>
 
                     {showForm && (
                         <form onSubmit={handleJobPost} className="mb-4">
-                            <input type="text" placeholder="Job Title" value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} className="border p-2 w-full mb-4" />
-                            <input type="text" placeholder="Location" value={jobLocation} onChange={(e) => setJobLocation(e.target.value)} className="border p-2 w-full mb-4" />
-                            <textarea placeholder="Job Description" value={jobDescription} onChange={(e) => setJobDescription(e.target.value)} className="border p-2 w-full mb-4"></textarea>
-                            <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">Submit Job</button>
+                            <input type="text" placeholder="Student Name" value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} className="border p-2 w-full mb-4" />
+                            <input type="text" placeholder="Student Email" value={jobLocation} onChange={(e) => setJobLocation(e.target.value)} className="border p-2 w-full mb-4" />
+                            <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">Add Student</button>
                         </form>
                     )}
 

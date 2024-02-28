@@ -14,11 +14,12 @@ export default function Register() {
         email: '',
         password: '',
         password_confirmation: '',
+        role: 'student', 
     });
 
     useEffect(() => {
         return () => {
-            reset('password', 'password_confirmation');
+            reset('password', 'password_confirmation', 'role');
         };
     }, []);
 
@@ -33,6 +34,9 @@ export default function Register() {
             <Head title="Register" />
 
             {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
+
+            
+
 
 
             <div className="flex flex-col items-center p-6">
