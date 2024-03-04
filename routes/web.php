@@ -6,10 +6,14 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\MessagingController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\ContactusController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\JobController;
+use App\Http\Controllers\DocumentsController;
+use App\Http\Controllers\ReflectionsController;
+use App\Http\Controllers\TeacherAuthController;
 
 
 
@@ -24,7 +28,6 @@ use App\Http\Controllers\JobController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 
 
 
@@ -79,8 +82,6 @@ Route::get('/messaging', [MessagingController::class, 'index'])
 
 
 
-use App\Http\Controllers\DocumentsController;
-use App\Http\Controllers\ReflectionsController;
 
 Route::get('/contactus', [ContactController::class, 'show'])->name('contact.show');
 Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
@@ -94,7 +95,6 @@ Route::get('/documents', [DocumentsController::class, 'index'])->name('documents
 Route::get('/reflections', [ReflectionsController::class, 'index'])->name('reflections');
 
 
-use App\Http\Controllers\TeacherAuthController;
 
 Route::get('/teacher/login', [TeacherAuthController::class, 'showLoginForm'])->name('teacher.login');
 Route::post('/teacher/login', [TeacherAuthController::class, 'login']);
@@ -103,3 +103,4 @@ Route::post('/teacher/login', [TeacherAuthController::class, 'login']);
 Route::post('/jobs', [JobController::class, 'store'])->name('jobs.store');
 
 
+Route::middleware(['auth:sanctum'])->get('/users', [UserController::class, 'index']);
