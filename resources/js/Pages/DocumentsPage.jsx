@@ -1,6 +1,4 @@
-
-//resources/js/Pages/DocumentsPage.jsx
-
+// resources/js/Pages/DocumentsPage.jsx
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
@@ -10,24 +8,24 @@ import { FiUpload, FiXCircle } from 'react-icons/fi'; // Ensure react-icons is i
 
 export default function Documents({ auth }) {
     const [documents, setDocuments] = useState([
-        { id: 1, title: 'Document 1', file: null },
-        { id: 2, title: 'Document 2', file: null },
-        { id: 3, title: 'Document 3', file: null },
-        { id: 4, title: 'Document 4', file: null },
+        { id: 1, title: 'Document 1', file: null, fileName: '', fileType: '' },
+        { id: 2, title: 'Document 2', file: null, fileName: '', fileType: '' },
+        { id: 3, title: 'Document 3', file: null, fileName: '', fileType: '' },
+        { id: 4, title: 'Document 4', file: null, fileName: '', fileType: '' },
     ]);
 
     const handleFileChange = async (event, documentId) => {
         const file = event.target.files[0];
         if (!file) return;
 
-        // This part simulates file upload and should be replaced with actual API call
         const formData = new FormData();
         formData.append('document', file);
         try {
-            // Simulate successful upload with a delay
             await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate upload delay
             setDocuments(docs =>
-                docs.map(doc => (doc.id === documentId ? { ...doc, file: URL.createObjectURL(file) } : doc))
+                docs.map(doc => 
+                    doc.id === documentId ? { ...doc, file: URL.createObjectURL(file), fileName: file.name, fileType: file.type } : doc
+                )
             );
         } catch (error) {
             console.error('Upload error', error);
@@ -36,7 +34,9 @@ export default function Documents({ auth }) {
 
     const removeDocument = (documentId) => {
         setDocuments(docs =>
-            docs.map(doc => (doc.id === documentId ? { ...doc, file: null } : doc))
+            docs.map(doc => 
+                doc.id === documentId ? { ...doc, file: null, fileName: '', fileType: '' } : doc
+            )
         );
     };
 
@@ -45,7 +45,12 @@ export default function Documents({ auth }) {
             <h3 className="text-lg font-bold mb-2">{document.title}</h3>
             {document.file ? (
                 <>
-                    <img src={document.file} alt="Uploaded document" className="max-w-full max-h-32 mb-2" />
+                    {document.fileType === 'application/pdf' ? (
+                        <iframe src={document.file} className="w-full h-64" type="application/pdf"></iframe>
+                    ) : (
+                        <img src={document.file} alt="Uploaded document" className="max-w-full max-h-32 mb-2" />
+                    )}
+                    <span className="text-sm text-gray-500">{document.fileName}</span>
                     <button onClick={() => removeDocument(document.id)} className="absolute top-0 right-0 m-2 text-red-500">
                         <FiXCircle size={24} />
                     </button>

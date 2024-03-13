@@ -8,17 +8,17 @@ export default function Messaging({ auth }) {
     const [currentUserId, setCurrentUserId] = useState(null);
     const [newMessage, setNewMessage] = useState('');
     const [users, setUsers] = useState([
-      //  { id: 1, name: 'Test User 1', pfp: null }, // Add profile picture if available. Use 'pfp' for profile picture.
-      //  { id: 2, name: 'Test User 2', pfp: null }
+        { id: 1, name: 'Test User 1', pfp: null }, // Add profile picture if available. Use 'pfp' for profile picture.
+        { id: 2, name: 'Test User 2', pfp: null }
     ]);
 
     useEffect(() => {
         // Example: Fetch users from your database here, for now we use static users
-         axios.get('/users')
-           .then(response => {
-             setUsers(response.data);
-         })
-         .catch(error => console.error('Error fetching users:', error));
+        // axios.get('/users')
+        //   .then(response => {
+        //     setUsers(response.data);
+        // })
+        // .catch(error => console.error('Error fetching users:', error));
     }, []);
 
     const handleSendMessage = () => {
