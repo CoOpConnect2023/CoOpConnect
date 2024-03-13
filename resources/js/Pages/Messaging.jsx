@@ -1,55 +1,51 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'; // Ensure Axios is installed
+import axios from 'axios';
 
 export default function Messaging({ auth }) {
-    const [conversations, setConversations] = useState([]);
+    const [conversations, setConversations] = useState({});
+    const [currentUserId, setCurrentUserId] = useState(null);
     const [newMessage, setNewMessage] = useState('');
-    const [users, setUsers] = useState([]); // New state for users
+    const [users, setUsers] = useState([
+      //  { id: 1, name: 'Test User 1', pfp: null }, // Add profile picture if available. Use 'pfp' for profile picture.
+      //  { id: 2, name: 'Test User 2', pfp: null }
+    ]);
 
     useEffect(() => {
-        // Fetch users when the component mounts
-        axios.get('/users')
-            .then(response => {
-                setUsers(response.data);
-            })
-            .catch(error => console.error('Error fetching users:', error));
+        // Example: Fetch users from your database here, for now we use static users
+         axios.get('/users')
+           .then(response => {
+             setUsers(response.data);
+         })
+         .catch(error => console.error('Error fetching users:', error));
     }, []);
 
     const handleSendMessage = () => {
-        if (newMessage.trim() === '') {
-            return; // Don't send empty messages
-        }
+        if (!newMessage.trim() || !currentUserId) return;
 
-        const currentUserConversation = conversations.find(conversation => conversation.name === auth.user.name);
+        const messageToSend = {
+            sender_id: auth.user.id,
+            body: newMessage,
+            date: new Date(),
+        };
 
-        if (currentUserConversation) {
-            const updatedConversation = {
-                ...currentUserConversation,
-                messages: [...currentUserConversation.messages, { sender: 'You', text: newMessage, date: new Date() }]
-            };
-            setConversations(conversations.map(conversation => conversation.name === auth.user.name ? updatedConversation : conversation));
-        } else {
-            const newConversation = {
-                id: Date.now(), // This should be replaced with a more robust method
-                name: auth.user.name,
-                messages: [{ sender: 'You', text: newMessage, date: new Date() }]
-            };
-            setConversations([...conversations, newConversation]);
-        }
+        const updatedConversations = { ...conversations };
+        updatedConversations[currentUserId] = updatedConversations[currentUserId] || [];
+        updatedConversations[currentUserId].push(messageToSend);
+
+        setConversations(updatedConversations);
         setNewMessage(''); // Clear input after sending
     };
 
     const selectUser = (user) => {
-        const existingConversation = conversations.find(conversation => conversation.name === user.name);
-        if (!existingConversation) {
-            setConversations([...conversations, {
-                id: Date.now(), // Again, consider a more robust ID
-                name: user.name,
-                messages: []
-            }]);
-        }
+        setCurrentUserId(user.id);
+    };
+
+    const getInitials = (name) => {
+        const names = name.split(' ');
+        const initials = names.map(n => n[0]).join('');
+        return initials.toUpperCase();
     };
 
     return (
@@ -64,12 +60,11 @@ export default function Messaging({ auth }) {
                     {/* Conversations Sidebar */}
                     <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg w-1/4">
                         <div className="p-6 border-b border-gray-200">
-                            <h3 className="text-lg font-bold">{auth.user.name}</h3>
+                            <h3 className="text-lg font-bold">Users</h3>
                         </div>
                         <div className="divide-y divide-gray-200">
-                            {/* Here we map over users instead of conversations */}
                             {users.map(user => (
-                                <div key={user.id} className="p-4 cursor-pointer" onClick={() => selectUser(user)}>
+                                <div key={user.id} className={`p-4 cursor-pointer ${currentUserId === user.id ? 'bg-gray-200' : ''}`} onClick={() => selectUser(user)}>
                                     <h3 className="text-lg font-bold">{user.name}</h3>
                                 </div>
                             ))}
@@ -79,34 +74,31 @@ export default function Messaging({ auth }) {
                     {/* Messaging Area */}
                     <div className="flex-1 ml-4 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6">
-                            {/* Message Area */}
+                            {/* User's Name and Message Area */}
+                            <div className="border-b border-gray-200 pb-4 mb-4">
+                                <h3 className="text-lg font-bold">
+                                    {currentUserId ? users.find(user => user.id === currentUserId)?.name : ''}
+                                </h3>
+                            </div>
                             <div className="h-96 overflow-y-scroll">
-                                {conversations.map(conversation => (
-                                    <div key={conversation.id} className="p-4">
-                                        {conversation.messages.map((message, index) => (
-                                            <div key={index} className={`flex ${message.sender === 'You' ? 'justify-end' : 'justify-start'}`}>
-                                                <div className="p-2">
-                                                    {/* Profile picture or initials */}
-                                                    <div className="flex items-center mb-1">
-                                                        <div className="mr-2">
-                                                            {/* Placeholder for profile picture */}
-                                                            <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
-                                                                <span>{message.sender.split(' ').map(name => name[0]).join('')}</span>
-                                                            </div>
-                                                        </div>
-                                                        {/* User name and date */}
-                                                        <div className="flex items-center">
-                                                            <p className="font-bold">{message.sender}</p>
-                                                            <p className="text-xs text-gray-600 ml-2">{new Date(message.date).toLocaleString()}</p>
-                                                        </div>
+                                {currentUserId && conversations[currentUserId] && conversations[currentUserId].length > 0 ? conversations[currentUserId].map((message, index) => (
+                                    <div key={index} className={`flex ${message.sender_id === auth.user.id ? 'justify-end' : 'justify-start'}`}>
+                                        <div className="p-2 flex items-center">
+                                            <div className="mr-2">
+                                                {users.find(user => user.id === message.sender_id)?.pfp ?
+                                                    <img src={users.find(user => user.id === message.sender_id).pfp} alt="pfp" className="w-8 h-8 rounded-full" /> :
+                                                    <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+                                                        <span>{getInitials(users.find(user => user.id === message.sender_id)?.name)}</span>
                                                     </div>
-                                                    {/* Message text */}
-                                                    <p>{message.text}</p>
-                                                </div>
+                                                }
                                             </div>
-                                        ))}
+                                            <div>
+                                                <p className="text-xs text-gray-600">{new Date(message.date).toLocaleString()}</p>
+                                                <p>{message.body}</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                ))}
+                                )) : null}
                             </div>
 
                             {/* Message Input */}
