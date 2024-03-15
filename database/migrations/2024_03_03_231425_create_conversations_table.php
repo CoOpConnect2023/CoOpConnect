@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('conversations', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('send_id');
+            $table->foreign('send_id')->references('id')->on('users');
+            $table->unsignedBigInteger('recv_id');
+            $table->foreign('recv_id')->references('id')->on('users');
             $table->timestamps();
         });
         

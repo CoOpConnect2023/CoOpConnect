@@ -1,27 +1,31 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
+import { Inertia } from '@inertiajs/inertia';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 export default function Messaging({ auth }) {
     const [conversations, setConversations] = useState({});
+    const [conversationId, setconversationId] = useState('');
     const [currentUserId, setCurrentUserId] = useState(null);
     const [newMessage, setNewMessage] = useState('');
-    const [users, setUsers] = useState([
-        { id: 1, name: 'Test User 1', pfp: null }, // Add profile picture if available. Use 'pfp' for profile picture.
-        { id: 2, name: 'Test User 2', pfp: null }
-    ]);
+    const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        // Example: Fetch users from your database here, for now we use static users
-        // axios.get('/users')
-        //   .then(response => {
-        //     setUsers(response.data);
-        // })
-        // .catch(error => console.error('Error fetching users:', error));
+        axios.get('/users')
+          .then(response => {
+            console.log(response.data);
+            setUsers(response.data);
+            setCurrentUserId(response.data.id)
+        })
+        .catch(error => console.error('Error fetching users:', error));
     }, []);
 
-    const handleSendMessage = () => {
+    const handleConversationIdChange = (event) => {
+        setconversationId(event.target.value);
+    };
+
+    const handleSendMessage = async () => {
         if (!newMessage.trim() || !currentUserId) return;
 
         const messageToSend = {
@@ -35,15 +39,58 @@ export default function Messaging({ auth }) {
         updatedConversations[currentUserId].push(messageToSend);
 
         setConversations(updatedConversations);
-        setNewMessage(''); // Clear input after sending
+
+        const userData = { send_id: auth.user.id, recv_id: currentUserId };
+
+        await axios.post('/api/createconversation', {
+            send_id: userData.send_id,
+            recv_id: userData.recv_id
+        })
+        .then(() => {
+            return axios.post('/api/sendmessage', {
+                send_id: userData.send_id,
+                recv_id: userData.recv_id,
+                body: newMessage
+            });
+        })
+        setNewMessage('');
     };
 
-    const selectUser = (user) => {
+    const selectUser = async (user) => {
         setCurrentUserId(user.id);
+        console.log(auth.user.id);
+        console.log(user.id);
+
+    // try{
+        const response = await axios.get('/api/fetchconversationid', {
+            params: {
+                send_id: auth.user.id,
+                recv_id: user.id
+            }
+        });
+
+        const conversation_id = response.data.conversation_id;
+        console.log(conversation_id);
+        setconversationId(conversation_id);
+
+        const messagesResponse = await axios.get('/api/getmessages', {
+            params: {
+                conversation_id: conversation_id
+            }
+        });
+
+        console.log(messagesResponse.data);
+        // console.log("Hii");
+    // }
+    // catch (error) {
+    //     console.error('Error:', error.response ? error.response.data : error.message);
+    // }
     };
 
     const getInitials = (name) => {
-        const names = name.split(' ');
+        if (!name || typeof name !== 'string') {
+            return '';
+        }
         const initials = names.map(n => n[0]).join('');
         return initials.toUpperCase();
     };
@@ -70,6 +117,8 @@ export default function Messaging({ auth }) {
                             ))}
                         </div>
                     </div>
+
+                    <input type="hidden" value={conversationId} onChange={handleConversationIdChange} disabled/>
 
                     {/* Messaging Area */}
                     <div className="flex-1 ml-4 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
