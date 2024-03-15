@@ -13,16 +13,11 @@ const ReflectionsPage = ({ auth }) => {
         const comment = {
             id: Date.now(),
             content: newComment,
-            user: auth.user.name, // Assuming the user object has a name
+            user: auth.user.name,
             replies: [],
         };
         setComments([...comments, comment]);
         setNewComment('');
-    };
-
-    // Function to toggle reply input
-    const toggleReplyInput = (commentId) => {
-        setReplyContent(prev => ({ ...prev, [commentId]: '' })); // Initialize or clear reply input
     };
 
     // Function to handle reply content change
@@ -30,21 +25,31 @@ const ReflectionsPage = ({ auth }) => {
         setReplyContent(prev => ({ ...prev, [commentId]: content }));
     };
 
-    // Function to handle new reply submission
+    // Function to handle new reply submission, only available for teachers and employers
     const handleReplySubmit = (commentId) => {
         if (!replyContent[commentId]) return; // Ignore empty replies
+
+        const newReply = {
+            content: replyContent[commentId],
+            user: auth.user.name, // We assume the user object has a name
+        };
 
         setComments(
             comments.map((comment) =>
                 comment.id === commentId
-                    ? { ...comment, replies: [...comment.replies, { content: replyContent[commentId], user: 'Teacher' }] }
+                    ? { ...comment, replies: [...comment.replies, newReply] }
                     : comment
             )
         );
-        toggleReplyInput(commentId); // Optionally hide the reply input after submitting
+        setReplyContent(prev => ({ ...prev, [commentId]: '' })); // Clear reply input after submission
     };
 
     const headerContent = <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Reflections Forum</h2>;
+
+    const isTeacherOrEmployer = () => {
+        // Assuming 'role' is a property of 'user' indicating the user's role
+        return ['teacher', 'employer'].includes(auth.user.role);
+    };
 
     return (
         <AuthenticatedLayout user={auth.user} header={headerContent}>
@@ -53,11 +58,11 @@ const ReflectionsPage = ({ auth }) => {
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white shadow rounded-lg p-6">
                         <div className="mb-4">
-                            <h1 className="text-xl font-semibold">Share Your Reflection</h1>
+                            <h1 className="text-xl font-semibold">Share Your Reflections with your teachers and employers!</h1>
                         </div>
                         <form onSubmit={handleCommentSubmit} className="mb-4">
-                            <textarea value={newComment} onChange={(e) => setNewComment(e.target.value)} className="w-full rounded-lg border-gray-300 p-2" placeholder="What are your thoughts?" rows="4"></textarea>
-                            <button type="submit" className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">Post Comment</button>
+                            <textarea value={newComment} onChange={(e) => setNewComment(e.target.value)} className="w-full rounded-lg border-gray-300 p-2" placeholder="Type your reflection here:" rows="4"></textarea>
+                            <button type="submit" className="mt-2 px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-700">Post Comment</button>
                         </form>
                         <div className="space-y-4">
                             {comments.map((comment) => (
@@ -70,8 +75,12 @@ const ReflectionsPage = ({ auth }) => {
                                             <div className="text-xs font-semibold">{reply.user}</div>
                                         </div>
                                     ))}
-                                    <textarea value={replyContent[comment.id] || ''} onChange={(e) => handleReplyChange(comment.id, e.target.value)} className="mt-2 w-full rounded-lg border-gray-300 p-2" placeholder="Write a reply..." rows="2"></textarea>
-                                    <button onClick={() => handleReplySubmit(comment.id)} className="mt-2 text-sm text-blue-500 hover:text-blue-700">Reply</button>
+                                    {isTeacherOrEmployer() && (
+                                        <>
+                                            <textarea value={replyContent[comment.id] || ''} onChange={(e) => handleReplyChange(comment.id, e.target.value)} className="mt-2 w-full rounded-lg border-gray-300 p-2" placeholder="Write a reply..." rows="2"></textarea>
+                                            <button onClick={() => handleReplySubmit(comment.id)} className="mt-2 text-sm text-purple-500 hover:text-purple-700">Reply</button>
+                                        </>
+                                    )}
                                 </div>
                             ))}
                         </div>

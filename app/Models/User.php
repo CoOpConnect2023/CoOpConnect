@@ -18,9 +18,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'name', 'email', 'password', 'role'
     ];
 
     /**
@@ -43,9 +41,22 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    /**
+     * Define a relationship to documents.
+     */
     public function documents()
-{
-    return $this->hasMany(Document::class);
-}
+    {
+        return $this->hasMany(Document::class);
+    }
 
+    /**
+     * Check if the user has a specific role.
+     *
+     * @param string $role
+     * @return bool
+     */
+    public function hasRole($role)
+    {
+        return $this->role === $role;
+    }
 }

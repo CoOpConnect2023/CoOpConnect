@@ -104,3 +104,13 @@ Route::post('/jobs', [JobController::class, 'store'])->name('jobs.store');
 
 
 Route::middleware(['auth:sanctum'])->get('/users', [UserController::class, 'index']);
+
+Route::group(['middleware' => ['role:admin']], function () {
+    // Place your admin-only routes here
+    Route::get('/admin/dashboard', 'AdminController@index')->name('admin.dashboard');
+    // You can add more routes that you want to be accessible only by admins
+});
+
+Route::group(['middleware' => ['auth', 'role:admin']], function () {
+    Route::get('/admin/dashboard', 'AdminController@dashboard')->name('admin.dashboard');
+});
