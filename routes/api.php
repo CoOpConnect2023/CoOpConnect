@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MessagingController;
 use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\DocumentsController;
+use App\Http\Controllers\JobController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,6 +20,8 @@ use App\Http\Controllers\DocumentsController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/filterjobs', [JobController::class, 'filterJobs']);
 
 Route::post('/sendmessage', [MessagingController::class, 'sendMessage']);
 Route::get('/getmessages', [MessagingController::class, 'fetchMessages']);
