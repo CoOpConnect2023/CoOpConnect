@@ -12,9 +12,12 @@ use App\Http\Controllers\ContactusController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\DocumentsController;
+use App\Http\Controllers\LoginProviderController;
 use App\Http\Controllers\ReflectionsController;
 use App\Http\Controllers\TeacherAuthController;
-
+use Laravel\Socialite\Facades\Socialite;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 
 
@@ -114,3 +117,8 @@ Route::group(['middleware' => ['role:admin']], function () {
 Route::group(['middleware' => ['auth', 'role:admin']], function () {
     Route::get('/admin/dashboard', 'AdminController@dashboard')->name('admin.dashboard');
 });
+
+Route::get('/auth/google/redirect', [LoginProviderController::class, 'redirectToGoogle'])->name('login.google');
+Route::get('/auth/google/callback', [LoginProviderController::class, 'handleGoogleCallback']);
+Route::get('/auth/linkedin/redirect', [LoginProviderController::class, 'redirectToLinkedIn'])->name('login.linkedin');
+Route::get('/auth/linkedin/callback', [LoginProviderController::class, 'handleLinkedInCallback']);

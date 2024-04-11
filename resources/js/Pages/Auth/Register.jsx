@@ -123,12 +123,12 @@ export default function Register() {
                         </div>
 
                         <div className="mt-4 w-full">
-                            <div className="flex justify-between">
+                                Already registered? {' '}
                                 <Link href={route('login')} className="underline text-sm text-gray-600 hover:text-gray-900">
-                                    Already registered?
+                                    Log in
                                 </Link>
                                 {/* Empty div to maintain space between the link and the button */}
-                                <div></div>
+                                <div>
                             </div>
                         </div>
                     </form>
