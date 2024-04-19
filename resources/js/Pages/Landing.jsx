@@ -1,16 +1,10 @@
 import { Link, Head } from '@inertiajs/react';
-import { Container } from 'postcss';
 import logo from './Images/COOPCONNECTLOGO.png';
-import landing from './Images/Landing.png';
-
 
 export default function Landing({ auth, laravelVersion, phpVersion }) {
     return (
         <>
             <Head title="Welcome" />
-
-            
-            
             <div className="">
                 <div className="flex flex-row items-center justify-between text-center">
                     <div>
@@ -36,13 +30,13 @@ export default function Landing({ auth, laravelVersion, phpVersion }) {
                                 <div className="flex flex-row gap-3">
                                     <Link
                                         href={route('register')}
-                                        className="font-semibold text-white hover:text-gray-900 px-2 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500 text-xl border-2 border-white rounded-lg px px-1.5 py-1 bg-purple-700"
+                                        className="font-semibold text-white px-2 hover:opacity-80 focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500 text-xl border-2 border-white rounded-lg px px-1.5 py-1 bg-purple-700"
                                     >
                                         Sign Up
                                     </Link>
                                     <Link
                                         href={route('login')}
-                                        className="font-semibold text-purple-900 hover:text-gray-900 px-2 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500 text-xl border-2 border-white rounded-lg px px-1.5 py-1 bg-purple-300"
+                                        className="font-semibold text-purple-900 hover:opacity-80 px-2 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500 text-xl border-2 border-white rounded-lg px px-1.5 py-1 bg-purple-300"
                                     >
                                         Sign In
                                     </Link>
@@ -73,7 +67,6 @@ export default function Landing({ auth, laravelVersion, phpVersion }) {
                                 <button className='bg-purple-600 rounded-lg text-white px-2 py-2 text-lg hover:opacity-80 opacity-100'>
                                     Get Started
                                 </button>
-
                             </Link>
                         </div>
                     </div>

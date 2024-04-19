@@ -118,7 +118,7 @@ export default function Login({ status, canResetPassword }) {
                             </label>
                         </div>
 
-                        
+
                         {canResetPassword && (
                             <div className="mt-4 text-left">
                                 <Link
