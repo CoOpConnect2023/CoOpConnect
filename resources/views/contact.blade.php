@@ -30,9 +30,9 @@
     </div>
     @endif
 
-    <form action="{{route('contact.send')}}" method= "POST"> 
+    <form action="{{route('contact.send')}}" method= "POST">
         @csrf
-        
+
     <div class="lg:w-1/2 md:w-2/3 mx-auto">
       <div class="flex flex-wrap -m-2">
         <div class="p-2 w-1/2">
@@ -68,14 +68,14 @@
 
         </div>
         <div class="p-2 w-full">
-          <button type= "submit" class="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"> Send </button>
+          <button type= "submit" class="flex mx-auto text-white bg-purple-800 border-0 py-2 px-8 focus:outline-none hover:bg-purple-600 rounded text-lg"> Send </button>
         </div>
-        
+
       </div>
     </div>
 
     </form>
-    
+
   </div>
 </section>
 

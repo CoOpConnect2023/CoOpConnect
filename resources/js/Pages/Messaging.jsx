@@ -155,14 +155,14 @@ export default function Messaging({ auth }) {
                                 <input
                                     type="text"
                                     placeholder="Type your message here"
-                                    className="border p-2 flex-1"
+                                    className="border rounded-md p-2 flex-1"
                                     value={newMessage}
                                     onChange={(e) => setNewMessage(e.target.value)}
                                     onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
                                 />
                                 <button
                                     onClick={handleSendMessage}
-                                    className="px-4 py-2 bg-blue-500 text-white rounded ml-2"
+                                    className="rounded-md px-4 py-2 bg-purple-800 text-white rounded ml-2"
                                 >
                                     Send
                                 </button>

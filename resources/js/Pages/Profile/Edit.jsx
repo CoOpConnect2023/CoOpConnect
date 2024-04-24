@@ -39,40 +39,38 @@ export default function Profile({ auth, mustVerifyEmail, status }) {
                             </div>
                         </div>
 
-                        {/* Plan Selection Section */}
-                        <div className="bg-white dark:bg-gray-800 shadow sm:rounded-lg p-4">
-                            <h3 className="text-lg font-bold mb-4">Plan Selection</h3>
-                            {/* Your plan selection content goes here */}
-                        </div>
-                    </div>
+                        <div className="flex-col gap-5">
+                            <div className="mb-5 h-[79%] bg-white dark:bg-gray-800 shadow sm:rounded-lg p-4">
+                                <h3 className="text-lg font-bold mb-4">My Matches</h3>
+                                <p className="mb-3">Some recommended jobs for you to check out!</p>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {matches.map((match) => (
+                                        <div key={match.id} className="bg-purple-100 border p-4 rounded-lg">
+                                            <h3 className="text-lg font-bold">{match.title}</h3>
+                                            <p className="text-sm">{match.location}</p>
+                                            <p className="text-sm">{match.info}</p>
 
-                    {/* Matches Section */}
-                    <div className="mt-6 bg-white dark:bg-gray-800 shadow sm:rounded-lg p-4">
-                        <h3 className="text-lg font-bold mb-4">My Matches</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {matches.map((match) => (
-                                <div key={match.id} className="border p-4 rounded-lg">
-                                    <h3 className="text-lg font-bold">{match.title}</h3>
-                                    <p className="text-sm">{match.location}</p>
-                                    <p className="text-sm">{match.info}</p>
-
-                                    <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
-                                        Message
-                                    </button>
+                                            <button className="mt-4 px-4 py-2 bg-purple-800 text-white rounded rounded-md">
+                                                View Job
+                                            </button>
+                                        </div>
+                                    ))}
                                 </div>
-                            ))}
-                        </div>
-
-                        {/* Buttons for Documents and Reflections */}
-                        <div className="flex flex-col justify-center items-end space-y-4 h-full">
-                            <a href="/documents" target="_blank" rel="noopener noreferrer" className="bg-blue-500 text-white p-4 rounded-lg shadow">
-                                Documents
-                            </a>
-                            <a href="/reflections" target="_blank" rel="noopener noreferrer" className="bg-green-500 text-white p-4 rounded-lg shadow">
-                                Reflections
-                            </a>
+                            </div>
+                            <div className="flex flex-col bg-white dark:bg-gray-800 shadow sm:rounded-lg p-4">
+                                <h3 className="text-center font-bold text-xl">My Documents and Reflections</h3>
+                                <div className="mt-5 flex flex-row gap-5 justify-center items-end">
+                                    <a href="/reflections" target="_blank" rel="noopener noreferrer" className="bg-purple-800 text-white p-4 rounded-lg shadow">
+                                        Reflections
+                                    </a>
+                                    <a href="/documents" target="_blank" rel="noopener noreferrer" className="bg-fuchsia-800 text-white p-4 rounded-lg shadow">
+                                        Documents
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </AuthenticatedLayout>
