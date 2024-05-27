@@ -1,12 +1,14 @@
 import { Link } from "@inertiajs/react";
-import logo from "@/Pages/Images/COOPCONNECTLOGO.png"
+import logo from "@/Pages/Images/COOPCONNECTLOGO.png";
 
 export default function LandingLayout({ auth }) {
     return (
         <>
             <div className="flex flex-row items-center justify-between text-center">
                 <div>
-                    <img className="" src={logo} alt="Logo" />
+                    <Link href="/">
+                        <img className="" src={logo} alt="Logo" />
+                    </Link>
                 </div>
                 <div>
                     <div className="flex flex-row gap-10 text-purple-700">
