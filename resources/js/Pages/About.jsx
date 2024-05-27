@@ -13,7 +13,7 @@ export default function About({ auth }) {
                     <div>
                         <div className="flex flex-row gap-10 text-purple-700">
                             <Link href='./contactus'>Contact Us</Link>
-                            <Link>About Us</Link>
+                            <Link href='./about'>About Us</Link>
                             <Link>Guide</Link>
                         </div>
                     </div>
