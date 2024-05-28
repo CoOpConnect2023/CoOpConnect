@@ -37,14 +37,13 @@ export default function Register() {
                     {status}
                 </div>
             )}
-
             <div className="flex flex-col items-center p-6">
                 <Link href="/">
-                    <img src={logo} alt="CO-OP CONNECT Logo" className="mb-8" />
+                    <img src={logo} alt="CO-OP CONNECT Logo" className="mb-4" />
                 </Link>
 
                 <div className="w-full max-w-md">
-                    <h2 className="font-semibold text-xl text-black mb-4 text-center signup-heading">
+                    <h2 className="text-black mb-4 text-center signup-heading">
                         Sign Up
                     </h2>
 
@@ -158,7 +157,9 @@ export default function Register() {
 
                         <div className="mx-auto max-w-sm text-center flex flex-wrap justify-center">
                             <div className="mx-auto max-w-sm text-center flex flex-wrap justify-center mt-4">
-                                <div className="flex flex-col items-center mr-4 mb-4">
+                                <div className="flex flex-col items-center mb-4">
+                                    {" "}
+                                    {/* Reduced margin */}
                                     <input
                                         id="radio1"
                                         type="radio"
@@ -174,7 +175,9 @@ export default function Register() {
                                     </label>
                                 </div>
 
-                                <div className="flex flex-col items-center mr-4 mb-4">
+                                <div className="flex flex-col items-center mb-4">
+                                    {" "}
+                                    {/* Reduced margin */}
                                     <input
                                         id="radio2"
                                         type="radio"
@@ -186,11 +189,13 @@ export default function Register() {
                                         className="flex flex-col items-center cursor-pointer"
                                     >
                                         <span className="w-4 inline-block mb-1"></span>
-                                        Student
+                                        Employer
                                     </label>
                                 </div>
 
-                                <div className="flex flex-col items-center mr-4 mb-4">
+                                <div className="flex flex-col items-center mb-4">
+                                    {" "}
+                                    {/* Reduced margin */}
                                     <input
                                         id="radio3"
                                         type="radio"
@@ -202,7 +207,7 @@ export default function Register() {
                                         className="flex flex-col items-center cursor-pointer"
                                     >
                                         <span className="w-4 inline-block mb-1"></span>
-                                        Employer
+                                        Student
                                     </label>
                                 </div>
                             </div>
@@ -215,7 +220,7 @@ export default function Register() {
                         </div>
 
                         <div className="mt-4 w-full">
-                            Already registered?{" "}
+                            Already a member?{" "}
                             <Link
                                 href={route("login")}
                                 className="underline text-sm text-gray-600 hover:text-gray-900"
