@@ -219,7 +219,7 @@ export default function Register() {
                             </PrimaryButton>
                         </div>
 
-                        <div className="mt-4 w-full">
+                        <div className="mt-8 w-full">
                             Already a member?{" "}
                             <Link
                                 href={route("login")}
