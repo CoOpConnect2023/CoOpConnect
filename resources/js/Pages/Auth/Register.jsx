@@ -219,11 +219,11 @@ export default function Register() {
                             </PrimaryButton>
                         </div>
 
-                        <div className="mt-8 w-full">
+                        <div className="mt-8 w-full text-center">
                             Already a member?{" "}
                             <Link
                                 href={route("login")}
-                                className="underline text-sm text-gray-600 hover:text-gray-900"
+                                className="underline text-m text-gray-600 hover:text-gray-900"
                             >
                                 Log in
                             </Link>

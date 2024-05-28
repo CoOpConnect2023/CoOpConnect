@@ -13,3 +13,8 @@
     opacity: 0px;
     border-radius: 10px;
 }
+
+.login-layout .custom-size {
+    height: auto; // Allow it to grow based on the content
+    padding: 20px;
+}
