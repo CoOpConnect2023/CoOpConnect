@@ -1,27 +1,36 @@
-import { useState } from "react";
+import { Component, useState, useRef } from "react";
 import ApplicationLogo from "@/Components/ApplicationLogo";
 import Dropdown from "@/Components/Dropdown";
 import NavLink from "@/Components/NavLink";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 import { Link } from "@inertiajs/react";
 import logo from "@/Pages/Images/COOPCONNECTLOGO.png";
+import { useContainerDimensions } from "@/Components/useContainerDimensions";
 
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
+    const componentRef = useRef();
+    const { width, height } = useContainerDimensions(componentRef);
+    console.log(width);
 
     return (
         <div className="min-h-screen bg-purple-50 dark:bg-gray-900">
             <nav className="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16">
-                        <div className="shrink-0 flex items-center">
+                        <div className="flex items-center grow basis-0 h-full" ref={componentRef}>
                             <Link href="/">
-                                <img className="" src={logo} alt="Logo" />
+                                <img
+                                    className="shrink-1"
+                                    src={logo}
+                                    alt="Logo"
+                                />
                             </Link>
                         </div>
-                        <div className="flex justify-center w-full">
-                            <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+
+                        <div className="flex justify-center">
+                            <div className="hidden space-x-8 sm:-my-px sm:flex">
                                 {/* Existing Job Page NavLink */}
                                 <NavLink
                                     href={route("dashboard")}
@@ -47,8 +56,8 @@ export default function Authenticated({ user, header, children }) {
                             </div>
                         </div>
 
-                        <div className="hidden sm:flex sm:items-center sm:ms-6">
-                            <div className="ms-3 relative">
+                        <div className="hidden sm:flex sm:items-center justify-end grow basis-0">
+                            <div className="ms-3 relative items-end">
                                 <Dropdown>
                                     <Dropdown.Trigger>
                                         <span className="inline-flex rounded-md">
