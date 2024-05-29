@@ -5,21 +5,17 @@ import NavLink from "@/Components/NavLink";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 import { Link } from "@inertiajs/react";
 import logo from "@/Pages/Images/COOPCONNECTLOGO.png";
-import { useContainerDimensions } from "@/Components/useContainerDimensions";
 
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
-    const componentRef = useRef();
-    const { width, height } = useContainerDimensions(componentRef);
-    console.log(width);
 
     return (
         <div className="min-h-screen bg-purple-50 dark:bg-gray-900">
             <nav className="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16">
-                        <div className="flex items-center grow basis-0 h-full" ref={componentRef}>
+                        <div className="flex items-center grow basis-0 h-full">
                             <Link href="/">
                                 <img
                                     className="shrink-1"
