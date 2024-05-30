@@ -11,8 +11,11 @@ export default function Authenticated({ user, header, children }) {
         useState(false);
 
     return (
-        <div className="min-h-screen bg-purple-50 dark:bg-gray-900">
-            <nav className="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+        <div className="min-h-screen bg-purple-50">
+            <nav
+                className=""
+                style={{ background: "var(--Schemes-Background, #fff7ff)" }}
+            >
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16">
                         <div className="flex items-center grow basis-0 h-full">
@@ -31,6 +34,14 @@ export default function Authenticated({ user, header, children }) {
                                 <NavLink
                                     href={route("dashboard")}
                                     active={route().current("dashboard")}
+                                    style={{
+                                        color: "var(--Palettes-Primary-40, #773DC3)",
+                                        fontSize: "16px",
+                                        fontStyle: "normal",
+                                        fontWeight: "400",
+                                        lineHeight: "24px",
+                                        letterSpacing: "0.15px",
+                                    }}
                                 >
                                     Home
                                 </NavLink>
@@ -39,6 +50,14 @@ export default function Authenticated({ user, header, children }) {
                                 <NavLink
                                     href={route("profile.edit")}
                                     active={route().current("profile.edit")}
+                                    style={{
+                                        color: "var(--Palettes-Primary-40, #773DC3)",
+                                        fontSize: "16px",
+                                        fontStyle: "normal",
+                                        fontWeight: "400",
+                                        lineHeight: "24px",
+                                        letterSpacing: "0.15px",
+                                    }}
                                 >
                                     My Profile
                                 </NavLink>
@@ -46,6 +65,14 @@ export default function Authenticated({ user, header, children }) {
                                 <NavLink
                                     href={route("messaging")}
                                     active={route().current("messaging")}
+                                    style={{
+                                        color: "var(--Palettes-Primary-40, #773DC3)",
+                                        fontSize: "16px",
+                                        fontStyle: "normal",
+                                        fontWeight: "400",
+                                        lineHeight: "24px",
+                                        letterSpacing: "0.15px",
+                                    }}
                                 >
                                     Messages
                                 </NavLink>
@@ -59,7 +86,7 @@ export default function Authenticated({ user, header, children }) {
                                         <span className="inline-flex rounded-md">
                                             <button
                                                 type="button"
-                                                className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150"
+                                                className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150"
                                             >
                                                 {user.name}
 

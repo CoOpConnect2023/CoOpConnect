@@ -2,20 +2,19 @@ import styled from "styled-components";
 
 export const MainContainer = styled.main`
     border-radius: 10px;
-    background-color: #fff7ff;
     display: flex;
     flex-direction: column;
-    padding: 10px;
-    min-height: 100vh;
+    padding: 10px;http://127.0.0.1:8000/profile/edit
+    min-height: 100vh;http://127.0.0.1:8000/profile/edit
 `;
 
 export const StyledSection = styled.section`
     justify-content: center;
     border-radius: 10px;
     border: 1px solid rgba(123, 117, 127, 1);
-    align-self: center;
+    align-self: center;http://127.0.0.1:8000/profile/edit
     display: flex;
-    margin-top: 40px;
+    margin-top: 40px;http://127.0.0.1:8000/profile/edit
     width: 734px;
     max-width: 100%;
     flex-direction: column;

@@ -11,16 +11,17 @@ import {
     HelpText,
     FormButton,
 } from "./EmployerSignUp.styled";
-import LandingLayout from "@/Layouts/LandingLayout";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 
 function EmployerAccountForm({ auth }) {
     return (
         <>
-            <Head title="Employer Sign Up" />
-            <MainContainer>
-            <LandingLayout auth={auth} />
 
+
+           <AuthenticatedLayout user={auth.user}>
+           <Head title="Employer Sign Up" />
+           <MainContainer>
                 <StyledSection>
                     <Title>Create an Employer Account</Title>
                     <Description>
@@ -59,7 +60,9 @@ function EmployerAccountForm({ auth }) {
                         <FormButton type="submit">Save</FormButton>
                     </StyledForm>
                 </StyledSection>
-            </MainContainer>
+                </MainContainer>
+                </AuthenticatedLayout>
+
         </>
     );
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AboutController;
+use App\Http\Controllers\CompanyJobPostingsController;
 use App\Http\Controllers\EmployerSignUpController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -94,6 +95,8 @@ Route::post('/contact', [ContactController::class, 'send'])->name('contact.send'
 Route::get('/about', [AboutController::class, 'show'])->name('about.show');
 
 Route::get('/employersignup', [EmployerSignUpController::class, 'show'])->name('employersignup.show');
+
+Route::get('/companyjobpostings', [CompanyJobPostingsController::class, 'show'])->name('companyjobpostings.show');
 
 
 
