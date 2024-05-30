@@ -32,7 +32,7 @@ export default function Authenticated({ user, header, children }) {
                                     href={route("dashboard")}
                                     active={route().current("dashboard")}
                                 >
-                                    Job Page
+                                    Home
                                 </NavLink>
 
                                 {/* Add "My Profile" NavLink */}
@@ -47,7 +47,7 @@ export default function Authenticated({ user, header, children }) {
                                     href={route("messaging")}
                                     active={route().current("messaging")}
                                 >
-                                    Messaging
+                                    Messages
                                 </NavLink>
                             </div>
                         </div>
