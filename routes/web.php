@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AboutController;
+use App\Http\Controllers\EmployerSignUpController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -91,6 +92,8 @@ Route::get('/contactus', [ContactController::class, 'show'])->name('contact.show
 Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 
 Route::get('/about', [AboutController::class, 'show'])->name('about.show');
+
+Route::get('/employersignup', [EmployerSignUpController::class, 'show'])->name('employersignup.show');
 
 
 
