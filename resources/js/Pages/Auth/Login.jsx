@@ -8,6 +8,7 @@ import TextInput from '@/Components/TextInput';
 import { Head, Link, useForm } from '@inertiajs/react';
 //import './Login.css';
 import logo from './Images/COOPCONNECTLOGO.png';
+import './Login.scss'
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -36,7 +37,7 @@ export default function Login({ status, canResetPassword }) {
     };
 
     return (
-        <GuestLayout>
+        <GuestLayout className="login-layout">
             <Head title="Log in" />
 
             {status && (
@@ -51,8 +52,8 @@ export default function Login({ status, canResetPassword }) {
                 </Link>
 
                 <div className="w-full max-w-md">
-                    <h2 className="font-semibold text-xl text-black mb-4 text-center">
-                        Sign in to CO-OP CONNECT
+                    <h2 className="text-black mb-4 text-center signin-heading">
+                        Sign In
                     </h2>
 
                     <form onSubmit={submit}>
@@ -60,7 +61,7 @@ export default function Login({ status, canResetPassword }) {
                             <InputLabel
                                 htmlFor="email"
                                 value="Email"
-                                className="text-left"
+                                className="input-label"
                             />
                             <TextInput
                                 id="email"
@@ -84,7 +85,7 @@ export default function Login({ status, canResetPassword }) {
                             <InputLabel
                                 htmlFor="password"
                                 value="Password"
-                                className="text-left"
+                                className="input-label"
                             />
                             <TextInput
                                 id="password"
@@ -137,11 +138,11 @@ export default function Login({ status, canResetPassword }) {
                             </PrimaryButton>
                         </div>
 
-                        <div className="mt-4 text-left">
+                        <div className="mt-4 text-center">
                             Don't have an account?{" "}
                             <Link
                                 href={route("register")}
-                                className="underline text-sm text-gray-600 hover:text-gray-900"
+                                className="underline text-m text-gray-600 hover:text-gray-900"
                             >
                                 Sign Up
                             </Link>

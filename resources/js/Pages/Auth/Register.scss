@@ -1,0 +1,60 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+
+input[type="radio"] {
+    display: none; /* Hide the actual radio button */
+}
+
+input[type="radio"] + label {
+    position: relative;
+    padding-left: 14px;
+    padding-right: 14px;
+    cursor: pointer;
+    text-align: center; /* Center the label */
+    margin-top: 5px;
+    font-size: 13px;
+    font-weight: 450;
+}
+
+
+input[type="radio"] + label::before {
+    content: "";
+    width: 16px;
+    height: 16px;
+    border: 1px solid #000;
+    background-color: white;
+    border-radius: 20%; /* Make the edges round */
+}
+
+input[type="radio"]:checked + label::before {
+    content: "\2713";
+    font-size: 10px;
+    line-height: 16px;
+    text-align: center;
+    color: white;
+    background-color: #9259df;
+}
+
+input[type="radio"]:checked + label {
+    font-weight: 600;
+}
+
+input[type="radio"] + label:hover::before {
+    transform: scale(1.1); /* Scale up the custom checkbox on hover */
+}
+
+.input-label {
+    color: #260e44;
+    font-size: 14px;
+    font-weight: 450;
+}
+
+.signup-heading {
+    font-size: 20px;
+    font-weight: 1000;
+}
+
+
