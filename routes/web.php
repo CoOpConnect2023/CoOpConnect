@@ -6,6 +6,7 @@ use App\Http\Controllers\CreateJobPostingController;
 use App\Http\Controllers\EmployerSignUpController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchJobPostingsController;
+use App\Http\Controllers\TestController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -103,6 +104,8 @@ Route::get('/companyjobpostings', [CompanyJobPostingsController::class, 'show'])
 Route::get('/createjobposting', [CreateJobPostingController::class, 'show'])->name('createjobposting.show');
 
 Route::get('/searchjobpostings', [SearchJobPostingsController::class, 'show'])->name('searchjobpostings.show');
+
+Route::get('/test', [TestController::class, 'show'])->name('test.show');
 
 
 
