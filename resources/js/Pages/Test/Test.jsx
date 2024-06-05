@@ -14,7 +14,8 @@ import EmployerProfile from "./EmployerProfile";
 import TeacherProfile from "./TeacherProfile";
 import StudentProfile from "./StudentProfile";
 import ReflectionsForum from "./ReflectionsForum";
+import Settings from "./Settings";
 
 export default function Test() {
-    return <ReflectionsForum />;
+    return <Settings />;
 }
