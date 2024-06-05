@@ -88,6 +88,7 @@ const AppContainer = styled.div`
     background-color: var(--Schemes-Background, #fff7ff);
     display: flex;
     gap: 0px;
+
     height: 100vh; /* Ensure it takes the full viewport height */
     @media (max-width: 991px) {
         flex-wrap: wrap;
@@ -155,6 +156,7 @@ const HeaderContainer = styled.div`
     justify-content: space-between;
     width: 100%;
     gap: 10px;
+    margin-bottom: 40px;
 `;
 
 const Title = styled.h1`
