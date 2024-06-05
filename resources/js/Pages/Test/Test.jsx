@@ -10,7 +10,10 @@ import ScheduleClasses from "./ScheduleClasses";
 import DocumentList from "./DocumentList";
 import DocumentUpload from "./DocumentUpload";
 import TeacherDashboard from "./TeacherDashboard";
+import EmployerProfile from "./EmployerProfile";
+import TeacherProfile from "./TeacherProfile";
+import StudentProfile from "./StudentProfile";
 
 export default function Test() {
-    return <TeacherDashboard />;
+    return <StudentProfile />;
 }
