@@ -13,7 +13,8 @@ import TeacherDashboard from "./TeacherDashboard";
 import EmployerProfile from "./EmployerProfile";
 import TeacherProfile from "./TeacherProfile";
 import StudentProfile from "./StudentProfile";
+import ReflectionsForum from "./ReflectionsForum";
 
 export default function Test() {
-    return <StudentProfile />;
+    return <ReflectionsForum />;
 }
