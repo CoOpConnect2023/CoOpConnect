@@ -8,6 +8,11 @@ import UserPanel from "./UserPanel";
 export default function Chat() {
     const messages = [
         {
+            content: "This is the top Message",
+            sender: "PersonA",
+            timestamp: "Today, 12:00pm",
+        },
+        {
             content: "This is the only message that was received.",
             sender: "PersonB",
             timestamp: "Today, 12:00pm",
