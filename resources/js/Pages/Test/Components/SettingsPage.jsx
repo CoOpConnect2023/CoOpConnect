@@ -54,40 +54,34 @@ function SettingsPanel() {
                 </SettingsHeader>
             </SettingsSection>
             <DummySection>
-                <DummyHeader>
-                    <DummyColumn>
-                        <DummyContent>
-                            <DummyTitle>Dummy Container</DummyTitle>
-                            <DummyDetail>
-                                Lorem ipsum is a placeholder text commonly used
-                                to demonstrate the visual form of a document or
-                                a typeface without relying on meaningful
-                                content.
-                            </DummyDetail>
-                        </DummyContent>
-                    </DummyColumn>
-                    <DummyButtonColumn>
-                        <SettingsButton>Settings Button</SettingsButton>
-                    </DummyButtonColumn>
-                </DummyHeader>
+                <FormColumn>
+                    <FormContent>
+                        <FormTitle>Dummy Container</FormTitle>
+                        <FormDetail>
+                            Lorem ipsum is a placeholder text commonly used to
+                            demonstrate the visual form of a document or a
+                            typeface without relying on meaningful content.
+                        </FormDetail>
+                    </FormContent>
+                </FormColumn>
+                <FormButtonColumn>
+                    <SettingsButton>Settings Button</SettingsButton>
+                </FormButtonColumn>
             </DummySection>
             <DummySection>
-                <DummyHeader>
-                    <DummyColumn>
-                        <DummyContent>
-                            <DummyTitle>Dummy Container</DummyTitle>
-                            <DummyDetail>
-                                Lorem ipsum is a placeholder text commonly used
-                                to demonstrate the visual form of a document or
-                                a typeface without relying on meaningful
-                                content.
-                            </DummyDetail>
-                        </DummyContent>
-                    </DummyColumn>
-                    <DummyButtonColumn>
-                        <SettingsButton>Settings Button</SettingsButton>
-                    </DummyButtonColumn>
-                </DummyHeader>
+                <FormColumn>
+                    <FormContent>
+                        <FormTitle>Dummy Container</FormTitle>
+                        <FormDetail>
+                            Lorem ipsum is a placeholder text commonly used to
+                            demonstrate the visual form of a document or a
+                            typeface without relying on meaningful content.
+                        </FormDetail>
+                    </FormContent>
+                </FormColumn>
+                <FormButtonColumn>
+                    <SettingsButton>Settings Button</SettingsButton>
+                </FormButtonColumn>
             </DummySection>
         </Main>
     );
@@ -296,6 +290,7 @@ const SettingsControls = styled.div`
 `;
 
 const CurrentSelection = styled.div`
+    text-align: center;
     color: #7b757f;
     letter-spacing: 0.4px;
     font: 600 12px/133% Poppins, sans-serif;
@@ -335,10 +330,13 @@ const DummySection = styled.section`
     border-color: rgba(123, 117, 127, 1);
     border-style: solid;
     border-bottom-width: 1px;
-    margin-top: 20px;
     padding: 20px;
+    display: flex;
+    margin-top: 20px;
+    gap: 20px;
     @media (max-width: 991px) {
-        max-width: 100%;
+        flex-direction: column;
+        align-items: stretch;
     }
 `;
 
