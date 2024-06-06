@@ -15,7 +15,8 @@ import TeacherProfile from "./TeacherProfile";
 import StudentProfile from "./StudentProfile";
 import ReflectionsForum from "./ReflectionsForum";
 import Settings from "./Settings";
+import Message from "./Message";
 
 export default function Test() {
-    return <Settings />;
+    return <Message />;
 }
