@@ -1,8 +1,8 @@
 import * as React from "react";
 import styled from "styled-components";
-import NavBar from "../Test/NavBar";
+import NavBar from "./Components/NavBar";
 
-function SearchJobPostings() {
+function Home() {
     const jobs = [
         {
             title: "Front-End Developer",
@@ -31,7 +31,7 @@ function SearchJobPostings() {
     ];
 
     return (
-        <NavBar header={"Job Postings"}>
+        <NavBar>
             <MainContainer>
                 <SearchSection>
                     <SearchTitle>Search for Job Postings</SearchTitle>
@@ -84,23 +84,6 @@ const MainContainer = styled.main`
     flex-direction: column;
     background: var(--Schemes-Background, #fff7ff);
 `;
-
-const HeaderSection = styled.header`
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    gap: 10px;
-
-    @media (max-width: 991px) {
-        flex-wrap: wrap;
-    }
-`;
-
-const Title = styled.h1`
-    font: 600 36px/122% Poppins, sans-serif;
-    color: #000;
-`;
-
 const SearchSection = styled.section`
     display: flex;
     flex-direction: column;
@@ -300,4 +283,4 @@ const JobButton = styled.button`
     cursor: pointer;
 `;
 
-export default SearchJobPostings;
+export default Home;

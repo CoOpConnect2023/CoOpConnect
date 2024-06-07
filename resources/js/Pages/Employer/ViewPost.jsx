@@ -1,10 +1,8 @@
 import * as React from "react";
 import styled from "styled-components";
-import LandingLayout from "@/Layouts/LandingLayout";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import NavBar from "../Test/NavBar";
+import NavBar from "./Components/NavBar";
 
-function CompanyJobPostings({ auth }) {
+function ViewPost() {
     const applicants = [
         {
             id: 1,
@@ -381,4 +379,4 @@ const ViewButton = styled.button`
     cursor: pointer;
 `;
 
-export default CompanyJobPostings;
+export default ViewPost;

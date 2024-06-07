@@ -1,6 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
-import NavBar from "./NavBar";
+import NavBar from "./Components/NavBar";
+import downarrow from "@/Pages/Images/Icon.svg";
 
 const TabMenu = ({ tabs }) => (
     <TabList>
@@ -55,7 +56,7 @@ const FileItem = ({ title, size }) => (
     </FileContainer>
 );
 
-const DocumentList = () => (
+const Document = () => (
     <NavBar header={"Documents"}>
         <Wrapper>
             <Content>
@@ -364,4 +365,4 @@ const SubmitButton = styled.button`
     }
 `;
 
-export default DocumentList;
+export default Document;

@@ -1,8 +1,8 @@
 import * as React from "react";
 import styled from "styled-components";
-import NavBar from "./NavBar";
+import NavBar from "./Components/NavBar";
 
-function StudentSearch() {
+function Jobs() {
     const jobPostings = [
         {
             title: "Full-Stack Developer",
@@ -413,4 +413,4 @@ const JobFullDescription = styled.p`
     }
 `;
 
-export default StudentSearch;
+export default Jobs;

@@ -1,18 +1,18 @@
 import * as React from "react";
 import styled from "styled-components";
-import NavBar from "./NavBar";
-import downarrow from "../Images/Icon.svg";
+import NavBar from "./Components/NavBar";
+import downarrow from "@/Pages/Images/Icon.svg";
 
-function EditPostA() {
+function Post2() {
     const skills = ["Tag", "Tag", "Tag", "Tag", "Tag", "Tag", "Tag"];
     return (
-        <NavBar header={"Edit Postings"}>
+        <NavBar header={"Posting Jobs"}>
             <Container>
                 <Card>
                     <FormWrapper>
-                        <Title>Edit Your Posting</Title>
+                        <Title>Create a New Posting</Title>
                         <Subtitle>
-                            Edit your selected posting's information.
+                            Hire amazing students through CO-OP Connect!
                         </Subtitle>
                         <FormContainer>
                             <SectionTitle>
@@ -79,6 +79,7 @@ const Card = styled.article`
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     background-color: var(--White, #fff);
     display: flex;
+    margin-top: 40px;
     justify-content: center;
     padding: 20px 10px;
     @media (max-width: 991px) {
@@ -301,4 +302,4 @@ const SubmitButton = styled.button`
         white-space: initial;
     }
 `;
-export default EditPostA;
+export default Post2;

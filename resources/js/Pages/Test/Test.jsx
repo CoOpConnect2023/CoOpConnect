@@ -18,5 +18,5 @@ import Settings from "./Settings";
 import Message from "./Message";
 
 export default function Test() {
-    return <Message />;
+    return <TeacherDashboard />;
 }

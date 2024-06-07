@@ -1,9 +1,9 @@
 import * as React from "react";
 import styled from "styled-components";
-import NavBar from "./NavBar";
-import downarrow from "../Images/Icon.svg";
+import NavBar from "./Components/NavBar";
+import downarrow from "@/Pages/Images/Icon.svg";
 
-function EditPostA() {
+function EditPost2() {
     const skills = ["Tag", "Tag", "Tag", "Tag", "Tag", "Tag", "Tag"];
     return (
         <NavBar header={"Edit Postings"}>
@@ -301,4 +301,4 @@ const SubmitButton = styled.button`
         white-space: initial;
     }
 `;
-export default EditPostA;
+export default EditPost2;

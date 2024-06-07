@@ -2,7 +2,7 @@ import * as React from "react";
 import styled from "styled-components";
 import NavBar from "../Test/NavBar";
 
-function CreateJobPosting() {
+function Home() {
     return (
         <NavBar header={"Job Postings"}>
             <MainContainer>
@@ -310,4 +310,4 @@ const EditPostingButton = styled.button`
     padding: 8px 16px;
 `;
 
-export default CreateJobPosting;
+export default Home;

@@ -1,9 +1,9 @@
 import * as React from "react";
 import styled from "styled-components";
-import NavBar from "./NavBar";
-import downarrow from "../Images/Icon.svg";
+import NavBar from "./Components/NavBar";
+import downarrow from "@/Pages/Images/Icon.svg";
 
-function EditPost() {
+function EditPost1() {
     return (
         <NavBar header={"Edit Posting"}>
             <Container>
@@ -245,4 +245,4 @@ const SubmitButton = styled.button`
         white-space: initial;
     }
 `;
-export default EditPost;
+export default EditPost1;

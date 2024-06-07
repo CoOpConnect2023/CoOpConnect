@@ -1,17 +1,17 @@
 import * as React from "react";
 import styled from "styled-components";
-import NavBar from "./NavBar";
+import NavBar from "./Components/NavBar";
 import downarrow from "../Images/Icon.svg";
 
-function EditPost() {
+function Post1() {
     return (
-        <NavBar header={"Edit Posting"}>
+        <NavBar header={"Posting Jobs"}>
             <Container>
                 <Card>
                     <FormWrapper>
-                        <Title>Edit Your Posting</Title>
+                        <Title>Create a New Posting</Title>
                         <Subtitle>
-                            Edit your selected posting's information.
+                            Hire amazing students through CO-OP Connect!
                         </Subtitle>
                         <Form>
                             <SectionTitle>
@@ -69,10 +69,7 @@ function EditPost() {
                                 </FormField>
                             </FormRow>
                             <HorizontalRule />
-                            <ButtonGroup>
-                                <ActionButton>Go Back</ActionButton>
-                                <SubmitButton>Finished</SubmitButton>
-                            </ButtonGroup>
+                            <SubmitButton tabIndex="0">Continue</SubmitButton>
                         </Form>
                     </FormWrapper>
                 </Card>
@@ -94,6 +91,7 @@ const Card = styled.article`
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     background-color: var(--White, #fff);
     display: flex;
+    margin-top: 40px;
     justify-content: center;
     padding: 20px 10px;
     @media (max-width: 991px) {
@@ -213,36 +211,19 @@ const HorizontalRule = styled.hr`
     }
 `;
 
-const ButtonGroup = styled.div`
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    line-height: 150%;
-`;
-
-const ActionButton = styled.button`
-    font-family: Roboto, sans-serif;
-    justify-content: center;
-    border: 2px solid rgba(107, 83, 140, 1);
-    border-radius: 12px;
-    color: var(--Schemes-Primary, #6b538c);
-    padding: 8px 16px;
-    background: none;
-`;
-
 const SubmitButton = styled.button`
-    font-family: Roboto, sans-serif;
     justify-content: center;
     border-radius: 12px;
-    background-color: var(--Schemes-Primary, #6b538c);
-    color: var(--Schemes-On-Primary, #fff);
+    border: 2px solid rgba(107, 83, 140, 1);
+    align-self: start;
+    margin-top: 20px;
+    color: var(--Schemes-Primary, #6b538c);
     white-space: nowrap;
+    letter-spacing: 0.5px;
     padding: 8px 16px;
+    font: 700 16px/150% Roboto, sans-serif;
     @media (max-width: 991px) {
         white-space: initial;
     }
 `;
-export default EditPost;
+export default Post1;
