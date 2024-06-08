@@ -95,16 +95,6 @@ Route::get('/messaging', [MessagingController::class, 'index'])
 Route::get('/contactus', [ContactController::class, 'show'])->name('contact.show');
 Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 
-Route::get('/about', [AboutController::class, 'show'])->name('about.show');
-
-Route::get('/employersignup', [EmployerSignUpController::class, 'show'])->name('employersignup.show');
-
-Route::get('/companyjobpostings', [CompanyJobPostingsController::class, 'show'])->name('companyjobpostings.show');
-
-Route::get('/createjobposting', [CreateJobPostingController::class, 'show'])->name('createjobposting.show');
-
-Route::get('/searchjobpostings', [SearchJobPostingsController::class, 'show'])->name('searchjobpostings.show');
-
 Route::get('/test', [TestController::class, 'show'])->name('test.show');
 
 

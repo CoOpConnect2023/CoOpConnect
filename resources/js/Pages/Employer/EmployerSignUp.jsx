@@ -1,12 +1,12 @@
 import * as React from "react";
 import styled from "styled-components";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
+import NavBar from "./Components/NavBar";
 
 function EmployerAccountForm({ auth }) {
     return (
         <>
-            <AuthenticatedLayout user={auth.user}>
+            <NavBar header={"Employer Sign Up"}>
                 <Head title="Employer Sign Up" />
                 <MainContainer>
                     <StyledSection>
@@ -51,7 +51,7 @@ function EmployerAccountForm({ auth }) {
                         </StyledForm>
                     </StyledSection>
                 </MainContainer>
-            </AuthenticatedLayout>
+            </NavBar>
         </>
     );
 }
