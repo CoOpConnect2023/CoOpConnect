@@ -19,7 +19,7 @@ class TeacherController extends Controller
 
     public function messages()
     {
-        return Inertia::render('Teacher/Messages');
+        return Inertia::render('Messages/Messages');
     }
 
     public function scheduling()

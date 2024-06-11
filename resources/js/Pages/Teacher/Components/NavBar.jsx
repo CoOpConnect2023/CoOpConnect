@@ -10,23 +10,35 @@ function Sidebar() {
     return (
         <aside>
             <NavContainer>
-                <Logo src={logo} alt="Logo" loading="lazy" />
+                <Link href="/">
+                    <Logo src={logo} alt="Logo" loading="lazy" />
+                </Link>
                 <Divider />
-                <IconButton>
-                    <Icon src={briefcase} alt="Icon 1" loading="lazy" />
-                </IconButton>
-                <IconButton>
-                    <Icon src={message} alt="" loading="lazy" />
-                </IconButton>
-                <IconButton>
-                    <Icon src={calendar} alt="" loading="lazy" />
-                </IconButton>
-                <IconButton>
-                    <Icon src={user} alt="" loading="lazy" />
-                </IconButton>
-                <IconButton>
-                    <Icon src={settings} alt="" loading="lazy" />
-                </IconButton>
+                <Link href="/teacher/home">
+                    <IconButton>
+                        <Icon src={briefcase} alt="Icon 1" loading="lazy" />
+                    </IconButton>
+                </Link>
+                <Link href="/teacher/messages">
+                    <IconButton>
+                        <Icon src={message} alt="" loading="lazy" />
+                    </IconButton>
+                </Link>
+                <Link href="/teacher/scheduling">
+                    <IconButton>
+                        <Icon src={calendar} alt="" loading="lazy" />
+                    </IconButton>
+                </Link>
+                <Link href="/teacher/profile">
+                    <IconButton>
+                        <Icon src={user} alt="" loading="lazy" />
+                    </IconButton>
+                </Link>
+                <Link href="/teacher/settings">
+                    <IconButton>
+                        <Icon src={settings} alt="" loading="lazy" />
+                    </IconButton>
+                </Link>
             </NavContainer>
         </aside>
     );

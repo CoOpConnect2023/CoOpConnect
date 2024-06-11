@@ -59,6 +59,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/student/reflections', [StudentController::class, 'reflections'])->name('student.reflections');
     Route::get('/student/documents', [StudentController::class, 'documents'])->name('student.documents');
     Route::get('/student/settings', [StudentController::class, 'settings'])->name('student.settings');
+    Route::get('/student/messages', [EmployerController::class, 'messages'])->name('student.messages');
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -84,26 +85,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/employer/settings', [EmployerController::class, 'settings'])->name('employer.settings');
 });
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/messages', [MessagesController::class, 'index'])->name('messages.index');
-});
-
-
-Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
-
-
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
-
-
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
 
 
 Route::get('/dashboard', [DashboardController::class, 'show'])
@@ -112,40 +97,10 @@ Route::get('/dashboard', [DashboardController::class, 'show'])
 require __DIR__ . '/auth.php';
 
 
-Route::get('/profile/edit', [ProfileController::class, 'edit'])
-    ->name('profile.edit')
-    ->middleware('auth');
-
-
-
-
-Route::get('/messaging', [MessagingController::class, 'index'])
-    ->name('messaging')
-    ->middleware('auth');
-
-
-
-
 Route::get('/contactus', [ContactController::class, 'show'])->name('contact.show');
 Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 
 Route::get('/test', [TestController::class, 'show'])->name('test.show');
-
-
-
-// Existing route for documents
-Route::get('/documents', [DocumentsController::class, 'index'])->name('documents');
-
-// Add a route for reflections
-Route::get('/reflections', [ReflectionsController::class, 'index'])->name('reflections');
-
-
-
-Route::get('/teacher/login', [TeacherAuthController::class, 'showLoginForm'])->name('teacher.login');
-Route::post('/teacher/login', [TeacherAuthController::class, 'login']);
-
-
-Route::post('/jobs', [JobController::class, 'store'])->name('jobs.store');
 
 
 Route::middleware(['auth:sanctum'])->get('/users', [UserController::class, 'index']);

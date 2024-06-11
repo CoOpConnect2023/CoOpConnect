@@ -44,7 +44,7 @@ class EmployerController extends Controller
 
     public function messages()
     {
-        return Inertia::render('Employer/Messages');
+        return Inertia::render('Messages/Messages');
     }
 
     public function interviews()
@@ -61,4 +61,6 @@ class EmployerController extends Controller
     {
         return Inertia::render('Employer/Settings');
     }
+
+
 }

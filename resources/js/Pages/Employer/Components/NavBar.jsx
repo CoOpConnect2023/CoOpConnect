@@ -6,28 +6,41 @@ import message from "@/Pages/Images/message-square.svg";
 import calendar from "@/Pages/Images/calendar-days.svg";
 import user from "@/Pages/Images/user.svg";
 import settings from "@/Pages/Images/settings.svg";
+import { Link } from "@inertiajs/react";
 
 function Sidebar() {
     return (
         <aside>
             <NavContainer>
-                <Logo src={logo} alt="Logo" loading="lazy" />
+                <Link href="/">
+                    <Logo src={logo} alt="Logo" loading="lazy" />
+                </Link>
                 <Divider />
-                <IconButton>
-                    <Icon src={briefcase} alt="Icon 1" loading="lazy" />
-                </IconButton>
-                <IconButton>
-                    <Icon src={message} alt="" loading="lazy" />
-                </IconButton>
-                <IconButton>
-                    <Icon src={calendar} alt="" loading="lazy" />
-                </IconButton>
-                <IconButton>
-                    <Icon src={user} alt="" loading="lazy" />
-                </IconButton>
-                <IconButton>
-                    <Icon src={settings} alt="" loading="lazy" />
-                </IconButton>
+                <Link href="/employer/home">
+                    <IconButton>
+                        <Icon src={briefcase} alt="Icon 1" loading="lazy" />
+                    </IconButton>
+                </Link>
+                <Link href="/employer/messages">
+                    <IconButton>
+                        <Icon src={message} alt="" loading="lazy" />
+                    </IconButton>
+                </Link>
+                <Link href="/employer/interviews">
+                    <IconButton>
+                        <Icon src={calendar} alt="" loading="lazy" />
+                    </IconButton>
+                </Link>
+                <Link href="/employer/profile">
+                    <IconButton>
+                        <Icon src={user} alt="" loading="lazy" />
+                    </IconButton>
+                </Link>
+                <Link href="/employer/settings">
+                    <IconButton>
+                        <Icon src={settings} alt="" loading="lazy" />
+                    </IconButton>
+                </Link>
             </NavContainer>
         </aside>
     );
