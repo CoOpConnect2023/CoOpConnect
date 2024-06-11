@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-import NavBar from "../Test/NavBar";
+import NavBar from "./Components/NavBar";
 
 function Home() {
     return (

@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-import Profile from "./Components/ProfileForm";
+import ProfileForm from "./Components/ProfileForm";
 import Matches from "./Components/Matches";
 import ReflectionDocuments from "./Components/ReflectionDocuments";
 import NavBar from "./Components/NavBar";

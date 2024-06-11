@@ -1,5 +1,5 @@
 import { Link, Head } from "@inertiajs/react";
-import background from "./Images/Landing.png";
+import background from "@/Pages/Images/Landing.png";
 import LandingLayout from "@/Layouts/LandingLayout";
 
 export default function Landing({ auth, laravelVersion, phpVersion }) {

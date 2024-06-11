@@ -1,12 +1,11 @@
 import * as React from "react";
 import styled from "styled-components";
-import logo from "../Images/puzzle.svg";
-import briefcase from "../Images/briefcase.svg";
-import message from "../Images/message-square.svg";
-import calendar from "../Images/calendar-days.svg";
-import user from "../Images/user.svg";
-import settings from "../Images/settings.svg";
-
+import logo from "@/Pages/Images/puzzle.svg";
+import briefcase from "@/Pages/Images/briefcase.svg";
+import message from "@/Pages/Images/message-square.svg";
+import calendar from "@/Pages/Images/calendar-days.svg";
+import user from "@/Pages/Images/user.svg";
+import settings from "@/Pages/Images/settings.svg";
 function Sidebar() {
     return (
         <aside>
