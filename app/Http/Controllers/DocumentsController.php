@@ -18,24 +18,28 @@ class DocumentsController extends Controller
     public function upload(Request $request)
     {
         $userId = $request->input('user_id');
-        $request->validate([
-            'document' => 'required|file|mimes:pdf,doc,docx|max:10240',
-        ]);
+        $files = $request->file('files'); // Retrieve the array of uploaded files
 
-        if ($request->hasFile('document')) {
-            $file = $request->file('document');
-            $fileName = $file->getClientOriginalName();
-            $filePath = $file->storeAs('uploads', $fileName);
+        if (!empty($files)) { // Check if any files were uploaded
+            foreach ($files as $file) {
+                // Validate and process each uploaded file
+                $request->validate([
+                    'files.*' => 'required|file|mimes:pdf,doc,docx|max:10240',
+                ]);
 
-            $document = Document::create([
-                'user_id' => $userId,
-                'title' => $fileName,
-                'path' => $filePath,
-            ]);
+                $fileName = $file->getClientOriginalName();
+                $filePath = $file->storeAs('uploads', $fileName);
 
-            return response()->json(['message' => 'File uploaded successfully', 'id' => $document->id], 200);
+                $document = Document::create([
+                    'user_id' => $userId,
+                    'title' => $fileName,
+                    'path' => $filePath,
+                ]);
+            }
+
+            return response()->json(['message' => 'Files uploaded successfully'], 200);
         } else {
-            return response()->json(['message' => 'No file uploaded'], 400);
+            return response()->json(['message' => 'No files uploaded'], 400);
         }
     }
 
@@ -51,7 +55,7 @@ class DocumentsController extends Controller
                 "data" => []
             ]);
         }
-    
+
         $counter = 0;
         $dataWithCounter = $data->map(function ($item) use (&$counter) {
             $counter++;
@@ -62,13 +66,13 @@ class DocumentsController extends Controller
                 "path" => $item->path
             ];
         });
-    
+
         return response()->json([
             "status" => 1,
             "message" => "Documents fetched successfully.",
             "data" => $dataWithCounter
         ]);
-    
+
     }
 
     public function deleteDoc(Request $request, $docId)

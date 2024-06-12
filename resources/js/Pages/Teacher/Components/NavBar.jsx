@@ -6,6 +6,7 @@ import message from "@/Pages/Images/message-square.svg";
 import calendar from "@/Pages/Images/calendar-days.svg";
 import user from "@/Pages/Images/user.svg";
 import settings from "@/Pages/Images/settings.svg";
+import { Link } from "@inertiajs/react";
 function Sidebar() {
     return (
         <aside>

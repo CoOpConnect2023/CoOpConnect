@@ -1,19 +1,76 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import axios from "axios";
 import NavBar from "./Components/NavBar";
+import wordlogo from "../Images/worddocicon.png"
+import pdflogo from "../Images/pdf-icon.png"
 
-function DocumentDropZone({ imgSrc, altText, description }) {
+function DocumentDropZone({ onFileDrop, imgSrc, altText, description, clearPreviewsTrigger }) {
+    const [isDragging, setIsDragging] = useState(false);
+    const [filesPreview, setFilesPreview] = useState([]);
+
+    const handleDragOver = (e) => {
+        e.preventDefault();
+        setIsDragging(true);
+    };
+
+    const handleDragLeave = () => {
+        setIsDragging(false);
+    };
+
+    const handleDrop = (e) => {
+        e.preventDefault();
+        setIsDragging(false);
+        const files = Array.from(e.dataTransfer.files);
+        onFileDrop(files);
+        setFilesPreview(files.map((file) => ({
+            file,
+            preview: URL.createObjectURL(file),
+            type: file.type
+        })));
+    };
+
+    useEffect(() => {
+        if (clearPreviewsTrigger) {
+            setFilesPreview([]);
+        }
+    }, [clearPreviewsTrigger]);
+
+    const getIconForFileType = (fileType) => {
+        if (fileType.includes('pdf')) {
+            return pdflogo;
+        } else if (fileType.includes('word')) {
+            return wordlogo;
+        } else {
+            return null;
+        }
+    };
+
     return (
-        <DropZoneContainer>
+        <DropZoneContainer
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            isDragging={isDragging}
+        >
             <DropZone>
-                <img
-                    src={imgSrc}
-                    alt={altText}
-                    style={{
-                        width: "100px",
-                        height: "100px",
-                    }}
-                />
+                {filesPreview.length > 0 ? (
+                    filesPreview.map((fileObj, index) => {
+                        const icon = getIconForFileType(fileObj.type);
+                        return (
+                            <PreviewImage key={index} src={icon ? icon : fileObj.preview} />
+                        );
+                    })
+                ) : (
+                    <img
+                        src={imgSrc}
+                        alt={altText}
+                        style={{
+                            width: "100px",
+                            height: "100px",
+                        }}
+                    />
+                )}
                 <DropZoneText>Drag your files here</DropZoneText>
             </DropZone>
             <DropZoneDescription>{description}</DropZoneDescription>
@@ -55,24 +112,67 @@ function Document() {
         },
     ];
 
+    const [filesToUpload, setFilesToUpload] = useState([]);
+    const [clearPreviewsTrigger, setClearPreviewsTrigger] = useState(false);
+
+    const handleFileDrop = async (files) => {
+        setFilesToUpload((prevFiles) => [...prevFiles, ...files]);
+        setClearPreviewsTrigger(false);
+
+    };
+
+    const handleUpload = async () => {
+        const formData = new FormData();
+        filesToUpload.forEach((file) => {
+            formData.append("files[]", file);
+        });
+        formData.append("user_id", 2); // Static user ID for testing
+
+        try {
+            const response = await axios.post("/api/uploaddocs", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+            console.log("Upload successful:", response.data);
+            setFilesToUpload([]);
+            setClearPreviewsTrigger(true);
+        } catch (error) {
+            console.error("Error uploading files:", error);
+        }
+    };
+
     return (
         <NavBar header={"Document Upload"}>
             <MainContainer>
                 <Section>
                     <DropZoneWrapper>
                         {documentData.slice(0, 3).map((doc, index) => (
-                            <DocumentDropZone key={index} {...doc} />
+                            <DocumentDropZone
+                                key={index}
+                                {...doc}
+                                onFileDrop={handleFileDrop}
+                                clearPreviewsTrigger={clearPreviewsTrigger}
+                            />
                         ))}
                     </DropZoneWrapper>
                 </Section>
                 <Section>
                     <DropZoneWrapper>
                         {documentData.slice(3).map((doc, index) => (
-                            <DocumentDropZone key={index} {...doc} />
+                            <DocumentDropZone
+                                key={index}
+                                {...doc}
+                                onFileDrop={handleFileDrop}
+                                clearPreviewsTrigger={clearPreviewsTrigger}
+                            />
                         ))}
                     </DropZoneWrapper>
                 </Section>
             </MainContainer>
+            {filesToUpload.length > 0 && (
+                <UploadButton onClick={handleUpload}>Upload Files</UploadButton>
+            )}
         </NavBar>
     );
 }
@@ -150,6 +250,24 @@ const DropZoneDescription = styled.p`
     align-self: center;
     margin-top: 10px;
     font: bold 28px Poppins, sans-serif;
+`;
+
+const PreviewImage = styled.img`
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 10px;
+`;
+
+const UploadButton = styled.button`
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 `;
 
 export default Document;
