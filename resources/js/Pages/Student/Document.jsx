@@ -78,6 +78,7 @@ function DocumentDropZone({ onFileDrop, imgSrc, altText, description, clearPrevi
     );
 }
 
+
 function Document() {
     const documentData = [
         {
@@ -95,21 +96,7 @@ function Document() {
             altText: "Upload Zone 3",
             description: "Document 3",
         },
-        {
-            imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/906419841746a1732713efefc5675f404b543de3dd88203c7d384fc92193a9c9?apiKey=d66532d056b14640a799069157705b77&",
-            altText: "Upload Zone 1",
-            description: "Document 1",
-        },
-        {
-            imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/2be66a00f7af6f4de8a52f78e488702758db936f19f83e7cdf4e5d364c3d5980?apiKey=d66532d056b14640a799069157705b77&",
-            altText: "Upload Zone 2",
-            description: "Document 2",
-        },
-        {
-            imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/68d58af99d26ef77eebd68a3c053d0bde9718f44bdef04efbe9ae7634110a91c?apiKey=d66532d056b14640a799069157705b77&",
-            altText: "Upload Zone 3",
-            description: "Document 3",
-        },
+
     ];
 
     const [filesToUpload, setFilesToUpload] = useState([]);
@@ -129,7 +116,7 @@ function Document() {
             ?.split('=')[1];
         axios.defaults.headers.common['X-XSRF-TOKEN'] = csrfToken;
 
-        // Fetch the user ID
+        // Fetch the user ID, only allows if token is correct
         const fetchUserId = async () => {
             try {
                 const response = await axios.get('/api/user-id');
@@ -176,6 +163,22 @@ function Document() {
 
     };
 
+    const handleDelete = async (id) => {
+        try {
+          const response = await axios.delete(`/api/deletedoc/${id}`);
+          if (response.data.status === 1) {
+            setUserDocuments((prevDocuments) =>
+              prevDocuments.filter((doc) => doc.id !== id)
+            );
+            console.log("Document deleted successfully");
+          } else {
+            console.error("Error deleting document:", response.data.message);
+          }
+        } catch (error) {
+          console.error("Error deleting document:", error);
+        }
+      };
+
     const handleUpload = async () => {
         const formData = new FormData();
 
@@ -194,7 +197,7 @@ function Document() {
 
             // Append the file with its type to formData
             formData.append("files[]", file);
-            formData.append("file_types[]", fileType); // Append the file type separately
+            formData.append("file_types[]", fileType);
         });
 
         formData.append("user_id", userId);
@@ -208,9 +211,7 @@ function Document() {
             console.log("Upload successful:", response.data);
             setFilesToUpload([]);
             setClearPreviewsTrigger(true);
-            setTimeout(() => {
-                fetchDocuments();
-            }, 2000)
+            window.location.reload();
         } catch (error) {
             console.error("Error uploading files:", error);
         }
@@ -231,13 +232,13 @@ const downloadDocument = async (id, title) => {
         // Create a link element to trigger the download
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute("download", title); // Set the download attribute to specify filename
+        link.setAttribute("download", title);
         document.body.appendChild(link);
 
         // Trigger the download
         link.click();
 
-        // Clean up by removing the link element and revoking the blob URL
+
         link.parentNode.removeChild(link);
         window.URL.revokeObjectURL(url);
 
@@ -247,21 +248,7 @@ const downloadDocument = async (id, title) => {
     }
 };
 
-const handleDelete = async (id) => {
-    try {
-      const response = await axios.delete(`/api/deletedoc/${id}`);
-      if (response.data.status === 1) {
-        setUserDocuments((prevDocuments) =>
-          prevDocuments.filter((doc) => doc.id !== id)
-        );
-        console.log("Document deleted successfully");
-      } else {
-        console.error("Error deleting document:", response.data.message);
-      }
-    } catch (error) {
-      console.error("Error deleting document:", error);
-    }
-  };
+
 
 
 
@@ -281,26 +268,28 @@ const handleDelete = async (id) => {
                     </DropZoneWrapper>
                 </Section>
                 <Section>
-                {userDocuments.length > 0 && (
-                 <DocumentWrapper>
-                 {userDocuments.map((doc, index) => (
-                   <DocumentItem key={index}>
-                     <span>{doc.title}</span>
-                     <DownloadButton
-                       onClick={() => downloadDocument(doc.id, doc.title)}
-                     >
-                       Download
-                     </DownloadButton>
-                     <DeleteButton
-                       onClick={() => handleDelete(doc.id)}
-                     >
-                       Delete
-                     </DeleteButton>
-                   </DocumentItem>
-                 ))}
-               </DocumentWrapper>
-            )}
-                </Section>
+  {userDocuments.length > 0 ? (
+    <DocumentWrapper>
+      {userDocuments.map((doc, index) => (
+        <DocumentItem key={index}>
+          <span>{doc.title}</span>
+          <ButtonContainer>
+            <DownloadButton onClick={() => downloadDocument(doc.id, doc.title)}>
+              Download
+            </DownloadButton>
+            <DeleteButton onClick={() => handleDelete(doc.id)}>
+              Delete
+            </DeleteButton>
+          </ButtonContainer>
+        </DocumentItem>
+      ))}
+    </DocumentWrapper>
+  ) : (
+    <MessageContainer>
+      <Message>No documents uploaded. Upload some documents to view.</Message>
+    </MessageContainer>
+  )}
+</Section>
             </MainContainer>
             {filesToUpload.length > 0 && (
                 <UploadButton onClick={handleUpload}>Upload Files</UploadButton>
@@ -415,12 +404,27 @@ const DocumentWrapper = styled.div`
 `;
 
 const DocumentItem = styled.div`
+ display: flex;
+ flex direction: row;
+ justify-content: space-between;
     border: 1px solid #ccc;
     padding: 10px;
     background-color: #f9f9f9;
     text-align: center;
     font-size: 0.75vw;
+     max-width: 20vw;
+     min-width:10vw;
 
+
+
+`;
+
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
 `;
 
 const PreviewImageDownload = styled.img`
@@ -449,6 +453,19 @@ const DeleteButton = styled.button`
   height: 3vh;
   margin-left: 0.5vh;
   font-size: 0.75vw;
+  margin-top 0.5vh;
+`;
+const MessageContainer = styled.div`
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin-top: 20px;
+`;
+
+const Message = styled.p`
+  font-size: 1rem;
+  color: #333;
+  text-align: center;
 `;
 
 export default Document;

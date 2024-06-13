@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { Link } from "@inertiajs/react";
 
 const Container = styled.section`
     display: flex;
@@ -72,20 +73,24 @@ const ReflectionDocuments = () => (
         <Title>Reflections & Documents</Title>
         <OptionsWrapper>
             <OptionCard color="var(--Schemes-Primary, #6b538c)">
+            <Link href="/student/reflections">
                 <OptionImage
                     src="https://cdn.builder.io/api/v1/image/assets/TEMP/f2c092e48480b10a594eda25d3cd6e685945fceb2d8ab8ee8dac19991294fb65?apiKey=d66532d056b14640a799069157705b77&"
                     alt="Reflection Icon"
                     loading="lazy"
                 />
                 <OptionText>Reflections</OptionText>
+                </Link>
             </OptionCard>
             <OptionCard color="var(--Schemes-Tertiary, #7c4e7e)">
-                <OptionImage
-                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/ddb447f5a5634723dbdbd666e52ad19e8d1cd8e9ab1b5753d740485b4ba7d7a8?apiKey=d66532d056b14640a799069157705b77&"
-                    alt="Documents Icon"
-                    loading="lazy"
-                />
-                <OptionText>Documents</OptionText>
+            <Link href="/student/documents">
+          <OptionImage
+            src="https://cdn.builder.io/api/v1/image/assets/TEMP/ddb447f5a5634723dbdbd666e52ad19e8d1cd8e9ab1b5753d740485b4ba7d7a8?apiKey=d66532d056b14640a799069157705b77&"
+            alt="Documents Icon"
+            loading="lazy"
+          />
+          <OptionText>Documents</OptionText>
+        </Link>
             </OptionCard>
         </OptionsWrapper>
     </Container>

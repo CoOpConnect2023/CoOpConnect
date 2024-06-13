@@ -6,6 +6,7 @@ use App\Http\Controllers\MessagingController;
 use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\DocumentsController;
 use App\Http\Controllers\JobController;
+use App\Http\Controllers\ReflectionController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -37,3 +38,14 @@ Route::get('/user-id', function () {
 })->middleware('auth:sanctum');
 
 Route::get('/download/{id}', [DocumentsController::class, 'download'])->name('file.download');
+
+
+
+
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/reflections', [ReflectionController::class, 'index']);
+    Route::post('/reflections', [ReflectionController::class, 'store']);
+    Route::put('/reflections/{id}', [ReflectionController::class, 'update']);
+    Route::delete('/reflections/{id}', [ReflectionController::class, 'destroy']);
+});
