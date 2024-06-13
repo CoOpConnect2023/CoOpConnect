@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\TokenController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MessagingController;
@@ -31,3 +32,7 @@ Route::get('/fetchconversationid', [ConversationController::class, 'fetchConvers
 Route::post('/uploaddocs', [DocumentsController::class, 'upload']);
 Route::get('/fetchdocs', [DocumentsController::class, 'fetchDoc']);
 Route::delete("/deletedoc/{doc_id}", [DocumentsController::class, "deleteDoc"]);
+
+Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], function () {
+    Route::apiResource('token', TokenController::class);
+});
