@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import NavBar from "./Components/NavBar";
-import wordlogo from "../Images/worddocicon.png"
-import pdflogo from "../Images/pdf-icon.png"
+import wordlogo from "../Images/worddocicon.png";
+import pdflogo from "../Images/pdf-icon.png";
 
 function DocumentDropZone({ onFileDrop, imgSrc, altText, description, clearPreviewsTrigger }) {
     const [isDragging, setIsDragging] = useState(false);
@@ -114,6 +114,61 @@ function Document() {
 
     const [filesToUpload, setFilesToUpload] = useState([]);
     const [clearPreviewsTrigger, setClearPreviewsTrigger] = useState(false);
+    const [userId, setUserId] = useState(null);
+    const [userDocuments, setUserDocuments] = useState([]);
+
+
+
+
+
+    useEffect(() => {
+        // Fetch the XSRF token from cookies and set it in Axios headers
+        const csrfToken = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('XSRF-TOKEN='))
+            ?.split('=')[1];
+        axios.defaults.headers.common['X-XSRF-TOKEN'] = csrfToken;
+
+        // Fetch the user ID
+        const fetchUserId = async () => {
+            try {
+                const response = await axios.get('/api/user-id');
+                setUserId(response.data.user_id);
+            } catch (error) {
+                console.error("Error fetching user ID:", error);
+            }
+        };
+
+        fetchUserId();
+    }, []);
+
+
+    useEffect(() => {
+        const fetchDocuments = async () => {
+            try {
+                if (!userId) {
+                    return; // Exit early if userId is null or undefined
+                }
+
+                const response = await axios.get("/api/fetchdocs", {
+                    params: {
+                        user_id: userId,
+                    },
+                });
+
+                if (response.data.status === 1) {
+                    setUserDocuments(response.data.data);
+                    console.log("Documents fetched successfully:", response.data.data);
+                } else {
+                    console.error("Error fetching documents:", response.data.message);
+                }
+            } catch (error) {
+                console.error("Error fetching documents:", error);
+            }
+        };
+
+        fetchDocuments();
+    }, [userId]);
 
     const handleFileDrop = async (files) => {
         setFilesToUpload((prevFiles) => [...prevFiles, ...files]);
@@ -123,10 +178,26 @@ function Document() {
 
     const handleUpload = async () => {
         const formData = new FormData();
+
         filesToUpload.forEach((file) => {
+            let fileType;
+
+            // Determine the file type based on the file's MIME type
+            if (file.type === 'application/pdf') {
+                fileType = 'pdf';
+            } else if (file.type === 'application/docx') {
+                fileType = 'word';
+            } else {
+                // Handle other file types as needed
+                fileType = 'other';
+            }
+
+            // Append the file with its type to formData
             formData.append("files[]", file);
+            formData.append("file_types[]", fileType); // Append the file type separately
         });
-        formData.append("user_id", 2); // Static user ID for testing
+
+        formData.append("user_id", userId);
 
         try {
             const response = await axios.post("/api/uploaddocs", formData, {
@@ -137,10 +208,62 @@ function Document() {
             console.log("Upload successful:", response.data);
             setFilesToUpload([]);
             setClearPreviewsTrigger(true);
+            setTimeout(() => {
+                fetchDocuments();
+            }, 2000)
         } catch (error) {
             console.error("Error uploading files:", error);
         }
     };
+
+
+
+const downloadDocument = async (id, title) => {
+    try {
+        const response = await axios.get(`/api/download/${id}`, {
+            responseType: "blob",
+        });
+
+        // Create a blob URL for the response data
+        const blob = new Blob([response.data], { type: response.data.type });
+        const url = window.URL.createObjectURL(blob);
+
+        // Create a link element to trigger the download
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", title); // Set the download attribute to specify filename
+        document.body.appendChild(link);
+
+        // Trigger the download
+        link.click();
+
+        // Clean up by removing the link element and revoking the blob URL
+        link.parentNode.removeChild(link);
+        window.URL.revokeObjectURL(url);
+
+        console.log("Download successful");
+    } catch (error) {
+        console.error("Error downloading document:", error);
+    }
+};
+
+const handleDelete = async (id) => {
+    try {
+      const response = await axios.delete(`/api/deletedoc/${id}`);
+      if (response.data.status === 1) {
+        setUserDocuments((prevDocuments) =>
+          prevDocuments.filter((doc) => doc.id !== id)
+        );
+        console.log("Document deleted successfully");
+      } else {
+        console.error("Error deleting document:", response.data.message);
+      }
+    } catch (error) {
+      console.error("Error deleting document:", error);
+    }
+  };
+
+
 
     return (
         <NavBar header={"Document Upload"}>
@@ -158,16 +281,25 @@ function Document() {
                     </DropZoneWrapper>
                 </Section>
                 <Section>
-                    <DropZoneWrapper>
-                        {documentData.slice(3).map((doc, index) => (
-                            <DocumentDropZone
-                                key={index}
-                                {...doc}
-                                onFileDrop={handleFileDrop}
-                                clearPreviewsTrigger={clearPreviewsTrigger}
-                            />
-                        ))}
-                    </DropZoneWrapper>
+                {userDocuments.length > 0 && (
+                 <DocumentWrapper>
+                 {userDocuments.map((doc, index) => (
+                   <DocumentItem key={index}>
+                     <span>{doc.title}</span>
+                     <DownloadButton
+                       onClick={() => downloadDocument(doc.id, doc.title)}
+                     >
+                       Download
+                     </DownloadButton>
+                     <DeleteButton
+                       onClick={() => handleDelete(doc.id)}
+                     >
+                       Delete
+                     </DeleteButton>
+                   </DocumentItem>
+                 ))}
+               </DocumentWrapper>
+            )}
                 </Section>
             </MainContainer>
             {filesToUpload.length > 0 && (
@@ -176,6 +308,11 @@ function Document() {
         </NavBar>
     );
 }
+
+
+
+
+
 
 const MainContainer = styled.main`
     display: flex;
@@ -268,6 +405,50 @@ const UploadButton = styled.button`
     border: none;
     border-radius: 5px;
     cursor: pointer;
+`;
+
+const DocumentWrapper = styled.div`
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+`;
+
+const DocumentItem = styled.div`
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #f9f9f9;
+    text-align: center;
+    font-size: 0.75vw;
+
+`;
+
+const PreviewImageDownload = styled.img`
+  width: 100px;
+  height: 100px;
+  margin-right: 10px;
+`;
+
+const DownloadButton = styled.button`
+  background-color: #EDDCFF;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  height: 3vh;
+  margin-left: 0.5vh;
+  font-size: 0.75vw;
+`;
+
+const DeleteButton = styled.button`
+  background-color: #ff0000;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  height: 3vh;
+  margin-left: 0.5vh;
+  font-size: 0.75vw;
 `;
 
 export default Document;

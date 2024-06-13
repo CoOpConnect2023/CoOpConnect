@@ -30,4 +30,10 @@ Route::get('/fetchconversationid', [ConversationController::class, 'fetchConvers
 
 Route::post('/uploaddocs', [DocumentsController::class, 'upload']);
 Route::get('/fetchdocs', [DocumentsController::class, 'fetchDoc']);
-Route::delete("/deletedoc/{doc_id}", [DocumentsController::class, "deleteDoc"]);
+Route::delete("/deletedoc/{id}", [DocumentsController::class, "deleteDoc"]);
+
+Route::get('/user-id', function () {
+    return response()->json(['user_id' => auth()->user()->id]);
+})->middleware('auth:sanctum');
+
+Route::get('/download/{id}', [DocumentsController::class, 'download'])->name('file.download');
