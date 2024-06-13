@@ -1,34 +1,45 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
 
 function Home() {
-    const jobs = [
-        {
-            title: "Front-End Developer",
-            company: "Company Name",
-            location: "Location",
-            skills: ["Javascript", "HTML", "Development", "+3"],
-            description:
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-        },
-        {
-            title: "Front-End Developer",
-            company: "Company Name",
-            location: "Location",
-            skills: ["Javascript", "HTML", "Development", "+3"],
-            description:
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-        },
-        {
-            title: "Front-End Developer",
-            company: "Company Name",
-            location: "Location",
-            skills: ["Javascript", "HTML", "Development", "+3"],
-            description:
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-        },
-    ];
+    const [jobs, setJobs] = useState([]);
+    const [featuredJob, setFeaturedJob] = useState(null);
+    const defaultSkills = ['Javascript', 'HTML', 'Development'];
+
+
+
+    useEffect(() => {
+        // Fetch the XSRF token from cookies and set it in Axios headers
+        const csrfToken = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('XSRF-TOKEN='))
+            ?.split('=')[1];
+        axios.defaults.headers.common['X-XSRF-TOKEN'] = csrfToken;
+
+        // Specify skills for testing
+        const testSkills = 'Javascript,HTML,Development';
+
+        // Fetch the jobs matching specified skills
+        const fetchJobs = async () => {
+            try {
+                const response = await axios.get(`/api/jobs/match`, {
+                    skills: defaultSkills
+                });
+                setJobs(response.data);
+                console.log("jobs",response.data);
+
+                // Optionally set a featured job if you have specific logic for it
+                if (response.data.length > 0) {
+                    setFeaturedJob(response.data[0]);
+                }
+            } catch (error) {
+                console.error("Error fetching jobs:", error);
+            }
+        };
+
+        fetchJobs();
+    }, []);
 
     return (
         <NavBar>
@@ -59,11 +70,9 @@ function Home() {
                                 <CompanyName>{job.company}</CompanyName>
                                 <Location>{job.location}</Location>
                                 <SkillsList>
-                                    {job.skills.map((skill, index) => (
-                                        <SkillBadge key={index}>
-                                            {skill}
-                                        </SkillBadge>
-                                    ))}
+                                {JSON.parse(job.skills).map((tag, index) => (
+                                                <SkillBadge key={index}>{tag}</SkillBadge>
+                                            ))}
                                 </SkillsList>
                                 <JobDescription>
                                     {job.description}

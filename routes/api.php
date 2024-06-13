@@ -49,3 +49,19 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/reflections/{id}', [ReflectionController::class, 'update']);
     Route::delete('/reflections/{id}', [ReflectionController::class, 'destroy']);
 });
+
+
+Route::get('/applications/create', [ApplicationController::class, 'create'])->name('applications.create');
+Route::post('/applications', [ApplicationController::class, 'store'])->name('applications.store');
+Route::get('/applications/{application}', [ApplicationController::class, 'show'])->name('applications.show');
+
+
+Route::get('/jobs', [JobController::class, 'index'])->name('jobs.index');
+Route::get('/jobs/create', [JobController::class, 'create'])->name('jobs.create');
+Route::get('/jobs/match', [JobController::class, 'matchSkills'])->name('jobs.match')->middleware('auth');
+
+Route::post('/jobs', [JobController::class, 'store'])->name('jobs.store');
+Route::get('/jobs/{job}', [JobController::class, 'show'])->name('jobs.show');
+Route::get('/jobs/{job}/edit', [JobController::class, 'edit'])->name('jobs.edit');
+Route::put('/jobs/{job}', [JobController::class, 'update'])->name('jobs.update');
+Route::delete('/jobs/{job}', [JobController::class, 'destroy'])->name('jobs.destroy');
