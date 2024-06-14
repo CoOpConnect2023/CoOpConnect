@@ -92,13 +92,13 @@ class JobController extends Controller
         // Parse the skills into an array, handle cases where it's null or empty
         $userSkillsArray = $userSkills ? explode(',', $userSkills) : json_decode(auth()->user()->skills, true);
 
-        // Check if userSkillsArray is null and default to an empty array if it is
+        $userSkillsArray = array_map('strtolower', $userSkillsArray);
 
 
         // Retrieve jobs that match the provided or user's skills
         $matchingJobs = Job::where(function ($query) use ($userSkillsArray) {
             foreach ($userSkillsArray as $skill) {
-                $query->orWhereJsonContains('skills', $skill);
+                $query->orWhereRaw("LOWER(skills) LIKE ?", ['%"' . strtolower($skill) . '"%']);
             }
         })->get();
         \Log::info('Matching jobs served:', $matchingJobs->toArray());

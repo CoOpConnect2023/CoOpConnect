@@ -5,7 +5,8 @@ import NavBar from "./Components/NavBar";
 function Home() {
     const [jobs, setJobs] = useState([]);
     const [featuredJob, setFeaturedJob] = useState(null);
-    const defaultSkills = ['Javascript', 'HTML', 'Development'];
+    const [userId, setUserId] = useState(null);
+    const defaultSkills = [];
 
 
 
@@ -17,17 +18,35 @@ function Home() {
             ?.split('=')[1];
         axios.defaults.headers.common['X-XSRF-TOKEN'] = csrfToken;
 
-        // Specify skills for testing
-        const testSkills = 'Javascript,HTML,Development';
+        // Function to fetch the user ID
+        const fetchUserId = async () => {
+            try {
+                const response = await axios.get(`/api/user-id`);
+                setUserId(response.data.user_id);
+                console.log('Fetched User ID:', userId);
+            } catch (error) {
+                console.error('Error fetching user ID:', error);
+            }
+        };
+
+        fetchUserId();
+    }, []);
+
+    useEffect(() => {
+        if (userId === null) {
+            return; // Don't fetch jobs until the user ID is set
+        }
 
         // Fetch the jobs matching specified skills
         const fetchJobs = async () => {
             try {
-                const response = await axios.get(`/api/jobs/match`, {
-                    skills: defaultSkills
+                const response = await axios.get(`/api/jobs/match/${userId}`, {
+                    params: {
+                        skills: defaultSkills
+                    }
                 });
                 setJobs(response.data);
-                console.log("jobs",response.data);
+                console.log("jobs", response.data);
 
                 // Optionally set a featured job if you have specific logic for it
                 if (response.data.length > 0) {
@@ -39,7 +58,7 @@ function Home() {
         };
 
         fetchJobs();
-    }, []);
+    }, [userId]);
 
     return (
         <NavBar>

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Job;
 
 class JobSeeder extends Seeder
 {
@@ -12,12 +13,7 @@ class JobSeeder extends Seeder
      */
     public function run()
 {
-    \App\Models\Job::create([
-        'title' => 'Software Developer',
-        'description' => 'Develop amazing applications.',
-        'location' => 'Remote',
-        // ... other fields ...
-    ]);
+    Job::factory()->count(10)->create();
     // Add more jobs as needed
 }
 }

@@ -14,6 +14,9 @@ class Job extends Model
         'title',
         'description',
         'location',
+        'skills',
+        'user_id',
+
         // other fields...
     ];
 
