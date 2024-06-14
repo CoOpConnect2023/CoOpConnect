@@ -2,6 +2,7 @@ import * as React from "react";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
 import downarrow from "../Images/Icon.svg";
+import { Link } from "@inertiajs/react";
 
 function Post1() {
     return (
@@ -69,7 +70,12 @@ function Post1() {
                                 </FormField>
                             </FormRow>
                             <HorizontalRule />
+                            <ButtonContainerPost><Link href="/employer/home">
+                            <BackButton tabIndex="0">Go Back</BackButton>
+                            </Link><Link href="/employer/post2">
                             <SubmitButton tabIndex="0">Continue</SubmitButton>
+                            </Link></ButtonContainerPost>
+
                         </Form>
                     </FormWrapper>
                 </Card>
@@ -222,8 +228,45 @@ const SubmitButton = styled.button`
     letter-spacing: 0.5px;
     padding: 8px 16px;
     font: 700 16px/150% Roboto, sans-serif;
+    transition: background-color 0.3s ease; /* Smooth transition for background color */
+
+    &:hover {
+        background-color: lightgreen; /* Light red color on hover */
+    }
+
     @media (max-width: 991px) {
         white-space: initial;
     }
+`;
+
+const BackButton = styled.button`
+    justify-content: center;
+    border-radius: 12px;
+    border: 2px solid rgba(107, 83, 140, 1);
+    align-self: start;
+    margin-top: 20px;
+    color: var(--Schemes-Primary, #6b538c);
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+    padding: 8px 16px;
+    font: 700 16px/150% Roboto, sans-serif;
+    transition: background-color 0.3s ease; /* Smooth transition for background color */
+
+    &:hover {
+        background-color: lightcoral; /* Light red color on hover */
+    }
+
+    @media (max-width: 991px) {
+        white-space: initial;
+    }
+`;
+
+const ButtonContainerPost = styled.div`
+    display: flex;
+flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+    flex-shrink: 0;
 `;
 export default Post1;

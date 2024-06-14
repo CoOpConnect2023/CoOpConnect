@@ -59,6 +59,9 @@ Route::get('/applications/{application}', [ApplicationController::class, 'show']
 Route::get('/jobs', [JobController::class, 'index'])->name('jobs.index');
 Route::get('/jobs/create', [JobController::class, 'create'])->name('jobs.create');
 Route::get('/jobs/match/{user_id}', [JobController::class, 'matchSkills'])->name('jobs.match')->middleware('auth');
+Route::get('/jobs/search/{user_id}', [JobController::class, 'searchJobs'])
+    ->name('jobs.search')
+    ->middleware('auth');
 
 Route::post('/jobs', [JobController::class, 'store'])->name('jobs.store');
 Route::get('/jobs/{job}', [JobController::class, 'show'])->name('jobs.show');

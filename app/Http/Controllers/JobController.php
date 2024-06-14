@@ -12,7 +12,7 @@ class JobController extends Controller
     {
         // Retrieve all jobs from the database
         $jobs = Job::all();
-        return view('jobs.index', compact('jobs'));
+        return response()->json($jobs);
     }
 
     // Show the form for creating a new job
@@ -106,6 +106,41 @@ class JobController extends Controller
         // Return the matching jobs as JSON
         return response()->json($matchingJobs);
     }
+
+    public function searchJobs(Request $request, $userId)
+    {
+        $searchTerm = $request->query('searchTerm');
+        $location = $request->query('location');
+
+        $query = Job::query();
+
+        if ($searchTerm) {
+            $searchTerm = strtolower($searchTerm);
+            $query->where(function ($q) use ($searchTerm) {
+                $q->whereRaw('LOWER(title) LIKE ?', ["%{$searchTerm}%"])
+                  ->orWhere(function ($q) use ($searchTerm) {
+                      $q->whereRaw('JSON_CONTAINS(JSON_ARRAY(LOWER(?)), LOWER(JSON_EXTRACT(skills, "$[*]")))', [$searchTerm]);
+                  });
+            });
+        }
+
+        // Check if $location is not empty before adding it to the query
+        if (!empty($location)) {
+            $location = strtolower($location);
+            $query->whereRaw('LOWER(location) LIKE ?', ["%{$location}%"]);
+        }
+
+        $matchingJobs = $query->get();
+
+        \Log::info('Search jobs served:', $matchingJobs->toArray());
+
+        return response()->json($matchingJobs);
+    }
+
+
+
+
+
     };
 
 

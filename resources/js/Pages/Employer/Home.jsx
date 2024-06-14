@@ -1,6 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
+import { Link } from "@inertiajs/react";
 
 function Home() {
     return (
@@ -17,13 +18,14 @@ function Home() {
                         industry's standard dummy text ever since the 1500s,
                         when an unknown printer took a galley of type and
                         scrambled it t
-                    </JobDescription>
-                    <PostJobButton>Post a Job</PostJobButton>
+                    </JobDescription><Link href="/employer/post1">
+                    <PostJobButton>Post a Job</PostJobButton></Link>
                 </CreateJobSection>
                 <CurrentPostingsSection>
                     <SectionTitle>Current Company Postings</SectionTitle>
                     <EditingInstructions>
-                        <UnderlineText>View</UnderlineText> or{" "}
+                        <Link href="/employer/viewpost">
+                        <UnderlineText>View</UnderlineText></Link> or{" "}
                         <UnderlineText>edit</UnderlineText> your company’s
                         current job postings.
                     </EditingInstructions>

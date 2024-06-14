@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
+import { Link } from "@inertiajs/react";
 
 function Home() {
     const [jobs, setJobs] = useState([]);
@@ -48,7 +49,7 @@ function Home() {
                 setJobs(response.data);
                 console.log("jobs", response.data);
 
-                // Optionally set a featured job if you have specific logic for it
+
                 if (response.data.length > 0) {
                     setFeaturedJob(response.data[0]);
                 }
@@ -75,7 +76,9 @@ function Home() {
                         when an unknown printer took a galley of type and
                         scrambled it t
                     </Description>
-                    <Button>View Jobs</Button>
+                    <Link href="/student/jobs">
+                    <Button >View Jobs</Button>
+                    </Link>
                 </SearchSection>
                 <JobsSection>
                     <JobsHeader>Recommended Jobs</JobsHeader>
@@ -83,23 +86,29 @@ function Home() {
                         <u>View</u> some of these recommended jobs!
                     </JobsSubHeader>
                     <JobListings>
-                        {jobs.map((job, index) => (
-                            <JobCard key={index}>
-                                <JobTitle>{job.title}</JobTitle>
-                                <CompanyName>{job.company}</CompanyName>
-                                <Location>{job.location}</Location>
-                                <SkillsList>
-                                {JSON.parse(job.skills).map((tag, index) => (
-                                                <SkillBadge key={index}>{tag}</SkillBadge>
-                                            ))}
-                                </SkillsList>
-                                <JobDescription>
-                                    {job.description}
-                                </JobDescription>
-                                <Divider />
-                                <JobButton>VIEW POSTING</JobButton>
-                            </JobCard>
-                        ))}
+                        {jobs.length === 0 ? (
+                            <EmptyMessage>
+                                Add some skills to your profile to see some jobs to apply for
+                            </EmptyMessage>
+                        ) : (
+                            jobs.map((job, index) => (
+                                <JobCard key={index}>
+                                    <JobTitle>{job.title}</JobTitle>
+                                    <CompanyName>{job.company}</CompanyName>
+                                    <Location>{job.location}</Location>
+                                    <SkillsList>
+                                        {JSON.parse(job.skills).map((tag, index) => (
+                                            <SkillBadge key={index}>{tag}</SkillBadge>
+                                        ))}
+                                    </SkillsList>
+                                    <JobDescription>
+                                        {job.description}
+                                    </JobDescription>
+                                    <Divider />
+                                    <JobButton>VIEW POSTING</JobButton>
+                                </JobCard>
+                            ))
+                        )}
                     </JobListings>
                 </JobsSection>
             </MainContainer>
@@ -309,6 +318,15 @@ const JobButton = styled.button`
     padding: 8px 16px;
     margin-top: 15px;
     cursor: pointer;
+`;
+
+const EmptyMessage = styled.div`
+    color: #ff6347; /* Tomato color for visibility */
+    font-size: 1.2em;
+    padding: 20px;
+    text-align: center;
+    background-color: #f0f0f0;
+    border-radius: 8px;
 `;
 
 export default Home;
