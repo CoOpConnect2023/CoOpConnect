@@ -10,15 +10,16 @@ use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
-    public function run(): void
+    public function run()
     {
-        DB::table('tokens')->insert([
-            'email' => "test@test.ca",
-            'token' => Str::random(10),
-
+        $this->call([
+            UserSeeder::class,
+            JobsSeeder::class,
+            UserJobsSeeder::class,
+            CoursesSeeder::class,
+            UserCoursesSeeder::class,
+            ReflectionsSeeder::class,
+            InterviewsSeeder::class,
         ]);
     }
 }
