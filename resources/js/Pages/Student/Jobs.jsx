@@ -306,7 +306,8 @@ const SearchButton = styled.button`
 
 const JobList = styled.div`
     display: flex;
-    margin-top: 30px;
+    margin-top: 5vh;
+    margin-bottom: 5vh;
     padding: 10px 10px 0;
     @media (max-width: 991px) {
         max-width: 100%;
@@ -319,6 +320,11 @@ const JobColumn = styled.div`
     line-height: normal;
     width: 43%;
     gap: 10px;
+    max-height: 50vh; /* Adjust the height as needed */
+    overflow-y: auto;
+    padding: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
     @media (max-width: 991px) {
         width: 100%;
     }

@@ -34,7 +34,7 @@ Route::get('/fetchdocs', [DocumentsController::class, 'fetchDoc']);
 Route::delete("/deletedoc/{id}", [DocumentsController::class, "deleteDoc"]);
 
 Route::get('/user-id', function () {
-    return response()->json(['user_id' => auth()->user()->id]);
+    return response()->json(['user' => Auth::user()]);
 })->middleware('auth:sanctum');
 
 Route::get('/download/{id}', [DocumentsController::class, 'download'])->name('file.download');

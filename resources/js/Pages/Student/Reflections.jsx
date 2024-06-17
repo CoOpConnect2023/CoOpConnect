@@ -27,6 +27,7 @@ function Reflections() {
         try {
           const response = await axios.get(`/api/user-id`);
           setUserId(response.data.user_id);
+          console.log("userinfo",response.data)
 
         } catch (error) {
           console.error('Error fetching user ID:', error);

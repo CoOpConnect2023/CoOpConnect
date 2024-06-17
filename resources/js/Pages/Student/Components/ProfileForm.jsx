@@ -1,14 +1,35 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 function ProfileForm() {
-    const [userData, setUserData] = React.useState({
-        name: "John Doe",
-        email: "email123@gmail.com",
-        accountTypes: ["Employer", "Teacher", "Student"],
-        educationInstitute: "School Name",
-        preferredPosition: "Junior Software Developer",
-    });
+    const [user, setUser] = useState(null);
+
+
+
+
+    useEffect(() => {
+        // Fetch the XSRF token from cookies and set it in Axios headers
+        const csrfToken = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('XSRF-TOKEN='))
+            ?.split('=')[1];
+        axios.defaults.headers.common['X-XSRF-TOKEN'] = csrfToken;
+
+        // Function to fetch the user ID
+        const fetchUserId = async () => {
+            try {
+                const response = await axios.get(`/api/user-id`);
+                setUser(response.data.user);
+                console.log('Fetched User :', response.data.user);
+                console.log(user,"testuser")
+            } catch (error) {
+                console.error('Error fetching user ID:', error);
+            }
+        };
+
+        fetchUserId();
+    }, []);
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -17,6 +38,9 @@ function ProfileForm() {
             [name]: value,
         }));
     };
+    if (!user) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <ProfileWrapper>
@@ -24,7 +48,7 @@ function ProfileForm() {
             <ProfileSection>
                 <ProfileContainer>
                     <ProfileImageWrapper>
-                        <ProfileImage loading="lazy" src="" alt="Profile" />
+                        <ProfileImage loading="lazy" src="{user.school}" alt="Profile" />
                     </ProfileImageWrapper>
                     <ProfileBio>
                         <BioHeader>Bio:</BioHeader>
@@ -45,7 +69,7 @@ function ProfileForm() {
                     <DetailValue
                         type="text"
                         name="name"
-                        value={userData.name}
+                        value={user.name}
                         onChange={handleChange}
                     />
                 </ProfileDetailItem>
@@ -54,7 +78,7 @@ function ProfileForm() {
                     <DetailValue
                         type="email"
                         name="email"
-                        value={userData.email}
+                        value={user.email}
                         onChange={handleChange}
                     />
                 </ProfileDetailItem>
@@ -63,8 +87,8 @@ function ProfileForm() {
                     <DetailValue
                         type="text"
                         name="accountTypes"
-                        value={userData.accountTypes.join(", ")}
-                        onChange={handleChange}
+                        value={user.role}
+
                     />
                 </ProfileDetailItem>
                 <ProfileDetailItem>
@@ -72,7 +96,7 @@ function ProfileForm() {
                     <DetailValue
                         type="text"
                         name="educationInstitute"
-                        value={userData.educationInstitute}
+                        value={user.school}
                         onChange={handleChange}
                     />
                 </ProfileDetailItem>
@@ -81,7 +105,7 @@ function ProfileForm() {
                     <DetailValue
                         type="text"
                         name="preferredPosition"
-                        value={userData.preferredPosition}
+                        value={user.school}
                         onChange={handleChange}
                     />
                 </ProfileDetailItem>
