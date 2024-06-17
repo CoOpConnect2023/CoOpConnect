@@ -120,7 +120,8 @@ function Document() {
         const fetchUserId = async () => {
             try {
                 const response = await axios.get('/api/user-id');
-                setUserId(response.data.user_id);
+                setUserId(response.data.user.id);
+
             } catch (error) {
                 console.error("Error fetching user ID:", error);
             }

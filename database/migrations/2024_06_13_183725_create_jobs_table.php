@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description');
-            $table->text('skills');
+
             $table->string('location');
             $table->string('posting_status');
             $table->string('job_type');
