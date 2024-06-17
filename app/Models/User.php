@@ -30,6 +30,10 @@ class User extends Authenticatable
         'interviewing',
         'searching',
         'skills',
+        'name',
+        'email',
+        'password',
+        'role'
     ];
 
     /**
@@ -59,6 +63,31 @@ class User extends Authenticatable
     public function documents()
     {
         return $this->hasMany(Document::class);
+    }
+
+    public function jobs()
+    {
+        return $this->belongsToMany(Jobs::class, 'user_jobs');
+    }
+
+    public function courses()
+    {
+        return $this->belongsToMany(Courses::class, 'user_courses');
+    }
+
+    public function reflections()
+    {
+        return $this->hasMany(Reflections::class);
+    }
+
+    public function interviewsAsInterviewee()
+    {
+        return $this->hasMany(Interviews::class, 'interviewee_id');
+    }
+
+    public function interviewsAsInterviewer()
+    {
+        return $this->hasMany(Interviews::class, 'interviewer_id');
     }
 
     /**

@@ -1,34 +1,16 @@
 <?php
 
-use App\Http\Controllers\AboutController;
-use App\Http\Controllers\CompanyJobPostingsController;
-use App\Http\Controllers\CreateJobPostingController;
-use App\Http\Controllers\EmployerSignUpController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\SearchJobPostingsController;
 use App\Http\Controllers\TestController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\MessagingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\EmailController;
-use App\Http\Controllers\ContactusController;
 use App\Http\Controllers\ContactController;
-use App\Http\Controllers\JobController;
-use App\Http\Controllers\DocumentsController;
 use App\Http\Controllers\EmployerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginProviderController;
-use App\Http\Controllers\MessagesController;
-use App\Http\Controllers\ReflectionsController;
 use App\Http\Controllers\StudentController;
-use App\Http\Controllers\TeacherAuthController;
 use App\Http\Controllers\TeacherController;
-use Laravel\Socialite\Facades\Socialite;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 
 
 

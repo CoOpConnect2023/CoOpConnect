@@ -1,5 +1,12 @@
 <?php
 
+use App\Http\Controllers\Api\V1\CoursesController;
+use App\Http\Controllers\Api\V1\InterviewsController;
+use App\Http\Controllers\Api\V1\JobsController;
+use App\Http\Controllers\Api\V1\ReflectionsController;
+use App\Http\Controllers\Api\V1\TokenController;
+use App\Http\Controllers\Api\V1\UserCoursesController;
+use App\Http\Controllers\Api\V1\UserJobsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MessagingController;
@@ -7,6 +14,7 @@ use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\DocumentsController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\ReflectionController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -68,3 +76,15 @@ Route::get('/jobs/{job}', [JobController::class, 'show'])->name('jobs.show');
 Route::get('/jobs/{job}/edit', [JobController::class, 'edit'])->name('jobs.edit');
 Route::put('/jobs/{job}', [JobController::class, 'update'])->name('jobs.update');
 Route::delete('/jobs/{job}', [JobController::class, 'destroy'])->name('jobs.destroy');
+
+Route::delete("/deletedoc/{doc_id}", [DocumentsController::class, "deleteDoc"]);
+
+Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], function () {
+    Route::apiResource('token', TokenController::class);
+    Route::apiResource('jobs', JobsController::class);
+    Route::apiResource('userjobs', UserJobsController::class);
+    Route::apiResource('courses', CoursesController::class);
+    Route::apiResource('usercourses', UserCoursesController::class);
+    Route::apiResource('reflections', ReflectionsController::class);
+    Route::apiResource('interviews', InterviewsController::class);
+});
