@@ -52,6 +52,6 @@ class ReflectionsController extends Controller
      */
     public function destroy(Reflections $reflection)
     {
-        //
+        $reflection->delete();
     }
 }

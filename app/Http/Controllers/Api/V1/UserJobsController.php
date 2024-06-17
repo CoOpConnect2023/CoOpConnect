@@ -10,6 +10,7 @@ use App\Http\Resources\V1\UserJobsResource;
 use App\Http\Resources\V1\UserJobsCollection;
 use Illuminate\Http\Request;
 use App\Filters\V1\UserJobsFilter;
+use Illuminate\Support\Facades\Log;
 
 class UserJobsController extends Controller
 {
@@ -34,24 +35,24 @@ class UserJobsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(UserJobs $userJob)
+    public function show(UserJobs $userjob)
     {
-        return new UserJobsResource($userJob);
+        return new UserJobsResource($userjob);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUserJobsRequest $request, UserJobs $userJob)
+    public function update(UpdateUserJobsRequest $request, UserJobs $userjob)
     {
-        $userJob->update($request->all());
+        $userjob->update($request->all());
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(UserJobs $userJob)
+    public function destroy(UserJobs $userjob)
     {
-        //
+        $userjob->delete();
     }
 }

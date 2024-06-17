@@ -24,22 +24,22 @@ class UpdateReflectionsRequest extends FormRequest
         if ($this->method() === 'PUT') {
             return [
                 'content' => ['required', 'string'],
-                'user_id' => ['required', 'exists:users_id'],
-                'jobs_id' => ['required', 'exists:jobs_id'],
+                'user_id' => ['required', 'exists:users,id'],
+                'jobs_id' => ['required', 'exists:jobs,id'],
             ];
         } else {
             return [
                 'content' => ['sometimes', 'required', 'string'],
-                'user_id' => ['sometimes', 'required', 'exists:users_id'],
-                'jobs_id' => ['sometimes', 'required', 'exists:jobs_id'],
+                'user_id' => ['sometimes', 'required', 'exists:users,id'],
+                'jobs_id' => ['sometimes', 'required', 'exists:jobs,id'],
             ];
         }
     }
     protected function prepareForValidation()
     {
-        $this->merge([
+        $this->merge(array_filter([
             'user_id' => $this->userId,
-            'jobs_id' => $this->jobId
-        ]);
+            'jobs_id' => $this->jobsId
+        ]));
     }
 }

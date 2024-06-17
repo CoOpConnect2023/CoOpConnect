@@ -11,7 +11,7 @@ class StoreUserCoursesRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -29,9 +29,9 @@ class StoreUserCoursesRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        $this->merge([
+        $this->merge(array_filter([
             'user_id' => $this->userId,
             'courses_id' => $this->coursesId
-        ]);
+        ]));
     }
 }

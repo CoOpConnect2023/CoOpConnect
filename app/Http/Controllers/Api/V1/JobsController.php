@@ -62,6 +62,6 @@ class JobsController extends Controller
      */
     public function destroy(Jobs $job)
     {
-        //
+        $job->delete();
     }
 }

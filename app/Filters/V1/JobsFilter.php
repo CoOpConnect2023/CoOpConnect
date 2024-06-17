@@ -8,6 +8,7 @@ use App\Filters\ApiFilter;
 class JobsFilter extends ApiFilter
 {
     protected $safeParams = [
+        'id' => ['eq'],
         'title' => ['eq'],
         'description' => ['eq'],
         'skills' => ['eq'],
@@ -18,7 +19,7 @@ class JobsFilter extends ApiFilter
     ];
 
     protected $columnMap = [
-        'postingStatus'=> 'posting_status',
+        'postingStatus' => 'posting_status',
         'jobType' => 'job_type'
     ];
 

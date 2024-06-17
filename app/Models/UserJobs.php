@@ -18,11 +18,11 @@ class UserJobs extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function job()
     {
-        return $this->belongsTo(Jobs::class);
+        return $this->belongsTo(Jobs::class, 'jobs_id');
     }
 }

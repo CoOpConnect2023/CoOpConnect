@@ -35,9 +35,9 @@ class UpdateUserCoursesRequest extends FormRequest
     }
     protected function prepareForValidation()
     {
-        $this->merge([
+        $this->merge(array_filter([
             'user_id' => $this->userId,
             'courses_id' => $this->coursesId
-        ]);
+        ]));
     }
 }

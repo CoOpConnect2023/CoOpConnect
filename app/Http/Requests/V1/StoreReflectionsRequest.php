@@ -30,9 +30,9 @@ class StoreReflectionsRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        $this->merge([
+        $this->merge(array_filter([
             'user_id' => $this->userId,
-            'jobs_id' => $this->jobId
-        ]);
+            'jobs_id' => $this->jobsId
+        ]));
     }
 }

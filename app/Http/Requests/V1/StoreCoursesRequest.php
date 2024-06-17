@@ -30,9 +30,9 @@ class StoreCoursesRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        $this->merge([
+        $this->merge(array_filter([
             'start_date' => $this->startDate,
             'end_date' => $this->endDate
-        ]);
+        ]));
     }
 }
