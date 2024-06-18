@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description');
-
+            $table->json('skills')->nullable();
             $table->string('location');
             $table->string('posting_status');
             $table->string('job_type');

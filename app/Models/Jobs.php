@@ -20,6 +20,17 @@ class Jobs extends Model
         'user_id',
     ];
 
+
+    public function setSkillsAttribute($value)
+    {
+        $this->attributes['skills'] = json_encode($value);
+    }
+
+    public function getSkillsAttribute($value)
+    {
+        return json_decode($value, true);
+    }
+
     public function users()
     {
         return $this->belongsToMany(User::class, 'user_jobs', 'jobs_id', 'user_id');

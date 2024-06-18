@@ -1,7 +1,67 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 export default function SidePanel() {
+    const [conversations, setConversations] = useState([]);
+    const [userId, setUserId] = useState(null);
+
+
+    useEffect(() => {
+        // Fetch the XSRF token from cookies and set it in Axios headers
+        const csrfToken = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('XSRF-TOKEN='))
+            ?.split('=')[1];
+        axios.defaults.headers.common['X-XSRF-TOKEN'] = csrfToken;
+
+        // Fetch the user ID, only allows if token is correct
+        const fetchUserId = async () => {
+            try {
+                const response = await axios.get('/api/user-id');
+                setUserId(response.data.user.id);
+
+            } catch (error) {
+                console.error("Error fetching user ID:", error);
+            }
+        };
+
+        fetchUserId();
+    }, []);
+
+    useEffect(() => {
+        const fetchConversations = async () => {
+            try {
+                if (!userId) {
+                    return; // Exit early if userId is null or undefined
+                }
+
+                const response = await axios.get(`/api/users/${userId}/conversations`, {
+                    params: {
+                        user_id: userId,
+                    },
+                });
+
+                if (response.data.status === 1) {
+                    setConversations(response.data.data);
+                    console.log("Conversations fetched successfully:", response.data.data);
+                } else {
+                    console.error("Error fetching Conversations:", response.data.message);
+                }
+            } catch (error) {
+                console.error("Error fetching Conversations:", error);
+            }
+        };
+
+        fetchConversations();
+    }, [userId]);
+
+
+
+
+
+
+
+
     const data = [
         {
             imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/09e638f41d9cedf8e1726ebb22929c2117cfca2ff217e39a0120741dcaace204?apiKey=d66532d056b14640a799069157705b77&",

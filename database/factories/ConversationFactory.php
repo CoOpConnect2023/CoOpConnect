@@ -2,40 +2,28 @@
 
 namespace Database\Factories;
 
+use App\Models\Conversation;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
- */
 class ConversationFactory extends Factory
 {
     /**
-     * The current password being used by the factory.
+     * The name of the factory's corresponding model.
+     *
+     * @var string
      */
-    protected static ?string $password;
+    protected $model = Conversation::class;
 
     /**
      * Define the model's default state.
      *
-     * @return array<string, mixed>
+     * @return array
      */
-    public function definition(): array
+    public function definition()
     {
         return [
-            'send_id' => 22,
-            'recv_id' => 23
+            'title' => $this->faker->sentence,
+            // Add more fields as needed
         ];
     }
-
-    // /**
-    //  * Indicate that the model's email address should be unverified.
-    //  */
-    // public function unverified(): static
-    // {
-    //     return $this->state(fn (array $attributes) => [
-    //         'email_verified_at' => null,
-    //     ]);
-    // }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Job;
+use App\Models\Jobs;
 use Illuminate\Http\Request;
 
 class JobController extends Controller
@@ -11,7 +11,7 @@ class JobController extends Controller
     public function index()
     {
         // Retrieve all jobs from the database
-        $jobs = Job::all();
+        $jobs = Jobs::all();
         return response()->json($jobs);
     }
 
@@ -33,7 +33,7 @@ class JobController extends Controller
         ]);
 
         // Create a new job record
-        $job = new Job();
+        $job = new Jobs();
         $job->title = $request->input('title');
         $job->description = $request->input('description');
         $job->skills = json_encode($request->input('skills')); // Convert skills array to JSON
@@ -45,13 +45,13 @@ class JobController extends Controller
     }
 
     // Display the specified job
-    public function show(Job $job)
+    public function show(Jobs $job)
     {
         return view('jobs.show', compact('job'));
     }
 
     // Show the form for editing the specified job
-    public function edit(Job $job)
+    public function edit(Jobs $job)
     {
         return view('jobs.edit', compact('job'));
     }
@@ -78,7 +78,7 @@ class JobController extends Controller
     }
 
     // Remove the specified job from storage
-    public function destroy(Job $job)
+    public function destroy(Jobs $job)
     {
         $job->delete();
         return redirect()->route('jobs.index')->with('success', 'Job deleted successfully!');
@@ -96,7 +96,7 @@ class JobController extends Controller
 
 
         // Retrieve jobs that match the provided or user's skills
-        $matchingJobs = Job::where(function ($query) use ($userSkillsArray) {
+        $matchingJobs = Jobs::where(function ($query) use ($userSkillsArray) {
             foreach ($userSkillsArray as $skill) {
                 $query->orWhereRaw("LOWER(skills) LIKE ?", ['%"' . strtolower($skill) . '"%']);
             }
@@ -112,7 +112,7 @@ class JobController extends Controller
         $searchTerm = $request->query('searchTerm');
         $location = $request->query('location');
 
-        $query = Job::query();
+        $query = Jobs::query();
 
         if ($searchTerm) {
             $searchTerm = strtolower($searchTerm);

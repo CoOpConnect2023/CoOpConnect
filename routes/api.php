@@ -7,13 +7,15 @@ use App\Http\Controllers\Api\V1\ReflectionsController;
 use App\Http\Controllers\Api\V1\TokenController;
 use App\Http\Controllers\Api\V1\UserCoursesController;
 use App\Http\Controllers\Api\V1\UserJobsController;
+use App\Http\Controllers\Api\V1\MessagingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\MessagingController;
+
 use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\DocumentsController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\ReflectionController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -88,3 +90,6 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
     Route::apiResource('reflections', ReflectionsController::class);
     Route::apiResource('interviews', InterviewsController::class);
 });
+
+
+Route::get('/users/{userId}/conversations', [UserController::class, 'getConversations']);

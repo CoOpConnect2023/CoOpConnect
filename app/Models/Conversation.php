@@ -11,4 +11,9 @@ class Conversation extends Model
 
     protected $fillable = ['send_id','recv_id'];
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_conversation', 'conversation_id', 'user_id');
+    }
+
 }

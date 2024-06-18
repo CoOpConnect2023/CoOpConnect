@@ -100,4 +100,11 @@ class User extends Authenticatable
     {
         return $this->role === $role;
     }
+
+    public function conversations()
+    {
+        return $this->belongsToMany(Conversation::class, 'user_conversation', 'user_id', 'conversation_id');
+    }
+
+    
 }

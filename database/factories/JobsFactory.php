@@ -2,30 +2,40 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Jobs;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Jobs>
- */
 class JobsFactory extends Factory
 {
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
     protected $model = Jobs::class;
+
     /**
      * Define the model's default state.
      *
-     * @return array<string, mixed>
+     * @return array
      */
     public function definition()
     {
+        $skills = $this->faker->randomElements(['JavaScript', 'PHP', 'HTML', 'CSS', 'Python'], $this->faker->numberBetween(1, 4));
+
         return [
             'title' => $this->faker->jobTitle,
             'description' => $this->faker->paragraph,
-            'skills' => implode(', ', $this->faker->words(5)),
             'location' => $this->faker->city,
-            'posting_status' => $this->faker->randomElement(['open', 'closed']),
-            'job_type' => $this->faker->randomElement(['full-time', 'part-time', 'contract', 'remote']),
+            'skills' => $skills, // Assign the array of skills directly
+            'posting_status' => true, // Default posting_status set to true
+            'job_type' => 'full-time', // Default job_type
             'company' => $this->faker->company,
+            'user_id' => function () {
+                return \App\Models\User::factory()->create()->id;
+            },
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
     }
 }

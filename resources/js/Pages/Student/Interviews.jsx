@@ -3,91 +3,118 @@ import { useState } from "react";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
 import Modal from "../Profile/Partials/AddEventModal"
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
+import moment from 'moment';
+import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
+const localizer = momentLocalizer(moment);
+const DnDCalendar = withDragAndDrop(Calendar);
 
 
 
 const Interviews = () => {
-    const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
-    const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-    const [events, setEvents] = useState([]);
-    const [showModal, setShowModal] = useState(false); // State to manage modal visibility
-    const [selectedDate, setSelectedDate] = useState(null); // State to store selected date for event
+    const [showModal, setShowModal] = useState(false);
+    const [events, setEvents] = useState([{
+        id: 0,
+        title: 'Board Meeting',
+        start: new Date(2024, 5, 20, 10, 0), // June 20, 2024, 10:00 AM
+        end: new Date(2024, 5, 20, 12, 0),   // June 20, 2024, 12:00 PM
+        description: 'Monthly board meeting',
+      },
+      {
+        id: 1,
+        title: 'Team Building Event',
+        start: new Date(2024, 5, 21, 14, 0), // June 21, 2024, 2:00 PM
+        end: new Date(2024, 5, 21, 17, 0),   // June 21, 2024, 5:00 PM
+        description: 'Outdoor activities and team exercises',
+      },
+      {
+        id: 2,
+        title: 'Project Deadline',
+        allDay: true,
+        start: new Date(2024, 5, 25),        // June 25, 2024 (all day)
+        end: new Date(2024, 5, 25),
+        description: 'Final submission date for the project',
+      },
+      {
+        id: 3,
+        title: 'Conference',
+        start: new Date(2024, 5, 26, 9, 0),  // June 26, 2024, 9:00 AM
+        end: new Date(2024, 5, 28, 17, 0),   // June 28, 2024, 5:00 PM
+        description: 'Annual industry conference',
+      },
+      {
+        id: 4,
+        title: 'Workshop: Advanced JavaScript',
+        start: new Date(2024, 5, 29, 13, 0), // June 29, 2024, 1:00 PM
+        end: new Date(2024, 5, 29, 16, 0),   // June 29, 2024, 4:00 PM
+        description: 'A hands-on workshop on advanced JavaScript topics',
+      },
+      {
+        id: 5,
+        title: 'Webinar: React Basics',
+        start: new Date(2024, 6, 3, 10, 0),  // July 3, 2024, 10:00 AM
+        end: new Date(2024, 6, 3, 11, 0),    // July 3, 2024, 11:00 AM
+        description: 'Introduction to React for beginners',
+      },
+      {
+        id: 6,
+        title: 'Company Holiday',
+        allDay: true,
+        start: new Date(2024, 6, 4),         // July 4, 2024 (all day)
+        end: new Date(2024, 6, 4),
+        description: 'Independence Day',
+      },
+      {
+        id: 7,
+        title: 'Product Launch',
+        start: new Date(2024, 6, 10, 15, 0), // July 10, 2024, 3:00 PM
+        end: new Date(2024, 6, 10, 16, 0),   // July 10, 2024, 4:00 PM
+        description: 'Launch event for new product line',
+      },
+      {
+        id: 8,
+        title: 'Client Meeting',
+        start: new Date(2024, 6, 12, 11, 0), // July 12, 2024, 11:00 AM
+        end: new Date(2024, 6, 12, 12, 0),   // July 12, 2024, 12:00 PM
+        description: 'Discuss project progress with client',
+      },
+      {
+        id: 9,
+        title: 'Team Lunch',
+        start: new Date(2024, 6, 13, 12, 30), // July 13, 2024, 12:30 PM
+        end: new Date(2024, 6, 13, 14, 0),    // July 13, 2024, 2:00 PM
+        description: 'Team bonding over lunch at a local restaurant',
+      },
 
-    const renderCalendar = (month, year) => {
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-        const firstDayIndex = new Date(year, month, 1).getDay();
-        const prevDays = firstDayIndex === 0 ? 6 : firstDayIndex - 1;
-        const prevMonthDays = new Date(year, month, 0).getDate();
-        const nextMonthDays = 42 - (daysInMonth + prevDays);
 
-        const daysArray = [
-            ...Array(prevDays)
-                .fill(null)
-                .map((_, i) => ({
-                    day: prevMonthDays - prevDays + i + 1,
-                    isInCurrentMonth: false,
-                })),
-            ...Array(daysInMonth)
-                .fill(null)
-                .map((_, i) => ({
-                    day: i + 1,
-                    isInCurrentMonth: true,
-                    hasEvent: events.some((event) =>
-                        isSameDay(event.date, new Date(year, month, i + 1))
-                    ),
-                })),
-            ...Array(nextMonthDays)
-                .fill(null)
-                .map((_, i) => ({
-                    day: i + 1,
-                    isInCurrentMonth: false,
-                })),
-        ];
 
-        return daysArray;
-    };
+    ]);
+     // State to manage modal visibility
 
-    const handlePrevMonth = () => {
-        const today = new Date();
-        if (
-            !(
-                currentMonth === today.getMonth() &&
-                currentYear === today.getFullYear()
-            )
-        ) {
-            if (currentMonth === 0) {
-                setCurrentMonth(11);
-                setCurrentYear(currentYear - 1);
-            } else {
-                setCurrentMonth(currentMonth - 1);
-            }
-        }
-    };
+    const handleEventResize = ({ event, start, end }) => {
+        const nextEvents = events.map(existingEvent => {
+          return existingEvent.id === event.id
+            ? { ...existingEvent, start, end }
+            : existingEvent;
+        });
 
-    const handleNextMonth = () => {
-        if (currentMonth === 11) {
-            setCurrentMonth(0);
-            setCurrentYear(currentYear + 1);
-        } else {
-            setCurrentMonth(currentMonth + 1);
-        }
-    };
+        setEvents(nextEvents);
+      };
 
-    const addEvent = (date, title, description) => {
-        const newEvent = {
-            id: events.length + 1,
-            date: new Date(currentYear, currentMonth, date),
-            title,
-            description,
-        };
+      const handleEventDrop = ({ event, start, end }) => {
+        const nextEvents = events.map(existingEvent => {
+          return existingEvent.id === event.id
+            ? { ...existingEvent, start, end }
+            : existingEvent;
+        });
 
-        setEvents([...events, newEvent]);
-    };
+        setEvents(nextEvents);
+      };
 
-    const isSameDay = (date1, date2) =>
-        date1.getDate() === date2.getDate() &&
-        date1.getMonth() === date2.getMonth() &&
-        date1.getFullYear() === date2.getFullYear();
 
     const openModal = (day) => {
         setSelectedDate(day);
@@ -104,12 +131,6 @@ const Interviews = () => {
         closeModal();
     };
 
-    const daysArray = renderCalendar(currentMonth, currentYear);
-
-    const today = new Date();
-    const isPrevDisabled =
-        currentMonth === today.getMonth() &&
-        currentYear === today.getFullYear();
 
     return (
         <NavBar header={"Interviews"}>
@@ -117,81 +138,20 @@ const Interviews = () => {
                 <Container>
                     <Wrapper>
                         <Header>Schedule your Interviews</Header>
-                        <CalendarWrapper>
-                            <CalendarHeader>
-                                <Month>
-                                    {new Date(
-                                        currentYear,
-                                        currentMonth
-                                    ).toLocaleDateString("en-us", {
-                                        month: "long",
-                                        year: "numeric",
-                                    })}
-                                </Month>
-                                <NavIcons>
-                                    <Icon
-                                        loading="lazy"
-                                        src="https://img.icons8.com/ios-glyphs/30/000000/chevron-left.png"
-                                        onClick={handlePrevMonth}
-                                        isDisabled={isPrevDisabled}
-                                    />
-                                    <Icon
-                                        loading="lazy"
-                                        src="https://img.icons8.com/ios-glyphs/30/000000/chevron-right.png"
-                                        onClick={handleNextMonth}
-                                        isDisabled={false}
-                                    />
-                                </NavIcons>
-                            </CalendarHeader>
-                            <DaysOfWeek>
-                                <Day>Mo</Day>
-                                <Day>Tu</Day>
-                                <Day>We</Day>
-                                <Day>Th</Day>
-                                <Day>Fr</Day>
-                                <Day>Sa</Day>
-                                <Day>Su</Day>
-                            </DaysOfWeek>
-                            <DatesGrid>
-                                {daysArray.map((date, idx) => {
-                                    const isToday =
-                                        date.day === today.getDate() &&
-                                        currentMonth === today.getMonth() &&
-                                        currentYear === today.getFullYear();
-
-                                    const hasEventIndicator = date.hasEvent ? (
-                                        <EventDot />
-                                    ) : null;
-
-                                    if (date.isInCurrentMonth) {
-                                        return isToday ? (
-                                            <TodayDateCell
-                                                key={idx}
-                                                onClick={() => openModal(date.day)}
-                                            >
-                                                {date.day}
-                                                {hasEventIndicator}
-                                            </TodayDateCell>
-                                        ) : (
-                                            <DateCell
-                                                key={idx}
-                                                onClick={() => openModal(date.day)}
-                                            >
-                                                {date.day}
-                                                {hasEventIndicator}
-                                            </DateCell>
-                                        );
-                                    } else {
-                                        return (
-                                            <InactiveDateCell key={idx}>
-                                                {date.day}
-                                                {hasEventIndicator}
-                                            </InactiveDateCell>
-                                        );
-                                    }
-                                })}
-                            </DatesGrid>
-                        </CalendarWrapper>
+                        <CalendarDiv>
+                        <DndProvider backend={HTML5Backend}>
+      <DnDCalendar
+        defaultDate={new Date(2024, 5, 20)}
+        defaultView="month"
+        events={events}
+        localizer={localizer}
+        onEventDrop={handleEventDrop}
+        resizable
+        onEventResize={handleEventResize}
+        style={{ height: "100%" }}
+      />
+    </DndProvider>
+    </CalendarDiv>
                     </Wrapper>
                 </Container>
             </MainContainer>
@@ -243,21 +203,11 @@ const Header = styled.div`
     font: 600 32px Poppins, sans-serif;
 `;
 
-const CalendarWrapper = styled.div`
-    border-radius: 16px;
-    box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1),
-        0px 2px 4px -1px rgba(0, 0, 0, 0.06);
-    border-color: rgba(123, 117, 127, 1);
-    border-style: solid;
-    border-width: 1px;
-    background-color: #fff;
-    display: flex;
-    margin-top: 40px;
-    flex-direction: column;
-    padding: 30px;
-    @media (max-width: 991px) {
-        max-width: 100%;
-        padding: 0 20px;
+const CalendarDiv = styled.div`
+    background-color: #ffffff;
+height: 80vh;
+margin-bottom: 3vh;
+margin-top: 3vh;
     }
 `;
 

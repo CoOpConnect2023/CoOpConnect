@@ -97,7 +97,7 @@ function Home() {
                                     <CompanyName>{job.company}</CompanyName>
                                     <Location>{job.location}</Location>
                                     <SkillsList>
-                                        {JSON.parse(job.skills).map((tag, index) => (
+                                        {(job.skills).map((tag, index) => (
                                             <SkillBadge key={index}>{tag}</SkillBadge>
                                         ))}
                                     </SkillsList>

@@ -2,6 +2,37 @@ import { Link } from "@inertiajs/react";
 import logo from "@/Pages/Images/COOPCONNECTLOGO.png";
 
 export default function LandingLayout({ auth }) {
+
+
+
+function getUserLinks(userType) {
+    switch (userType) {
+      case 'student':
+        return {
+
+          dashboard: '/student/home',
+
+        };
+      case 'employee':
+        return {
+
+          dashboard: '/employer/home',
+
+        };
+      case 'teacher':
+        return {
+
+          dashboard: '/teacher/home',
+
+        };
+      default:
+        return {};
+    }
+  }
+
+
+
+
     return (
         <>
             <div className="flex flex-row items-center justify-between text-center">
@@ -20,7 +51,7 @@ export default function LandingLayout({ auth }) {
                 <div className="p-6 text-end">
                     {auth.user ? (
                         <Link
-                            href={route("dashboard")}
+                            href={getUserLinks(auth.user.role).dashboard}
                             className="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
                         >
                             Dashboard

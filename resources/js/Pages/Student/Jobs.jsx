@@ -159,7 +159,7 @@ function Jobs() {
                                             <div>{job.location}</div>
                                         </JobMeta>
                                         <SkillsList>
-                                {JSON.parse(job.skills).map((tag, index) => (
+                                {(job.skills).map((tag, index) => (
                                                 <SkillBadge key={index}>{tag}</SkillBadge>
                                             ))}
                                 </SkillsList>

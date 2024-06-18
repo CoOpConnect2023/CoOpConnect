@@ -10,7 +10,7 @@ class AddColumnsToJobsTable extends Migration
     {
         Schema::table('jobs', function (Blueprint $table) {
 
-            $table->json('skills')->nullable(); // JSON column for skills (array)
+             (array)
 
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
              // Adds created_at and updated_at columns
