@@ -2,6 +2,7 @@ import * as React from "react";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
 import downarrow from "@/Pages/Images/Icon.svg";
+import { Link } from "@inertiajs/react";
 
 function Post2() {
     const skills = ["Tag", "Tag", "Tag", "Tag", "Tag", "Tag", "Tag"];
@@ -54,8 +55,8 @@ function Post2() {
                                 ))}
                             </TagContainer>
                             <HorizontalRule />
-                            <ButtonGroup>
-                                <ActionButton>Go Back</ActionButton>
+                            <ButtonGroup><Link href="/employer/post1">
+                                <ActionButton>Go Back</ActionButton></Link>
                                 <SubmitButton>Finished</SubmitButton>
                             </ButtonGroup>
                         </FormContainer>
@@ -272,12 +273,12 @@ const HorizontalRule = styled.hr`
 
 const ButtonGroup = styled.div`
     display: flex;
-    gap: 10px;
-    margin-top: 20px;
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    line-height: 150%;
+flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+    flex-shrink: 0;
+    margin-top: 1vh;
 `;
 
 const ActionButton = styled.button`
@@ -288,7 +289,20 @@ const ActionButton = styled.button`
     color: var(--Schemes-Primary, #6b538c);
     padding: 8px 16px;
     background: none;
+transition: background-color 0.3s ease; /* Smooth transition for background color */
+
+    &:hover {
+        background-color: lightcoral; /* Light red color on hover */
+    }
+
+    @media (max-width: 991px) {
+        white-space: initial;
+    }
 `;
+
+
+
+
 
 const SubmitButton = styled.button`
     font-family: Roboto, sans-serif;
@@ -301,5 +315,14 @@ const SubmitButton = styled.button`
     @media (max-width: 991px) {
         white-space: initial;
     }
+`;
+
+const ButtonContainerPost2 = styled.div`
+    display: flex;
+flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+    flex-shrink: 0;
 `;
 export default Post2;

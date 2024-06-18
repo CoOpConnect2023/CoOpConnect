@@ -1,53 +1,128 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
+import axios from "axios";
+
+
+
+const badWords = ["bitch","nigger", "fuck", "cock","pussy","shit","asshole","dick", "whore", "prick", "bullshit", "bastard"];
 
 function Reflections() {
+    const [userId, setUserId] = useState(null);
+    const [reflectionContent, setReflectionContent] = useState('');
+    const [error, setError] = React.useState(null);
+    const [successMessage, setSuccessMessage] = useState("");
+
+
+    useEffect(() => {
+      // Fetch the XSRF token from cookies and set it in Axios headers
+      const csrfToken = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('XSRF-TOKEN='))
+        ?.split('=')[1];
+      axios.defaults.headers.common['X-XSRF-TOKEN'] = csrfToken;
+
+      // Fetch the user ID
+      const fetchUserId = async () => {
+        try {
+          const response = await axios.get(`/api/user-id`);
+          setUserId(response.data.user_id);
+          console.log("userinfo",response.data)
+
+        } catch (error) {
+          console.error('Error fetching user ID:', error);
+        }
+      };
+
+      fetchUserId();
+    }, []);
+
+
+
+    const handleSubmit = async (event) => {
+      event.preventDefault();
+
+      const hasBadWords = badWords.some((word) =>
+        reflectionContent.toLowerCase().includes(word)
+      );
+
+      if (hasBadWords) {
+        setError("Please remove inappropriate words from your reflection.");
+        return; // Prevent submission if bad words are found
+      }
+
+      try {
+        const response = await axios.post(
+          `/api/reflections`,
+          {
+            user_id: userId,
+            content: reflectionContent,
+
+          }
+        );
+        console.log('Reflection posted successfully:', response.data);
+        setSuccessMessage("Reflection posted successfully!");
+        setReflectionContent('');
+        setError(null)
+        setTimeout(() => {
+            setSuccessMessage("");
+        }, 5000);
+
+      } catch (error) {
+        console.error('Error posting reflection:', error);
+
+      }
+    };
+
+
     return (
         <NavBar header={"Reflections Upload"}>
-            <Section className="forum-container">
-                <Container className="form-inner-container">
-                    <FormWrapper className="form-content-wrapper">
-                        <Header className="forum-header">
-                            Reflections Forum
-                        </Header>
-                        <Description className="forum-description">
-                            Share your reflections with your teachers and
-                            employers!
-                        </Description>
-                        <FormContainer>
-                            <Form>
-                                <Label
-                                    htmlFor="reflectionInput"
-                                    className="reflection-label"
-                                >
-                                    Type out your reflection here:
-                                </Label>
-                                <TextareaWrapper
-                                    className="textarea-wrapper"
-                                    tabIndex="0"
-                                >
-                                    <Textarea
-                                        id="reflectionInput"
-                                        className="reflection-textarea"
-                                        defaultValue="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
-                                    />
-                                    <Image
-                                        loading="lazy"
-                                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/cdd149d58712b078a844655053653df9d81013ce41c2123353ace40a672efdc3?apiKey=d66532d056b14640a799069157705b77&"
-                                        alt=""
-                                    />
-                                </TextareaWrapper>
-                                <Button type="submit" className="submit-button">
-                                    Post Comment
-                                </Button>
-                            </Form>
-                        </FormContainer>
-                    </FormWrapper>
-                </Container>
-            </Section>
+          <Section className="forum-container">
+            <Container className="form-inner-container">
+              <FormWrapper className="form-content-wrapper">
+                <Header className="forum-header">Reflections Forum</Header>
+                <Description className="forum-description">
+                  Share your reflections with your teachers and employers!
+                </Description>
+                <FormContainer>
+                  <Form onSubmit={handleSubmit}>
+                    <Label htmlFor="reflectionInput" className="reflection-label">
+                      Type out your reflection here:
+                    </Label>
+                    <TextareaWrapper className="textarea-wrapper" tabIndex="0">
+                      <Textarea
+                        id="reflectionInput"
+                        className="reflection-textarea"
+                        value={reflectionContent}
+                        onChange={(e) => {
+                            setReflectionContent(e.target.value);
+                            // Clear error message on input change
+                            setError(null);
+                        }}
+                    />
+
+
+                      <Image
+                        loading="lazy"
+                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/cdd149d58712b078a844655053653df9d81013ce41c2123353ace40a672efdc3?apiKey=d66532d056b14640a799069157705b77&"
+                        alt=""
+                      />
+                    </TextareaWrapper>
+                    {error && <ErrorMessage>{error}</ErrorMessage>}
+                    <Button type="submit" className="submit-button">
+                      Post Comment
+                    </Button>
+                    {successMessage && (
+                                    <SuccessMessage>{successMessage}</SuccessMessage>
+                                )}
+                  </Form>
+                </FormContainer>
+              </FormWrapper>
+            </Container>
+          </Section>
         </NavBar>
-    );
+      );
+
 }
 
 const Section = styled.section`
@@ -177,6 +252,18 @@ const Button = styled.button`
     @media (max-width: 991px) {
         max-width: 100%;
     }
+`;
+
+const ErrorMessage = styled.p`
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+`;
+
+const SuccessMessage = styled.p`
+    color: green;
+    font-weight: bold;
+    margin-top: 10px;
 `;
 
 export default Reflections;

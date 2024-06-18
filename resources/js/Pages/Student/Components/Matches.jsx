@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 const JobContainer = styled.section`
@@ -107,24 +107,65 @@ const ViewButton = styled.button`
     cursor: pointer;
 `;
 
-const jobs = [
-    {
-        title: "Front-End Developer",
-        companyName: "Company Name",
-        location: "Location",
-        imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/f431c52a26bb3f4d9af631c4376a9111f916c5faa63eae0fe2f1f5853c8bb441?apiKey=d66532d056b14640a799069157705b77&",
-        imgAlt: "Company Logo",
-    },
-    {
-        title: "Front-End Developer",
-        companyName: "Company Name",
-        location: "Location",
-        imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/f431c52a26bb3f4d9af631c4376a9111f916c5faa63eae0fe2f1f5853c8bb441?apiKey=d66532d056b14640a799069157705b77&",
-        imgAlt: "Company Logo",
-    },
-];
+
 
 function Matches() {
+
+    const [jobs, setJobs] = useState([]);
+    const [userId, setUserId] = useState(null);
+
+    useEffect(() => {
+        // Fetch the XSRF token from cookies and set it in Axios headers
+        const csrfToken = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('XSRF-TOKEN='))
+            ?.split('=')[1];
+        axios.defaults.headers.common['X-XSRF-TOKEN'] = csrfToken;
+
+        // Function to fetch the user ID
+        const fetchUserId = async () => {
+            try {
+                const response = await axios.get(`/api/user-id`);
+                setUserId(response.data.user_id);
+                console.log('Fetched User ID:', userId);
+            } catch (error) {
+                console.error('Error fetching user ID:', error);
+            }
+        };
+
+        fetchUserId();
+    }, []);
+
+    useEffect(() => {
+        if (userId === null) {
+            return; // Don't fetch jobs until the user ID is set
+        }
+
+        // Fetch the jobs matching specified skills
+        const fetchJobs = async () => {
+            try {
+                const response = await axios.get(`/api/jobs/match/${userId}`, {
+                    params: {
+
+                    }
+                });
+                const receivedJobs = response.data.slice(0, 3);
+                setJobs(receivedJobs);
+                console.log("jobs", response.data);
+
+
+                if (response.data.length > 0) {
+                    setFeaturedJob(response.data[0]);
+                }
+            } catch (error) {
+                console.error("Error fetching jobs:", error);
+            }
+        };
+
+        fetchJobs();
+    }, [userId]);
+
+
     return (
         <JobContainer>
             <Title>Matches</Title>
@@ -140,7 +181,7 @@ function Matches() {
                                 alt={job.imgAlt}
                             />
                             <CompanyInfo>
-                                <CompanyName>{job.companyName}</CompanyName>
+                                <CompanyName>{job.company}</CompanyName>
                                 <Location>{job.location}</Location>
                             </CompanyInfo>
                         </JobDetails>

@@ -21,6 +21,7 @@ class Jobs extends Model
         'posting_status',
         'job_type',
         'company',
+        'user_id',
     ];
 
     public function users()

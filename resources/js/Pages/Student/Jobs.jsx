@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
 
@@ -22,13 +22,93 @@ function Jobs() {
         },
     ];
 
-    const featuredJob = {
-        title: "Full-Stack Developer",
-        company: "Microsoft",
-        location: "Toronto, ON",
-        description: `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.`,
-        reasons: `It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).`,
+
+
+    const [jobs, setJobs] = useState([]);
+    const [userId, setUserId] = useState(null);
+    const [featuredJob, setFeaturedJob] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [searchLocation, setLocation] = useState('');
+
+    useEffect(() => {
+        // Fetch the XSRF token from cookies and set it in Axios headers
+        const csrfToken = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('XSRF-TOKEN='))
+            ?.split('=')[1];
+        axios.defaults.headers.common['X-XSRF-TOKEN'] = csrfToken;
+
+        // Function to fetch the user ID
+        const fetchUserId = async () => {
+            try {
+                const response = await axios.get(`/api/user-id`);
+                setUserId(response.data.user_id);
+                console.log('Fetched User ID:', userId);
+            } catch (error) {
+                console.error('Error fetching user ID:', error);
+            }
+        };
+
+        fetchUserId();
+    }, []);
+
+    useEffect(() => {
+        if (userId === null) {
+            return;
+        }
+
+
+        const fetchJobs = async () => {
+            try {
+                const response = await axios.get(`/api/jobs`, {
+                    params: {
+
+                    }
+                });
+                const receivedJobs = response.data.slice(0, 3);
+                setJobs(receivedJobs);
+                console.log("jobs", response.data);
+
+
+                if (receivedJobs.length > 0) {
+                    setFeaturedJob(receivedJobs[0]);
+                    console.log(receivedJobs[0])
+                }
+            } catch (error) {
+                console.error("Error fetching jobs:", error);
+            }
+        };
+
+        fetchJobs();
+    }, [userId]);
+
+    const handleSearch = async (e) => {
+        e.preventDefault();
+
+
+        const lowerCaseSearchTerm = searchTerm ? searchTerm.toLowerCase() : null;
+        const lowerCaseSearchLocation = searchLocation ? searchLocation.toLowerCase() : null;
+
+        console.log("Search Parameters:", { lowerCaseSearchTerm, lowerCaseSearchLocation });
+
+        try {
+            const response = await axios.get(`/api/jobs/search/${userId}`, {
+                params: {
+                    searchTerm: lowerCaseSearchTerm,
+                    location: lowerCaseSearchLocation,
+                }
+            });
+
+            setJobs(response.data);
+            console.log("Jobs found:", response.data);
+        } catch (error) {
+            console.error("Error searching jobs:", error);
+        }
     };
+
+
+
+
 
     return (
         <NavBar header={"Job Postings"}>
@@ -40,43 +120,49 @@ function Jobs() {
                             Get amazing opportunities through jobs at CO-OP
                             Connect!
                         </TextDescription>
-                        <SearchForm>
-                            <SearchField>
-                                <img
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/7ac6f5e8995015505b63112c3fe0ce83293960aae84ac26f166dcf6eb5607efc?apiKey=d66532d056b14640a799069157705b77&"
-                                    alt="search icon"
-                                />
-                                <SearchInput
-                                    placeholder="Job Titles, Keywords"
-                                    aria-label="Job Titles, Keywords"
-                                />
-                            </SearchField>
-                            <SearchField>
-                                <img
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/e18a12a75f61520eab005b610b7b3ed410f4b0e7ebaa3f2d7c7708f36f9bb18d?apiKey=d66532d056b14640a799069157705b77&"
-                                    alt="location icon"
-                                />
-                                <SearchInput
-                                    placeholder="Location"
-                                    aria-label="Location"
-                                />
-                            </SearchField>
-                            <SearchButton>View Jobs</SearchButton>
-                        </SearchForm>
-                        <JobList>
+                        <SearchForm onSubmit={handleSearch}>
+                        <SearchField>
+                <img
+                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/7ac6f5e8995015505b63112c3fe0ce83293960aae84ac26f166dcf6eb5607efc?apiKey=d66532d056b14640a799069157705b77&"
+                    alt="search icon"
+                />
+                <SearchInput
+                    type="text"
+                    placeholder="Job Titles, Keywords"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    aria-label="Job Titles, Keywords"
+                />
+            </SearchField>
+            <SearchField>
+                <img
+                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/e18a12a75f61520eab005b610b7b3ed410f4b0e7ebaa3f2d7c7708f36f9bb18d?apiKey=d66532d056b14640a799069157705b77&"
+                    alt="location icon"
+                />
+                <SearchInput
+                    type="text"
+
+                    value={searchLocation}
+                    onChange={(e) => setLocation(e.target.value)}
+                    aria-label="Location"
+                />
+            </SearchField>
+            <SearchButton type="submit">View Jobs</SearchButton>
+                        </SearchForm>{jobs && (
+                        <JobList>{jobs && jobs.length > 0 ? (
                             <JobColumn>
-                                {jobPostings.map((job) => (
+                                {jobs.map((job) => (
                                     <JobCard key={job.title}>
                                         <JobTitle>{job.title}</JobTitle>
                                         <JobMeta>
                                             <div>{job.company}</div>
                                             <div>{job.location}</div>
                                         </JobMeta>
-                                        <JobTags>
-                                            {job.tags.map((tag, index) => (
-                                                <Tag key={index}>{tag}</Tag>
+                                        <SkillsList>
+                                {JSON.parse(job.skills).map((tag, index) => (
+                                                <SkillBadge key={index}>{tag}</SkillBadge>
                                             ))}
-                                        </JobTags>
+                                </SkillsList>
                                         <JobDescription>
                                             {job.description}
                                         </JobDescription>
@@ -84,7 +170,9 @@ function Jobs() {
                                         <ViewButton>VIEW POSTING</ViewButton>
                                     </JobCard>
                                 ))}
-                            </JobColumn>
+                            </JobColumn>) : (
+                <p>No jobs found.</p>
+            )} {featuredJob && (
                             <FeaturedJob>
                                 <JobCardFeatured>
                                     <JobTitle>{featuredJob.title}</JobTitle>
@@ -95,10 +183,10 @@ function Jobs() {
                                         />
                                         <CompanyDetails>
                                             <CompanyName>
-                                                {featuredJob.company}
+                                                {featuredJob.title}
                                             </CompanyName>
                                             <CompanyLocation>
-                                                {featuredJob.location}
+                                                {featuredJob.title}
                                             </CompanyLocation>
                                         </CompanyDetails>
                                     </CompanyInfo>
@@ -112,11 +200,11 @@ function Jobs() {
                                         <br />
                                         <strong>Why do we use it?</strong>
                                         <br />
-                                        {featuredJob.reasons}
+                                        {featuredJob.title}
                                     </JobFullDescription>
                                 </JobCardFeatured>
-                            </FeaturedJob>
-                        </JobList>
+                            </FeaturedJob>)}
+                        </JobList>)}
                     </SearchInnerContainer>
                 </SearchContainer>
             </MainContainer>
@@ -218,7 +306,8 @@ const SearchButton = styled.button`
 
 const JobList = styled.div`
     display: flex;
-    margin-top: 30px;
+    margin-top: 5vh;
+    margin-bottom: 5vh;
     padding: 10px 10px 0;
     @media (max-width: 991px) {
         max-width: 100%;
@@ -231,6 +320,11 @@ const JobColumn = styled.div`
     line-height: normal;
     width: 43%;
     gap: 10px;
+    max-height: 50vh; /* Adjust the height as needed */
+    overflow-y: auto;
+    padding: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
     @media (max-width: 991px) {
         width: 100%;
     }
@@ -410,6 +504,38 @@ const JobFullDescription = styled.p`
 
     @media (max-width: 991px) {
         max-width: 100%;
+    }
+`;
+
+const SkillsList = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-content: space-between;
+    align-self: stretch;
+    flex-wrap: wrap;
+    margin-top: 17px;
+    gap: 10px;
+    font-size: 12px;
+    color: #773dc3;
+    letter-spacing: 0.4px;
+    line-height: 133%;
+
+    @media (max-width: 991px) {
+        white-space: initial;
+    }
+`;
+
+const SkillBadge = styled.span`
+    font-family: Poppins, sans-serif;
+    border: 1px solid #773dc3;
+    border-radius: 40px;
+    padding: 8px 10px;
+    text-align: center;
+
+    &:nth-child(4) {
+        background-color: #773dc3;
+        color: #fff;
+        box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
     }
 `;
 

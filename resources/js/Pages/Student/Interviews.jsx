@@ -2,10 +2,16 @@ import * as React from "react";
 import { useState } from "react";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
+import Modal from "../Profile/Partials/AddEventModal"
+
+
 
 const Interviews = () => {
     const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+    const [events, setEvents] = useState([]);
+    const [showModal, setShowModal] = useState(false); // State to manage modal visibility
+    const [selectedDate, setSelectedDate] = useState(null); // State to store selected date for event
 
     const renderCalendar = (month, year) => {
         const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -23,10 +29,19 @@ const Interviews = () => {
                 })),
             ...Array(daysInMonth)
                 .fill(null)
-                .map((_, i) => ({ day: i + 1, isInCurrentMonth: true })),
+                .map((_, i) => ({
+                    day: i + 1,
+                    isInCurrentMonth: true,
+                    hasEvent: events.some((event) =>
+                        isSameDay(event.date, new Date(year, month, i + 1))
+                    ),
+                })),
             ...Array(nextMonthDays)
                 .fill(null)
-                .map((_, i) => ({ day: i + 1, isInCurrentMonth: false })),
+                .map((_, i) => ({
+                    day: i + 1,
+                    isInCurrentMonth: false,
+                })),
         ];
 
         return daysArray;
@@ -56,6 +71,37 @@ const Interviews = () => {
         } else {
             setCurrentMonth(currentMonth + 1);
         }
+    };
+
+    const addEvent = (date, title, description) => {
+        const newEvent = {
+            id: events.length + 1,
+            date: new Date(currentYear, currentMonth, date),
+            title,
+            description,
+        };
+
+        setEvents([...events, newEvent]);
+    };
+
+    const isSameDay = (date1, date2) =>
+        date1.getDate() === date2.getDate() &&
+        date1.getMonth() === date2.getMonth() &&
+        date1.getFullYear() === date2.getFullYear();
+
+    const openModal = (day) => {
+        setSelectedDate(day);
+        setShowModal(true);
+    };
+
+    const closeModal = () => {
+        setSelectedDate(null);
+        setShowModal(false);
+    };
+
+    const handleAddEvent = (title, description) => {
+        addEvent(selectedDate, title, description);
+        closeModal();
     };
 
     const daysArray = renderCalendar(currentMonth, currentYear);
@@ -113,20 +159,33 @@ const Interviews = () => {
                                         currentMonth === today.getMonth() &&
                                         currentYear === today.getFullYear();
 
+                                    const hasEventIndicator = date.hasEvent ? (
+                                        <EventDot />
+                                    ) : null;
+
                                     if (date.isInCurrentMonth) {
                                         return isToday ? (
-                                            <TodayDateCell key={idx}>
+                                            <TodayDateCell
+                                                key={idx}
+                                                onClick={() => openModal(date.day)}
+                                            >
                                                 {date.day}
+                                                {hasEventIndicator}
                                             </TodayDateCell>
                                         ) : (
-                                            <DateCell key={idx}>
+                                            <DateCell
+                                                key={idx}
+                                                onClick={() => openModal(date.day)}
+                                            >
                                                 {date.day}
+                                                {hasEventIndicator}
                                             </DateCell>
                                         );
                                     } else {
                                         return (
                                             <InactiveDateCell key={idx}>
                                                 {date.day}
+                                                {hasEventIndicator}
                                             </InactiveDateCell>
                                         );
                                     }
@@ -136,10 +195,17 @@ const Interviews = () => {
                     </Wrapper>
                 </Container>
             </MainContainer>
+            {showModal && (
+                <Modal
+                    onClose={closeModal}
+                    onSubmit={(title, description) =>
+                        handleAddEvent(title, description)
+                    }
+                />
+            )}
         </NavBar>
     );
 };
-
 const MainContainer = styled.div`
     display: flex;
     padding: 20px;

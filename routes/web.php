@@ -97,6 +97,11 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
     Route::get('/admin/dashboard', 'AdminController@dashboard')->name('admin.dashboard');
 });
 
+
+
+
+
+
 Route::get('/auth/google/redirect', [LoginProviderController::class, 'redirectToGoogle'])->name('login.google');
 Route::get('/auth/google/callback', [LoginProviderController::class, 'handleGoogleCallback']);
 Route::get('/auth/linkedin/redirect', [LoginProviderController::class, 'redirectToLinkedIn'])->name('login.linkedin');
