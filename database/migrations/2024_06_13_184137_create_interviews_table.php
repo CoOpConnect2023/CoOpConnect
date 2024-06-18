@@ -13,14 +13,12 @@ return new class extends Migration
     {
         Schema::create('interviews', function (Blueprint $table) {
             $table->id();
+            $table->dateTime('interview_date');
+            $table->integer('duration');
+            $table->string('status');
+            $table->text('description');
+            $table->foreignId('interviewee_id')->constrained('users');
             $table->foreignId('interviewer_id')->constrained('users');
-    $table->foreignId('interviewee_id')->constrained('users');
-    $table->dateTime('start_time');
-    $table->dateTime('end_time');
-    $table->date('date');
-    $table->boolean('status')->default(false);
-    $table->text('description')->nullable();
-    $table->text('feedback')->nullable();
             $table->timestamps();
         });
     }
