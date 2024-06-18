@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('reflections', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('image')->nullable();
             $table->text('content');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('jobs_id')->constrained()->onDelete('cascade');
             $table->timestamps();
+
+            $table->unique(['user_id', 'jobs_id']);
         });
     }
 
