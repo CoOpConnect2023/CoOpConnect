@@ -8,8 +8,9 @@ use App\Filters\ApiFilter;
 class UserJobsFilter extends ApiFilter
 {
     protected $safeParams = [
-        'user_id' => ['eq'],
-        'jobs_id' => ['eq'],
+        'id' => ['eq'],
+        'userId' => ['eq'],
+        'jobsId' => ['eq'],
     ];
 
     protected $columnMap = [
