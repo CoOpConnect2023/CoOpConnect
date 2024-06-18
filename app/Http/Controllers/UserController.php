@@ -55,4 +55,47 @@ class UserController extends Controller
         'conversations' => $conversations,
       ]);
     }
+
+
+    public function updateProfile(Request $request, User $user)
+{
+    // Ensure the authenticated user matches the requested user ID
+    if (Auth::user()->id !== $user->id) {
+        return response()->json(['error' => 'Unauthorized'], 403);
+    }
+
+    // Handle profile image upload
+    if ($request->hasFile('profile_image')) {
+        $image = $request->file('profile_image');
+
+        // Generate a unique file name
+        $imageName = time() . '.' . $image->getClientOriginalExtension();
+
+        // Store the image in the storage/app/public/profile_images directory
+        $image->storeAs('public/profile_images', $imageName);
+
+        // Update user's profile_image field in database
+        $user->profile_image = '/storage/profile_images/' . $imageName;
+
+        // Log the uploaded image path
+        info('Uploaded image path: ' . $user->profile_image);
+    }
+
+    // Update other fields
+    $user->description = $request->description;
+    $user->name = $request->name;
+    $user->email = $request->email;
+    $user->role = $request->role;
+    $user->school = $request->school;
+    $user->positiontitle = $request->positiontitle;
+    $user->skills = $request->skills;
+
+    // Save user data
+    $user->save();
+
+    // Log the updated user data
+    info('Updated user data: ' . json_encode($user));
+
+    return response()->json(['message' => 'Profile updated successfully', 'user' => $user]);
+}
 }

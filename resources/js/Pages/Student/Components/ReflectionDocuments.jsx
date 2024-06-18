@@ -52,8 +52,14 @@ const OptionCard = styled.div`
     gap: 8px;
     padding: 8px 16px;
     background-color: ${({ color }) => color};
+     transition: background-color 0.3s ease, transform 0.2s ease;
     @media (max-width: 991px) {
         padding: 0 20px;
+    }
+         &:hover {
+
+        transform: scale(1.05);
+
     }
 `;
 

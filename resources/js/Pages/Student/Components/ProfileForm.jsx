@@ -16,57 +16,119 @@ const Dropzone = ({ onDrop }) => {
     );
 };
 
-
-
-
 function ProfileForm() {
     const [user, setUser] = useState(null);
     const [droppedImage, setDroppedImage] = useState(null);
-    const [userData, setUserData] = useState({
-        description: user && user.description !== null ? user.description : '',
-    });
 
     const handleDrop = (acceptedFiles) => {
         if (acceptedFiles && acceptedFiles.length > 0) {
             const file = acceptedFiles[0];
             const imageUrl = URL.createObjectURL(file);
-            console.log('Dropped image URL:', imageUrl); // Debugging
             setDroppedImage(imageUrl);
         }
     };
 
-
     useEffect(() => {
         // Fetch the XSRF token from cookies and set it in Axios headers
         const csrfToken = document.cookie
-            .split('; ')
-            .find(row => row.startsWith('XSRF-TOKEN='))
-            ?.split('=')[1];
-        axios.defaults.headers.common['X-XSRF-TOKEN'] = csrfToken;
+            .split("; ")
+            .find((row) => row.startsWith("XSRF-TOKEN="))
+            ?.split("=")[1];
+        axios.defaults.headers.common["X-XSRF-TOKEN"] = csrfToken;
 
         // Function to fetch the user ID
         const fetchUserId = async () => {
             try {
                 const response = await axios.get(`/api/user-id`);
-                setUser(response.data.user);
-                console.log('Fetched User :', response.data.user);
-                console.log(user,"testuser")
+                const userData = response.data.user;
+                userData.skills = JSON.parse(userData.skills || "[]");
+                setUser(userData);
             } catch (error) {
-                console.error('Error fetching user ID:', error);
+                console.error("Error fetching user ID:", error);
             }
         };
 
         fetchUserId();
     }, []);
 
-
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setUserData((prevData) => ({
+        setUser((prevData) => ({
             ...prevData,
             [name]: value,
         }));
     };
+
+    const addSkill = () => {
+        if (user.newSkill.trim() !== "") {
+            setUser((prevData) => ({
+                ...prevData,
+                skills: [...prevData.skills, prevData.newSkill.trim()],
+                newSkill: "", // Clear the input field after adding the skill
+            }));
+        }
+    };
+
+    const removeSkill = (index) => {
+        const updatedSkills = [...user.skills];
+        updatedSkills.splice(index, 1);
+        setUser((prevData) => ({
+            ...prevData,
+            skills: updatedSkills,
+        }));
+    };
+
+    const handleSubmit = async () => {
+        try {
+            const formData = new FormData();
+
+            // Check if droppedImage is set and append it to formData
+            if (droppedImage) {
+                // If droppedImage is a File object (if using Dropzone), directly append it
+                if (droppedImage instanceof File) {
+                    formData.append("profile_image", droppedImage);
+                } else {
+                    // If droppedImage is a URL (if using an image preview), fetch the file and append
+                    const response = await fetch(droppedImage);
+                    const blob = await response.blob();
+                    formData.append("profile_image", blob, "profile_image.png"); // Adjust filename as needed
+                }
+            }
+
+            // Append other form fields
+            formData.append("description", user.description);
+            formData.append("name", user.name);
+            formData.append("email", user.email);
+            formData.append("role", user.role);
+            formData.append("school", user.school);
+            formData.append("positiontitle", user.positiontitle);
+            formData.append("skills", JSON.stringify(user.skills));
+
+            const response = await axios.post(
+                `/api/update-profile/${user.id}`,
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                        Authorization: `Bearer ${localStorage.getItem(
+                            "accessToken"
+                        )}`,
+                    },
+                }
+            );
+
+            console.log("Profile updated:", response.data);
+            window.location.reload();
+        } catch (error) {
+            console.error("Error updating profile:", error);
+        }
+    };
+
+    const handleClear = () => {
+        // Update user state to clear profile image
+        setUser({ ...user, profile_image: null });
+    };
+
     if (!user) {
         return <div>Loading...</div>;
     }
@@ -76,30 +138,37 @@ function ProfileForm() {
             <ProfileHeader>Student Name</ProfileHeader>
             <ProfileSection>
                 <ProfileContainer>
-                <ProfileImageWrapper>
+                    <ProfileImageWrapper>
                         {droppedImage ? (
-                            <ProfileImage loading="lazy" src={droppedImage} alt="Profile" />
+                            <ProfileImage
+                                loading="lazy"
+                                src={droppedImage}
+                                alt="Profile"
+                            />
                         ) : user.profile_image ? (
-                            <ProfileImage loading="lazy" src={user.profile_image} alt="Profile" />
+                            <div>
+                                <ProfileImage
+                                    loading="lazy"
+                                    src={user.profile_image}
+                                    alt="ProfileIMG"
+                                />
+                                <ClearProfileButton onClick={handleClear}>
+                                    Clear
+                                </ClearProfileButton>
+                            </div>
                         ) : (
                             <Dropzone onDrop={handleDrop} />
                         )}
                     </ProfileImageWrapper>
                     <ProfileBio>
                         <BioHeader>Bio:</BioHeader>
-                        {user && user.description !== null && user.description !== '' ? (
-                    <BioContent>
-                        {user.description}
-                    </BioContent>
-                ) : (
-                    <DetailValue
-                        name="description"
-                        value={userData.description}
-                        onChange={handleChange}
-                        placeholder="Add a few words about yourself..."
-                    />
-                )}
-            </ProfileBio>
+                        <DetailValue
+                            name="description"
+                            value={user.description}
+                            onChange={handleChange}
+                            placeholder="Add a few words about yourself..."
+                        />
+                    </ProfileBio>
                 </ProfileContainer>
             </ProfileSection>
             <ProfileDetail>
@@ -125,16 +194,16 @@ function ProfileForm() {
                     <DetailLabel>Account Type</DetailLabel>
                     <DetailValue
                         type="text"
-                        name="accountTypes"
+                        name="role"
                         value={user.role}
-
+                        onChange={handleChange}
                     />
                 </ProfileDetailItem>
                 <ProfileDetailItem>
                     <DetailLabel>Education Institute</DetailLabel>
                     <DetailValue
                         type="text"
-                        name="educationInstitute"
+                        name="school"
                         value={user.school}
                         onChange={handleChange}
                     />
@@ -143,16 +212,54 @@ function ProfileForm() {
                     <DetailLabel>Preferred Position Title</DetailLabel>
                     <DetailValue
                         type="text"
-                        name="preferredPosition"
+                        name="positiontitle"
                         value={user.positiontitle}
                         onChange={handleChange}
                     />
                 </ProfileDetailItem>
+                <ProfileDetailItem>
+                    <DetailLabel>Skills</DetailLabel>
+                    <SkillsContainer>
+                        {Array.isArray(user.skills) &&
+                        user.skills.length > 0 ? (
+                            user.skills.map((skill, index) => (
+                                <SkillChip key={index}>
+                                    {skill}
+                                    <span
+                                        style={{
+                                            cursor: "pointer",
+                                            marginLeft: "6px",
+                                        }}
+                                        onClick={() => removeSkill(index)}
+                                    >
+                                        &#10005;
+                                    </span>
+                                </SkillChip>
+                            ))
+                        ) : (
+                            <p>No skills added yet.</p>
+                        )}
+                        <DetailValue
+                            type="text"
+                            name="newSkill"
+                            value={user.newSkill || ""}
+                            onChange={handleChange}
+                            placeholder="Add a skill..."
+                        />
+                        <AddSkillButton type="button" onClick={addSkill}>
+                            Add Skill
+                        </AddSkillButton>
+                    </SkillsContainer>
+                </ProfileDetailItem>
             </ProfileDetail>
-            <EditProfileButton>Edit Profile</EditProfileButton>
+            <EditProfileButton onClick={handleSubmit}>
+                Save Profile Changes
+            </EditProfileButton>
         </ProfileWrapper>
     );
 }
+
+
 
 const ProfileWrapper = styled.section`
     display: flex;
@@ -240,6 +347,8 @@ const BioContent = styled.div`
     display: flex;
     flex-direction: column;
     padding: 12px;
+    white-space: pre-wrap; /* Ensures that whitespace is preserved and text wraps */
+    word-wrap: break-word;
 `;
 const BioLine = styled.div`
     border-radius: 3px;
@@ -298,12 +407,37 @@ const DetailValue = styled.input`
     line-height: 143%;
     width: 100%;
     box-sizing: border-box;
+    white-space: pre-wrap; /* Ensures that whitespace is preserved and text wraps */
+    word-wrap: break-word;
     @media (max-width: 991px) {
         max-width: 100%;
         padding-right: 20px;
     }
 `;
 const EditProfileButton = styled.button`
+    justify-content: center;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #6b538c, #a97bbf);
+    align-self: start;
+    margin-top: 20px;
+    color: #fff;
+    letter-spacing: 0.5px;
+    padding: 8px 16px;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 150%;
+    font-family: Roboto, sans-serif;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+
+    &:hover {
+        background: linear-gradient(135deg, #543b6f, #8e6aae);
+        transform: scale(1.05);
+    }
+`;
+
+const ClearProfileButton = styled.button`
     justify-content: center;
     border-radius: 12px;
     background: linear-gradient(135deg, #6b538c, #a97bbf);
@@ -344,5 +478,35 @@ const DropzoneContainer = styled.div`
         background-color: #f3e8ff;
     }
 `;
+
+const SkillsContainer = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+`;
+
+const SkillChip = styled.div`
+    background-color: #e0e0e0;
+    color: #333;
+    padding: 6px 12px;
+    border-radius: 20px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+`;
+
+const AddSkillButton = styled.button`
+    background-color: #6b538c;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #7c4e7e;
+    }
+`;
+
 
 export default ProfileForm;

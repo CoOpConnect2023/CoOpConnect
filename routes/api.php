@@ -49,6 +49,21 @@ Route::get('/user-id', function () {
 
 Route::get('/download/{id}', [DocumentsController::class, 'download'])->name('file.download');
 
+Route::post('/update-profile/{user}', [UserController::class, 'updateProfile'])->name('profile.update')->middleware('auth');
+
+Route::get('/profile-images/{filename}', function ($filename) {
+    $path = storage_path('app/public/' . $filename);
+    if (!File::exists($path)) {
+        abort(404);
+    }
+
+    $file = File::get($path);
+    $type = File::mimeType($path);
+    $response = Response::make($file, 200);
+    $response->header("Content-Type", $type);
+
+    return $response;
+});
 
 
 
