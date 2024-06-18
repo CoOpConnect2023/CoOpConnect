@@ -8,6 +8,7 @@ use App\Filters\ApiFilter;
 class TokenFilter extends ApiFilter
 {
     protected $safeParams = [
+        'id' => ['eq'],
         'email' => ['eq'],
         'token' => ['eq']
     ];

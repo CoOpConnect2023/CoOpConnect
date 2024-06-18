@@ -34,24 +34,24 @@ class UserCoursesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(UserCourses $userCourse)
+    public function show(UserCourses $usercourse)
     {
-        return new UserCoursesResource($userCourse);
+        return new UserCoursesResource($usercourse);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUserCoursesRequest $request, UserCourses $userCourse)
+    public function update(UpdateUserCoursesRequest $request, UserCourses $usercourse)
     {
-        $userCourse->update($request->all());
+        $usercourse->update($request->all());
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(UserCourses $userCourse)
+    public function destroy(UserCourses $usercourse)
     {
-        //
+        $usercourse->delete();
     }
 }

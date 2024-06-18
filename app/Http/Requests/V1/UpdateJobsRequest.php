@@ -12,7 +12,7 @@ class UpdateJobsRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -47,9 +47,9 @@ class UpdateJobsRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        $this->merge([
+        $this->merge(array_filter([
             'posting_status' => $this->postingStatus,
             'job_type' => $this->jobType
-        ]);
+        ]));
     }
 }

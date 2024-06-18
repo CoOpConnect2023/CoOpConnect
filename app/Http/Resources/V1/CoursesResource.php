@@ -19,6 +19,7 @@ class CoursesResource extends JsonResource
             'name' => $this->name,
             'startDate' => $this->start_date,
             'endDate' => $this->end_date,
+            'users' => $this->whenLoaded('users')
         ];
     }
 }

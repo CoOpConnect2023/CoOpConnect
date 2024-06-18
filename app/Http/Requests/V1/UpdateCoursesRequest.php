@@ -38,16 +38,9 @@ class UpdateCoursesRequest extends FormRequest
     }
     protected function prepareForValidation()
     {
-        if ($this->startDate) {
-            $this->merge([
-                'start_date' => $this->startDate,
-            ]);
-        }
-        if ($this->endDate) {
-            $this->merge([
-                'end_date' => $this->endDate
-            ]);
-        }
-
+        $this->merge(array_filter([
+            'start_date' => $this->startDate,
+            'end_date' => $this->endDate,
+        ]));
     }
 }

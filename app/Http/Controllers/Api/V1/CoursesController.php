@@ -19,8 +19,17 @@ class CoursesController extends Controller
     public function index(Request $request)
     {
         $filter = new CoursesFilter();
-        $filterItems = $filter->transform($request);  //[['column,', 'operator', 'value']]
-        return new CoursesCollection(Courses::where($filterItems)->get());
+        $filterItems = $filter->transform($request);
+
+        $includeUsers = $request->query('includeUsers');
+
+        $courses = Courses::where($filterItems);
+
+        if ($includeUsers) {
+            $courses = $courses->with('users');
+        }
+
+        return new CoursesCollection($courses->get());
     }
 
     /**
@@ -52,6 +61,6 @@ class CoursesController extends Controller
      */
     public function destroy(Courses $course)
     {
-        //
+        $course->delete();
     }
 }

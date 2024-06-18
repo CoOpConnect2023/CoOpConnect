@@ -8,12 +8,13 @@ use App\Filters\ApiFilter;
 class InterviewsFilter extends ApiFilter
 {
     protected $safeParams = [
-        'interview_date' => ['eq'],
+        'id' => ['eq'],
+        'interviewDate' => ['eq'],
         'duration' => ['eq'],
         'status' => ['eq'],
         'description' => ['eq'],
-        'interviewee_id' => ['eq'],
-        'interviewer_id' => ['eq'],
+        'intervieweeId' => ['eq'],
+        'interviewerId' => ['eq'],
     ];
 
     protected $columnMap = [

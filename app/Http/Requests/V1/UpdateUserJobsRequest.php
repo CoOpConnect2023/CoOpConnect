@@ -28,16 +28,16 @@ class UpdateUserJobsRequest extends FormRequest
             ];
         } else {
             return [
-                'user_id' => ['sometimes', 'required', 'exists:users_id'],
-                'jobs_id' => ['sometimes', 'required', 'exists:jobs_id'],
+                'user_id' => ['sometimes', 'required', 'exists:users,id'],
+                'jobs_id' => ['sometimes', 'required', 'exists:jobs,id'],
             ];
         }
     }
     protected function prepareForValidation()
     {
-        $this->merge([
+        $this->merge(array_filter([
             'user_id' => $this->userId,
             'jobs_id' => $this->jobsId
-        ]);
+        ]));
     }
 }

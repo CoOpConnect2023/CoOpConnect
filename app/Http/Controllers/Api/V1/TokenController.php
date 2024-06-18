@@ -52,6 +52,6 @@ class TokenController extends Controller
      */
     public function destroy(Token $token)
     {
-        //
+        $token->delete();
     }
 }

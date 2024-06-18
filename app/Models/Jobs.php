@@ -9,6 +9,10 @@ class Jobs extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'skills' => 'array',
+    ];
+
     protected $fillable = [
         'title',
         'description',
