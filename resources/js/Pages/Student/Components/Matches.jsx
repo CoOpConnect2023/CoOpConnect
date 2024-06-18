@@ -107,6 +107,15 @@ const ViewButton = styled.button`
     cursor: pointer;
 `;
 
+const EmptyMessage = styled.div`
+    color: #ff6347; /* Tomato color for visibility */
+    font-size: 1.2em;
+    padding: 20px;
+    text-align: center;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+`;
+
 
 
 function Matches() {
@@ -169,9 +178,16 @@ function Matches() {
     return (
         <JobContainer>
             <Title>Matches</Title>
-            <Subtitle>Some recommended jobs for you to check out!</Subtitle>
+            {jobs.length > 0 && (
+            <Subtitle>Some recommended jobs for you to check out!</Subtitle>)}
+
             <JobList>
-                {jobs.map((job, index) => (
+            {jobs.length === 0 ? (
+                <EmptyMessage>
+                    Add some skills to your profile to see some jobs to apply for
+                </EmptyMessage>
+            ) : (
+                jobs.map((job, index) => (
                     <JobCard key={index} hasMargin={index !== 0}>
                         <JobTitle>{job.title}</JobTitle>
                         <JobDetails>
@@ -188,7 +204,9 @@ function Matches() {
                         <Divider />
                         <ViewButton>VIEW JOB</ViewButton>
                     </JobCard>
-                ))}
+                ))
+            )}
+
             </JobList>
         </JobContainer>
     );

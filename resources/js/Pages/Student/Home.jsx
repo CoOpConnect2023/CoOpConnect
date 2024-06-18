@@ -46,7 +46,8 @@ function Home() {
                         skills: defaultSkills
                     }
                 });
-                setJobs(response.data);
+                const limitedJobs = response.data.slice(0, 8);
+                setJobs(limitedJobs);
                 console.log("jobs", response.data);
 
 

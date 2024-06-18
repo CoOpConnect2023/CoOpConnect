@@ -30,6 +30,10 @@ function Jobs() {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchLocation, setLocation] = useState('');
 
+    function getRandomNumber() {
+        return Math.floor(Math.random() * 20) + 1;
+    }
+
     useEffect(() => {
         // Fetch the XSRF token from cookies and set it in Axios headers
         const csrfToken = document.cookie
@@ -65,7 +69,7 @@ function Jobs() {
 
                     }
                 });
-                const receivedJobs = response.data.slice(0, 3);
+                const receivedJobs = response.data.slice(0, 30);
                 setJobs(receivedJobs);
                 console.log("jobs", response.data);
 

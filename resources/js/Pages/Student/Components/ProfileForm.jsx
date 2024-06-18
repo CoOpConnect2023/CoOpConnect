@@ -1,10 +1,39 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { useDropzone } from 'react-dropzone';
+
+
+
+
+const Dropzone = ({ onDrop }) => {
+    const { getRootProps, getInputProps } = useDropzone({ onDrop });
+
+    return (
+        <DropzoneContainer {...getRootProps()}>
+            <input {...getInputProps()} />
+            <p>Drop a profile image here</p>
+        </DropzoneContainer>
+    );
+};
+
+
+
 
 function ProfileForm() {
     const [user, setUser] = useState(null);
+    const [droppedImage, setDroppedImage] = useState(null);
+    const [userData, setUserData] = useState({
+        description: user && user.description !== null ? user.description : '',
+    });
 
-
+    const handleDrop = (acceptedFiles) => {
+        if (acceptedFiles && acceptedFiles.length > 0) {
+            const file = acceptedFiles[0];
+            const imageUrl = URL.createObjectURL(file);
+            console.log('Dropped image URL:', imageUrl); // Debugging
+            setDroppedImage(imageUrl);
+        }
+    };
 
 
     useEffect(() => {
@@ -47,20 +76,30 @@ function ProfileForm() {
             <ProfileHeader>Student Name</ProfileHeader>
             <ProfileSection>
                 <ProfileContainer>
-                    <ProfileImageWrapper>
-                        <ProfileImage loading="lazy" src="{user.school}" alt="Profile" />
+                <ProfileImageWrapper>
+                        {droppedImage ? (
+                            <ProfileImage loading="lazy" src={droppedImage} alt="Profile" />
+                        ) : user.profile_image ? (
+                            <ProfileImage loading="lazy" src={user.profile_image} alt="Profile" />
+                        ) : (
+                            <Dropzone onDrop={handleDrop} />
+                        )}
                     </ProfileImageWrapper>
                     <ProfileBio>
                         <BioHeader>Bio:</BioHeader>
-                        <BioContent>
-                            <BioLine />
-                            <BioLine />
-                            <BioStatus>
-                                <BioStatusItem />
-                                <BioStatusItem />
-                            </BioStatus>
-                        </BioContent>
-                    </ProfileBio>
+                        {user && user.description !== null && user.description !== '' ? (
+                    <BioContent>
+                        {user.description}
+                    </BioContent>
+                ) : (
+                    <DetailValue
+                        name="description"
+                        value={userData.description}
+                        onChange={handleChange}
+                        placeholder="Add a few words about yourself..."
+                    />
+                )}
+            </ProfileBio>
                 </ProfileContainer>
             </ProfileSection>
             <ProfileDetail>
@@ -101,11 +140,11 @@ function ProfileForm() {
                     />
                 </ProfileDetailItem>
                 <ProfileDetailItem>
-                    <DetailLabel>Preferred Position</DetailLabel>
+                    <DetailLabel>Preferred Position Title</DetailLabel>
                     <DetailValue
                         type="text"
                         name="preferredPosition"
-                        value={user.school}
+                        value={user.positiontitle}
                         onChange={handleChange}
                     />
                 </ProfileDetailItem>
@@ -167,11 +206,11 @@ const ProfileImage = styled.img`
     border: 2px solid rgba(45, 54, 72, 1);
     background-color: #edf0f7;
     display: block;
-    width: 150px;
-    height: 150px;
-    padding: 0 55px;
-    aspect-ratio: 1;
-    object-fit: cover;
+
+
+
+
+
     @media (max-width: 991px) {
         padding: 0 20px;
     }
@@ -267,7 +306,7 @@ const DetailValue = styled.input`
 const EditProfileButton = styled.button`
     justify-content: center;
     border-radius: 12px;
-    background-color: #6b538c;
+    background: linear-gradient(135deg, #6b538c, #a97bbf);
     align-self: start;
     margin-top: 20px;
     color: #fff;
@@ -277,6 +316,33 @@ const EditProfileButton = styled.button`
     font-size: 16px;
     line-height: 150%;
     font-family: Roboto, sans-serif;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+
+    &:hover {
+        background: linear-gradient(135deg, #543b6f, #8e6aae);
+        transform: scale(1.05);
+    }
+`;
+
+
+const DropzoneContainer = styled.div`
+    border: 2px dashed #6b538c;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    color: #6b538c;
+    font-family: Poppins, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.1px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+
+    &:hover {
+        background-color: #f3e8ff;
+    }
 `;
 
 export default ProfileForm;
