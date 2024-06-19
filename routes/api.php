@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\CoursesController;
 use App\Http\Controllers\Api\V1\InterviewsController;
+use App\Http\Controllers\Api\V1\InterviewController;
 use App\Http\Controllers\Api\V1\JobsController;
 use App\Http\Controllers\Api\V1\ReflectionsController;
 use App\Http\Controllers\Api\V1\TokenController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\DocumentsController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\ReflectionController;
 use App\Http\Controllers\UserController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -113,3 +115,8 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
 
 
 Route::get('/users/{userId}/conversations', [UserController::class, 'getConversations']);
+Route::delete('/delete-account/{id}', [UserController::class, 'deleteAccount']);
+
+
+Route::get('/interviews', [InterviewsController::class, 'index']);
+Route::post('/interviews', [InterviewsController::class, 'store']);

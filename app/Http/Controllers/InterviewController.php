@@ -13,7 +13,7 @@ class InterviewController extends Controller
      */
     public function index()
     {
-        //
+        return Interview::all();
     }
 
     /**
@@ -29,7 +29,21 @@ class InterviewController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'start_time' => 'required|date',
+            'end_time' => 'required|date',
+        ]);
+
+        $interview = Interview::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'start_time' => $request->start,
+            'end_time' => $request->end,
+        ]);
+
+        return response()->json($event, 201);
     }
 
     /**

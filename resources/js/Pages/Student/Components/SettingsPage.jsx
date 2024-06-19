@@ -1,7 +1,62 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
+
 function SettingsPanel() {
+    const [userId, setUserId] = useState(null);
+
+
+
+
+
+    useEffect(() => {
+        // Fetch the XSRF token from cookies and set it in Axios headers
+        const csrfToken = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('XSRF-TOKEN='))
+            ?.split('=')[1];
+        axios.defaults.headers.common['X-XSRF-TOKEN'] = csrfToken;
+
+        // Function to fetch the user ID
+        const fetchUserId = async () => {
+            try {
+                const response = await axios.get(`/api/user-id`);
+                setUserId(response.data.user.id);
+                console.log('Fetched User ID:', response.data.user);
+            } catch (error) {
+                console.error('Error fetching user ID:', error);
+            }
+        };
+
+        fetchUserId();
+    }, []);
+
+    const handleDeleteAccount = async () => {
+        try {
+          const response = await axios.delete(`/api/delete-account/${userId}`);
+          console.log("Account deleted successfully:", response.data);
+
+          // Redirect to login page after successful deletion
+          window.location.href = "/login";
+        } catch (error) {
+          console.error("Error deleting account:", error);
+        }
+      };
+
+      const handlePrivacyOptionChange = async (privacyType) => {
+        try {
+          const response = await axios.post(`/api/update-profile-privacy`, {
+            userId: userId,
+            privacyType: privacyType,
+          });
+          console.log("Profile privacy updated successfully:", response.data);
+          // Optionally, you can update UI based on the response
+        } catch (error) {
+          console.error("Error updating profile privacy:", error);
+        }
+      };
+
+
     return (
         <Main>
             <Section className="account-section">
@@ -24,7 +79,7 @@ function SettingsPanel() {
                         </FormContent>
                     </FormColumn>
                     <FormButtonColumn>
-                        <DeleteButton>Delete Account</DeleteButton>
+                        <DeleteButton onClick={handleDeleteAccount}>Delete Account</DeleteButton>
                     </FormButtonColumn>
                 </FormSection>
             </Section>
@@ -45,10 +100,15 @@ function SettingsPanel() {
                             Currently Selected: Private
                         </CurrentSelection>
                         <SettingsOptions>
-                            <OptionButton className="private">
-                                Private
-                            </OptionButton>
-                            <OptionButton>Public</OptionButton>
+                        <OptionButton
+                className="private"
+                onClick={() => handlePrivacyOptionChange("private")}
+              >
+                Private
+              </OptionButton>
+              <OptionButton onClick={() => handlePrivacyOptionChange("public")}>
+                Public
+              </OptionButton>
                         </SettingsOptions>
                     </SettingsControls>
                 </SettingsHeader>
@@ -208,18 +268,17 @@ const FormButtonColumn = styled.div`
 `;
 
 const DeleteButton = styled.button`
-    justify-content: center;
-    border-radius: 6px;
-    background-color: #e53e3e;
-    align-self: stretch;
-    color: #fff;
-    width: 100%;
-    margin: auto 0;
-    padding: 8px 16px;
-    font: 600 16px/150% Inter, sans-serif;
-    @media (max-width: 991px) {
-        margin-top: 40px;
-    }
+  /* Styles for delete button */
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #d32f2f;
+  }
 `;
 
 const SettingsSection = styled.section`

@@ -17,6 +17,7 @@ const DnDCalendar = withDragAndDrop(Calendar);
 
 const Interviews = () => {
     const [showModal, setShowModal] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(null);
     const [events, setEvents] = useState([{
         id: 0,
         title: 'Board Meeting',
@@ -136,10 +137,29 @@ const Interviews = () => {
         setShowModal(false);
     };
 
-    const handleAddEvent = (title, description) => {
-        addEvent(selectedDate, title, description);
-        closeModal();
-    };
+    const handleAddEvent = (title, description, start, end) => {
+        // Format start and end dates to ISO 8601 string format
+        const formattedStart = start.toISOString(); // Convert Date object to ISO string
+  const formattedEnd = end.toISOString();
+
+        // Create newEvent object with formatted dates
+        const newEvent = {
+          title : 'test',
+          description : 'test',
+          start : 'test',
+          end : 'test',
+          status : "test"
+        };
+
+        console.log("newevent", newEvent);
+
+        axios.post('/api/interviews', newEvent)
+          .then(response => {
+            setEvents([...events, response.data]);
+            closeModal();
+          })
+          .catch(error => console.error('Error adding event:', error));
+      };
 
 
     return (
@@ -159,8 +179,11 @@ const Interviews = () => {
         resizable
         onEventResize={handleEventResize}
         style={{ height: "100%" }}
+        selectable
+        onSelectSlot={openModal}
       />
     </DndProvider>
+
     </CalendarDiv>
                     </Wrapper>
                 </Container>
@@ -168,9 +191,8 @@ const Interviews = () => {
             {showModal && (
                 <Modal
                     onClose={closeModal}
-                    onSubmit={(title, description) =>
-                        handleAddEvent(title, description)
-                    }
+                    onSubmit={handleAddEvent}
+                    defaultDate={new Date(getTodayDate())}
                 />
             )}
         </NavBar>

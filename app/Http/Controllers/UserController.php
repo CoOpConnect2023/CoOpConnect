@@ -57,6 +57,30 @@ class UserController extends Controller
     }
 
 
+    public function deleteAccount($id)
+    {
+        try {
+            // Find the user by ID
+            $user = User::findOrFail($id);
+
+            // Perform actions to delete user (example)
+            $user->delete();
+
+            // Optionally, perform additional cleanup tasks like deleting related records
+
+            // Return success response
+            return response()->json(['message' => 'Account deleted successfully'], 200);
+        } catch (\Exception $e) {
+            // Log any errors
+            Log::error('Error deleting account: ' . $e->getMessage());
+
+            // Return error response
+            return response()->json(['error' => 'Could not delete account'], 500);
+        }
+    }
+
+
+
     public function updateProfile(Request $request, User $user)
 {
     // Ensure the authenticated user matches the requested user ID
