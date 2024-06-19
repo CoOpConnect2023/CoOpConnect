@@ -27,17 +27,17 @@ class StoreInterviewsRequest extends FormRequest
             'duration' => ['required', 'integer'],
             'status' => ['required', Rule::in(['scheduled', 'completed', 'canceled'])],
             'description' => ['required'],
-            'interviewee_id' => ['required', 'exists:users_id'],
-            'interviewer_id' => ['required', 'exists:users_id'],
+            'interviewee_id' => ['required', 'exists:users,id'],
+            'interviewer_id' => ['required', 'exists:users,id'],
         ];
     }
 
     protected function prepareForValidation()
     {
-        $this->merge([
+        $this->merge(array_filter([
             'interview_date' => $this->interviewDate,
             'interviewee_id' => $this->intervieweeId,
             'interviewer_id' => $this->interviewerId,
-        ]);
+        ]));
     }
 }

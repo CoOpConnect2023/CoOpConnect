@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reflections', function (Blueprint $table) {
+        Schema::create('interviews', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('image')->nullable();
-            $table->text('content');
+            $table->dateTime('interview_date');
+            $table->integer('duration');
+            $table->string('status');
+            $table->text('description');
+            $table->foreignId('interviewee_id')->constrained('users');
+            $table->foreignId('interviewer_id')->constrained('users');
             $table->timestamps();
         });
     }
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reflections');
+        Schema::dropIfExists('interviews');
     }
 };

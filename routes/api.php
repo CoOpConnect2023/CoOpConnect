@@ -32,6 +32,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/jobs/match', [JobsController::class, 'matchSkills'])->name('jobs.match');
+
 Route::get('/filterjobs', [JobController::class, 'filterJobs']);
 
 Route::post('/sendmessage', [MessagingController::class, 'sendMessage']);
@@ -98,12 +100,15 @@ Route::delete("/deletedoc/{doc_id}", [DocumentsController::class, "deleteDoc"]);
 
 Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], function () {
     Route::apiResource('token', TokenController::class);
+    Route::get('/jobs/search', [JobsController::class, 'searchJobs'])->name('jobs.search');
+    Route::get('/jobs/match', [JobsController::class, 'matchSkills'])->name('jobs.match');
     Route::apiResource('jobs', JobsController::class);
     Route::apiResource('userjobs', UserJobsController::class);
     Route::apiResource('courses', CoursesController::class);
     Route::apiResource('usercourses', UserCoursesController::class);
     Route::apiResource('reflections', ReflectionsController::class);
     Route::apiResource('interviews', InterviewsController::class);
+
 });
 
 

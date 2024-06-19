@@ -8,9 +8,10 @@ use App\Filters\ApiFilter;
 class ReflectionsFilter extends ApiFilter
 {
     protected $safeParams = [
+        'id' => ['eq'],
         'content' => ['eq'],
-        'user_id' => ['eq'],
-        'jobs_id' => ['eq'],
+        'userId' => ['eq'],
+        'jobsId' => ['eq'],
     ];
 
     protected $columnMap = [

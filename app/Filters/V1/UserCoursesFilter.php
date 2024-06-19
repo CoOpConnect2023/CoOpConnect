@@ -8,8 +8,9 @@ use App\Filters\ApiFilter;
 class UserCoursesFilter extends ApiFilter
 {
     protected $safeParams = [
-        'user_id' => ['eq'],
-        'courses_id' => ['eq'],
+        'id' => ['eq'],
+        'userId' => ['eq'],
+        'coursesId' => ['eq'],
     ];
 
     protected $columnMap = [

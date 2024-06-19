@@ -27,8 +27,8 @@ class UpdateInterviewsRequest extends FormRequest
                 'duration' => ['required', 'integer'],
                 'status' => ['required', 'in:scheduled,completed,canceled'],
                 'description' => ['required'],
-                'interviewee_id' => ['required', 'exists:users_id'],
-                'interviewer_id' => ['required', 'exists:users_id'],
+                'interviewee_id' => ['required', 'exists:users,id'],
+                'interviewer_id' => ['required', 'exists:users,id'],
             ];
         } else {
             return [
@@ -36,17 +36,17 @@ class UpdateInterviewsRequest extends FormRequest
                 'duration' => ['sometimes', 'required', 'integer'],
                 'status' => ['sometimes', 'required', 'in:scheduled,completed,canceled'],
                 'description' => ['sometimes', 'required'],
-                'interviewee_id' => ['sometimes', 'required', 'exists:users_id'],
-                'interviewer_id' => ['sometimes', 'required', 'exists:users_id'],
+                'interviewee_id' => ['sometimes', 'required', 'exists:users,id'],
+                'interviewer_id' => ['sometimes', 'required', 'exists:users,id'],
             ];
         }
     }
     protected function prepareForValidation()
     {
-        $this->merge([
+        $this->merge(array_filter([
             'interview_date' => $this->interviewDate,
             'interviewee_id' => $this->intervieweeId,
             'interviewer_id' => $this->interviewerId,
-        ]);
+        ]));
     }
 }

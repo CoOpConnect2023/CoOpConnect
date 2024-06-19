@@ -26,6 +26,7 @@ class JobsFactory extends Factory
         return [
             'title' => $this->faker->jobTitle,
             'description' => $this->faker->paragraph,
+            'skills' => $this->faker->randomElements(['JavaScript', 'PHP', 'HTML', 'CSS', 'Python'], $this->faker->numberBetween(1, 4)),
             'location' => $this->faker->city,
             'skills' => $skills, // Assign the array of skills directly
             'posting_status' => true, // Default posting_status set to true

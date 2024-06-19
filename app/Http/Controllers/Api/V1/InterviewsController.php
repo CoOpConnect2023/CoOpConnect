@@ -52,6 +52,6 @@ class InterviewsController extends Controller
      */
     public function destroy(Interviews $interview)
     {
-        //
+        $interview->delete();
     }
 }

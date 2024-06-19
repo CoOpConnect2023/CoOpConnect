@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('conversations', function (Blueprint $table) {
             $table->id();
-            $table->text('title');
+            
+            $table->string('title');
             $table->timestamps();
         });
 

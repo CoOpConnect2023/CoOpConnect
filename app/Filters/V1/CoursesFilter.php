@@ -8,9 +8,10 @@ use App\Filters\ApiFilter;
 class CoursesFilter extends ApiFilter
 {
     protected $safeParams = [
+        'id' => ['eq'],
         'name' => ['eq'],
-        'start_date' => ['eq'],
-        'end_date' => ['eq'],
+        'startDate' => ['eq'],
+        'endDate' => ['eq'],
     ];
 
     protected $columnMap = [
