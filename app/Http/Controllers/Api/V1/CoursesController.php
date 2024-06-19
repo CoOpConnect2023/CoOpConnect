@@ -32,6 +32,17 @@ class CoursesController extends Controller
         return new CoursesCollection($courses->get());
     }
 
+    public function getCoursesforUser($userId)
+    {
+        // Fetch all jobs related to the specific user
+        $userJobs = Courses::whereHas('users', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        })->get();
+
+        // Return the jobs as a JSON response
+        return new CoursesCollection($userJobs);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
