@@ -16,7 +16,8 @@ import StudentProfile from "./StudentProfile";
 import ReflectionsForum from "./ReflectionsForum";
 import Settings from "./Settings";
 import Message from "./Message";
+import TestData from "./TestData";
 
 export default function Test() {
-    return <TeacherDashboard />;
+    return <TestData />;
 }

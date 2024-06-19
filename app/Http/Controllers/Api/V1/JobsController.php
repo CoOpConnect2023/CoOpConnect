@@ -19,7 +19,6 @@ class JobsController extends Controller
      */
     public function index(Request $request)
     {
-        Log::info('matchSkills method called.');
         $filter = new JobsFilter();
         $filterItems = $filter->transform($request);
 
@@ -34,6 +33,18 @@ class JobsController extends Controller
 
         return new JobsCollection($jobs->get());
     }
+
+    public function getJobsforUser($userId)
+    {
+        // Fetch all jobs related to the specific user
+        $userJobs = Jobs::whereHas('users', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        })->get();
+
+        // Return the jobs as a JSON response
+        return new JobsCollection($userJobs);
+    }
+
 
     /**
      * Store a newly created resource in storage.
