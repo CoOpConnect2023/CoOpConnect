@@ -118,5 +118,4 @@ Route::get('/users/{userId}/conversations', [UserController::class, 'getConversa
 Route::delete('/delete-account/{id}', [UserController::class, 'deleteAccount']);
 
 
-Route::get('/interviews', [InterviewsController::class, 'index']);
-Route::post('/interviews', [InterviewsController::class, 'store']);
+
