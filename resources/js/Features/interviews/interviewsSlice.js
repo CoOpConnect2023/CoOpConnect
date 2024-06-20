@@ -4,6 +4,7 @@ axios.defaults.baseURL = "http://127.0.0.1:8000/api/v1";
 
 const initialState = {
     interviews: [],
+    postInterview: [],
     status: {
         interviews: "idle",
         postInterview: "idle",
@@ -63,6 +64,7 @@ export const interviewsSlice = createSlice({
                 state.status.postInterview = "loading";
             })
             .addCase(postInterview.fulfilled, (state, action) => {
+                state.postInterview = action.payload;
                 state.status.postInterview = "succeeded";
             })
             .addCase(postInterview.rejected, (state, action) => {
@@ -125,6 +127,7 @@ export const getInterviewsForInterviewee = createAsyncThunk(
     "interviews/getInterviewsForInterviewee",
     async (params) => {
         const { intervieweeId } = params;
+        console.log("asd", params);
         const response = await axios({
             url: `/interviews?intervieweeId[eq]=${intervieweeId}`,
             method: "GET",
@@ -149,8 +152,9 @@ export const postInterview = createAsyncThunk(
     "interviews/postInterview",
     async (params) => {
         const {
-            interviewDate,
-            duration,
+            title,
+            startDate,
+            endDate,
             status,
             description,
             intervieweeId,
@@ -160,8 +164,9 @@ export const postInterview = createAsyncThunk(
             url: "/interviews",
             method: "POST",
             data: {
-                interviewDate,
-                duration,
+                title,
+                startDate,
+                endDate,
                 status,
                 description,
                 intervieweeId,
@@ -177,8 +182,9 @@ export const putInterview = createAsyncThunk(
     async (params) => {
         const {
             interviewId,
-            interviewDate,
-            duration,
+            title,
+            startDate,
+            endDate,
             status,
             description,
             intervieweeId,
@@ -188,8 +194,9 @@ export const putInterview = createAsyncThunk(
             url: `/interviews/${interviewId}`,
             method: "PUT",
             data: {
-                interviewDate,
-                duration,
+                title,
+                startDate,
+                endDate,
                 status,
                 description,
                 intervieweeId,
@@ -205,8 +212,9 @@ export const patchInterview = createAsyncThunk(
     async (params) => {
         const {
             interviewId,
-            interviewDate,
-            duration,
+            title,
+            startDate,
+            endDate,
             status,
             description,
             intervieweeId,
@@ -216,8 +224,9 @@ export const patchInterview = createAsyncThunk(
             url: `/interviews/${interviewId}`,
             method: "PATCH",
             data: {
-                interviewDate,
-                duration,
+                title,
+                startDate,
+                endDate,
                 status,
                 description,
                 intervieweeId,
@@ -241,9 +250,10 @@ export const deleteInterview = createAsyncThunk(
     }
 );
 
-export const selectInterviews = (state) => state.interviews.interviews;
+export const selectInterviews = (state) => state.interviews;
+
 export const selectInterviewsStatus = (state) =>
-    state.interviews.status.interviews;
+    state.interviews.status;
 // Action creators are generated for each case reducer function
 export const {} = interviewsSlice.actions;
 

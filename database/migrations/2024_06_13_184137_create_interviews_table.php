@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('interviews', function (Blueprint $table) {
             $table->id();
-            $table->dateTime('interview_date');
-            $table->integer('duration');
+            $table->string('title');
+            $table->dateTime('start_date');
+            $table->dateTime('end_date');
             $table->string('status');
             $table->text('description');
             $table->foreignId('interviewee_id')->constrained('users');

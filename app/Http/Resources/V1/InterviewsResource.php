@@ -16,8 +16,9 @@ class InterviewsResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            'interviewDate' => $this->interview_date,
-            'duration' => $this->duration,
+            'title' => $this->title,
+            'startDate' => $this->start_date,
+            'endDate' => $this->end_date,
             'status' => $this->status,
             'description' => $this->description,
             'intervieweeId' => $this->interviewee_id,

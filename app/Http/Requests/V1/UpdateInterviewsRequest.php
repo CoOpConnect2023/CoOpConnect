@@ -3,6 +3,8 @@
 namespace App\Http\Requests\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
 
 class UpdateInterviewsRequest extends FormRequest
 {
@@ -23,18 +25,20 @@ class UpdateInterviewsRequest extends FormRequest
     {
         if ($this->method() === "PUT") {
             return [
-                'interview_date' => ['required', 'date'],
-                'duration' => ['required', 'integer'],
-                'status' => ['required', 'in:scheduled,completed,canceled'],
+                'title' => ['required'],
+                'start_date' => ['required', 'date'],
+                'end_date' => ['required', 'date'],
+                'status' => ['required', Rule::in(['scheduled', 'completed', 'canceled'])],
                 'description' => ['required'],
                 'interviewee_id' => ['required', 'exists:users,id'],
                 'interviewer_id' => ['required', 'exists:users,id'],
             ];
         } else {
             return [
-                'interview_date' => ['sometimes', 'required', 'date'],
-                'duration' => ['sometimes', 'required', 'integer'],
-                'status' => ['sometimes', 'required', 'in:scheduled,completed,canceled'],
+                'title' => ['sometimes', 'required'],
+                'start_date' => ['sometimes', 'required', 'date'],
+                'end_date' => ['sometimes', 'required', 'date'],
+                'status' => ['sometimes', 'required', Rule::in(['scheduled', 'completed', 'canceled'])],
                 'description' => ['sometimes', 'required'],
                 'interviewee_id' => ['sometimes', 'required', 'exists:users,id'],
                 'interviewer_id' => ['sometimes', 'required', 'exists:users,id'],
@@ -44,7 +48,8 @@ class UpdateInterviewsRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge(array_filter([
-            'interview_date' => $this->interviewDate,
+            'start_date' => $this->startDate,
+            'end_date' => $this->endDate,
             'interviewee_id' => $this->intervieweeId,
             'interviewer_id' => $this->interviewerId,
         ]));

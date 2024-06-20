@@ -23,8 +23,9 @@ class StoreInterviewsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'interview_date' => ['required', 'date'],
-            'duration' => ['required', 'integer'],
+            'title' => ['required'],
+            'start_date' => ['required', 'date'],
+            'end_date' => ['required', 'date'],
             'status' => ['required', Rule::in(['scheduled', 'completed', 'canceled'])],
             'description' => ['required'],
             'interviewee_id' => ['required', 'exists:users,id'],
@@ -35,7 +36,8 @@ class StoreInterviewsRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge(array_filter([
-            'interview_date' => $this->interviewDate,
+            'start_date' => $this->startDate,
+            'end_date' => $this->endDate,
             'interviewee_id' => $this->intervieweeId,
             'interviewer_id' => $this->interviewerId,
         ]));
