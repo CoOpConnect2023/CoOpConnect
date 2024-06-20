@@ -88,6 +88,7 @@ class UserController extends Controller
     $user->role = $request->role;
     $user->school = $request->school;
     $user->positiontitle = $request->positiontitle;
+    $user->company_name = $request->company_name;
     $user->skills = $request->skills;
 
     // Save user data

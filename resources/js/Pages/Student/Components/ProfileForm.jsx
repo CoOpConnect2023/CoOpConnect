@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useDropzone } from 'react-dropzone';
-
+const appUrl = import.meta.env.VITE_APP_URL;
 
 
 
@@ -39,7 +39,7 @@ function ProfileForm() {
         // Function to fetch the user ID
         const fetchUserId = async () => {
             try {
-                const response = await axios.get(`/api/user-id`);
+                const response = await axios.get(`${appUrl}/api/user-id`);
                 const userData = response.data.user;
                 userData.skills = JSON.parse(userData.skills || "[]");
                 setUser(userData);
@@ -105,7 +105,7 @@ function ProfileForm() {
             formData.append("skills", JSON.stringify(user.skills));
 
             const response = await axios.post(
-                `/api/update-profile/${user.id}`,
+                `${appUrl}/api/update-profile/${user.id}`,
                 formData,
                 {
                     headers: {
@@ -221,7 +221,7 @@ function ProfileForm() {
                     <DetailLabel>Skills</DetailLabel>
                     <SkillsContainer>
                         {Array.isArray(user.skills) &&
-                        user.skills.length > 0 ? (
+                            user.skills.length > 0 ? (
                             user.skills.map((skill, index) => (
                                 <SkillChip key={index}>
                                     {skill}

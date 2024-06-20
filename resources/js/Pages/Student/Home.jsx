@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
 import { Link } from "@inertiajs/react";
+const appUrl = import.meta.env.VITE_APP_URL;
+
 
 function Home() {
     const [jobs, setJobs] = useState([]);
@@ -22,9 +24,9 @@ function Home() {
         // Function to fetch the user ID
         const fetchUserId = async () => {
             try {
-                const response = await axios.get(`/api/user-id`);
+                const response = await axios.get(`${appUrl}/api/user-id`);
                 setUserId(response.data.user_id);
-                console.log('Fetched User ID:', userId);
+                console.log('Fetched User ID:', response.data);
             } catch (error) {
                 console.error('Error fetching user ID:', error);
             }
@@ -41,7 +43,7 @@ function Home() {
         // Fetch the jobs matching specified skills
         const fetchJobs = async () => {
             try {
-                const response = await axios.get(`/api/jobs/match/${userId}`, {
+                const response = await axios.get(`${appUrl}/api/jobs/match/${userId}`, {
                     params: {
                         skills: defaultSkills
                     }

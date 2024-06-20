@@ -100,10 +100,12 @@ Route::delete("/deletedoc/{doc_id}", [DocumentsController::class, "deleteDoc"]);
 
 Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], function () {
     Route::apiResource('token', TokenController::class);
+    Route::get('/jobs/user/{userId}', [JobsController::class, 'getJobsforUser']);
     Route::get('/jobs/search', [JobsController::class, 'searchJobs'])->name('jobs.search');
     Route::get('/jobs/match', [JobsController::class, 'matchSkills'])->name('jobs.match');
     Route::apiResource('jobs', JobsController::class);
     Route::apiResource('userjobs', UserJobsController::class);
+    Route::get('/courses/user/{userId}', [CoursesController::class, 'getCourseforUser']);
     Route::apiResource('courses', CoursesController::class);
     Route::apiResource('usercourses', UserCoursesController::class);
     Route::apiResource('reflections', ReflectionsController::class);

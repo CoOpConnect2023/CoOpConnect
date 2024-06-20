@@ -134,7 +134,7 @@ function Matches() {
         // Function to fetch the user ID
         const fetchUserId = async () => {
             try {
-                const response = await axios.get(`/api/user-id`);
+                const response = await axios.get(`http://localhost:8000/api/user-id`);
                 setUserId(response.data.user_id);
                 console.log('Fetched User ID:', userId);
             } catch (error) {
@@ -153,7 +153,7 @@ function Matches() {
         // Fetch the jobs matching specified skills
         const fetchJobs = async () => {
             try {
-                const response = await axios.get(`/api/jobs/match/${userId}`, {
+                const response = await axios.get(`http://localhost:8000/api/jobs/match/${userId}`, {
                     params: {
 
                     }

@@ -1,28 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
-
+const appUrl = import.meta.env.VITE_APP_URL;
 function Jobs() {
-    const jobPostings = [
-        {
-            title: "Full-Stack Developer",
-            company: "Microsoft",
-            location: "Toronto, ON",
-            tags: ["Javascript", "HTML", "Development", "+3"],
-            description:
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
-        },
-        {
-            title: "Web Developer",
-            company: "Atlassian",
-            location: "Houston, TX",
-            tags: ["Javascript", "HTML", "Development", "+3"],
-            description:
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
-        },
-    ];
-
-
 
     const [jobs, setJobs] = useState([]);
     const [userId, setUserId] = useState(null);
@@ -45,9 +25,10 @@ function Jobs() {
         // Function to fetch the user ID
         const fetchUserId = async () => {
             try {
-                const response = await axios.get(`/api/user-id`);
+                const response = await axios.get(`${appUrl}/api/user-id`);
                 setUserId(response.data.user_id);
                 console.log('Fetched User ID:', userId);
+                console.log("appUrl", appUrl)
             } catch (error) {
                 console.error('Error fetching user ID:', error);
             }
@@ -64,7 +45,7 @@ function Jobs() {
 
         const fetchJobs = async () => {
             try {
-                const response = await axios.get(`/api/jobs`, {
+                const response = await axios.get(`${appUrl}/api/jobs`, {
                     params: {
 
                     }
@@ -96,7 +77,7 @@ function Jobs() {
         console.log("Search Parameters:", { lowerCaseSearchTerm, lowerCaseSearchLocation });
 
         try {
-            const response = await axios.get(`/api/jobs/search/${userId}`, {
+            const response = await axios.get(`${appUrl}/api/jobs/search/${userId}`, {
                 params: {
                     searchTerm: lowerCaseSearchTerm,
                     location: lowerCaseSearchLocation,
