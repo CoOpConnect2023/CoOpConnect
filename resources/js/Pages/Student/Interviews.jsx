@@ -66,7 +66,7 @@ const Interviews = () => {
 
     useEffect(() => {
         setEvents(transformedInterviews(interviews));
-    }, [interviews]);
+    }, [interviews, data.postInterview]);
 
     useEffect(() => {
         if (interviewsStatus.postInterview == "succeeded") {
@@ -126,9 +126,9 @@ const Interviews = () => {
 
         dispatch(
             postInterview({
-                title: "test",
-                startDate: "2024-06-18 23:15:47",
-                endDate: "2024-06-19 00:15:47",
+                title: "test3",
+                startDate: "2024-06-25 23:15:47",
+                endDate: "2024-06-16 00:15:47",
                 status: "scheduled",
                 description: "test",
                 intervieweeId: userId,
