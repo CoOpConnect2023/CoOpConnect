@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import JobModal from "../../Profile/Partials/ViewJobModal";
 
 const appUrl = import.meta.env.VITE_APP_URL;
 
@@ -112,9 +113,9 @@ const ViewButton = styled.button`
 
 
 function Matches() {
-
     const [jobs, setJobs] = useState([]);
     const [userId, setUserId] = useState(null);
+    const [selectedJob, setSelectedJob] = useState(null);
 
     useEffect(() => {
         // Fetch the XSRF token from cookies and set it in Axios headers
@@ -129,7 +130,7 @@ function Matches() {
             try {
                 const response = await axios.get(`${appUrl}/api/user-id`);
                 setUserId(response.data.user_id);
-                console.log('Fetched User ID:', userId);
+                console.log('Fetched User ID:', response.data.user_id);
             } catch (error) {
                 console.error('Error fetching user ID:', error);
             }
@@ -147,17 +148,14 @@ function Matches() {
         const fetchJobs = async () => {
             try {
                 const response = await axios.get(`${appUrl}/api/jobs/match/${userId}`, {
-                    params: {
-
-                    }
+                    params: {}
                 });
                 const receivedJobs = response.data.slice(0, 3);
                 setJobs(receivedJobs);
                 console.log("jobs", response.data);
 
-
                 if (response.data.length > 0) {
-                    setFeaturedJob(response.data[0]);
+                    setSelectedJob(response.data[0]);
                 }
             } catch (error) {
                 console.error("Error fetching jobs:", error);
@@ -167,6 +165,13 @@ function Matches() {
         fetchJobs();
     }, [userId]);
 
+    const handleViewJob = (job) => {
+        setSelectedJob(job);
+    };
+
+    const handleCloseModal = () => {
+        setSelectedJob(null);
+    };
 
     return (
         <JobContainer>
@@ -188,10 +193,13 @@ function Matches() {
                             </CompanyInfo>
                         </JobDetails>
                         <Divider />
-                        <ViewButton>VIEW JOB</ViewButton>
+                        <ViewButton onClick={() => handleViewJob(job)}>VIEW JOB</ViewButton>
                     </JobCard>
                 ))}
             </JobList>
+            {selectedJob && (
+                <JobModal job={selectedJob} onClose={handleCloseModal} />
+            )}
         </JobContainer>
     );
 }

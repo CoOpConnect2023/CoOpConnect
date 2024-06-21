@@ -33,4 +33,9 @@ class Jobs extends Model
     {
         return $this->hasMany(Reflections::class);
     }
+
+    public function applications()
+{
+    return $this->hasMany(Application::class);
+}
 }

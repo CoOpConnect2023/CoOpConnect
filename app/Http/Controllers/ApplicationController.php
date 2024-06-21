@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Application;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ApplicationController extends Controller
 {
@@ -57,4 +58,32 @@ class ApplicationController extends Controller
     {
         // Logic to delete application
     }
+
+    public function apply(Request $request, $jobId)
+    {
+        $userId = Auth::id();
+
+        // Check if the user has already applied for the job
+        $existingApplication = Application::where('user_id', $userId)->where('job_id', $jobId)->first();
+        if ($existingApplication) {
+            return response()->json(['message' => 'You have already applied for this job.', 'applied' => true], 400);
+        }
+
+        // Create the application
+        $application = new Application();
+        $application->user_id = $userId;
+        $application->job_id = $jobId;
+        $application->save();
+
+        return response()->json(['message' => 'Application submitted successfully.', 'applied' => false], 201);
+    }
+
+    public function checkApplication($jobId)
+    {
+        $userId = Auth::id();
+
+        $existingApplication = Application::where('user_id', $userId)->where('job_id', $jobId)->first();
+        return response()->json(['applied' => $existingApplication ? true : false]);
+    }
+
 }

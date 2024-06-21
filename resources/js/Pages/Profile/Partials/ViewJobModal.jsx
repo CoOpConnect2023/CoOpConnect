@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+const appUrl = import.meta.env.VITE_APP_URL;
 
 const JobModal = ({ job, onClose }) => {
+    const [applied, setApplied] = useState(false);
     const parseJSONSkills = (skills) => {
         try {
             return JSON.parse(skills);
@@ -14,6 +16,34 @@ const JobModal = ({ job, onClose }) => {
     // Conditionally parse job.skills if it's a string
     const parsedSkills = typeof job.skills === 'string' ? parseJSONSkills(job.skills) : job.skills;
 
+
+    useEffect(() => {
+        const checkApplicationStatus = async () => {
+            try {
+                const response = await axios.get(`${appUrl}/api/check-application/${job.id}`);
+                setApplied(response.data.applied);
+            } catch (error) {
+                console.error('Error checking application status:', error);
+            }
+        };
+
+        checkApplicationStatus();
+    }, [job.id]);
+
+    const handleApply = async () => {
+        try {
+            const response = await axios.post(`${appUrl}/api/apply/${job.id}`);
+            alert(response.data.message);
+            if (response.data.applied === false) {
+                setApplied(true);
+            }
+        } catch (error) {
+            alert(error.response.data.message || 'Error applying for the job.');
+        }
+    };
+
+    const skills = typeof job.skills === 'string' ? JSON.parse(job.skills) : job.skills;
+
     return (
         <ModalBackground>
             <ModalContent>
@@ -23,13 +53,15 @@ const JobModal = ({ job, onClose }) => {
                     <CompanyName>{job.company}</CompanyName>
                     <Location>{job.location}</Location>
                     <SkillsList>
-                        {parsedSkills.map((tag, index) => (
+                        {skills.map((tag, index) => (
                             <SkillBadge key={index}>{tag}</SkillBadge>
                         ))}
                     </SkillsList>
                     <JobDescription>{job.description}</JobDescription>
                     <Divider />
-                    <ApplyButton>Apply Now</ApplyButton>
+                    <ApplyButton onClick={handleApply} applied={applied} disabled={applied}>
+                        {applied ? 'Applied' : 'Apply Now'}
+                    </ApplyButton>
                 </JobCardContainer>
             </ModalContent>
         </ModalBackground>
