@@ -25,7 +25,7 @@ function Home() {
         const fetchUserId = async () => {
             try {
                 const response = await axios.get(`${appUrl}/api/user-id`);
-                setUserId(response.data.user_id);
+                setUserId(response.data.user.id);
                 console.log('Fetched User ID:', response.data);
             } catch (error) {
                 console.error('Error fetching user ID:', error);

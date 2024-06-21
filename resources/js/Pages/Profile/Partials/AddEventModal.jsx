@@ -96,6 +96,9 @@ const Modal = ({ onClose, onSubmit, defaultDate }) => {
     const [endTime, setEndTime] = useState(
         defaultDate.toISOString().substring(11, 16)
     ); // Initial value in HH:mm format
+    const [status, setStatus] = useState(
+        "scheduled"
+    );
 
     const handleTitleChange = (e) => setTitle(e.target.value);
     const handleDescriptionChange = (e) => setDescription(e.target.value);
@@ -107,7 +110,7 @@ const Modal = ({ onClose, onSubmit, defaultDate }) => {
     const handleSubmit = () => {
         const start = new Date(`${startDate}T${startTime}`);
         const end = new Date(`${endDate}T${endTime}`);
-        onSubmit(title, description, start, end);
+        onSubmit(title, description, start, end, status);
         onClose();
     };
 

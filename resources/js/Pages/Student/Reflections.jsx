@@ -8,6 +8,8 @@ import {
     selectReflections,
 } from "@/Features/reflections/reflectionsSlice";
 
+const appUrl = import.meta.env.VITE_APP_URL;
+
 const badWords = [
     "bitch",
     "nigger",
@@ -41,10 +43,10 @@ function Reflections() {
         const fetchUserId = async () => {
             try {
                 const response = await axios.get(
-                    `http://127.0.0.1:8000/api/user-id`
+                    `${appUrl}/api/user-id`
                 );
                 setUserId(response.data.user.id);
-                console.log("userinfo", response.data.user.id);
+
             } catch (error) {
                 console.error("Error fetching user ID:", error);
             }

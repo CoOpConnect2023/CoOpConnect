@@ -18,6 +18,7 @@ import {
     selectInterviews,
 } from "@/Features/interviews/interviewsSlice";
 const localizer = momentLocalizer(moment);
+const appUrl = import.meta.env.VITE_APP_URL;
 const DnDCalendar = withDragAndDrop(Calendar);
 
 const Interviews = () => {
@@ -28,16 +29,24 @@ const Interviews = () => {
     const [userId, setUserId] = useState(null);
 
     useEffect(() => {
+        // Fetch the XSRF token from cookies and set it in Axios headers
+        const csrfToken = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('XSRF-TOKEN='))
+            ?.split('=')[1];
+        axios.defaults.headers.common['X-XSRF-TOKEN'] = csrfToken;
+
+        // Fetch the user ID, only allows if token is correct
         const fetchUserId = async () => {
             try {
-                const response = await axios.get(
-                    `http://127.0.0.1:8000/api/user-id`
-                );
+                const response = await axios.get(`${appUrl}/api/user-id`);
                 setUserId(response.data.user.id);
+
             } catch (error) {
                 console.error("Error fetching user ID:", error);
             }
         };
+
         fetchUserId();
     }, []);
 
@@ -117,24 +126,20 @@ const Interviews = () => {
         setShowModal(false);
     };
 
-    const handleAddEvent = (title, description, start, end) => {
-        // Format start and end dates to ISO 8601 string format
-        /*         const formattedStart = start.toISOString(); // Convert Date object to ISO string
-        const formattedEnd = end.toISOString(); */
-
-        // Create newEvent object with formatted dates
-
+    const handleAddEvent = () => {
         dispatch(
             postInterview({
-                title: "test",
+                title: "Test Interview",
                 startDate: "2024-06-18 23:15:47",
                 endDate: "2024-06-19 00:15:47",
-                status: "scheduled",
-                description: "test",
-                intervieweeId: userId,
+                status: "test",
+                description: "Test Description",
+                intervieweeId: 1,
                 interviewerId: 2,
             })
-        );
+        ).catch((error) => {
+            console.error("Error posting interview:", error);
+        });
 
         closeModal();
     };

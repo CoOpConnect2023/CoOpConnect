@@ -1,9 +1,50 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
 import { Link } from "@inertiajs/react";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { getJobsforUser } from "@/Features/jobs/jobsSlice";
+const appUrl = import.meta.env.VITE_APP_URL;
 
 function Home() {
+    const dispatch = useDispatch();
+    const jobPostings = useSelector((state) => state.jobs.jobPostings); // Update according to your state structure
+    const [userId, setUserId] = useState(null); // Assuming you have userId in your auth slice
+
+    useEffect(() => {
+        // Fetch the XSRF token from cookies and set it in Axios headers
+        const csrfToken = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('XSRF-TOKEN='))
+            ?.split('=')[1];
+        axios.defaults.headers.common['X-XSRF-TOKEN'] = csrfToken;
+
+        // Fetch the user ID, only allows if token is correct
+        const fetchUserId = async () => {
+            try {
+                const response = await axios.get(`${appUrl}/api/user-id`);
+                setUserId(response.data.user.id);
+            } catch (error) {
+                console.error("Error fetching user ID:", error);
+            }
+        };
+
+        fetchUserId();
+    }, []);
+
+    useEffect(() => {
+        if (userId) {
+            dispatch(getJobsforUser({ userId }));
+        }
+    }, [dispatch, userId]);
+
+    useEffect(() => {
+        if (jobPostings) {
+            console.log("Fetched job postings:", jobPostings);
+        }
+    }, [jobPostings]);
+
     return (
         <NavBar header={"Job Postings"}>
             <MainContainer>
@@ -18,21 +59,25 @@ function Home() {
                         industry's standard dummy text ever since the 1500s,
                         when an unknown printer took a galley of type and
                         scrambled it t
-                    </JobDescription><Link href="/employer/post1">
-                    <PostJobButton>Post a Job</PostJobButton></Link>
+                    </JobDescription>
+                    <Link href="/employer/post1">
+                        <PostJobButton>Post a Job</PostJobButton>
+                    </Link>
                 </CreateJobSection>
                 <CurrentPostingsSection>
                     <SectionTitle>Current Company Postings</SectionTitle>
                     <EditingInstructions>
                         <Link href="/employer/viewpost">
-                        <UnderlineText>View</UnderlineText></Link> or{" "}
+                            <UnderlineText>View</UnderlineText>
+                        </Link>{" "}
+                        or{" "}
                         <UnderlineText>edit</UnderlineText> your company’s
                         current job postings.
                     </EditingInstructions>
                     <PostingsGrid>
-                        {jobPostings.map((post, i) => {
-                            return <JobPosting key={i} post={post} />;
-                        })}
+                        {jobPostings && jobPostings.map((post, i) => (
+                            <JobPosting key={i} post={post} />
+                        ))}
                     </PostingsGrid>
                 </CurrentPostingsSection>
             </MainContainer>
@@ -61,7 +106,6 @@ function JobPosting({ post }) {
         </JobCard>
     );
 }
-
 // Dummy data
 const jobPostings = [
     {
