@@ -19,9 +19,12 @@ class InterviewsFactory extends Factory
     protected $model = Interviews::class;
     public function definition()
     {
+        $startDate = $this->faker->dateTimeBetween('-1 month', '+1 month');
+        $endDate = (clone $startDate)->modify('+1 hour');
         return [
-            'interview_date' => $this->faker->dateTimeBetween('now', '+1 month'),
-            'duration' => $this->faker->numberBetween(30, 120), // Duration in minutes
+            'title' => $this->faker->sentence,
+            'start_date' => $startDate,
+            'end_date' => $endDate,
             'status' => $this->faker->randomElement(['scheduled', 'completed', 'canceled']),
             'description' => $this->faker->paragraph,
             'interviewee_id' => User::factory(),

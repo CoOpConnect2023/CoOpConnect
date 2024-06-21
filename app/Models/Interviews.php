@@ -10,8 +10,9 @@ class Interviews extends Model
     use HasFactory;
 
     protected $fillable = [
-        'interview_date',
-        'duration',
+        'title',
+        'start_date',
+        'end_date',
         'status',
         'description',
         'interviewee_id',

@@ -9,8 +9,9 @@ class InterviewsFilter extends ApiFilter
 {
     protected $safeParams = [
         'id' => ['eq'],
-        'interviewDate' => ['eq'],
-        'duration' => ['eq'],
+        'title' => ['eq'],
+        'start_date' => ['eq'],
+        'end_date' => ['eq'],
         'status' => ['eq'],
         'description' => ['eq'],
         'intervieweeId' => ['eq'],
@@ -18,7 +19,8 @@ class InterviewsFilter extends ApiFilter
     ];
 
     protected $columnMap = [
-        'interviewDate' => 'interview_date',
+        'startDate' => 'start_date',
+        'endDate' => 'end_date',
         'intervieweeId' => 'interviewee_id',
         'interviewerId' => 'interviewer_id',
     ];

@@ -110,7 +110,6 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
     Route::apiResource('usercourses', UserCoursesController::class);
     Route::apiResource('reflections', ReflectionsController::class);
     Route::apiResource('interviews', InterviewsController::class);
-
 });
 
 

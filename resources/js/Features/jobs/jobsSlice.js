@@ -150,19 +150,6 @@ export const getJobsforUser = createAsyncThunk(
     }
 );
 
-
-export const matchJobsforUser = createAsyncThunk(
-    "jobs/matchJobsforUser",
-    async (params) => {
-        const { userId } = params;
-        const response = await axios({
-            url: `/jobs/match/${userId}`,
-            method: "GET",
-        });
-        return response.data.data;
-    }
-);
-
 export const getUsersForJob = createAsyncThunk(
     "jobs/getUsersForJob",
     async (params) => {

@@ -1,130 +1,111 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
-import Modal from "../Profile/Partials/AddEventModal"
-import 'react-big-calendar/lib/css/react-big-calendar.css';
-import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
-import moment from 'moment';
-import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { DndProvider } from 'react-dnd';
+import Modal from "../Profile/Partials/AddEventModal";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
+import { Calendar, momentLocalizer } from "react-big-calendar";
+import moment from "moment";
+import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { DndProvider } from "react-dnd";
+import {
+    getInterviewsForInterviewee,
+    postInterview,
+    selectInterviewsStatus,
+    selectInterviews,
+} from "@/Features/interviews/interviewsSlice";
 const localizer = momentLocalizer(moment);
 const DnDCalendar = withDragAndDrop(Calendar);
 
-
-
 const Interviews = () => {
     const [showModal, setShowModal] = useState(false);
-    const [events, setEvents] = useState([{
-        id: 0,
-        title: 'Board Meeting',
-        start: new Date(2024, 5, 20, 10, 0), // June 20, 2024, 10:00 AM
-        end: new Date(2024, 5, 20, 12, 0),   // June 20, 2024, 12:00 PM
-        description: 'Monthly board meeting',
-      },
-      {
-        id: 1,
-        title: 'Team Building Event',
-        start: new Date(2024, 5, 21, 14, 0), // June 21, 2024, 2:00 PM
-        end: new Date(2024, 5, 21, 17, 0),   // June 21, 2024, 5:00 PM
-        description: 'Outdoor activities and team exercises',
-      },
-      {
-        id: 2,
-        title: 'Project Deadline',
-        allDay: true,
-        start: new Date(2024, 5, 25),        // June 25, 2024 (all day)
-        end: new Date(2024, 5, 25),
-        description: 'Final submission date for the project',
-      },
-      {
-        id: 3,
-        title: 'Conference',
-        start: new Date(2024, 5, 26, 9, 0),  // June 26, 2024, 9:00 AM
-        end: new Date(2024, 5, 28, 17, 0),   // June 28, 2024, 5:00 PM
-        description: 'Annual industry conference',
-      },
-      {
-        id: 4,
-        title: 'Workshop: Advanced JavaScript',
-        start: new Date(2024, 5, 29, 13, 0), // June 29, 2024, 1:00 PM
-        end: new Date(2024, 5, 29, 16, 0),   // June 29, 2024, 4:00 PM
-        description: 'A hands-on workshop on advanced JavaScript topics',
-      },
-      {
-        id: 5,
-        title: 'Webinar: React Basics',
-        start: new Date(2024, 6, 3, 10, 0),  // July 3, 2024, 10:00 AM
-        end: new Date(2024, 6, 3, 11, 0),    // July 3, 2024, 11:00 AM
-        description: 'Introduction to React for beginners',
-      },
-      {
-        id: 6,
-        title: 'Company Holiday',
-        allDay: true,
-        start: new Date(2024, 6, 4),         // July 4, 2024 (all day)
-        end: new Date(2024, 6, 4),
-        description: 'Independence Day',
-      },
-      {
-        id: 7,
-        title: 'Product Launch',
-        start: new Date(2024, 6, 10, 15, 0), // July 10, 2024, 3:00 PM
-        end: new Date(2024, 6, 10, 16, 0),   // July 10, 2024, 4:00 PM
-        description: 'Launch event for new product line',
-      },
-      {
-        id: 8,
-        title: 'Client Meeting',
-        start: new Date(2024, 6, 12, 11, 0), // July 12, 2024, 11:00 AM
-        end: new Date(2024, 6, 12, 12, 0),   // July 12, 2024, 12:00 PM
-        description: 'Discuss project progress with client',
-      },
-      {
-        id: 9,
-        title: 'Team Lunch',
-        start: new Date(2024, 6, 13, 12, 30), // July 13, 2024, 12:30 PM
-        end: new Date(2024, 6, 13, 14, 0),    // July 13, 2024, 2:00 PM
-        description: 'Team bonding over lunch at a local restaurant',
-      },
+    const [selectedDate, setSelectedDate] = useState(null);
+    const [events, setEvents] = useState([]);
 
+    const [userId, setUserId] = useState(null);
 
+    useEffect(() => {
+        const fetchUserId = async () => {
+            try {
+                const response = await axios.get(
+                    `http://127.0.0.1:8000/api/user-id`
+                );
+                setUserId(response.data.user.id);
+            } catch (error) {
+                console.error("Error fetching user ID:", error);
+            }
+        };
+        fetchUserId();
+    }, []);
 
-    ]);
+    const dispatch = useDispatch();
+
+    const data = useSelector(selectInterviews);
+    const interviews = data.interviews;
+    const interviewsStatus = useSelector(selectInterviewsStatus);
+
+    useEffect(() => {
+        dispatch(
+            getInterviewsForInterviewee({
+                intervieweeId: userId,
+            })
+        );
+    }, [userId]);
+
+    function transformedInterviews(interviews) {
+        const result = interviews.map((interview) => ({
+            ...interview,
+            start: interview.startDate,
+            end: interview.endDate,
+        }));
+        return result;
+    }
+
+    useEffect(() => {
+        setEvents(transformedInterviews(interviews));
+    }, [interviews]);
+
+    useEffect(() => {
+        if (interviewsStatus.postInterview == "succeeded") {
+            console.log("True Check", transformedInterviews(data.postInterview));
+            setEvents(...events, transformedInterviews(data.postInterview));
+        }
+    }, [interviews.postInterview]);
+
+    console.log("Fetched User ID:", userId);
+    console.log("interviews", events);
 
     function getTodayDate() {
         const today = new Date();
         const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
-        const day = String(today.getDate()).padStart(2, '0');
+        const month = String(today.getMonth() + 1).padStart(2, "0"); // Months are zero-indexed
+        const day = String(today.getDate()).padStart(2, "0");
 
         return `${year}-${month}-${day}`;
     }
 
-
-
     const handleEventResize = ({ event, start, end }) => {
-        const nextEvents = events.map(existingEvent => {
-          return existingEvent.id === event.id
-            ? { ...existingEvent, start, end }
-            : existingEvent;
+        const nextEvents = events.map((existingEvent) => {
+            return existingEvent.id === event.id
+                ? { ...existingEvent, start, end }
+                : existingEvent;
         });
 
         setEvents(nextEvents);
-      };
+    };
 
-      const handleEventDrop = ({ event, start, end }) => {
-        const nextEvents = events.map(existingEvent => {
-          return existingEvent.id === event.id
-            ? { ...existingEvent, start, end }
-            : existingEvent;
+    const handleEventDrop = ({ event, start, end }) => {
+        const nextEvents = events.map((existingEvent) => {
+            return existingEvent.id === event.id
+                ? { ...existingEvent, start, end }
+                : existingEvent;
         });
 
         setEvents(nextEvents);
-      };
-
+    };
 
     const openModal = (day) => {
         setSelectedDate(day);
@@ -136,11 +117,27 @@ const Interviews = () => {
         setShowModal(false);
     };
 
-    const handleAddEvent = (title, description) => {
-        addEvent(selectedDate, title, description);
+    const handleAddEvent = (title, description, start, end) => {
+        // Format start and end dates to ISO 8601 string format
+        /*         const formattedStart = start.toISOString(); // Convert Date object to ISO string
+        const formattedEnd = end.toISOString(); */
+
+        // Create newEvent object with formatted dates
+
+        dispatch(
+            postInterview({
+                title: "test",
+                startDate: "2024-06-18 23:15:47",
+                endDate: "2024-06-19 00:15:47",
+                status: "scheduled",
+                description: "test",
+                intervieweeId: userId,
+                interviewerId: 2,
+            })
+        );
+
         closeModal();
     };
-
 
     return (
         <NavBar header={"Interviews"}>
@@ -149,28 +146,29 @@ const Interviews = () => {
                     <Wrapper>
                         <Header>Schedule your Interviews</Header>
                         <CalendarDiv>
-                        <DndProvider backend={HTML5Backend}>
-      <DnDCalendar
-        defaultDate={new Date(getTodayDate())}
-        defaultView="month"
-        events={events}
-        localizer={localizer}
-        onEventDrop={handleEventDrop}
-        resizable
-        onEventResize={handleEventResize}
-        style={{ height: "100%" }}
-      />
-    </DndProvider>
-    </CalendarDiv>
+                            <DndProvider backend={HTML5Backend}>
+                                <DnDCalendar
+                                    defaultDate={new Date(getTodayDate())}
+                                    defaultView="month"
+                                    events={events}
+                                    localizer={localizer}
+                                    onEventDrop={handleEventDrop}
+                                    resizable
+                                    onEventResize={handleEventResize}
+                                    style={{ height: "100%" }}
+                                    selectable
+                                    onSelectSlot={openModal}
+                                />
+                            </DndProvider>
+                        </CalendarDiv>
                     </Wrapper>
                 </Container>
             </MainContainer>
             {showModal && (
                 <Modal
                     onClose={closeModal}
-                    onSubmit={(title, description) =>
-                        handleAddEvent(title, description)
-                    }
+                    onSubmit={handleAddEvent}
+                    defaultDate={new Date(getTodayDate())}
                 />
             )}
         </NavBar>
