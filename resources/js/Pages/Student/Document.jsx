@@ -5,6 +5,8 @@ import NavBar from "./Components/NavBar";
 import wordlogo from "../Images/worddocicon.png";
 import pdflogo from "../Images/pdf-icon.png";
 
+const appUrl = import.meta.env.VITE_APP_URL;
+
 function DocumentDropZone({ onFileDrop, imgSrc, altText, description, clearPreviewsTrigger }) {
     const [isDragging, setIsDragging] = useState(false);
     const [filesPreview, setFilesPreview] = useState([]);
@@ -119,7 +121,7 @@ function Document() {
         // Fetch the user ID, only allows if token is correct
         const fetchUserId = async () => {
             try {
-                const response = await axios.get('/api/user-id');
+                const response = await axios.get(`${appUrl}/api/user-id`);
                 setUserId(response.data.user.id);
 
             } catch (error) {
@@ -138,7 +140,7 @@ function Document() {
                     return; // Exit early if userId is null or undefined
                 }
 
-                const response = await axios.get("/api/fetchdocs", {
+                const response = await axios.get(`${appUrl}/api/fetchdocs`, {
                     params: {
                         user_id: userId,
                     },
@@ -166,7 +168,7 @@ function Document() {
 
     const handleDelete = async (id) => {
         try {
-          const response = await axios.delete(`/api/deletedoc/${id}`);
+          const response = await axios.delete(`${appUrl}/api/deletedoc/${id}`);
           if (response.data.status === 1) {
             setUserDocuments((prevDocuments) =>
               prevDocuments.filter((doc) => doc.id !== id)
@@ -204,7 +206,7 @@ function Document() {
         formData.append("user_id", userId);
 
         try {
-            const response = await axios.post("/api/uploaddocs", formData, {
+            const response = await axios.post(`${appUrl}/api/uploaddocs`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
@@ -222,7 +224,7 @@ function Document() {
 
 const downloadDocument = async (id, title) => {
     try {
-        const response = await axios.get(`/api/download/${id}`, {
+        const response = await axios.get(`${appUrl}/api/download/${id}`, {
             responseType: "blob",
         });
 

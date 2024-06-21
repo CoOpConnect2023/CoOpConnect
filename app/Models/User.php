@@ -26,6 +26,8 @@ class User extends Authenticatable
         'profile_image',
         'company_name',
         'company',
+        'positiontitle',
+        'description',
         'working',
         'interviewing',
         'searching',

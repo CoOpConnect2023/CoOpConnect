@@ -14,6 +14,7 @@ use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\DocumentsController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\ReflectionController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,6 +49,8 @@ Route::get('/user-id', function () {
 })->middleware('auth:sanctum');
 
 Route::get('/download/{id}', [DocumentsController::class, 'download'])->name('file.download');
+
+Route::post('/update-profile/{user}', [UserController::class, 'updateProfile'])->name('profile.update')->middleware('auth');
 
 
 
