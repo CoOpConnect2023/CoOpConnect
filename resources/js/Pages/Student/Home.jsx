@@ -1,65 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
 import { Link } from "@inertiajs/react";
+import {
+    searchJobsbySkill,
+    selectJobsStatus,
+    selectJobs,
+} from "@/Features/jobs/jobsSlice";
 
 function Home() {
-    const [jobs, setJobs] = useState([]);
-    const [featuredJob, setFeaturedJob] = useState(null);
-    const [userId, setUserId] = useState(null);
-    const defaultSkills = [];
+    const dispatch = useDispatch();
 
-
+    const jobs = useSelector(selectJobs);
+    const jobsStatus = useSelector(selectJobsStatus);
 
     useEffect(() => {
-        // Fetch the XSRF token from cookies and set it in Axios headers
-        const csrfToken = document.cookie
-            .split('; ')
-            .find(row => row.startsWith('XSRF-TOKEN='))
-            ?.split('=')[1];
-        axios.defaults.headers.common['X-XSRF-TOKEN'] = csrfToken;
-
-        // Function to fetch the user ID
-        const fetchUserId = async () => {
-            try {
-                const response = await axios.get(`/api/user-id`);
-                setUserId(response.data.user_id);
-                console.log('Fetched User ID:', userId);
-            } catch (error) {
-                console.error('Error fetching user ID:', error);
-            }
-        };
-
-        fetchUserId();
-    }, []);
-
-    useEffect(() => {
-        if (userId === null) {
-            return; // Don't fetch jobs until the user ID is set
-        }
-
-        // Fetch the jobs matching specified skills
-        const fetchJobs = async () => {
-            try {
-                const response = await axios.get(`/api/jobs/match/${userId}`, {
-                    params: {
-                        skills: defaultSkills
-                    }
-                });
-                setJobs(response.data);
-                console.log("jobs", response.data);
-
-
-                if (response.data.length > 0) {
-                    setFeaturedJob(response.data[0]);
-                }
-            } catch (error) {
-                console.error("Error fetching jobs:", error);
-            }
-        };
-
-        fetchJobs();
-    }, [userId]);
+        dispatch(
+            searchJobsbySkill({
+                skills: [],
+            })
+        );
+    }, [dispatch]);
 
     return (
         <NavBar>
@@ -77,7 +39,7 @@ function Home() {
                         scrambled it t
                     </Description>
                     <Link href="/student/jobs">
-                    <Button >View Jobs</Button>
+                        <Button>View Jobs</Button>
                     </Link>
                 </SearchSection>
                 <JobsSection>
@@ -86,9 +48,12 @@ function Home() {
                         <u>View</u> some of these recommended jobs!
                     </JobsSubHeader>
                     <JobListings>
-                        {jobs.length === 0 ? (
+                        {jobsStatus === "loading" ? (
+                            <EmptyMessage>Loading...</EmptyMessage>
+                        ) : jobs.length === 0 ? (
                             <EmptyMessage>
-                                Add some skills to your profile to see some jobs to apply for
+                                Add some skills to your profile to see some jobs
+                                to apply for
                             </EmptyMessage>
                         ) : (
                             jobs.map((job, index) => (
@@ -97,8 +62,10 @@ function Home() {
                                     <CompanyName>{job.company}</CompanyName>
                                     <Location>{job.location}</Location>
                                     <SkillsList>
-                                        {JSON.parse(job.skills).map((tag, index) => (
-                                            <SkillBadge key={index}>{tag}</SkillBadge>
+                                        {job.skills.map((tag, index) => (
+                                            <SkillBadge key={index}>
+                                                {tag}
+                                            </SkillBadge>
                                         ))}
                                     </SkillsList>
                                     <JobDescription>

@@ -163,29 +163,33 @@ export const getUsersForJob = createAsyncThunk(
 );
 
 export const searchJobsbySkill = createAsyncThunk(
-    "budgets/searchJobsbySkill",
+    "jobs/searchJobsbySkill",
     async (params) => {
         const { skills } = params;
         const response = await axios({
             url: "/jobs/match",
             method: "GET",
-            data: {
+            params: {
                 skills,
             },
         });
+
+        console.log(response.data);
+
         return response.data.data;
     }
 );
 
 export const searchJobsBySkillAndLocation = createAsyncThunk(
-    "budgets/getJobs",
+    "jobs/searchJobsBySkillAndLocation",
     async (params) => {
-        const { skills, location } = params;
+        const { searchTerm, location } = params;
+        console.log("test", searchTerm);
         const response = await axios({
             url: "/jobs/search",
             method: "GET",
-            data: {
-                skills,
+            params: {
+                searchTerm,
                 location,
             },
         });
@@ -193,7 +197,7 @@ export const searchJobsBySkillAndLocation = createAsyncThunk(
     }
 );
 
-export const postJob = createAsyncThunk("budgets/postJob", async (params) => {
+export const postJob = createAsyncThunk("jobs/postJob", async (params) => {
     const {
         title,
         description,
@@ -219,7 +223,7 @@ export const postJob = createAsyncThunk("budgets/postJob", async (params) => {
     return response.data.data;
 });
 
-export const putJob = createAsyncThunk("budgets/putJob", async (params) => {
+export const putJob = createAsyncThunk("jobs/putJob", async (params) => {
     const {
         jobsId,
         title,
@@ -246,7 +250,7 @@ export const putJob = createAsyncThunk("budgets/putJob", async (params) => {
     return response.data.data;
 });
 
-export const patchJob = createAsyncThunk("budgets/patchJob", async (params) => {
+export const patchJob = createAsyncThunk("jobs/patchJob", async (params) => {
     const {
         jobsId,
         title,

@@ -1,114 +1,40 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
+import { useSelector, useDispatch } from "react-redux";
+import {
+    searchJobsBySkillAndLocation,
+    selectJobsStatus,
+    selectJobs,
+} from "@/Features/jobs/jobsSlice";
 
 function Jobs() {
-    const jobPostings = [
-        {
-            title: "Full-Stack Developer",
-            company: "Microsoft",
-            location: "Toronto, ON",
-            tags: ["Javascript", "HTML", "Development", "+3"],
-            description:
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
-        },
-        {
-            title: "Web Developer",
-            company: "Atlassian",
-            location: "Houston, TX",
-            tags: ["Javascript", "HTML", "Development", "+3"],
-            description:
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
-        },
-    ];
-
-
-
-    const [jobs, setJobs] = useState([]);
-    const [userId, setUserId] = useState(null);
     const [featuredJob, setFeaturedJob] = useState(null);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [searchLocation, setLocation] = useState('');
+    const [searchTerms, setSearchTerms] = useState("");
+    const [searchLocation, setLocation] = useState("");
 
-    useEffect(() => {
-        // Fetch the XSRF token from cookies and set it in Axios headers
-        const csrfToken = document.cookie
-            .split('; ')
-            .find(row => row.startsWith('XSRF-TOKEN='))
-            ?.split('=')[1];
-        axios.defaults.headers.common['X-XSRF-TOKEN'] = csrfToken;
+    const dispatch = useDispatch();
 
-        // Function to fetch the user ID
-        const fetchUserId = async () => {
-            try {
-                const response = await axios.get(`/api/user-id`);
-                setUserId(response.data.user_id);
-                console.log('Fetched User ID:', userId);
-            } catch (error) {
-                console.error('Error fetching user ID:', error);
-            }
-        };
-
-        fetchUserId();
-    }, []);
-
-    useEffect(() => {
-        if (userId === null) {
-            return;
-        }
-
-
-        const fetchJobs = async () => {
-            try {
-                const response = await axios.get(`/api/jobs`, {
-                    params: {
-
-                    }
-                });
-                const receivedJobs = response.data.slice(0, 3);
-                setJobs(receivedJobs);
-                console.log("jobs", response.data);
-
-
-                if (receivedJobs.length > 0) {
-                    setFeaturedJob(receivedJobs[0]);
-                    console.log(receivedJobs[0])
-                }
-            } catch (error) {
-                console.error("Error fetching jobs:", error);
-            }
-        };
-
-        fetchJobs();
-    }, [userId]);
+    const jobs = useSelector(selectJobs);
+    const jobsStatus = useSelector(selectJobsStatus);
 
     const handleSearch = async (e) => {
         e.preventDefault();
-
-
-        const lowerCaseSearchTerm = searchTerm ? searchTerm.toLowerCase() : null;
-        const lowerCaseSearchLocation = searchLocation ? searchLocation.toLowerCase() : null;
-
-        console.log("Search Parameters:", { lowerCaseSearchTerm, lowerCaseSearchLocation });
-
         try {
-            const response = await axios.get(`/api/jobs/search/${userId}`, {
-                params: {
-                    searchTerm: lowerCaseSearchTerm,
-                    location: lowerCaseSearchLocation,
-                }
-            });
-
-            setJobs(response.data);
-            console.log("Jobs found:", response.data);
+            const response = await dispatch(
+                searchJobsBySkillAndLocation({
+                    searchTerm: searchTerms
+                        .split(",")
+                        .map((searchTerm) => searchTerm.trim()),
+                    location: searchLocation,
+                })
+            );
+            setFeaturedJob(response.payload[0]); // Assuming payload is an array of jobs returned
         } catch (error) {
             console.error("Error searching jobs:", error);
+            // Handle error state if necessary
         }
     };
-
-
-
-
 
     return (
         <NavBar header={"Job Postings"}>
@@ -121,90 +47,115 @@ function Jobs() {
                             Connect!
                         </TextDescription>
                         <SearchForm onSubmit={handleSearch}>
-                        <SearchField>
-                <img
-                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/7ac6f5e8995015505b63112c3fe0ce83293960aae84ac26f166dcf6eb5607efc?apiKey=d66532d056b14640a799069157705b77&"
-                    alt="search icon"
-                />
-                <SearchInput
-                    type="text"
-                    placeholder="Job Titles, Keywords"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    aria-label="Job Titles, Keywords"
-                />
-            </SearchField>
-            <SearchField>
-                <img
-                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/e18a12a75f61520eab005b610b7b3ed410f4b0e7ebaa3f2d7c7708f36f9bb18d?apiKey=d66532d056b14640a799069157705b77&"
-                    alt="location icon"
-                />
-                <SearchInput
-                    type="text"
-
-                    value={searchLocation}
-                    onChange={(e) => setLocation(e.target.value)}
-                    aria-label="Location"
-                />
-            </SearchField>
-            <SearchButton type="submit">View Jobs</SearchButton>
-                        </SearchForm>{jobs && (
-                        <JobList>{jobs && jobs.length > 0 ? (
-                            <JobColumn>
-                                {jobs.map((job) => (
-                                    <JobCard key={job.title}>
-                                        <JobTitle>{job.title}</JobTitle>
-                                        <JobMeta>
-                                            <div>{job.company}</div>
-                                            <div>{job.location}</div>
-                                        </JobMeta>
-                                        <SkillsList>
-                                {JSON.parse(job.skills).map((tag, index) => (
-                                                <SkillBadge key={index}>{tag}</SkillBadge>
-                                            ))}
-                                </SkillsList>
-                                        <JobDescription>
-                                            {job.description}
-                                        </JobDescription>
-                                        <Divider />
-                                        <ViewButton>VIEW POSTING</ViewButton>
-                                    </JobCard>
-                                ))}
-                            </JobColumn>) : (
-                <p>No jobs found.</p>
-            )} {featuredJob && (
-                            <FeaturedJob>
-                                <JobCardFeatured>
-                                    <JobTitle>{featuredJob.title}</JobTitle>
-                                    <CompanyInfo>
-                                        <CompanyImage
-                                            src="https://cdn.builder.io/api/v1/image/assets/TEMP/b8ae9cd831463a8906ed092974d8aff01723eb0ccd0c5c446d59bc3e96d9c74c?apiKey=d66532d056b14640a799069157705b77&"
-                                            alt="company logo"
-                                        />
-                                        <CompanyDetails>
-                                            <CompanyName>
+                            <SearchField>
+                                <img
+                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/7ac6f5e8995015505b63112c3fe0ce83293960aae84ac26f166dcf6eb5607efc?apiKey=d66532d056b14640a799069157705b77&"
+                                    alt="search icon"
+                                />
+                                <SearchInput
+                                    type="text"
+                                    placeholder="Job Titles, Keywords"
+                                    value={searchTerms}
+                                    onChange={(e) =>
+                                        setSearchTerms(e.target.value)
+                                    }
+                                    aria-label="Job Titles, Keywords"
+                                />
+                            </SearchField>
+                            <SearchField>
+                                <img
+                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/e18a12a75f61520eab005b610b7b3ed410f4b0e7ebaa3f2d7c7708f36f9bb18d?apiKey=d66532d056b14640a799069157705b77&"
+                                    alt="location icon"
+                                />
+                                <SearchInput
+                                    type="text"
+                                    value={searchLocation}
+                                    onChange={(e) =>
+                                        setLocation(e.target.value)
+                                    }
+                                    aria-label="Location"
+                                />
+                            </SearchField>
+                            <SearchButton type="submit">View Jobs</SearchButton>
+                        </SearchForm>
+                        {jobs && (
+                            <JobList>
+                                {jobs && jobs.length > 0 ? (
+                                    <JobColumn>
+                                        {jobs.map((job) => (
+                                            <JobCard key={job.title}>
+                                                <JobTitle>{job.title}</JobTitle>
+                                                <JobMeta>
+                                                    <div>{job.company}</div>
+                                                    <div>{job.location}</div>
+                                                </JobMeta>
+                                                <SkillsList>
+                                                    {job.skills.map(
+                                                        (tag, index) => (
+                                                            <SkillBadge
+                                                                key={index}
+                                                            >
+                                                                {tag}
+                                                            </SkillBadge>
+                                                        )
+                                                    )}
+                                                </SkillsList>
+                                                <JobDescription>
+                                                    {job.description}
+                                                </JobDescription>
+                                                <Divider />
+                                                <ViewButton>
+                                                    VIEW POSTING
+                                                </ViewButton>
+                                            </JobCard>
+                                        ))}
+                                    </JobColumn>
+                                ) : (
+                                    <p>No jobs found.</p>
+                                )}{" "}
+                                {featuredJob && (
+                                    <FeaturedJob>
+                                        <JobCardFeatured>
+                                            <JobTitle>
                                                 {featuredJob.title}
-                                            </CompanyName>
-                                            <CompanyLocation>
-                                                {featuredJob.title}
-                                            </CompanyLocation>
-                                        </CompanyDetails>
-                                    </CompanyInfo>
-                                    <ApplyButton>Apply Here!</ApplyButton>
+                                            </JobTitle>
+                                            <CompanyInfo>
+                                                <CompanyImage
+                                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/b8ae9cd831463a8906ed092974d8aff01723eb0ccd0c5c446d59bc3e96d9c74c?apiKey=d66532d056b14640a799069157705b77&"
+                                                    alt="company logo"
+                                                />
+                                                <CompanyDetails>
+                                                    <CompanyName>
+                                                        {featuredJob.title}
+                                                    </CompanyName>
+                                                    <CompanyLocation>
+                                                        {featuredJob.title}
+                                                    </CompanyLocation>
+                                                </CompanyDetails>
+                                            </CompanyInfo>
+                                            <ApplyButton>
+                                                Apply Here!
+                                            </ApplyButton>
 
-                                    <JobFullDescription>
-                                        <strong>What is Lorem Ipsum?</strong>
-                                        <br />
-                                        {featuredJob.description}
-                                        <br />
-                                        <br />
-                                        <strong>Why do we use it?</strong>
-                                        <br />
-                                        {featuredJob.title}
-                                    </JobFullDescription>
-                                </JobCardFeatured>
-                            </FeaturedJob>)}
-                        </JobList>)}
+                                            <JobFullDescription>
+                                                <strong>
+                                                    What is Lorem Ipsum?
+                                                </strong>
+                                                <br />
+                                                {featuredJob.description}
+                                                <br />
+                                                <br />
+                                                <strong>
+                                                    Why do we use it?
+                                                </strong>
+                                                <br />
+                                                {featuredJob.title}
+                                            </JobFullDescription>
+                                        </JobCardFeatured>
+                                    </FeaturedJob>
+                                )}
+                            </JobList>
+                        )}
                     </SearchInnerContainer>
                 </SearchContainer>
             </MainContainer>

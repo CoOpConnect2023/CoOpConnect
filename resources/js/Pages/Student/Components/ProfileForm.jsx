@@ -4,32 +4,19 @@ import styled from "styled-components";
 function ProfileForm() {
     const [user, setUser] = useState(null);
 
-
-
-
     useEffect(() => {
-        // Fetch the XSRF token from cookies and set it in Axios headers
-        const csrfToken = document.cookie
-            .split('; ')
-            .find(row => row.startsWith('XSRF-TOKEN='))
-            ?.split('=')[1];
-        axios.defaults.headers.common['X-XSRF-TOKEN'] = csrfToken;
-
-        // Function to fetch the user ID
-        const fetchUserId = async () => {
+        const fetchUser = async () => {
             try {
-                const response = await axios.get(`/api/user-id`);
+                const response = await axios.get(
+                    `http://127.0.0.1:8000/api/user-id`
+                );
                 setUser(response.data.user);
-                console.log('Fetched User :', response.data.user);
-                console.log(user,"testuser")
             } catch (error) {
-                console.error('Error fetching user ID:', error);
+                console.error("Error fetching user ID:", error);
             }
         };
-
-        fetchUserId();
+        fetchUser();
     }, []);
-
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -48,7 +35,11 @@ function ProfileForm() {
             <ProfileSection>
                 <ProfileContainer>
                     <ProfileImageWrapper>
-                        <ProfileImage loading="lazy" src="{user.school}" alt="Profile" />
+                        <ProfileImage
+                            loading="lazy"
+                            src="{user.school}"
+                            alt="Profile"
+                        />
                     </ProfileImageWrapper>
                     <ProfileBio>
                         <BioHeader>Bio:</BioHeader>
@@ -88,7 +79,6 @@ function ProfileForm() {
                         type="text"
                         name="accountTypes"
                         value={user.role}
-
                     />
                 </ProfileDetailItem>
                 <ProfileDetailItem>
