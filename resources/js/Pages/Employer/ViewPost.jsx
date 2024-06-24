@@ -1,119 +1,152 @@
-import * as React from "react";
+
+
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
+import ApplicantModal from "../Profile/Partials/ApplicantModal";
+import EditJobModal from "../Profile/Partials/EditJobModal";
+const appUrl = import.meta.env.VITE_APP_URL;
+
 
 function ViewPost() {
-    const applicants = [
-        {
-            id: 1,
-            imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/ffe01f15e5bd2c123e54f594bac37752eb1d698a2b703557da309d5e47debd5e?apiKey=d66532d056b14640a799069157705b77&",
-            name: "Barack Obama",
-            schoolInfo: "School Information",
-            location: "Toronto, ON",
-            description:
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-        },
-        {
-            id: 2,
-            imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/ffe01f15e5bd2c123e54f594bac37752eb1d698a2b703557da309d5e47debd5e?apiKey=d66532d056b14640a799069157705b77&",
-            name: "Barack Obama",
-            schoolInfo: "School Information",
-            location: "Toronto, ON",
-            description:
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-        },
-        {
-            id: 3,
-            imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/ffe01f15e5bd2c123e54f594bac37752eb1d698a2b703557da309d5e47debd5e?apiKey=d66532d056b14640a799069157705b77&",
-            name: "Barack Obama",
-            schoolInfo: "School Information",
-            location: "Toronto, ON",
-            description:
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-        },
-        {
-            id: 4,
-            imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/ffe01f15e5bd2c123e54f594bac37752eb1d698a2b703557da309d5e47debd5e?apiKey=d66532d056b14640a799069157705b77&",
-            name: "Barack Obama",
-            schoolInfo: "School Information",
-            location: "Toronto, ON",
-            description:
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-        },
-    ];
+  const [job, setJob] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedApplicant, setSelectedApplicant] = useState(null);
+  const [editModalIsOpen, setEditModalIsOpen] = useState(false);
 
-    return (
-        <NavBar header={"Job Postings"}>
-            <MainContainer>
-                <Container>
-                    <Title>Current Company Postings</Title>
-                    <JobPostingCard>
-                        <JobInfo>
-                            <JobInfoLeft>
-                                <CompanyLogo
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/c18c37d4baea2f5cbd4d392adacf6fa12686c4c99b1f2a12d132c4a3ef4a5899?apiKey=d66532d056b14640a799069157705b77&"
-                                    alt="Company Logo"
-                                />
-                                <JobDetails>
-                                    <JobTitle>Front-End Developer</JobTitle>
-                                    <CompanyName>Microsoft</CompanyName>
-                                    <JobDescription>
-                                        Lorem Ipsum is simply dummy text of the
-                                        printing and typesetting industry. Lorem
-                                        Ipsum has been the industry's standard
-                                        dummy text ever since the 1500s, when an
-                                        unknown printer took a galley of type
-                                        and scrambled it to make a type specimen
-                                        book.
-                                    </JobDescription>
-                                </JobDetails>
-                                <StatusIcon
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/0f00bd98ccee0cca896d493616005574e2e5aaa7076659900adbd3e310f5af87?apiKey=d66532d056b14640a799069157705b77&"
-                                    alt="Status Icon"
-                                />
-                            </JobInfoLeft>
-                            <JobInfoRight>
-                                <StatusTag>Posting Status: Open</StatusTag>
-                                <JobTypeTag>Job Type: Full-Time</JobTypeTag>
-                                <LocationTag>Work Location: Remote</LocationTag>
-                            </JobInfoRight>
-                        </JobInfo>
-                        <ApplicantSection>
-                            <ApplicantTitle>Applicants</ApplicantTitle>
-                            <Applicants>
-                                {applicants.map((applicant) => (
-                                    <ApplicantCard key={applicant.id}>
-                                        <ApplicantInfo>
-                                            <ApplicantImage
-                                                src={applicant.imgSrc}
-                                                alt={applicant.name}
-                                            />
-                                            <ApplicantDetails>
-                                                <ApplicantName>
-                                                    {applicant.name}
-                                                </ApplicantName>
-                                                <SchoolInfo>
-                                                    {applicant.schoolInfo}
-                                                </SchoolInfo>
-                                                <Location>
-                                                    {applicant.location}
-                                                </Location>
-                                            </ApplicantDetails>
-                                        </ApplicantInfo>
-                                        <ApplicantDescription>
-                                            {applicant.description}
-                                        </ApplicantDescription>
-                                        <ViewButton>View Applicant</ViewButton>
-                                    </ApplicantCard>
-                                ))}
-                            </Applicants>
-                        </ApplicantSection>
-                    </JobPostingCard>
-                </Container>
-            </MainContainer>
-        </NavBar>
-    );
+  // Extract job ID from URL using useParams hook
+  const jobId = parseInt(window.location.pathname.split('/').pop(), 10);
+
+  useEffect(() => {
+    // Fetch job details including applications based on jobId
+    const fetchJobDetails = async () => {
+      try {
+        const response = await fetch(`${appUrl}/api/jobs/${jobId}`); // Replace with your API endpoint
+        if (!response.ok) {
+          throw new Error("Failed to fetch job details");
+        }
+        const data = await response.json();
+        setJob(data);
+        console.log(data)
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching job details:", error);
+      }
+    };
+
+    fetchJobDetails();
+  }, [jobId]);
+
+  if (loading || !job) {
+    return <div>Loading...</div>; // You can show a loading indicator here
+  }
+
+  console.log("Job from URL:", job);
+
+  // Check if job.applications exists and is an array
+  const applicants = job.applications && Array.isArray(job.applications)
+    ? job.applications.map(app => app.user)
+    : [];
+
+
+    const openModal = (applicant) => {
+        setSelectedApplicant(applicant);
+        setModalIsOpen(true);
+      };
+
+      const closeModal = () => {
+        setModalIsOpen(false);
+        setSelectedApplicant(null);
+      };
+
+      const openEditModal = () => {
+        setEditModalIsOpen(true);
+      };
+
+      const closeEditModal = () => {
+        setEditModalIsOpen(false);
+      };
+
+      const handleSave = (updatedJob) => {
+        // Awaiting logic
+        setJob((prevJob) => ({ ...prevJob, ...updatedJob }));
+        closeEditModal();
+      };
+
+
+
+  return (
+    <NavBar header={"Job Postings"}>
+      <MainContainer>
+        <Container>
+          <Title>Current Company Postings</Title>
+          <JobPostingCard>
+            <JobInfo>
+              <JobInfoLeft>
+                <CompanyLogo
+                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/c18c37d4baea2f5cbd4d392adacf6fa12686c4c99b1f2a12d132c4a3ef4a5899?apiKey=d66532d056b14640a799069157705b77&"
+                  alt="Company Logo"
+                />
+                <JobDetails>
+                  <JobTitle>{job.title}</JobTitle>
+                  <CompanyName>{job.company}</CompanyName>
+                  <JobDescription>{job.description}</JobDescription>
+                </JobDetails>
+                <StatusIcon
+                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/0f00bd98ccee0cca896d493616005574e2e5aaa7076659900adbd3e310f5af87?apiKey=d66532d056b14640a799069157705b77&"
+                  alt="Status Icon"
+                  onClick={openEditModal}
+                />
+              </JobInfoLeft>
+              <JobInfoRight>
+                <StatusTag>Posting Status: {job.posting_status}</StatusTag>
+                <JobTypeTag>Job Type: {job.job_type}</JobTypeTag>
+                <LocationTag>Work Location: {job.location}</LocationTag>
+              </JobInfoRight>
+            </JobInfo>
+            <ApplicantSection>
+              <ApplicantTitle>Applicants</ApplicantTitle>
+              <Applicants>
+                {applicants.map((applicant) => (
+                  <ApplicantCard key={applicant.id}>
+                    <ApplicantInfo>
+                      <ApplicantImage
+                        src={applicant.profile_image || "https://via.placeholder.com/150"}
+                        alt={applicant.name}
+                      />
+                      <ApplicantDetails>
+                        <ApplicantName>{applicant.name}</ApplicantName>
+                        <SchoolInfo>{applicant.school || "N/A"}</SchoolInfo>
+                        <Location>{applicant.location}</Location>
+                      </ApplicantDetails>
+                    </ApplicantInfo>
+                    <ApplicantDescription>
+                      {applicant.description || "N/A"}
+                    </ApplicantDescription>
+                    <ViewButton onClick={() => openModal(applicant)}>View Applicant</ViewButton>
+                  </ApplicantCard>
+                ))}
+              </Applicants>
+            </ApplicantSection>
+          </JobPostingCard>
+        </Container>
+      </MainContainer>
+      <ApplicantModal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        applicant={selectedApplicant}
+      />
+      <EditJobModal
+        isOpen={editModalIsOpen}
+        onRequestClose={closeEditModal}
+        job={job}
+        onSave={handleSave}
+      />
+    </NavBar>
+  );
 }
+
 
 const MainContainer = styled.div`
     display: flex;

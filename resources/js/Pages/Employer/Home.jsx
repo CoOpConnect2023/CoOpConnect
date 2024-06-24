@@ -1,9 +1,42 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
 import { Link } from "@inertiajs/react";
+const appUrl = import.meta.env.VITE_APP_URL;
 
 function Home() {
+    const [user, setUser] = useState(null);
+    const [jobPostings, setJobPostings] = useState([]);
+
+    useEffect(() => {
+        // Fetch the XSRF token from cookies and set it in Axios headers
+        const csrfToken = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("XSRF-TOKEN="))
+            ?.split("=")[1];
+        axios.defaults.headers.common["X-XSRF-TOKEN"] = csrfToken;
+
+        // Function to fetch the user ID
+        const fetchUserAndJobs = async () => {
+            try {
+                const response = await axios.get(`${appUrl}/api/user-id`);
+                const userData = response.data.user;
+                userData.skills = JSON.parse(userData.skills || "[]");
+                setUser(userData);
+                console.log(response.data.user)
+
+                // Fetch jobs for the user
+                const jobsResponse = await axios.get(`${appUrl}/api/jobs/user/${userData.id}`);
+                setJobPostings(jobsResponse.data);
+                console.log(jobsResponse.data)
+            } catch (error) {
+                console.error("Error fetching user ID or jobs:", error);
+            }
+        };
+
+        fetchUserAndJobs();
+    }, []);
+
     return (
         <NavBar header={"Job Postings"}>
             <MainContainer>
@@ -45,17 +78,19 @@ function JobPosting({ post }) {
     return (
         <JobCard>
             <JobCardTitle>{post.title}</JobCardTitle>
-            <CompanyName>{post.companyName}</CompanyName>
+            <CompanyName>{post.company}</CompanyName>
             <Location>{post.location}</Location>
-            <Tags>
-                {post.tags.map((tag, i) => (
-                    <Tag key={i}>{tag}</Tag>
-                ))}
-            </Tags>
+            <SkillsList>
+                                                {JSON.parse(post.skills).map((tag, index) => (
+                                                    <SkillBadge key={index}>{tag}</SkillBadge>
+                                                ))}
+                                            </SkillsList>
             <JobDescriptionText>{post.description}</JobDescriptionText>
             <Divider />
             <CardButtons>
-                <ViewPostingButton>VIEW POSTING</ViewPostingButton>
+            <Link href={`/employer/viewpost/${post.id}`}>
+                    <ViewPostingButton>VIEW POSTING</ViewPostingButton>
+                </Link>
                 <EditPostingButton>EDIT POSTING</EditPostingButton>
             </CardButtons>
         </JobCard>
@@ -310,6 +345,38 @@ const EditPostingButton = styled.button`
     border: 2px solid #6b538c;
     color: #260e44;
     padding: 8px 16px;
+`;
+
+const SkillsList = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-content: space-between;
+    align-self: stretch;
+    flex-wrap: wrap;
+    margin-top: 17px;
+    gap: 10px;
+    font-size: 12px;
+    color: #773dc3;
+    letter-spacing: 0.4px;
+    line-height: 133%;
+
+    @media (max-width: 991px) {
+        white-space: initial;
+    }
+`;
+
+const SkillBadge = styled.span`
+    font-family: Poppins, sans-serif;
+    border: 1px solid #773dc3;
+    border-radius: 40px;
+    padding: 8px 10px;
+    text-align: center;
+
+    &:nth-child(4) {
+        background-color: #773dc3;
+        color: #fff;
+        box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+    }
 `;
 
 export default Home;

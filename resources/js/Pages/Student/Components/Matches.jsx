@@ -154,9 +154,10 @@ function Matches() {
                 setJobs(receivedJobs);
                 console.log("jobs", response.data);
 
-                if (response.data.length > 0) {
-                    setSelectedJob(response.data[0]);
-                }
+                // Remove this line to prevent setting the modal job on initial load
+                // if (response.data.length > 0) {
+                //     setSelectedJob(response.data[0]);
+                // }
             } catch (error) {
                 console.error("Error fetching jobs:", error);
             }

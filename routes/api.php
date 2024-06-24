@@ -55,6 +55,7 @@ Route::post('/update-profile/{user}', [UserController::class, 'updateProfile'])-
 
 Route::middleware('auth:sanctum')->post('/apply/{jobId}', [ApplicationController::class, 'apply']);
 Route::middleware('auth:sanctum')->get('/check-application/{jobId}', [ApplicationController::class, 'checkApplication']);
+Route::get('/jobs/user/{userId}', [JobController::class, 'getJobsByUserId']);
 
 
 

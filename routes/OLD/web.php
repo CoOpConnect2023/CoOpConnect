@@ -51,7 +51,10 @@ Route::get('/', function () {
     ]);
 });
 
-
+Route::get('/employer/viewpost/{jobId}', function ($jobId) {
+    $job = Job::with(['applications.user'])->findOrFail($jobId);
+    return Inertia::render('ViewPost', ['job' => $job]);
+});
 
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
 

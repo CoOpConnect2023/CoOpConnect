@@ -18,7 +18,7 @@ return new class extends Migration
             $table->boolean('searching')->default(false);
             $table->json('skills')->nullable();
             $table->string('positiontitle')->nullable();
-            $table->string('description')->nullable();
+
             // Add more columns as needed
         });
     }
@@ -34,7 +34,7 @@ return new class extends Migration
             $table->dropColumn('interviewing');
             $table->dropColumn('searching');
             $table->dropColumn('skills');
-            $table->string('description')->nullable();
+
             // Drop other columns added in 'up' method
         });
     }

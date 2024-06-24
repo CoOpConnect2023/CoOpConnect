@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Job;
+use App\Models\Jobs;
 use Illuminate\Http\Request;
 
 class JobController extends Controller
@@ -47,7 +48,8 @@ class JobController extends Controller
     // Display the specified job
     public function show(Job $job)
     {
-        return view('jobs.show', compact('job'));
+        $job->load('applications.user');
+        return response()->json($job);
     }
 
     // Show the form for editing the specified job
@@ -137,7 +139,11 @@ class JobController extends Controller
         return response()->json($matchingJobs);
     }
 
-
+    public function getJobsByUserId($userId)
+    {
+        $jobs = Job::where('user_id', $userId)->get();
+        return response()->json($jobs);
+    }
 
 
 
