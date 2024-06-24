@@ -121,18 +121,20 @@ const Interviews = () => {
         // Format start and end dates to ISO 8601 string format
         /*         const formattedStart = start.toISOString(); // Convert Date object to ISO string
         const formattedEnd = end.toISOString(); */
+        const formattedStart = `${start.getFullYear()}-${String(start.getMonth() + 1).padStart(2, '0')}-${String(start.getDate()).padStart(2, '0')} ${String(start.getHours()).padStart(2, '0')}:${String(start.getMinutes()).padStart(2, '0')}:${String(start.getSeconds()).padStart(2, '0')}`;
+    const formattedEnd = `${end.getFullYear()}-${String(end.getMonth() + 1).padStart(2, '0')}-${String(end.getDate()).padStart(2, '0')} ${String(end.getHours()).padStart(2, '0')}:${String(end.getMinutes()).padStart(2, '0')}:${String(end.getSeconds()).padStart(2, '0')}`;
 
         // Create newEvent object with formatted dates
 
         dispatch(
             postInterview({
-                title: "test",
-                startDate: "2024-06-18 23:15:47",
-                endDate: "2024-06-19 00:15:47",
-                status: "scheduled",
-                description: "test",
-                intervieweeId: userId,
-                interviewerId: 2,
+                title,
+        startDate: formattedStart,
+        endDate: formattedEnd,
+        status: "scheduled",
+        description,
+        intervieweeId: userId,   // Assuming userId is defined
+        interviewerId: userId,
             })
         );
 

@@ -96,6 +96,13 @@ class User extends Authenticatable
     return $this->hasMany(Application::class);
 }
 
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
+
+
     /**
      * Check if the user has a specific role.
      *

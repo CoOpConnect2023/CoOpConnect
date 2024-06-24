@@ -59,25 +59,37 @@ class JobController extends Controller
     }
 
     // Update the specified job in storage
-    public function update(Request $request, Job $job)
-    {
-        // Validate incoming request
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'skills' => 'nullable|array',
-            'locations' => 'required|string|max:255',
-        ]);
+    public function update(Request $request, $id)
+{
+    // Validate the incoming request data
+    $validatedData = $request->validate([
+        'title' => 'required|string|max:255',
+        'company' => 'required|string|max:255',
+        'description' => 'required|string',
+        'posting_status' => 'required|in:open,closed',
+        'job_type' => 'required|in:hybrid,remote,on-site',
+        'location' => 'required|string|max:255',
+    ]);
 
-        // Update job record
-        $job->title = $request->input('title');
-        $job->description = $request->input('description');
-        $job->skills = json_encode($request->input('skills')); // Convert skills array to JSON
-        $job->locations = $request->input('locations');
-        $job->save();
+    // Debugging: Log the validated data
+    \Illuminate\Support\Facades\Log::info('Validated Data:', $validatedData);
 
-        return redirect()->route('jobs.index')->with('success', 'Job updated successfully!');
-    }
+    // Find the job by ID
+    $job = Job::findOrFail($id);
+
+    // Debugging: Log the found job
+    \Illuminate\Support\Facades\Log::info('Found Job:', $job);
+
+    // Update the job with validated data
+    $job->update($validatedData);
+
+    // Debugging: Log the updated job
+    \Illuminate\Support\Facades\Log::info('Updated Job:', $job);
+
+    // Return updated job as JSON response
+    return response()->json($job);
+}
+
 
     // Remove the specified job from storage
     public function destroy(Job $job)

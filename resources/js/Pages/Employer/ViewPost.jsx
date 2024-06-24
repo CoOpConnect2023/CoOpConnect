@@ -5,8 +5,13 @@ import styled from "styled-components";
 import NavBar from "./Components/NavBar";
 import ApplicantModal from "../Profile/Partials/ApplicantModal";
 import EditJobModal from "../Profile/Partials/EditJobModal";
-const appUrl = import.meta.env.VITE_APP_URL;
 
+const appUrl = import.meta.env.VITE_APP_URL;
+const csrfToken = document.cookie
+.split("; ")
+.find((row) => row.startsWith("XSRF-TOKEN="))
+?.split("=")[1];
+axios.defaults.headers.common["X-XSRF-TOKEN"] = csrfToken;
 
 function ViewPost() {
   const [job, setJob] = useState(null);
@@ -14,6 +19,8 @@ function ViewPost() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedApplicant, setSelectedApplicant] = useState(null);
   const [editModalIsOpen, setEditModalIsOpen] = useState(false);
+
+
 
   // Extract job ID from URL using useParams hook
   const jobId = parseInt(window.location.pathname.split('/').pop(), 10);
@@ -68,10 +75,26 @@ function ViewPost() {
         setEditModalIsOpen(false);
       };
 
-      const handleSave = (updatedJob) => {
-        // Awaiting logic
-        setJob((prevJob) => ({ ...prevJob, ...updatedJob }));
-        closeEditModal();
+      const handleSave = async (updatedJob) => {
+        try {
+          const response = await fetch(`${appUrl}/api/jobs/${job.id}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedJob),
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to update job');
+          }
+
+          const data = await response.json();
+          setJob(data); // Update state with the updated job data
+          closeEditModal();
+        } catch (error) {
+          console.error('Error updating job:', error);
+        }
       };
 
 
