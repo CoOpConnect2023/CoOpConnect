@@ -3,7 +3,7 @@ import styled from "styled-components";
 import NavBar from "./Components/NavBar";
 import { Link } from "@inertiajs/react";
 import EditJobModal from "../Profile/Partials/EditJobModal";
-EditJobModal
+EditJobModal;
 const appUrl = import.meta.env.VITE_APP_URL;
 
 const Home = () => {
@@ -13,131 +13,130 @@ const Home = () => {
     const [jobToEdit, setJobToEdit] = useState(null);
 
     useEffect(() => {
-      // Fetch the XSRF token from cookies and set it in Axios headers
-      const csrfToken = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("XSRF-TOKEN="))
-        ?.split("=")[1];
-      axios.defaults.headers.common["X-XSRF-TOKEN"] = csrfToken;
+        // Fetch the XSRF token from cookies and set it in Axios headers
+        const csrfToken = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("XSRF-TOKEN="))
+            ?.split("=")[1];
+        axios.defaults.headers.common["X-XSRF-TOKEN"] = csrfToken;
 
-      // Function to fetch the user ID
-      const fetchUserAndJobs = async () => {
-        try {
-          const response = await axios.get(`${appUrl}/api/user-id`);
-          const userData = response.data.user;
-          userData.skills = JSON.parse(userData.skills || "[]");
-          setUser(userData);
+        // Function to fetch the user ID
+        const fetchUserAndJobs = async () => {
+            try {
+                const response = await axios.get(`${appUrl}/api/user-id`);
+                const userData = response.data.user;
+                userData.skills = userData.skills || "[]";
+                setUser(userData);
 
-          // Fetch jobs for the user
-          const jobsResponse = await axios.get(
-            `${appUrl}/api/jobs/user/${userData.id}`
-          );
-          setJobPostings(jobsResponse.data);
-        } catch (error) {
-          console.error("Error fetching user ID or jobs:", error);
-        }
-      };
+                // Fetch jobs for the user
+                const jobsResponse = await axios.get(
+                    `${appUrl}/api/jobs/user/${userData.id}`
+                );
+                setJobPostings(jobsResponse.data);
+            } catch (error) {
+                console.error("Error fetching user ID or jobs:", error);
+            }
+        };
 
-      fetchUserAndJobs();
+        fetchUserAndJobs();
     }, []);
 
     const openEditModal = (job) => {
-      setJobToEdit(job);
-      setEditModalIsOpen(true);
+        setJobToEdit(job);
+        setEditModalIsOpen(true);
     };
 
     const closeEditModal = () => {
-      setEditModalIsOpen(false);
+        setEditModalIsOpen(false);
     };
 
     const handleSave = (updatedJob) => {
-      // Update the job in jobPostings state
-      setJobPostings((prevJobs) =>
-        prevJobs.map((job) => (job.id === updatedJob.id ? updatedJob : job))
-      );
-      closeEditModal();
+        // Update the job in jobPostings state
+        setJobPostings((prevJobs) =>
+            prevJobs.map((job) => (job.id === updatedJob.id ? updatedJob : job))
+        );
+        closeEditModal();
     };
 
     return (
-      <NavBar header={"Job Postings"}>
-        <MainContainer>
-          <CreateJobSection>
-            <JobTitle>Create a New Job Posting</JobTitle>
-            <JobSubtitle>
-              Hire amazing students through CO-OP Connect!
-            </JobSubtitle>
-            <JobDescription>
-              Lorem Ipsum is simply dummy text of the printing and
-              typesetting industry. Lorem Ipsum has been the
-              industry's standard dummy text ever since the 1500s,
-              when an unknown printer took a galley of type and
-              scrambled it t
-            </JobDescription>
-            <Link href="/employer/post1">
-              <PostJobButton>Post a Job</PostJobButton>
-            </Link>
-          </CreateJobSection>
-          <CurrentPostingsSection>
-            <SectionTitle>Current Company Postings</SectionTitle>
-            <EditingInstructions>
-              <Link href="/employer/viewpost">
-                <UnderlineText>View</UnderlineText>
-              </Link>{" "}
-              or{" "}
-              <UnderlineText>edit</UnderlineText> your company’s
-              current job postings.
-            </EditingInstructions>
-            <PostingsGrid>
-              {jobPostings.map((post, i) => (
-                <JobPosting
-                  key={i}
-                  post={post}
-                  openEditModal={openEditModal}
+        <NavBar header={"Job Postings"}>
+            <MainContainer>
+                <CreateJobSection>
+                    <JobTitle>Create a New Job Posting</JobTitle>
+                    <JobSubtitle>
+                        Hire amazing students through CO-OP Connect!
+                    </JobSubtitle>
+                    <JobDescription>
+                        Lorem Ipsum is simply dummy text of the printing and
+                        typesetting industry. Lorem Ipsum has been the
+                        industry's standard dummy text ever since the 1500s,
+                        when an unknown printer took a galley of type and
+                        scrambled it t
+                    </JobDescription>
+                    <Link href="/employer/post1">
+                        <PostJobButton>Post a Job</PostJobButton>
+                    </Link>
+                </CreateJobSection>
+                <CurrentPostingsSection>
+                    <SectionTitle>Current Company Postings</SectionTitle>
+                    <EditingInstructions>
+                        <Link href="/employer/viewpost">
+                            <UnderlineText>View</UnderlineText>
+                        </Link>{" "}
+                        or <UnderlineText>edit</UnderlineText> your company’s
+                        current job postings.
+                    </EditingInstructions>
+                    <PostingsGrid>
+                        {jobPostings.map((post, i) => (
+                            <JobPosting
+                                key={i}
+                                post={post}
+                                openEditModal={openEditModal}
+                            />
+                        ))}
+                    </PostingsGrid>
+                </CurrentPostingsSection>
+            </MainContainer>
+            {editModalIsOpen && (
+                <EditJobModal
+                    isOpen={editModalIsOpen}
+                    onRequestClose={closeEditModal}
+                    job={jobToEdit}
+                    onSave={handleSave}
                 />
-              ))}
-            </PostingsGrid>
-          </CurrentPostingsSection>
-        </MainContainer>
-        {editModalIsOpen && (
-          <EditJobModal
-            isOpen={editModalIsOpen}
-            onRequestClose={closeEditModal}
-            job={jobToEdit}
-            onSave={handleSave}
-          />
-        )}
-      </NavBar>
+            )}
+        </NavBar>
     );
-  };
+};
 // Reusable Components
 const JobPosting = ({ post, openEditModal }) => {
     const handleEditClick = () => {
-      openEditModal(post); // Open modal for editing this specific job post
+        openEditModal(post); // Open modal for editing this specific job post
     };
 
     return (
-      <JobCard>
-        <JobCardTitle>{post.title}</JobCardTitle>
-        <CompanyName>{post.company}</CompanyName>
-        <Location>{post.location}</Location>
-        <SkillsList>
-          {JSON.parse(post.skills).map((tag, index) => (
-            <SkillBadge key={index}>{tag}</SkillBadge>
-          ))}
-        </SkillsList>
-        <JobDescriptionText>{post.description}</JobDescriptionText>
-        <Divider />
-        <CardButtons>
-          <Link href={`/employer/viewpost/${post.id}`}>
-            <ViewPostingButton>VIEW POSTING</ViewPostingButton>
-          </Link>
-          <EditPostingButton onClick={handleEditClick}>
-            EDIT POSTING
-          </EditPostingButton>
-        </CardButtons>
-      </JobCard>
+        <JobCard>
+            <JobCardTitle>{post.title}</JobCardTitle>
+            <CompanyName>{post.company}</CompanyName>
+            <Location>{post.location}</Location>
+            <SkillsList>
+                {post.skills.map((tag, index) => (
+                    <SkillBadge key={index}>{tag}</SkillBadge>
+                ))}
+            </SkillsList>
+            <JobDescriptionText>{post.description}</JobDescriptionText>
+            <Divider />
+            <CardButtons>
+                <Link href={`/employer/viewpost/${post.id}`}>
+                    <ViewPostingButton>VIEW POSTING</ViewPostingButton>
+                </Link>
+                <EditPostingButton onClick={handleEditClick}>
+                    EDIT POSTING
+                </EditPostingButton>
+            </CardButtons>
+        </JobCard>
     );
-  };
+};
 
 // Dummy data
 const jobPostings = [

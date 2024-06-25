@@ -3,6 +3,12 @@ import styled from "styled-components";
 import JobModal from "../../Profile/Partials/ViewJobModal";
 
 const appUrl = import.meta.env.VITE_APP_URL;
+import { useSelector, useDispatch } from "react-redux";
+import {
+    searchJobsbySkill,
+    selectJobsStatus,
+    selectJobs,
+} from "@/Features/jobs/jobsSlice";
 
 const JobContainer = styled.section`
     border-radius: 10px;
@@ -110,61 +116,21 @@ const ViewButton = styled.button`
     cursor: pointer;
 `;
 
-
-
 function Matches() {
-    const [jobs, setJobs] = useState([]);
-    const [userId, setUserId] = useState(null);
+    const dispatch = useDispatch();
+    const jobs = useSelector(selectJobs);
+    const jobsStatus = useSelector(selectJobsStatus);
     const [selectedJob, setSelectedJob] = useState(null);
 
     useEffect(() => {
-        // Fetch the XSRF token from cookies and set it in Axios headers
-        const csrfToken = document.cookie
-            .split('; ')
-            .find(row => row.startsWith('XSRF-TOKEN='))
-            ?.split('=')[1];
-        axios.defaults.headers.common['X-XSRF-TOKEN'] = csrfToken;
+        dispatch(
+            searchJobsbySkill({
+                skills: [],
+            })
+        );
+    }, [dispatch]);
 
-        // Function to fetch the user ID
-        const fetchUserId = async () => {
-            try {
-                const response = await axios.get(`${appUrl}/api/user-id`);
-                setUserId(response.data.user_id);
-                console.log('Fetched User ID:', response.data.user_id);
-            } catch (error) {
-                console.error('Error fetching user ID:', error);
-            }
-        };
-
-        fetchUserId();
-    }, []);
-
-    useEffect(() => {
-        if (userId === null) {
-            return; // Don't fetch jobs until the user ID is set
-        }
-
-        // Fetch the jobs matching specified skills
-        const fetchJobs = async () => {
-            try {
-                const response = await axios.get(`${appUrl}/api/jobs/match/${userId}`, {
-                    params: {}
-                });
-                const receivedJobs = response.data.slice(0, 3);
-                setJobs(receivedJobs);
-                console.log("jobs", response.data);
-
-                // Remove this line to prevent setting the modal job on initial load
-                // if (response.data.length > 0) {
-                //     setSelectedJob(response.data[0]);
-                // }
-            } catch (error) {
-                console.error("Error fetching jobs:", error);
-            }
-        };
-
-        fetchJobs();
-    }, [userId]);
+    const displayedJobs = jobs.slice(0, 3);
 
     const handleViewJob = (job) => {
         setSelectedJob(job);
@@ -179,7 +145,7 @@ function Matches() {
             <Title>Matches</Title>
             <Subtitle>Some recommended jobs for you to check out!</Subtitle>
             <JobList>
-                {jobs.map((job, index) => (
+                {displayedJobs.map((job, index) => (
                     <JobCard key={index} hasMargin={index !== 0}>
                         <JobTitle>{job.title}</JobTitle>
                         <JobDetails>

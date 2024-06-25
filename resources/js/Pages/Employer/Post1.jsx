@@ -3,8 +3,22 @@ import styled from "styled-components";
 import NavBar from "./Components/NavBar";
 import downarrow from "../Images/Icon.svg";
 import { Link } from "@inertiajs/react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    updateJobFormData,
+    selectJobFormData,
+} from "@/Features/jobs/jobsSlice";
+import { Inertia } from "@inertiajs/inertia";
 
 function Post1() {
+    const dispatch = useDispatch();
+    const jobFormData = useSelector(selectJobFormData);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        dispatch(updateJobFormData({ [name]: value }));
+    };
+
     return (
         <NavBar header={"Posting Jobs"}>
             <Container>
@@ -25,9 +39,11 @@ function Post1() {
                                     </Label>
                                     <Input
                                         type="text"
-                                        id="jobTitle"
-                                        name="jobTitle"
+                                        id="title"
+                                        name="title"
                                         aria-label="Job Title"
+                                        value={jobFormData.title}
+                                        onChange={handleInputChange}
                                     />
                                 </FormField>
                                 <FormField>
@@ -36,9 +52,11 @@ function Post1() {
                                     </Label>
                                     <Input
                                         type="text"
-                                        id="companyName"
-                                        name="companyName"
+                                        id="company"
+                                        name="company"
                                         aria-label="Company Name"
+                                        value={jobFormData.company}
+                                        onChange={handleInputChange}
                                     />
                                 </FormField>
                             </FormRow>
@@ -48,9 +66,11 @@ function Post1() {
                                         Workplace Type *
                                     </Label>
                                     <Select
-                                        id="workplaceType"
-                                        name="workplaceType"
+                                        id="jobType"
+                                        name="jobType"
                                         aria-label="Workplace Type"
+                                        value={jobFormData.jobType}
+                                        onChange={handleInputChange}
                                     >
                                         <option value="onsite">Onsite</option>
                                         <option value="remote">Remote</option>
@@ -63,19 +83,27 @@ function Post1() {
                                     </Label>
                                     <Input
                                         type="text"
-                                        id="jobLocation"
-                                        name="jobLocation"
+                                        id="location"
+                                        name="location"
                                         aria-label="Job Location"
+                                        value={jobFormData.location}
+                                        onChange={handleInputChange}
                                     />
                                 </FormField>
                             </FormRow>
                             <HorizontalRule />
-                            <ButtonContainerPost><Link href="/employer/home">
-                            <BackButton tabIndex="0">Go Back</BackButton>
-                            </Link><Link href="/employer/post2">
-                            <SubmitButton tabIndex="0">Continue</SubmitButton>
-                            </Link></ButtonContainerPost>
-
+                            <ButtonContainerPost>
+                                <Link href="/employer/home">
+                                    <BackButton tabIndex="0">
+                                        Go Back
+                                    </BackButton>
+                                </Link>
+                                <Link href="/employer/post2">
+                                    <SubmitButton tabIndex="0">
+                                        Continue
+                                    </SubmitButton>
+                                </Link>
+                            </ButtonContainerPost>
                         </Form>
                     </FormWrapper>
                 </Card>
@@ -263,7 +291,7 @@ const BackButton = styled.button`
 
 const ButtonContainerPost = styled.div`
     display: flex;
-flex-direction: row;
+    flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
     gap: 8px;

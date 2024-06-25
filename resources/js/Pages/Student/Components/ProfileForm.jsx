@@ -41,14 +41,13 @@ function ProfileForm() {
             try {
                 const response = await axios.get(`${appUrl}/api/user-id`);
                 const userData = response.data.user;
-                userData.skills = JSON.parse(userData.skills || "[]");
+                userData.skills = userData.skills || "[]";
                 setUser(userData);
                 console.log("test",response.data.user)
             } catch (error) {
                 console.error("Error fetching user ID:", error);
             }
         };
-
         fetchUserId();
     }, []);
 

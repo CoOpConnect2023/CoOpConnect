@@ -86,7 +86,7 @@ class JobsController extends Controller
 
         Log::info("Skills from Request: " . print_r($userSkills, true));
         // Parse the skills into an array, handle cases where it's null or empty
-        $userSkillsArray = $userSkills ?: json_decode(auth()->user()->skills, true) ?: [];
+        $userSkillsArray = $userSkills ?: auth()->user()->skills ?: [];
 
         $userSkillsArray = array_map('strtolower', $userSkillsArray);
 
@@ -104,23 +104,36 @@ class JobsController extends Controller
         }
 
         // Return the matching jobs as JSON
-        return response()->json($matchingJobs);
+        return new JobsCollection($matchingJobs);
     }
 
     public function searchJobs(Request $request)
     {
-        $searchTerm = $request->input('searchTerm');
+
+        Log::info('Full Request:', ['request' => request()->all()]);
+
+
+        $searchTerms = $request->input('searchTerm');
         $location = $request->input('location');
+
+        Log::info('Received Search Term:', ['searchTerm' => $searchTerms]);
+        Log::info('Received Location:', ['location' => $location]);
+
+
 
         $query = Jobs::query();
 
-        if ($searchTerm) {
-            $searchTerm = strtolower($searchTerm);
-            $query->where(function ($q) use ($searchTerm) {
-                $q->whereRaw('LOWER(title) LIKE ?', ["%{$searchTerm}%"])
-                    ->orWhere(function ($q) use ($searchTerm) {
-                        $q->whereRaw('JSON_CONTAINS(skills->"$[*]", JSON_QUOTE(LOWER(?)))', [$searchTerm]);
+        if ($searchTerms) {
+            $query->where(function ($q) use ($searchTerms) {
+                foreach ($searchTerms as $searchTerm) {
+                    $searchTerm = strtolower($searchTerm);
+                    $q->orWhere(function ($q) use ($searchTerm) {
+                        $q->whereRaw('LOWER(title) LIKE ?', ["%{$searchTerm}%"])
+                            ->orWhere(function ($q) use ($searchTerm) {
+                                $q->whereRaw('JSON_SEARCH(LOWER(skills), "one", LOWER(?)) IS NOT NULL', [$searchTerm]);
+                            });
                     });
+                }
             });
         }
 
@@ -132,8 +145,6 @@ class JobsController extends Controller
 
         $matchingJobs = $query->get();
 
-        \Log::info('Search jobs served:', $matchingJobs->toArray());
-
-        return response()->json($matchingJobs);
+        return new JobsCollection($matchingJobs);
     }
 }

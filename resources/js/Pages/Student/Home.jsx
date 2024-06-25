@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
 import { Link } from "@inertiajs/react";
@@ -20,80 +20,50 @@ import {
 } from "@/Features/jobs/jobsSlice";
 const appUrl = import.meta.env.VITE_APP_URL;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 function Home() {
-    const [jobs, setJobs] = useState([]);
     const [userId, setUserId] = useState(null);
     const [defaultSkills, setDefaultSkills] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [selectedJob, setSelectedJob] = useState(null); // State to store the selected job
+    const dispatch = useDispatch();
+
+    const jobs = useSelector(selectJobs);
+    const jobsStatus = useSelector(selectJobsStatus);
+
+    useEffect(() => {
+        dispatch(
+            searchJobsbySkill({
+                skills: [],
+            })
+        );
+    }, [dispatch]);
 
     const openModal = (job) => {
         setSelectedJob(job); // Set the selected job
         setShowModal(true);
     };
-
     const closeModal = () => {
         setShowModal(false);
     };
-
-    useEffect(() => {
-        // Fetch the XSRF token from cookies and set it in Axios headers
-        const csrfToken = document.cookie
-            .split('; ')
-            .find(row => row.startsWith('XSRF-TOKEN='))
-            ?.split('=')[1];
-        axios.defaults.headers.common['X-XSRF-TOKEN'] = csrfToken;
-
-        // Function to fetch the user ID
-        const fetchUserId = async () => {
-            try {
-                const response = await axios.get(`${appUrl}/api/user-id`);
-                setUserId(response.data.user.id);
-
-                console.log('Fetched User ID:', userId);
-            } catch (error) {
-                console.error('Error fetching user ID:', error);
-            }
-        };
-
-        fetchUserId();
-    }, []);
-
-    useEffect(() => {
-        if (userId === null) {
-            return; // Don't fetch jobs until the user ID is set
-        }
-
-        // Fetch the jobs matching specified skills
-        const fetchJobs = async () => {
-            try {
-                const response = await axios.get(`${appUrl}/api/jobs/match/${userId}`, {
-                    params: {
-                        skills: defaultSkills
-                    }
-                });
-                setJobs(response.data);
-                console.log("jobs", response.data);
-            } catch (error) {
-                console.error("Error fetching jobs:", error);
-            }
-        };
-
-        fetchJobs();
-    }, [userId]);
+    const JobCard = ({ job, openModal }) => {
+        return (
+            <JobCardContainer>
+                <JobTitle>{job.title}</JobTitle>
+                <CompanyName>{job.company}</CompanyName>
+                <Location>{job.location}</Location>
+                <SkillsList>
+                    {job.skills.map((tag, index) => (
+                        <SkillBadge key={index}>{tag}</SkillBadge>
+                    ))}
+                </SkillsList>
+                <JobDescription>{job.description}</JobDescription>
+                <Divider />
+                <JobButton onClick={() => openModal(job)}>
+                    VIEW POSTING
+                </JobButton>
+            </JobCardContainer>
+        );
+    };
 
     return (
         <NavBar>
@@ -120,13 +90,20 @@ function Home() {
                         <u>View</u> some of these recommended jobs!
                     </JobsSubHeader>
                     <JobListings>
-                        {jobs.length === 0 ? (
+                        {jobsStatus === "loading" ? (
+                            <EmptyMessage>Loading...</EmptyMessage>
+                        ) : jobs.length === 0 ? (
                             <EmptyMessage>
-                                Add some skills to your profile to see some jobs to apply for
+                                Add some skills to your profile to see some jobs
+                                to apply for
                             </EmptyMessage>
                         ) : (
                             jobs.map((job, index) => (
-                                <JobCard key={index} job={job} openModal={openModal} />
+                                <JobCard
+                                    key={index}
+                                    job={job}
+                                    openModal={openModal}
+                                />
                             ))
                         )}
                     </JobListings>

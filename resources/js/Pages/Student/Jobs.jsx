@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
 import JobModal from "../Profile/Partials/ViewJobModal";
-import { useSelector, useDispatch } from "react-redux";
 import {
     getJobs,
     selectJobs,
@@ -18,6 +17,7 @@ import {
     deleteJob,
 } from "@/Features/jobs/jobsSlice";
 const appUrl = import.meta.env.VITE_APP_URL;
+import { useSelector, useDispatch } from "react-redux";
 
 function Jobs() {
     const jobPostings = [
@@ -38,6 +38,7 @@ function Jobs() {
                 "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
         },
     ];
+
 
 
     const [userId, setUserId] = useState(null);
@@ -88,23 +89,22 @@ function Jobs() {
         }
     }, [jobs]);
 
+
     const handleSearch = async (e) => {
         e.preventDefault();
-
-        const lowerCaseSearchTerm = searchTerm ? searchTerm.toLowerCase() : null;
-        const lowerCaseSearchLocation = searchLocation ? searchLocation.toLowerCase() : null;
-
         try {
-            const response = await axios.get(`${appUrl}/api/jobs/search/${userId}`, {
-                params: {
-                    searchTerm: lowerCaseSearchTerm,
-                    location: lowerCaseSearchLocation,
-                }
-            });
-
-            setJobs(response.data);
+            const response = await dispatch(
+                searchJobsBySkillAndLocation({
+                    searchTerm: searchTerm
+                        .split(",")
+                        .map((searchTerm) => searchTerm.trim()),
+                    location: searchLocation,
+                })
+            );
+            setFeaturedJob(response.payload[0]); // Assuming payload is an array of jobs returned
         } catch (error) {
             console.error("Error searching jobs:", error);
+            // Handle error state if necessary
         }
     };
 

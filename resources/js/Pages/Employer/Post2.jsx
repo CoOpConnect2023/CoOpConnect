@@ -1,11 +1,48 @@
-import * as React from "react";
+import React from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
-import downarrow from "@/Pages/Images/Icon.svg";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    postJob,
+    updateJobFormData,
+    selectJobFormData,
+    resetJobFormData,
+} from "@/Features/jobs/jobsSlice";
 import { Link } from "@inertiajs/react";
 
 function Post2() {
-    const skills = ["Tag", "Tag", "Tag", "Tag", "Tag", "Tag", "Tag"];
+    const [userId, setUserId] = useState(null);
+    useEffect(() => {
+        const fetchUserId = async () => {
+            try {
+                const response = await axios.get(
+                    `http://127.0.0.1:8000/api/user-id`
+                );
+                setUserId(response.data.user.id);
+                dispatch(updateJobFormData({ userId: response.data.user.id }));
+                console.log(response.data.user.id);
+            } catch (error) {
+                console.error("Error fetching user ID:", error);
+            }
+        };
+        fetchUserId();
+    }, []);
+
+    const dispatch = useDispatch();
+    const jobFormData = useSelector(selectJobFormData);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        dispatch(updateJobFormData({ [name]: value }));
+    };
+
+    const handleSubmit = (e) => {
+        // Dispatch postJob action with jobFormData
+        dispatch(postJob(jobFormData));
+        dispatch(resetJobFormData());
+    };
+
     return (
         <NavBar header={"Posting Jobs"}>
             <Container>
@@ -28,12 +65,11 @@ function Post2() {
                                 expectations.
                             </SectionDescription>
                             <Form>
-                                <InputField />
-                                <InputField />
-                                <ProgressBar>
-                                    <ProgressItem />
-                                    <ProgressItem />
-                                </ProgressBar>
+                                <InputField
+                                    name="description"
+                                    value={jobFormData.description}
+                                    onChange={handleInputChange}
+                                />
                             </Form>
                             <HorizontalRule />
                             <SectionHeading>Add Skills</SectionHeading>
@@ -41,23 +77,25 @@ function Post2() {
                                 Add some skill keywords to the job.
                             </SectionDescription>
                             <Label htmlFor="skillInput">Skill to add</Label>
-                            <StyledInput id="skillInput" />
-                            <TagContainer>
-                                {skills.map((skill, index) => (
-                                    <Tag key={index}>
-                                        <TagName>{skill}</TagName>
-                                        <TagIcon
-                                            loading="lazy"
-                                            src="https://cdn.builder.io/api/v1/image/assets/TEMP/f4297c66e6d9622e462ebb187a46dd67cf9ee2c5dfcfd5088583249a1e3bfc3e?apiKey=d66532d056b14640a799069157705b77&"
-                                            alt={`${skill} Icon`}
-                                        />
-                                    </Tag>
-                                ))}
-                            </TagContainer>
+                            <StyledInput
+                                id="skillInput"
+                                name="skills"
+                                value={jobFormData.skills.join(", ")}
+                                onChange={(e) => {
+                                    const skills = e.target.value
+                                        .split(",")
+                                        .map((skill) => skill.trim());
+                                    dispatch(updateJobFormData({ skills }));
+                                }}
+                            />
                             <HorizontalRule />
-                            <ButtonGroup><Link href="/employer/post1">
-                                <ActionButton>Go Back</ActionButton></Link>
-                                <SubmitButton>Finished</SubmitButton>
+                            <ButtonGroup>
+                                <Link href="/employer/post1">
+                                    <ActionButton>Go Back</ActionButton>
+                                </Link>
+                                <SubmitButton onClick={handleSubmit}>
+                                    Finished
+                                </SubmitButton>
                             </ButtonGroup>
                         </FormContainer>
                     </FormWrapper>
@@ -169,10 +207,9 @@ const SectionDescription = styled.p`
     }
 `;
 
-const InputField = styled.div`
+const InputField = styled.input`
     border-radius: 3px;
-    background-color: var(--WF-Base-500, #a0abc0);
-    height: 16px;
+    height: 62px;
     & + & {
         margin-top: 8px;
     }
@@ -195,7 +232,6 @@ const ProgressBar = styled.div`
 const ProgressItem = styled.div`
     flex: 1;
     height: 16px;
-    background-color: var(--WF-Base-500, #a0abc0);
     &:first-of-type {
         border-radius: 3px 0 0 3px;
     }
@@ -273,7 +309,7 @@ const HorizontalRule = styled.hr`
 
 const ButtonGroup = styled.div`
     display: flex;
-flex-direction: row;
+    flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
     gap: 8px;
@@ -289,7 +325,7 @@ const ActionButton = styled.button`
     color: var(--Schemes-Primary, #6b538c);
     padding: 8px 16px;
     background: none;
-transition: background-color 0.3s ease; /* Smooth transition for background color */
+    transition: background-color 0.3s ease; /* Smooth transition for background color */
 
     &:hover {
         background-color: lightcoral; /* Light red color on hover */
@@ -299,10 +335,6 @@ transition: background-color 0.3s ease; /* Smooth transition for background colo
         white-space: initial;
     }
 `;
-
-
-
-
 
 const SubmitButton = styled.button`
     font-family: Roboto, sans-serif;
@@ -319,7 +351,7 @@ const SubmitButton = styled.button`
 
 const ButtonContainerPost2 = styled.div`
     display: flex;
-flex-direction: row;
+    flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
     gap: 8px;
