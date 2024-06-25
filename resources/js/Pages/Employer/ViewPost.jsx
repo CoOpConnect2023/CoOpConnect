@@ -19,7 +19,7 @@ function ViewPost() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedApplicant, setSelectedApplicant] = useState(null);
   const [editModalIsOpen, setEditModalIsOpen] = useState(false);
-
+  const [isOnShortlist, setIsOnShortlist] = useState(false);
 
 
   // Extract job ID from URL using useParams hook
@@ -60,6 +60,7 @@ function ViewPost() {
     const openModal = (applicant) => {
         setSelectedApplicant(applicant);
         setModalIsOpen(true);
+        checkShortlistStatus(applicant.id)
       };
 
       const closeModal = () => {
@@ -96,6 +97,76 @@ function ViewPost() {
           console.error('Error updating job:', error);
         }
       };
+
+
+      const addToShortlist = async (applicantId) => {
+        try {
+            const response = await axios.post(`${appUrl}/api/jobs/${job.id}/shortlist`, {
+                applicantId: applicantId,
+            });
+
+            if (response.status !== 200) {
+                throw new Error('Failed to add applicant to shortlist');
+            }
+
+            // Assuming response.data contains the updated shortlist
+            const updatedShortlist = response.data.shortlist;
+            const updatedJob = { ...job, shortlist: updatedShortlist };
+            setJob(updatedJob); // Update job state with updated shortlist
+        } catch (error) {
+            console.error('Error adding applicant to shortlist:', error);
+        }
+    };
+
+    const removeFromShortlist = async (applicantId) => {
+        try {
+          const response = await axios.post(`${appUrl}/api/jobs/${job.id}/shortlist/${applicantId}`, {
+            // Optional: You can send additional data if required
+          });
+
+          if (response.status !== 200) {
+            throw new Error('Failed to remove applicant from shortlist');
+          }
+
+          const updatedShortlist = response.data.shortlist; // Assuming response.data contains updated shortlist
+          const updatedJob = { ...job, shortlist: updatedShortlist };
+          setJob(updatedJob); // Update job state with updated shortlist
+          setIsOnShortlist(false); // Update state to reflect applicant is not on shortlist anymore
+        } catch (error) {
+          console.error('Error removing applicant from shortlist:', error);
+        }
+      };
+
+
+      // Function to check if applicant is on shortlist
+      const checkShortlistStatus = async (applicantId) => {
+        try {
+          const response = await axios.get(`${appUrl}/api/users/${job.user_id}/shortlists`);
+
+          if (response.status !== 200) {
+            throw new Error('Failed to fetch shortlist status');
+          }
+
+          const shortlist = response.data.shortlists;
+
+          // Check if applicantId exists in the shortlist
+          let isOnShortlist = false;
+          shortlist.forEach(item => {
+            if (item.applicants.some(applicant => applicant.id === applicantId)) {
+              isOnShortlist = true;
+            }
+          });
+
+          setIsOnShortlist(isOnShortlist);
+          console.log("Is on shortlist:", isOnShortlist);
+
+        } catch (error) {
+          console.error('Error checking shortlist status:', error);
+        }
+      };
+
+
+
 
 
 
@@ -159,6 +230,9 @@ function ViewPost() {
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         applicant={selectedApplicant}
+        addToShortlist={addToShortlist}
+        removeFromShortlist={removeFromShortlist}
+        isOnShortlist={isOnShortlist}
       />
       <EditJobModal
         isOpen={editModalIsOpen}

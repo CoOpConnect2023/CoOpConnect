@@ -102,6 +102,11 @@ class User extends Authenticatable
         return $this->hasMany(Message::class);
     }
 
+    public function shortlists()
+{
+    return $this->hasMany(Shortlist::class);
+}
+
 
     /**
      * Check if the user has a specific role.

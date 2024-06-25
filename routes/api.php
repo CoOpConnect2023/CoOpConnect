@@ -16,6 +16,7 @@ use App\Http\Controllers\JobController;
 use App\Http\Controllers\ReflectionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ApplicationController;
+use App\Http\Controllers\ShortlistController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +41,25 @@ Route::post('/sendmessage', [MessagingController::class, 'sendMessage']);
 Route::get('/getmessages', [MessagingController::class, 'fetchMessages']);
 Route::post('/createconversation', [ConversationController::class, 'createConversation']);
 Route::get('/fetchconversationid', [ConversationController::class, 'fetchConversationId']);
+
+Route::get('/chat', [App\Http\Controllers\ChatsController::class, 'index']);
+Route::get('/messages', [App\Http\Controllers\ChatsController::class, 'fetchMessages']);
+Route::post('/messages', [App\Http\Controllers\ChatsController::class, 'sendMessage']);
+
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('jobs/{job}/shortlist', [ShortlistController::class, 'addToShortlist']);
+    Route::delete('/shortlists/{shortlist}/applicants/{applicant}', [ShortlistController::class, 'removeFromShortlist']);
+    Route::get('/jobs/{job}/shortlist', [ShortlistController::class, 'getShortlist']);
+    Route::get('/users/{userId}/shortlists', [ShortlistController::class, 'getShortlistsForUser']);
+    Route::post('/jobs/{job}/shortlist/{applicant}', [ShortlistController::class, 'removeFromShortlist']);
+    Route::delete('/jobs/{job}/shortlist', [ShortlistController::class, 'deleteShortlist']);
+
+
+});
+
+Route::get('/shortlists/{id}', [ShortlistController::class, 'show']);
+
 
 Route::post('/uploaddocs', [DocumentsController::class, 'upload']);
 Route::get('/fetchdocs', [DocumentsController::class, 'fetchDoc']);

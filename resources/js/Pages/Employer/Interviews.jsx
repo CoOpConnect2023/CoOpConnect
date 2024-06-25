@@ -1,69 +1,202 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
+import Modal from "../Profile/Partials/AddEventModal";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
+import { Calendar, momentLocalizer } from "react-big-calendar";
+import moment from "moment";
+import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { DndProvider } from "react-dnd";
+import {
+    getInterviewsForInterviewer,
+    postInterview,
+    selectInterviewsStatus,
+    selectInterviews,
+} from "@/Features/interviews/interviewsSlice";
+import axios from "axios"; // Don't forget to import axios
+
+const localizer = momentLocalizer(moment);
+const DnDCalendar = withDragAndDrop(Calendar);
 
 const Interviews = () => {
-    const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
-    const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+    const [showModal, setShowModal] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(null);
+    const [events, setEvents] = useState([]);
 
-    const renderCalendar = (month, year) => {
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-        const firstDayIndex = new Date(year, month, 1).getDay();
-        const prevDays = firstDayIndex === 0 ? 6 : firstDayIndex - 1;
-        const prevMonthDays = new Date(year, month, 0).getDate();
-        const nextMonthDays = 42 - (daysInMonth + prevDays);
+    const [userId, setUserId] = useState(null);
+    const [shortlists, setShortlists] = useState([]);
 
-        const daysArray = [
-            ...Array(prevDays)
-                .fill(null)
-                .map((_, i) => ({
-                    day: prevMonthDays - prevDays + i + 1,
-                    isInCurrentMonth: false,
-                })),
-            ...Array(daysInMonth)
-                .fill(null)
-                .map((_, i) => ({ day: i + 1, isInCurrentMonth: true })),
-            ...Array(nextMonthDays)
-                .fill(null)
-                .map((_, i) => ({ day: i + 1, isInCurrentMonth: false })),
-        ];
-
-        return daysArray;
-    };
-
-    const handlePrevMonth = () => {
-        const today = new Date();
-        if (
-            !(
-                currentMonth === today.getMonth() &&
-                currentYear === today.getFullYear()
-            )
-        ) {
-            if (currentMonth === 0) {
-                setCurrentMonth(11);
-                setCurrentYear(currentYear - 1);
-            } else {
-                setCurrentMonth(currentMonth - 1);
+    useEffect(() => {
+        const fetchUserId = async () => {
+            try {
+                const response = await axios.get(
+                    `http://127.0.0.1:8000/api/user-id`
+                );
+                setUserId(response.data.user.id);
+            } catch (error) {
+                console.error("Error fetching user ID:", error);
             }
+        };
+        fetchUserId();
+    }, []);
+
+    const dispatch = useDispatch();
+
+    const data = useSelector(selectInterviews);
+    const interviews = data.interviews;
+    const interviewsStatus = useSelector(selectInterviewsStatus);
+
+    useEffect(() => {
+        dispatch(
+            getInterviewsForInterviewer({
+                interviewerId: userId,
+            })
+        );
+    }, [userId]);
+
+    function transformedInterviews(interviews) {
+        const result = interviews.map((interview) => ({
+            ...interview,
+            start: interview.startDate,
+            end: interview.endDate,
+        }));
+        return result;
+    }
+
+    useEffect(() => {
+        setEvents(transformedInterviews(interviews));
+    }, [interviews]);
+
+    useEffect(() => {
+        if (interviewsStatus.postInterview === "succeeded") {
+            setEvents((prevEvents) => [
+                ...prevEvents,
+                ...transformedInterviews(data.postInterview),
+            ]);
         }
+    }, [interviewsStatus.postInterview, data.postInterview]);
+
+    console.log("Fetched User ID:", userId);
+    console.log("interviews", events);
+
+    function getTodayDate() {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, "0"); // Months are zero-indexed
+        const day = String(today.getDate()).padStart(2, "0");
+
+        return `${year}-${month}-${day}`;
+    }
+
+    const handleEventResize = ({ event, start, end }) => {
+        const nextEvents = events.map((existingEvent) =>
+            existingEvent.id === event.id ? { ...existingEvent, start, end } : existingEvent
+        );
+
+        setEvents(nextEvents);
     };
 
-    const handleNextMonth = () => {
-        if (currentMonth === 11) {
-            setCurrentMonth(0);
-            setCurrentYear(currentYear + 1);
-        } else {
-            setCurrentMonth(currentMonth + 1);
-        }
+    const handleEventDrop = ({ event, start, end }) => {
+        const nextEvents = events.map((existingEvent) =>
+            existingEvent.id === event.id ? { ...existingEvent, start, end } : existingEvent
+        );
+
+        setEvents(nextEvents);
     };
 
-    const daysArray = renderCalendar(currentMonth, currentYear);
+    const openModal = (day) => {
+        setSelectedDate(day);
+        setShowModal(true);
+    };
 
-    const today = new Date();
-    const isPrevDisabled =
-        currentMonth === today.getMonth() &&
-        currentYear === today.getFullYear();
+    const closeModal = () => {
+        setSelectedDate(null);
+        setShowModal(false);
+    };
+
+    const handleAddEvent = (title, description, start, end, selectedApplicant) => {
+        // Check if selectedApplicant is defined and not empty
+        if (!selectedApplicant) {
+            // Handle case where no applicant is selected
+            console.error("No applicant selected.");
+            // Optionally, show an error message or prevent form submission
+            return;
+        }
+
+        const formattedStart = `${start.getFullYear()}-${String(
+            start.getMonth() + 1
+        ).padStart(2, "0")}-${String(start.getDate()).padStart(2, "0")} ${String(
+            start.getHours()
+        ).padStart(2, "0")}:${String(start.getMinutes()).padStart(2, "0")}:${String(
+            start.getSeconds()
+        ).padStart(2, "0")}`;
+        const formattedEnd = `${end.getFullYear()}-${String(
+            end.getMonth() + 1
+        ).padStart(2, "0")}-${String(end.getDate()).padStart(2, "0")} ${String(
+            end.getHours()
+        ).padStart(2, "0")}:${String(end.getMinutes()).padStart(2, "0")}:${String(
+            end.getSeconds()
+        ).padStart(2, "0")}`;
+
+        // Assuming userId is defined elsewhere in your component
+        const interviewerId = userId; // Replace with actual userId value
+
+        dispatch(
+            postInterview({
+                title,
+                startDate: formattedStart,
+                endDate: formattedEnd,
+                status: "scheduled",
+                description,
+                intervieweeId: selectedApplicant,
+                interviewerId,
+            })
+        );
+
+        closeModal();
+    };
+
+    useEffect(() => {
+        const fetchShortlists = async (userId) => {
+            try {
+                const response = await axios.get(
+                    `http://127.0.0.1:8000/api/users/${userId}/shortlists`
+                );
+                setShortlists(response.data.shortlists);
+                console.log("shortlists", response.data.shortlists);
+            } catch (error) {
+                console.error("Error fetching shortlists:", error);
+                // Handle error gracefully
+            }
+        };
+
+        if (userId) {
+            fetchShortlists(userId);
+        }
+    }, [userId]); // Ensure useEffect runs when userId changes
+
+
+    const handleDeleteClick = async (shortlist) => {
+        try {
+          const response = await axios.delete(
+            `http://127.0.0.1:8000/api/jobs/${shortlist.job.id}/shortlist`
+          );
+          handleShortlistDelete(shortlist.id); // Update state or perform any necessary cleanup
+          console.log(response.data.message); // Optionally log the response message
+        } catch (error) {
+          console.error("Error deleting shortlist:", error);
+          // Handle error
+        }
+      };
+
+      const handleShortlistDelete = (shortlistId) => {
+        const updatedShortlists = shortlists.filter((shortlist) => shortlist.id !== shortlistId);
+        setShortlists(updatedShortlists);
+      };
 
     return (
         <NavBar header={"Interviews"}>
@@ -71,71 +204,58 @@ const Interviews = () => {
                 <Container>
                     <Wrapper>
                         <Header>Schedule your Interviews</Header>
-                        <CalendarWrapper>
-                            <CalendarHeader>
-                                <Month>
-                                    {new Date(
-                                        currentYear,
-                                        currentMonth
-                                    ).toLocaleDateString("en-us", {
-                                        month: "long",
-                                        year: "numeric",
-                                    })}
-                                </Month>
-                                <NavIcons>
-                                    <Icon
-                                        loading="lazy"
-                                        src="https://img.icons8.com/ios-glyphs/30/000000/chevron-left.png"
-                                        onClick={handlePrevMonth}
-                                        isDisabled={isPrevDisabled}
-                                    />
-                                    <Icon
-                                        loading="lazy"
-                                        src="https://img.icons8.com/ios-glyphs/30/000000/chevron-right.png"
-                                        onClick={handleNextMonth}
-                                        isDisabled={false}
-                                    />
-                                </NavIcons>
-                            </CalendarHeader>
-                            <DaysOfWeek>
-                                <Day>Mo</Day>
-                                <Day>Tu</Day>
-                                <Day>We</Day>
-                                <Day>Th</Day>
-                                <Day>Fr</Day>
-                                <Day>Sa</Day>
-                                <Day>Su</Day>
-                            </DaysOfWeek>
-                            <DatesGrid>
-                                {daysArray.map((date, idx) => {
-                                    const isToday =
-                                        date.day === today.getDate() &&
-                                        currentMonth === today.getMonth() &&
-                                        currentYear === today.getFullYear();
-
-                                    if (date.isInCurrentMonth) {
-                                        return isToday ? (
-                                            <TodayDateCell key={idx}>
-                                                {date.day}
-                                            </TodayDateCell>
-                                        ) : (
-                                            <DateCell key={idx}>
-                                                {date.day}
-                                            </DateCell>
-                                        );
-                                    } else {
-                                        return (
-                                            <InactiveDateCell key={idx}>
-                                                {date.day}
-                                            </InactiveDateCell>
-                                        );
-                                    }
-                                })}
-                            </DatesGrid>
-                        </CalendarWrapper>
+                        <CalendarDiv>
+                            <DndProvider backend={HTML5Backend}>
+                                <DnDCalendar
+                                    defaultDate={new Date(getTodayDate())}
+                                    defaultView="month"
+                                    events={events}
+                                    localizer={localizer}
+                                    onEventDrop={handleEventDrop}
+                                    resizable
+                                    onEventResize={handleEventResize}
+                                    style={{ height: "100%" }}
+                                    selectable
+                                    onSelectSlot={openModal}
+                                />
+                            </DndProvider>
+                        </CalendarDiv>
                     </Wrapper>
+                    <ShortlistsContainer>
+                        <ShortlistsHeader>Applicant Shortlists</ShortlistsHeader>
+                        {shortlists && shortlists.length > 0 ? (
+                            shortlists.map((shortlist) => (
+                                <Shortlist key={shortlist.id}>
+                                    <DeleteButton onClick={() => handleDeleteClick(shortlist)}>X</DeleteButton>
+                                    <div>{shortlist.job.title}</div>
+                                    <div>
+                                        Applicants:
+                                        <ApplicantList>
+                                            {shortlist.applicants.map((applicant) => (
+                                                <ApplicantItem key={applicant.id}>
+                                                    {applicant.name} - {applicant.email}
+                                                </ApplicantItem>
+                                            ))}
+                                        </ApplicantList>
+                                    </div>
+
+                                    {/* Add more fields as needed */}
+                                </Shortlist>
+                            ))
+                        ) : (
+                            <NoShortlistsMessage>No shortlists found</NoShortlistsMessage>
+                        )}
+                    </ShortlistsContainer>
                 </Container>
             </MainContainer>
+            {showModal && (
+                <Modal
+                    onClose={closeModal}
+                    onSubmit={handleAddEvent}
+                    defaultDate={new Date(getTodayDate())}
+                    applicants={shortlists.flatMap((shortlist) => shortlist.applicants)}
+                />
+            )}
         </NavBar>
     );
 };
@@ -161,12 +281,13 @@ const Container = styled.div`
     justify-content: center;
     padding: 20px;
     border-radius: 10px;
+    gap: 40px; /* Add gap between CalendarDiv and ShortlistsContainer */
 `;
 
 const Wrapper = styled.div`
     display: flex;
-    width: 782px;
-    max-width: 100%;
+    width: 100%; /* Adjusted to take full width of Container */
+    max-width: 782px; /* Adjust as per your design */
     flex-direction: column;
 `;
 
@@ -177,122 +298,62 @@ const Header = styled.div`
     font: 600 32px Poppins, sans-serif;
 `;
 
-const CalendarWrapper = styled.div`
-    border-radius: 16px;
-    box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1),
-        0px 2px 4px -1px rgba(0, 0, 0, 0.06);
-    border-color: rgba(123, 117, 127, 1);
-    border-style: solid;
-    border-width: 1px;
-    background-color: #fff;
-    display: flex;
-    margin-top: 40px;
-    flex-direction: column;
-    padding: 30px;
-    @media (max-width: 991px) {
-        max-width: 100%;
-        padding: 0 20px;
-    }
+const CalendarDiv = styled.div`
+    background-color: #ffffff;
+    height: 80vh;
+    margin-bottom: 3vh;
+    margin-top: 3vh;
+
 `;
 
-const CalendarHeader = styled.div`
-    justify-content: space-between;
-    display: flex;
-    width: 100%;
-    gap: 20px;
-    @media (max-width: 991px) {
-        max-width: 100%;
-        flex-wrap: wrap;
-    }
+const ShortlistsContainer = styled.div`
+    width: 100%; /* Take full width of Container */
+    max-width: 400px; /* Adjust as per your design */
 `;
 
-const Month = styled.div`
-    color: var(--Schemes-Primary, #6b538c);
-    margin: auto 0;
-    font: 900 24px Inter, sans-serif;
+const ShortlistsHeader = styled.h2`
+    font-size: 24px;
+    color: #6b538c;
+    margin-bottom: 20px;
 `;
 
-const NavIcons = styled.div`
-    display: flex;
-    gap: 8px;
-    justify-content: space-between;
+const Shortlist = styled.div`
+    background-color: #ffffff;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
     padding: 16px;
+    margin-bottom: 16px;
+    position: relative; /* Ensure relative positioning for absolute children */
 `;
 
-const Icon = styled.img`
-    aspect-ratio: 1;
-    object-fit: auto;
-    object-position: center;
-    width: 30px;
-    cursor: ${({ isDisabled }) => (isDisabled ? "default" : "pointer")};
-    filter: ${({ isDisabled }) =>
-        isDisabled ? "grayscale(100%) brightness(150%)" : "none"};
-    opacity: ${({ isDisabled }) => (isDisabled ? 0.5 : 1)};
-`;
-
-const DaysOfWeek = styled.div`
-    display: flex;
-    margin-top: 12px;
-    gap: -1px;
+const DeleteButton = styled.button`
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
     font-size: 14px;
-    color: #000;
-    font-weight: 600;
-    white-space: nowrap;
-    text-align: center;
-    justify-content: space-between;
-    padding: 40px 80px 40px 0;
-    @media (max-width: 991px) {
-        max-width: 100%;
-        flex-wrap: wrap;
-        padding-right: 20px;
-        white-space: initial;
-    }
+    position: absolute;
+    top: 10px;
+    right: 10px;
 `;
 
-const Day = styled.div`
-    display: flex;
-    font-variant-numeric: lining-nums tabular-nums;
-    font-family: Inter, sans-serif;
+const ApplicantList = styled.ul`
+    list-style: none;
+    padding: 0;
+    margin-top: 8px;
 `;
 
-const DatesGrid = styled.div`
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: -1px;
-    font-size: 14px;
-    color: #000;
-    font-weight: 400;
-    white-space: nowrap;
-    text-align: center;
-    justify-content: space-between;
-    @media (max-width: 991px) {
-        flex-wrap: wrap;
-        white-space: initial;
-    }
+const ApplicantItem = styled.li`
+    font-size: 16px;
+    margin-bottom: 4px;
 `;
 
-const DateCell = styled.div`
-    font-variant-numeric: lining-nums tabular-nums;
-    font-family: Inter, sans-serif;
-    justify-content: center;
-    border-color: rgba(213, 212, 223, 1);
-    border-style: solid;
-    border-width: 1px;
-    padding: 40px;
-    @media (max-width: 991px) {
-        white-space: initial;
-        padding: 0 20px;
-    }
-`;
-
-const InactiveDateCell = styled(DateCell)`
-    background-color: var(--Inactive, #f2f3f7);
-`;
-
-const TodayDateCell = styled(DateCell)`
-    border: 1px solid var(--Stroke, #d5d4df);
-    background: var(--Schemes-Primary, #6b538c);
-    color: #fff; // Ensures the text is readable
+const NoShortlistsMessage = styled.p`
+    font-size: 18px;
+    color: #6b538c;
+    margin-top: 20px;
 `;
 
 export default Interviews;

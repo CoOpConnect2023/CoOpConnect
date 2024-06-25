@@ -140,8 +140,9 @@ export const getInterviewsForInterviewer = createAsyncThunk(
     "interviews/getInterviewsForInterviewer",
     async (params) => {
         const { interviewerId } = params;
+        console.log("asd", params);
         const response = await axios({
-            url: `/interviews?intervieweeId[eq]=${interviewerId}`,
+            url: `/interviews?interviewerId[eq]=${interviewerId}`,
             method: "GET",
         });
         return response.data.data;

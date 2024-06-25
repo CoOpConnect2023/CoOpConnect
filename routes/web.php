@@ -41,7 +41,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/student/reflections', [StudentController::class, 'reflections'])->name('student.reflections');
     Route::get('/student/documents', [StudentController::class, 'documents'])->name('student.documents');
     Route::get('/student/settings', [StudentController::class, 'settings'])->name('student.settings');
-    Route::get('/student/messages', [EmployerController::class, 'messages'])->name('student.messages');
+    Route::get('/student/messages', [StudentController::class, 'messages'])->name('student.messages');
 });
 
 Route::middleware(['auth'])->group(function () {

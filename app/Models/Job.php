@@ -38,6 +38,12 @@ class Job extends Model
     return $this->hasMany(Application::class);
 }
 
+public function shortlist()
+    {
+        return $this->hasOne(Shortlist::class);
+    }
+
+
     // If you want to protect against mass-assignment but not specify each field, you can set $guarded instead:
     // protected $guarded = [];
 }

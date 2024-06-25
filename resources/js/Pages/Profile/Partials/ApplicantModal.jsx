@@ -1,13 +1,23 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const ApplicantModal = ({ isOpen, onRequestClose, applicant }) => {
+const ApplicantModal = ({ isOpen, onRequestClose, applicant, isOnShortlist, addToShortlist, removeFromShortlist }) => {
     if (!isOpen || !applicant) {
       return null; // Modal is closed or applicant data is not available
     }
 
     // Check if applicant.skills is present before parsing
     const skills = applicant.skills ? JSON.parse(applicant.skills) : [];
+
+    const handleAddToShortlist = () => {
+        addToShortlist(applicant.id);
+         // Close modal after adding to shortlist
+      };
+
+      const handleRemoveFromShortlist = () => {
+        removeFromShortlist(applicant.id);
+         // Close modal after adding to shortlist
+      };
 
     return (
       <ModalOverlay>
@@ -36,6 +46,11 @@ const ApplicantModal = ({ isOpen, onRequestClose, applicant }) => {
                 <div>No skills listed</div>
               )}
             </ApplicantDetails>
+            {isOnShortlist ? (
+              <ShortlistButton onClick={handleRemoveFromShortlist}>Remove from Shortlist</ShortlistButton>
+            ) : (
+              <ShortlistButton onClick={handleAddToShortlist}>Add to Shortlist</ShortlistButton>
+            )}
           </ModalBody>
         </ModalContent>
       </ModalOverlay>
@@ -140,5 +155,19 @@ const SkillBadge = styled.span`
     }
 `;
 
+const ShortlistButton = styled.button`
+  background-color: #773dc3;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+
+  &:hover {
+    background-color: #5a299a;
+  }
+`;
 
 export default ApplicantModal;
