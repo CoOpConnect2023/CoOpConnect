@@ -82,15 +82,21 @@ function DocumentDropZone({ onFileDrop, imgSrc, altText, description, clearPrevi
 
 
 
-const TabMenu = ({ tabs }) => (
+const TabMenu = ({ activeTab, handleTabChange }) => (
     <TabList>
-        {tabs.map((tab, index) => (
-            <TabItem key={index} className={index === 0 ? "active" : ""}>
-                {tab}
-            </TabItem>
-        ))}
+      <TabItem onClick={() => handleTabChange("Employer Documents")} className={activeTab === "Employer Documents" ? "active" : ""}>
+        Employer Documents
+      </TabItem>
+      <TabItem onClick={() => handleTabChange("Shortlist Documents")} className={activeTab === "Shortlist Documents" ? "active" : ""}>
+        Shortlist Documents
+      </TabItem>
+      <TabItem onClick={() => handleTabChange("Applicant Documents")} className={activeTab === "Applicant Documents" ? "active" : ""}>
+        Applicant Documents
+      </TabItem>
     </TabList>
-);
+  );
+
+
 
 const FileItem = ({ title, type, downloadDocument, doc, handleDelete }) => (
 
@@ -142,6 +148,8 @@ function Document()  {
     const [clearPreviewsTrigger, setClearPreviewsTrigger] = useState(false);
     const [userId, setUserId] = useState(null);
     const [userDocuments, setUserDocuments] = useState([]);
+    const [activeTab, setActiveTab] = useState("Progress Reports");
+    const [shortlistDocuments, setShortlistDocuments] = useState([]);
 
 
 
@@ -196,6 +204,29 @@ function Document()  {
 
         fetchDocuments();
     }, [userId]);
+
+    const fetchShortlistDocuments = async () => {
+        try {
+            const response = await axios.get(`http://127.0.0.1:8000/api/users/${userId}/shortlists`);
+
+            if (response.data && response.data.shortlists && response.data.shortlists.length > 0) {
+                const allDocuments = response.data.shortlists.flatMap(shortlist =>
+                    shortlist.applicants.flatMap(applicant =>
+                        applicant.documents.map(doc => ({
+                            ...doc,
+                            applicantName: applicant.name,
+                        }))
+                    )
+                );
+                setShortlistDocuments(allDocuments);
+                console.log('Shortlist documents fetched successfully:', allDocuments);
+            } else {
+                console.error('No shortlist documents found in the response:', response);
+            }
+        } catch (error) {
+            console.error('Error fetching shortlist documents:', error);
+        }
+    };
 
     const handleFileDrop = async (files) => {
         setFilesToUpload((prevFiles) => [...prevFiles, ...files]);
@@ -288,77 +319,84 @@ const downloadDocument = async (id, title) => {
     }
 };
 
+const handleTabChange = (tab) => {
+    setActiveTab(tab);
+
+    // Fetch shortlist documents when Shortlist Documents tab is clicked
+    if (tab === 'Shortlist Documents') {
+        fetchShortlistDocuments();
+    }
+};
+
 return(
 
     <NavBar header={"Documents"}>
-        <Wrapper>
-            <Content>
-                <FileSection>
-                    <SectionHeader>
-                        <TabMenu
-                            tabs={[
-                                "Progress Reports",
-                                "Student Logs",
-                                "Student Documents",
-                                "All Files",
-                            ]}
-                        />
-                    </SectionHeader>
-                    <FileList>
-                        {userDocuments.map((doc,index) =>(
-                        <FileItem
-                        key={index}
-                        title={doc.title}
-                        type={doc.id}
-                        id={doc.id}
-                        downloadDocument={() => downloadDocument(doc.id, doc.title)}
-                        handleDelete={() =>  handleDelete(doc.id)}
-
-                        />
-                        ))}
-                    </FileList>
-                </FileSection>
-                <FormSection>
-                    <Form>
-                        <Title>Add Documents</Title>
-
-
-                        <Label htmlFor="fileUpload">Attach Documents</Label>
-                        <DropZoneWrapper>
-
-                            <DocumentDropZone
-
-
-                                onFileDrop={handleFileDrop}
-                                clearPreviewsTrigger={clearPreviewsTrigger}
+            <Wrapper>
+                <Content>
+                    <FileSection>
+                        <SectionHeader>
+                            <TabMenu
+                                tabs={[
+                                    "Employer Documents",
+                                    "Shortlist Documents",
+                                    "Applicant Documents",
+                                    "Progress Reports",
+                                ]}
+                                activeTab={activeTab}
+                                setActiveTab={setActiveTab}
+                                handleTabChange={handleTabChange}
                             />
+                        </SectionHeader>
+                        <FileList>
+                            {(activeTab === 'Employer Documents' && userDocuments.length > 0) &&
+                                userDocuments.map((doc, index) => (
+                                    <FileItem
+                                        key={index}
+                                        title={doc.title}
+                                        type={doc.id}
+                                        downloadDocument={() => downloadDocument(doc.id, doc.title)}
+                                        handleDelete={() => handleDelete(doc.id)}
+                                        doc={doc}
+                                    />
+                                ))}
+                            {(activeTab === 'Shortlist Documents' && shortlistDocuments.length > 0) &&
+                                shortlistDocuments.map((doc, index) => (
+                                    <FileItem
+                                        key={index}
+                                        title={doc.title}
+                                        type={doc.applicantName}
+                                        downloadDocument={() => downloadDocument(doc.id, doc.title)}
 
-                    </DropZoneWrapper>
-                        <div
-                            style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                            }}
-                        >
-                            <FileTypes>
-                                Accepted File Types: .doc, .docx, .pdf only
-                            </FileTypes>
-                            <SecurityNote>
-                                <img
-                                    loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/8b7ec72c66d30f8ec5c35d4cec5db08f1877f1a7d86ea8b6c08df8054b4a9a85?apiKey=d66532d056b14640a799069157705b77&"
-                                    alt=""
+                                        doc={doc}
+                                    />
+                                ))}
+                        </FileList>
+                    </FileSection>
+                    <FormSection>
+                        <Form>
+                            <Title>Add Documents</Title>
+                            <Label htmlFor="fileUpload">Attach Documents</Label>
+                            <DropZoneWrapper>
+                                <DocumentDropZone
+                                    onFileDrop={handleFileDrop}
+                                    clearPreviewsTrigger={clearPreviewsTrigger}
                                 />
-                                Secure
-                            </SecurityNote>
-                        </div>
-                        <SubmitButton onClick={handleUpload}>Upload</SubmitButton>
-                    </Form>
-                </FormSection>
-            </Content>
-        </Wrapper>
-    </NavBar>
-)};
+                            </DropZoneWrapper>
+                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <FileTypes>Accepted File Types: .doc, .docx, .pdf only</FileTypes>
+                                <SecurityNote>
+                                    {/* Security icon */}
+                                    Secure
+                                </SecurityNote>
+                            </div>
+                            <SubmitButton onClick={handleUpload}>Upload</SubmitButton>
+                        </Form>
+                    </FormSection>
+                </Content>
+            </Wrapper>
+        </NavBar>
+    );
+};
 
 const Wrapper = styled.main`
     display: flex;
@@ -406,18 +444,19 @@ const TabList = styled.nav`
     font-weight: 500;
     color: #334155;
     @media (max-width: 991px) {
-        flex-wrap: wrap;
+      flex-wrap: wrap;
     }
-`;
+  `;
 
-const TabItem = styled.div`
+  const TabItem = styled.div`
     padding: 6px 20px;
     position: relative;
+    cursor: pointer;
     &.active {
-        border-bottom: 2px solid #6b538c;
-        color: #0f172a;
+      border-bottom: 2px solid #6b538c;
+      color: #0f172a;
     }
-`;
+  `;
 
 const FileList = styled.div`
     display: flex;
