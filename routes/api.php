@@ -50,13 +50,15 @@ Route::post('/messages', [App\Http\Controllers\ChatsController::class, 'sendMess
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('jobs/{job}/shortlist', [ShortlistController::class, 'addToShortlist']);
     Route::delete('/shortlists/{shortlist}/applicants/{applicant}', [ShortlistController::class, 'removeFromShortlist']);
-    Route::get('/jobs/{job}/shortlist', [ShortlistController::class, 'getShortlist']);
+
 
     Route::post('/jobs/{job}/shortlist/{applicant}', [ShortlistController::class, 'removeFromShortlist']);
     Route::delete('/jobs/{job}/shortlist', [ShortlistController::class, 'deleteShortlist']);
 
 
 });
+
+Route::get('/jobs/{job}/shortlist', [ShortlistController::class, 'getShortlist']);
 Route::get('/users/{userId}/shortlists', [ShortlistController::class, 'getShortlistsForUser']);
 Route::get('/shortlists/{id}', [ShortlistController::class, 'show']);
 

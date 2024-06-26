@@ -141,21 +141,16 @@ function ViewPost() {
       // Function to check if applicant is on shortlist
       const checkShortlistStatus = async (applicantId) => {
         try {
-          const response = await axios.get(`${appUrl}/api/users/${job.user_id}/shortlists`);
+          const response = await axios.get(`${appUrl}/api/jobs/${job.id}/shortlist`);
 
           if (response.status !== 200) {
             throw new Error('Failed to fetch shortlist status');
           }
 
-          const shortlist = response.data.shortlists;
+          const shortlists = response.data;
 
           // Check if applicantId exists in the shortlist
-          let isOnShortlist = false;
-          shortlist.forEach(item => {
-            if (item.applicants.some(applicant => applicant.id === applicantId)) {
-              isOnShortlist = true;
-            }
-          });
+          const isOnShortlist = shortlists.some(user => user.id === applicantId);
 
           setIsOnShortlist(isOnShortlist);
           console.log("Is on shortlist:", isOnShortlist);
