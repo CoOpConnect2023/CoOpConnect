@@ -1,7 +1,9 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 
-export default function NewMessage({ newMessage, setNewMessage, onSendNewMessage, recipientEmail, setRecipientEmail}) {
+export default function NewMessage({ newMessage, setNewMessage, onSendNewMessage, recipientEmail, setRecipientEmail, shortlists}) {
+    const [defaultRecipientEmail, setDefaultRecipientEmail] = useState('');
 
     const handleInputChange = (e) => {
         setNewMessage(e.target.value);
@@ -11,18 +13,46 @@ export default function NewMessage({ newMessage, setNewMessage, onSendNewMessage
         setRecipientEmail(e.target.value);
     };
 
+    const handleSelectChange = (e) => {
+        setRecipientEmail(e.target.value);
+    };
+
+
+
+    let uniqueEmails = new Set();
+
+    // Collect unique emails from all shortlists and their applicants
+    if (shortlists && Array.isArray(shortlists)) {
+        shortlists.forEach(shortlist => {
+            if (shortlist && shortlist.applicants && Array.isArray(shortlist.applicants)) {
+                shortlist.applicants.forEach(applicant => {
+                    if (applicant && applicant.email) {
+                        uniqueEmails.add(applicant.email);
+                    }
+                });
+            }
+        });
+    }
+    const hasApplicants = shortlists && shortlists.some(shortlist => shortlist.applicants.length > 0);
+
+
     return (
         <Div4>
             <Div5>New Message</Div5>
             <Div6>
                 <Div7>
                     <Div8>To: </Div8>
-                    <Div9><Input
-                        type="text"
-                        placeholder="Recipient's Email"
-                        value={recipientEmail}
-                        onChange={handleRecipientChange}
-                    /></Div9>
+                    <Div9> {hasApplicants ? (<select value={recipientEmail} onChange={handleSelectChange}>
+                            {[...uniqueEmails].map(email => (
+                                <option key={email} value={email}>
+                                    {email}
+                                </option>
+                            ))}
+                        </select>) : (
+                            <StyledMessage>
+                                Add some applicants to your shortlist to message them.
+                            </StyledMessage>
+                        )}</Div9>
                 </Div7>
             </Div6>
             <Div10>
@@ -79,7 +109,7 @@ const Div5 = styled.div`
 `;
 
 const Div6 = styled.div`
-    justify-content: center;
+
     align-items: center;
     border-radius: 10px;
     border-color: rgba(123, 117, 127, 1);
@@ -97,6 +127,7 @@ const Div6 = styled.div`
 const Div7 = styled.div`
     display: flex;
     gap: 10px;
+    justify-content: flex-start;
 `;
 
 const Div8 = styled.div`
@@ -187,4 +218,9 @@ const SendButton = styled.button`
     &:hover {
         background-color: #0056b3;
     }
+`;
+
+const StyledMessage = styled.div`
+    color: #260e44;
+    font-size: 14px;
 `;

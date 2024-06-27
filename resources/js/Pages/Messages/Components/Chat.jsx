@@ -16,6 +16,7 @@ export default function Chat() {
     const [selectedConversation, setSelectedConversation] = useState(null);
     const [newMessage, setNewMessage] = useState('');
     const [recipientEmail, setRecipientEmail] = useState('');
+    const [shortlists, setShortlists] = useState(null)
 
 
 
@@ -67,7 +68,7 @@ export default function Chat() {
         try {
             const response = await axios.get(`${appUrl}/api/conversation/${user?.id}`);
             setConversations(response.data.conversations);
-            console.log(response.data.conversations)
+
         } catch (error) {
             console.error('Error fetching conversations:', error);
         }
@@ -120,13 +121,18 @@ export default function Chat() {
     const handleSendNewMessage = async () => {
         if (newMessage.trim() === '') return; // Prevent sending empty messages
 
-        try {
-            const response = await axios.post(`${appUrl}/api/sendnewmessages`, {
-                content: newMessage,
-                user_id: user.id,
+        const requestData = {
+            content: newMessage,
+            user_id: user.id,
+            recipient_email: recipientEmail
+        };
 
-                recipient_email: recipientEmail
-            });
+        try {
+            console.log('Sending message with data:', requestData);
+
+            const response = await axios.post(`${appUrl}/api/sendnewmessages`, requestData);
+
+            console.log('Response from server:', response.data); // Log the response data
 
             setMessages([...messages, response.data]);
             setNewMessage('');
@@ -139,7 +145,30 @@ export default function Chat() {
     };
 
 
+
+
     const currentUser = user?.id || null;
+
+    const fetchShortlists = async (currentUser) => {
+        try {
+            const response = await axios.get(
+                `http://127.0.0.1:8000/api/users/${currentUser}/shortlists`
+            );
+            setShortlists(response.data.shortlists);
+            console.log("shortlists", response.data.shortlists);
+        } catch (error) {
+            console.error("Error fetching shortlists:", error);
+            // Handle error gracefully
+        }
+    };
+
+    useEffect(() => {
+
+
+        if (currentUser) {
+            fetchShortlists(currentUser);
+        }
+    }, [currentUser]);
 
     if (!user) {
         return <LoadingScreen>Loading...</LoadingScreen>;
@@ -152,7 +181,7 @@ export default function Chat() {
             <Content>
                 <Column>
                     <LeftColumn>
-                        <NewMessage newMessage={newMessage} setNewMessage={setNewMessage} onSendNewMessage={handleSendNewMessage} recipientEmail={recipientEmail} setRecipientEmail={setRecipientEmail} />
+                        <NewMessage newMessage={newMessage} setNewMessage={setNewMessage} onSendNewMessage={handleSendNewMessage} recipientEmail={recipientEmail} setRecipientEmail={setRecipientEmail} shortlists={shortlists} />
                         {conversations && <SidePanel conversations={conversations} setConversationsID={setConversationsID} currentUser={currentUser}  />}
                     </LeftColumn>
                 </Column>
