@@ -1,22 +1,38 @@
 import * as React from "react";
 import styled from "styled-components";
 
-export default function UserPanel() {
+export default function UserPanel({ conversation, currentUser }) {
+    if (!conversation || !conversation.users || conversation.users.length < 2) {
+        return <div>No second user found</div>;
+    }
+
+    const secondUser = conversation.users.length > 1 ? conversation.users.find(user => user.id !== currentUser) : null;
     return (
         <Div70>
+
             <Div71>
-                <Img12
-                    loading="lazy"
-                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/c47a81d89b80af54f5476e14879bb84b3496b020df7bb399a343744b681844d6?apiKey=d66532d056b14640a799069157705b77&"
-                />
+            {secondUser && secondUser.profile_image ? (
+                    <img
+                        loading="lazy"
+                        src={secondUser.profile_image}
+                        alt={secondUser.name}
+                        style={{ width: '100px', height: '100px' }} // Adjust styles as needed
+                    />
+                ) : (
+                    <Img12
+                        loading="lazy"
+                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/c47a81d89b80af54f5476e14879bb84b3496b020df7bb399a343744b681844d6?apiKey=d66532d056b14640a799069157705b77&"
+                    />
+                )}
                 <Div72>
-                    <Div73>John</Div73>
+                    <Div73>{secondUser ? secondUser.name : 'No second user'}</Div73>
                     <Div74>
                         <Div75 />
                         <Div76>Online</Div76>
                     </Div74>
                 </Div72>
             </Div71>
+
             <Div77>
                 <Img13
                     loading="lazy"

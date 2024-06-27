@@ -10,13 +10,14 @@ use App\Http\Controllers\Api\V1\UserJobsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MessagingController;
+use App\Http\Controllers\MessagesController;
 use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\DocumentsController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\ReflectionController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\ApplicationController;
-use App\Http\Controllers\ShortlistController;
+use App\Http\Controllers\Api\V1\ApplicationController;
+use App\Http\Controllers\Api\V1\ShortlistController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,30 +38,42 @@ Route::get('/jobs/match', [JobsController::class, 'matchSkills'])->name('jobs.ma
 
 Route::get('/filterjobs', [JobController::class, 'filterJobs']);
 
-Route::post('/sendmessage', [MessagingController::class, 'sendMessage']);
-Route::get('/getmessages', [MessagingController::class, 'fetchMessages']);
-Route::post('/createconversation', [ConversationController::class, 'createConversation']);
-Route::get('/fetchconversationid', [ConversationController::class, 'fetchConversationId']);
-
-Route::get('/chat', [App\Http\Controllers\ChatsController::class, 'index']);
-Route::get('/messages', [App\Http\Controllers\ChatsController::class, 'fetchMessages']);
-Route::post('/messages', [App\Http\Controllers\ChatsController::class, 'sendMessage']);
 
 
-Route::middleware(['auth:sanctum'])->group(function () {
-    Route::post('jobs/{job}/shortlist', [ShortlistController::class, 'addToShortlist']);
+Route::post('jobs/{job}/shortlist', [ShortlistController::class, 'addToShortlist']);
     Route::delete('/shortlists/{shortlist}/applicants/{applicant}', [ShortlistController::class, 'removeFromShortlist']);
-
-
+    Route::get('/jobs/{job}/shortlist', [ShortlistController::class, 'getShortlist']);
+    Route::get('/users/{userId}/shortlists', [ShortlistController::class, 'getShortlistsForUser']);
+    Route::get('/shortlists/{id}', [ShortlistController::class, 'show']);
     Route::post('/jobs/{job}/shortlist/{applicant}', [ShortlistController::class, 'removeFromShortlist']);
     Route::delete('/jobs/{job}/shortlist', [ShortlistController::class, 'deleteShortlist']);
 
+    Route::get('/applications/create', [ApplicationController::class, 'create'])->name('applications.create');
+    Route::post('/applications', [ApplicationController::class, 'store'])->name('applications.store');
+    Route::get('/applications/{application}', [ApplicationController::class, 'show'])->name('applications.show');
+    Route::middleware('auth:sanctum')->post('/apply/{jobId}', [ApplicationController::class, 'apply']);
+    Route::middleware('auth:sanctum')->get('/check-application/{jobId}', [ApplicationController::class, 'checkApplication']);
+    Route::get('/jobs/user/{userId}', [JobController::class, 'getJobsByUserId']);
 
-});
 
-Route::get('/jobs/{job}/shortlist', [ShortlistController::class, 'getShortlist']);
-Route::get('/users/{userId}/shortlists', [ShortlistController::class, 'getShortlistsForUser']);
-Route::get('/shortlists/{id}', [ShortlistController::class, 'show']);
+    Route::post('/conversation', 'ConversationController@store');
+
+    Route::post('/sendmessages', [MessagesController::class, 'store']);
+    Route::post('/sendnewmessages', [MessagesController::class, 'createConversation']);
+
+    Route::post('/conversation', 'ConversationController@store');
+    Route::get('/conversation/{user_id}', [ConversationController::class, 'show']);
+    Route::post('/message', 'MessageController@store');
+
+
+    Route::get('/conversation/{conversation_id}/messages', [ConversationController::class, 'getMessages']);
+
+    Route::get('/conversations/{conversation_id}/current', [ConversationController::class, 'getCurrentConversation']);
+
+
+
+
+
 
 
 Route::post('/uploaddocs', [DocumentsController::class, 'upload']);
@@ -75,9 +88,7 @@ Route::get('/download/{id}', [DocumentsController::class, 'download'])->name('fi
 
 Route::post('/update-profile/{user}', [UserController::class, 'updateProfile'])->name('profile.update')->middleware('auth');
 
-Route::middleware('auth:sanctum')->post('/apply/{jobId}', [ApplicationController::class, 'apply']);
-Route::middleware('auth:sanctum')->get('/check-application/{jobId}', [ApplicationController::class, 'checkApplication']);
-Route::get('/jobs/user/{userId}', [JobController::class, 'getJobsByUserId']);
+
 
 
 
@@ -90,9 +101,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 
-Route::get('/applications/create', [ApplicationController::class, 'create'])->name('applications.create');
-Route::post('/applications', [ApplicationController::class, 'store'])->name('applications.store');
-Route::get('/applications/{application}', [ApplicationController::class, 'show'])->name('applications.show');
+
 
 
 Route::get('/jobs', [JobController::class, 'index'])->name('jobs.index');
@@ -110,6 +119,9 @@ Route::delete('/jobs/{job}', [JobController::class, 'destroy'])->name('jobs.dest
 
 Route::delete("/deletedoc/{doc_id}", [DocumentsController::class, "deleteDoc"]);
 
+
+
+
 Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], function () {
     Route::apiResource('token', TokenController::class);
     Route::get('/jobs/user/{userId}', [JobsController::class, 'getJobsforUser']);
@@ -118,8 +130,33 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
     Route::apiResource('jobs', JobsController::class);
     Route::apiResource('userjobs', UserJobsController::class);
     Route::get('/courses/user/{userId}', [CoursesController::class, 'getCourseforUser']);
+
+
+    Route::post('jobs/{job}/shortlist', [ShortlistController::class, 'addToShortlist']);
+    Route::delete('/shortlists/{shortlist}/applicants/{applicant}', [ShortlistController::class, 'removeFromShortlist']);
+    Route::get('/jobs/{job}/shortlist', [ShortlistController::class, 'getShortlist']);
+    Route::get('/users/{userId}/shortlists', [ShortlistController::class, 'getShortlistsForUser']);
+    Route::get('/shortlists/{id}', [ShortlistController::class, 'show']);
+    Route::post('/jobs/{job}/shortlist/{applicant}', [ShortlistController::class, 'removeFromShortlist']);
+    Route::delete('/jobs/{job}/shortlist', [ShortlistController::class, 'deleteShortlist']);
+
+    Route::get('/applications/create', [ApplicationController::class, 'create'])->name('applications.create');
+    Route::post('/applications', [ApplicationController::class, 'store'])->name('applications.store');
+    Route::get('/applications/{application}', [ApplicationController::class, 'show'])->name('applications.show');
+    Route::middleware('auth:sanctum')->post('/apply/{jobId}', [ApplicationController::class, 'apply']);
+    Route::middleware('auth:sanctum')->get('/check-application/{jobId}', [ApplicationController::class, 'checkApplication']);
+    Route::get('/jobs/user/{userId}', [JobController::class, 'getJobsByUserId']);
+
+
+
+
+
+
+
     Route::apiResource('courses', CoursesController::class);
     Route::apiResource('usercourses', UserCoursesController::class);
     Route::apiResource('reflections', ReflectionsController::class);
     Route::apiResource('interviews', InterviewsController::class);
+    Route::apiResource('applications', ApplicationController::class);
+    Route::apiResource('shortlists', ShortListController::class);
 });

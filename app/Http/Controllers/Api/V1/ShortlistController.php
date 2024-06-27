@@ -1,14 +1,44 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
+
+use App\Models\Application;
 use Illuminate\Http\Request;
 use App\Models\Shortlist;
 use App\Models\User;
 use App\Models\Job;
+use Illuminate\Http\Response;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\V1\ShortListResource;
+use App\Http\Resources\V1\ShortListCollection;
+
 
 class ShortlistController extends Controller
 {
+
+
+/**
+     * Display a listing of the applications.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        return new ShortListCollection(ShortList::all());
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     public function addToShortlist(Request $request, Job $job)
 {
     $request->validate([
@@ -93,11 +123,11 @@ public function removeFromShortlist(Job $job, User $applicant)
         $shortlist = Shortlist::with('applicants.documents')->find($id);
 
         if (!$shortlist) {
-            return response()->json(['message' => 'Shortlist not found'], 404);
+            return response()->json(['message' => 'Shortlist not found'], Response::HTTP_NOT_FOUND);
         }
 
-        // Optionally, you can return a JSON response or pass it to a view
-        return response()->json(['shortlist' => $shortlist]);
+        // Return the resource
+        return new ShortlistResource($shortlist);
     }
 
 

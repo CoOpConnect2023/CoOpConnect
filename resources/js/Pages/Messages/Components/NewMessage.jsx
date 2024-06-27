@@ -1,14 +1,28 @@
 import * as React from "react";
 import styled from "styled-components";
 
-export default function NewMessage() {
+export default function NewMessage({ newMessage, setNewMessage, onSendNewMessage, recipientEmail, setRecipientEmail}) {
+
+    const handleInputChange = (e) => {
+        setNewMessage(e.target.value);
+    };
+
+    const handleRecipientChange = (e) => {
+        setRecipientEmail(e.target.value);
+    };
+
     return (
         <Div4>
             <Div5>New Message</Div5>
             <Div6>
                 <Div7>
                     <Div8>To: </Div8>
-                    <Div9>john@gmail.com</Div9>
+                    <Div9><Input
+                        type="text"
+                        placeholder="Recipient's Email"
+                        value={recipientEmail}
+                        onChange={handleRecipientChange}
+                    /></Div9>
                 </Div7>
             </Div6>
             <Div10>
@@ -18,7 +32,13 @@ export default function NewMessage() {
                             loading="lazy"
                             src="https://cdn.builder.io/api/v1/image/assets/TEMP/b1fe555b0ffdbe13c397278b479bee6782aab134a4d597d83c876620c9e724f1?apiKey=d66532d056b14640a799069157705b77&"
                         />
-                        <Div13>Type your message</Div13>
+                        <Div13><Input
+                            type="text"
+                            placeholder="Type your message"
+                            value={newMessage}
+                            onChange={handleInputChange}
+
+                        /></Div13><SendButton onClick={onSendNewMessage}>Send</SendButton>
                     </Div12>
                     <Div14>
                         <img
@@ -143,4 +163,28 @@ const Div14 = styled.div`
     flex-wrap: wrap;
     display: flex;
     gap: 10px;
+`;
+
+const Input = styled.input`
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    font-size: 14px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+`;
+
+const SendButton = styled.button`
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #0056b3;
+    }
 `;

@@ -1,26 +1,178 @@
-import * as React from "react";
+import React, { useEffect, useState } from 'react';
 import styled from "styled-components";
 import SidePanel from "./SidePanel";
 import NewMessage from "./NewMessage";
 import TypeMessage from "./TypeMessage";
 import UserPanel from "./UserPanel";
 import MessageContent from "./MessageContent";
+const appUrl = import.meta.env.VITE_APP_URL;
 
 export default function Chat() {
+    // Assuming user_id 3 is the current user
+    const [messages, setMessages] = useState([]);
+    const [user, setUser] = useState(null);
+    const [conversations, setConversations] = useState(null);
+    const [conversationID, setConversationsID] = useState(null)
+    const [selectedConversation, setSelectedConversation] = useState(null);
+    const [newMessage, setNewMessage] = useState('');
+    const [recipientEmail, setRecipientEmail] = useState('');
+
+
+
+    useEffect(() => {
+        // Fetch the XSRF token from cookies and set it in Axios headers
+        const csrfToken = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("XSRF-TOKEN="))
+            ?.split("=")[1];
+        axios.defaults.headers.common["X-XSRF-TOKEN"] = csrfToken;
+
+        // Function to fetch the user ID
+        const fetchUserId = async () => {
+            try {
+                const response = await axios.get(`${appUrl}/api/user-id`);
+                const userData = response.data.user;
+                userData.skills = JSON.parse(userData.skills || "[]");
+                setUser(userData);
+
+            } catch (error) {
+                console.error("Error fetching user ID:", error);
+            }
+        };
+
+        fetchUserId();
+    }, []);
+
+    const fetchMessages = async () => {
+        try {
+            const response = await axios.get(`${appUrl}/api/conversation/${conversationID}/messages`);
+            setMessages(response.data);
+        } catch (error) {
+            console.error('Error fetching messages:', error);
+        }
+    };
+
+    useEffect(() => {
+
+
+        // Fetch messages whenever conversationID changes
+        if (conversationID !== null) {
+            fetchMessages();
+        }
+    }, [conversationID]);
+
+
+
+    const fetchConversations = async () => {
+        try {
+            const response = await axios.get(`${appUrl}/api/conversation/${user?.id}`);
+            setConversations(response.data.conversations);
+            console.log(response.data.conversations)
+        } catch (error) {
+            console.error('Error fetching conversations:', error);
+        }
+    };
+
+    useEffect(() => {
+
+        // Check if user.id is not null before fetching conversations
+        if (user?.id) {
+            fetchConversations();
+        }
+    }, [user]);
+
+    const fetchConversationDetails = async () => {
+        try {
+            const response = await axios.get(`${appUrl}/api/conversations/${conversationID}/current`);
+            setSelectedConversation(response.data.conversation);
+            console.log(response.data);
+        } catch (error) {
+            console.error('Error fetching conversation details:', error);
+        }
+    };
+
+    useEffect(() => {
+        if (conversationID !== null) {
+            fetchConversationDetails();
+        }
+    }, [conversationID]);
+
+    const handleSendMessage = async () => {
+        if (newMessage.trim() === '') return; // Prevent sending empty messages
+
+        try {
+            const response = await axios.post(`${appUrl}/api/sendmessages`, {
+                content: newMessage,
+                user_id: user.id,
+                conversation_id: conversationID
+            });
+
+            setMessages([...messages, response.data]);
+            setNewMessage('');
+
+            setTimeout(fetchMessages, 500);
+            setTimeout(fetchConversations, 500);
+        } catch (error) {
+            console.error('Error sending message:', error);
+        }
+    };
+
+    const handleSendNewMessage = async () => {
+        if (newMessage.trim() === '') return; // Prevent sending empty messages
+
+        try {
+            const response = await axios.post(`${appUrl}/api/sendnewmessages`, {
+                content: newMessage,
+                user_id: user.id,
+
+                recipient_email: recipientEmail
+            });
+
+            setMessages([...messages, response.data]);
+            setNewMessage('');
+
+            setTimeout(fetchMessages, 500);
+            setTimeout(fetchConversations, 500);
+        } catch (error) {
+            console.error('Error sending message:', error);
+        }
+    };
+
+
+    const currentUser = user?.id || null;
+
+    if (!user) {
+        return <LoadingScreen>Loading...</LoadingScreen>;
+    }
+
+
+
     return (
         <MainContainer>
             <Content>
                 <Column>
                     <LeftColumn>
-                        <NewMessage />
-                        <SidePanel />
+                        <NewMessage newMessage={newMessage} setNewMessage={setNewMessage} onSendNewMessage={handleSendNewMessage} recipientEmail={recipientEmail} setRecipientEmail={setRecipientEmail} />
+                        {conversations && <SidePanel conversations={conversations} setConversationsID={setConversationsID} currentUser={currentUser}  />}
                     </LeftColumn>
                 </Column>
                 <Column2>
                     <RightColumn>
-                        <UserPanel />
-                        <MessageContent/>
-                        <TypeMessage />
+                    {selectedConversation &&<UserPanel conversation={selectedConversation} currentUser={currentUser}  />}
+                        <ScrollableContainer>
+                        <MessageContainer>
+                            {messages.map((message, index) => (
+                                <MessageContent
+                                    key={index}
+                                    message={message}
+                                    isCurrentUser={message.user_id === currentUser}
+                                    conversationID={conversationID}
+
+                                />
+                            ))}
+                        </MessageContainer>
+                        </ScrollableContainer>
+                        <TypeMessage newMessage={newMessage} setNewMessage={setNewMessage} onSendMessage={handleSendMessage} />
                     </RightColumn>
                 </Column2>
             </Content>
@@ -95,6 +247,15 @@ const RightColumn = styled.div`
         max-width: 100%;
         margin-top: 40px;
     }
+`;
+
+const MessageContainer = styled.div`
+    height: 60vh;
+`;
+
+const ScrollableContainer = styled.div`
+
+    overflow-y: auto;
 `;
 
 const Div78 = styled.div`
@@ -238,4 +399,11 @@ const Div95 = styled.div`
     font-weight: 500;
     letter-spacing: 0.5px;
     padding: 10px;
+`;
+const LoadingScreen = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 20px;
 `;

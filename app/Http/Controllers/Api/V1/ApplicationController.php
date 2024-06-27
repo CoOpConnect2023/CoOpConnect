@@ -1,13 +1,36 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Response;
+use App\Http\Resources\V1\ApplicationResource;
+use App\Http\Resources\V1\ApplicationCollection;
+
 
 class ApplicationController extends Controller
 {
+
+ /**
+     * Display a listing of the applications.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        return response()->json(Application::all(), Response::HTTP_OK);
+    }
+
+
+
+
+
+
+
+
     // Show the form for creating a new application
     public function create()
     {
@@ -38,7 +61,7 @@ class ApplicationController extends Controller
     // Display the specified application (if needed)
     public function show(Application $application)
     {
-        // Logic to show a specific application
+        return new ApplicationResource($application);
     }
 
     // Show the form for editing the specified application (if needed)

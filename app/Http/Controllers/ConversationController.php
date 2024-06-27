@@ -2,51 +2,65 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Conversation; // Make sure to use your actual Message model
+use App\Models\Conversation;
+use App\Models\Message; // Make sure to use your actual Message model
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class ConversationController extends Controller
 {
-    public function index()
+    public function store(Request $request)
     {
-        // You can pass data related to messages if needed
-        return Inertia::render('Conversations', [
-            // 'messages' => $messagesData, // Pass any necessary data
+        $validatedData = $request->validate([
+            'participants' => 'required|array|min:2',
         ]);
+
+        $conversation = Conversation::create();
+
+        $conversation->users()->attach($validatedData['participants']);
+
+        return response()->json(['message' => 'Conversation created successfully', 'conversation' => $conversation], 201);
     }
 
-    public function createConversation(Request $req)
+    public function show($user_id)
+{
+    // Find all conversations where the given user ID participates
+    $conversations = Conversation::whereHas('users', function ($query) use ($user_id) {
+        $query->where('users.id', $user_id);
+    })
+    ->with(['users', 'messages' => function ($query) {
+        $query->orderBy('created_at', 'desc'); // Order messages by created_at descending
+    }])
+    ->orderBy('updated_at', 'desc') // Ensure conversations are ordered chronologically by last update
+    ->get();
+
+    // Attach the most recent message to each conversation
+    $conversations->each(function ($conversation) {
+        $conversation->latest_message = $conversation->messages->first();
+        $conversation->unsetRelation('messages'); // Remove the messages relation to only include the latest message
+    });
+
+    return response()->json(['conversations' => $conversations]);
+}
+
+    public function getMessages($conversation_id)
+{
+    $messages = Message::where('conversation_id', $conversation_id)->get();
+    return response()->json($messages);
+}
+
+
+public function getCurrentConversation($id)
     {
-        $send_id = $req->input('send_id');
-        $recv_id = $req->input('recv_id');
+        // Retrieve the conversation with the given ID
+        $conversation = Conversation::with(['users'])->find($id);
 
-        $conversation_id = Conversation::where('send_id', '=', $send_id)
-        ->where("recv_id",'=',$recv_id)->first();
-
-        if(is_null($conversation_id)){
-            $conversation = new Conversation();
-            $conversation->send_id = $send_id;
-            $conversation->recv_id = $recv_id;
-            $conversation->save();
+        if (!$conversation) {
+            return response()->json(['error' => 'Conversation not found'], 404);
         }
-        return redirect()->route('messaging')->with('success', 'Message posted successfully.');
+
+        return response()->json(['conversation' => $conversation]);
     }
 
-    public function fetchConversationId(Request $req)
-    {
-        $send_id = $req->input('send_id');
-        $recv_id = $req->input('recv_id');
 
-        $conversation_id = Conversation::where('send_id', '=', $send_id)
-        ->where("recv_id",'=',$recv_id)->pluck('id')->first();
-
-        if(!is_null($conversation_id)){
-            return response()->json(array(
-                "status" => 1,
-                "message" => "Fetched Successfully...",
-                "conversation_id" => $conversation_id
-            ));
-        }
-    }
 }

@@ -1,94 +1,48 @@
 import * as React from "react";
 import styled from "styled-components";
 
-export default function SidePanel() {
-    const data = [
-        {
-            imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/09e638f41d9cedf8e1726ebb22929c2117cfca2ff217e39a0120741dcaace204?apiKey=d66532d056b14640a799069157705b77&",
-            name: "John",
-            time: "Today, 9:52pm",
-            content:
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-        },
-        {
-            imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/09e638f41d9cedf8e1726ebb22929c2117cfca2ff217e39a0120741dcaace204?apiKey=d66532d056b14640a799069157705b77&",
-            name: "Benjamin",
-            time: "Yesterday, 12:22pm",
-            content:
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-        },
-        {
-            imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/09e638f41d9cedf8e1726ebb22929c2117cfca2ff217e39a0120741dcaace204?apiKey=d66532d056b14640a799069157705b77&",
-            name: "Bill Gates",
-            time: "Wednesday, 9:41am",
-            content:
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-        },
-        {
-            imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/09e638f41d9cedf8e1726ebb22929c2117cfca2ff217e39a0120741dcaace204?apiKey=d66532d056b14640a799069157705b77&",
-            name: "Bill Gates",
-            time: "Wednesday, 9:41am",
-            content:
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-        },
-        {
-            imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/09e638f41d9cedf8e1726ebb22929c2117cfca2ff217e39a0120741dcaace204?apiKey=d66532d056b14640a799069157705b77&",
-            name: "Bill Gates",
-            time: "Wednesday, 9:41am",
-            content:
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-        },
-        {
-            imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/09e638f41d9cedf8e1726ebb22929c2117cfca2ff217e39a0120741dcaace204?apiKey=d66532d056b14640a799069157705b77&",
-            name: "Bill Gates",
-            time: "Wednesday, 9:41am",
-            content:
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-        },
-        {
-            imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/09e638f41d9cedf8e1726ebb22929c2117cfca2ff217e39a0120741dcaace204?apiKey=d66532d056b14640a799069157705b77&",
-            name: "Mariam",
-            time: "Wednesday, 8:41am",
-            content:
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-        },
-        {
-            imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/09e638f41d9cedf8e1726ebb22929c2117cfca2ff217e39a0120741dcaace204?apiKey=d66532d056b14640a799069157705b77&",
-            name: "Joseph",
-            time: "Monday, 1:00am",
-            content:
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-        },
+export default function SidePanel({ conversations, setConversationsID, currentUser }) {
 
-        // Add more objects for each data entry including duplicates
-    ];
+    const handleConversationClick = (conversationId) => {
+        // Pass the conversationId to the parent component (Chat) when clicked
+        setConversationsID(conversationId);
+        console.log(conversationId)
+    };
+
 
     return (
         <Div15>
             <Div16>Conversations</Div16>
             <Div17>
                 <Div18>
-                    {data.map((item, index) => (
-                        <Div19
-                            key={index}
-                            style={
-                                index === data.length - 1
-                                    ? {
-                                          borderBottomWidth: "0px",
-                                      }
-                                    : {}
-                            }
-                        >
-                            <Img4 loading="lazy" src={item.imgSrc} />
-                            <Div20>
-                                <Div21>
-                                    <Div22>{item.name}</Div22>
-                                    <Div23>{item.time}</Div23>
-                                </Div21>
-                                <Div24>{item.content}</Div24>
-                            </Div20>
-                        </Div19>
-                    ))}
+                    {conversations.map((conversation) => {
+
+                        const otherUser = conversation.users.find(user => user.id !== currentUser);
+
+
+                        if (!otherUser) {
+                            return null;
+                        }
+
+                        return (
+                            <Div19 key={conversation.id} onClick={() => handleConversationClick(conversation.id)}>
+
+                                <Img4
+                                    loading="lazy"
+                                    src={otherUser.profile_image || 'https://cdn.builder.io/api/v1/image/assets/TEMP/09e638f41d9cedf8e1726ebb22929c2117cfca2ff217e39a0120741dcaace204?apiKey=d66532d056b14640a799069157705b77&'}
+                                />
+                                <Div20>
+                                    <Div21>
+                                        <Div22>{otherUser.name}</Div22>
+                                        {/* You may need to format the timestamp to match your desired format */}
+                                        <Div23>{new Date(conversation.latest_message.updated_at).toLocaleString()}</Div23>
+                                    </Div21>
+                                    {/* Display last message content here if available */}
+                                    <Div24>{conversation.latest_message ? conversation.latest_message.content : 'No messages yet'}</Div24>
+                                </Div20>
+                            </Div19>
+                        );
+                    })}
                 </Div18>
                 <Div67>
                     <Div68 />
@@ -97,6 +51,7 @@ export default function SidePanel() {
         </Div15>
     );
 }
+
 
 const Div15 = styled.div`
     border-radius: 10px;
