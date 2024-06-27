@@ -4,6 +4,7 @@ import styled from "styled-components";
 import NavBar from "./Components/NavBar";
 import SettingsPanel from "./Components/SettingsPage";
 import QuickLinks from "./Components/QuickLinks";
+import { MainContainer } from "./Styling/Settings.styles";
 
 export default function Settings() {
     return (
@@ -15,10 +16,3 @@ export default function Settings() {
         </NavBar>
     );
 }
-
-const MainContainer = styled.div`
-    display: flex;
-    gap: 20px;
-    flex: 1 0 0;
-    justify-content: center;
-`;

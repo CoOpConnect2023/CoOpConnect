@@ -2,6 +2,21 @@ import * as React from "react";
 import { useState } from "react";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
+import {
+    MainContainer,
+    Container,
+    Wrapper,
+    Header,
+    CalendarWrapper,
+    CalendarHeader,
+    Month,
+    NavIcons,
+    Icon,
+    DaysOfWeek,
+    Day,
+    DatesGrid,
+    DateCell,
+} from "./Styling/Scheduling.styles.jsx";
 
 const Scheduling = () => {
     const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
