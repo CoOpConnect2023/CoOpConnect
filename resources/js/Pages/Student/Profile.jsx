@@ -4,6 +4,11 @@ import ProfileForm from "./Components/ProfileForm";
 import Matches from "./Components/Matches";
 import ReflectionDocuments from "./Components/ReflectionDocuments";
 import NavBar from "./Components/NavBar";
+import {
+    MainContainer,
+    ProfileContainer,
+    RightContainer,
+} from "./Styling/Profile.styles";
 
 export default function Profile() {
     return (
@@ -20,22 +25,3 @@ export default function Profile() {
         </NavBar>
     );
 }
-
-const MainContainer = styled.div`
-    display: flex;
-    align-items: flex-start;
-    gap: 20px;
-`;
-
-const ProfileContainer = styled.div`
-    flex: 1;
-    min-width: 300px;
-`;
-
-const RightContainer = styled.div`
-    flex: 1;
-    min-width: 300px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-`;
