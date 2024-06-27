@@ -5,22 +5,24 @@ import { Link } from "@inertiajs/react";
 import EditJobModal from "../Profile/Partials/EditJobModal";
 EditJobModal;
 const appUrl = import.meta.env.VITE_APP_URL;
+import {
+    getJobsforEmployer,
+    patchJob,
+    selectJobs,
+    selectJobsStatus,
+} from "@/Features/jobs/jobsSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const Home = () => {
     const [user, setUser] = useState(null);
-    const [jobPostings, setJobPostings] = useState([]);
     const [editModalIsOpen, setEditModalIsOpen] = useState(false);
     const [jobToEdit, setJobToEdit] = useState(null);
 
-    useEffect(() => {
-        // Fetch the XSRF token from cookies and set it in Axios headers
-        const csrfToken = document.cookie
-            .split("; ")
-            .find((row) => row.startsWith("XSRF-TOKEN="))
-            ?.split("=")[1];
-        axios.defaults.headers.common["X-XSRF-TOKEN"] = csrfToken;
+    const dispatch = useDispatch();
+    const jobs = useSelector(selectJobs);
+    const jobsStatus = useSelector(selectJobsStatus);
 
-        // Function to fetch the user ID
+    useEffect(() => {
         const fetchUserAndJobs = async () => {
             try {
                 const response = await axios.get(`${appUrl}/api/user-id`);
@@ -29,17 +31,14 @@ const Home = () => {
                 setUser(userData);
 
                 // Fetch jobs for the user
-                const jobsResponse = await axios.get(
-                    `${appUrl}/api/jobs/user/${userData.id}`
-                );
-                setJobPostings(jobsResponse.data);
+                dispatch(getJobsforEmployer({ userId: userData.id }));
             } catch (error) {
                 console.error("Error fetching user ID or jobs:", error);
             }
         };
 
         fetchUserAndJobs();
-    }, []);
+    }, [dispatch]);
 
     const openEditModal = (job) => {
         setJobToEdit(job);
@@ -50,13 +49,23 @@ const Home = () => {
         setEditModalIsOpen(false);
     };
 
-    const handleSave = (updatedJob) => {
-        // Update the job in jobPostings state
-        setJobPostings((prevJobs) =>
-            prevJobs.map((job) => (job.id === updatedJob.id ? updatedJob : job))
+    const handleSave = async (updatedJob) => {
+        // Dispatch the patchJob action and wait for it to complete
+        dispatch(
+            patchJob({
+                jobsId: updatedJob.id,
+                title: updatedJob.title,
+                description: updatedJob.description,
+                company: updatedJob.company,
+                location: updatedJob.location,
+                postingStatus: updatedJob.postingStatus,
+                jobType: updatedJob.jobType,
+            })
         );
+
         closeEditModal();
     };
+
 
     return (
         <NavBar header={"Job Postings"}>
@@ -86,15 +95,18 @@ const Home = () => {
                         or <UnderlineText>edit</UnderlineText> your company’s
                         current job postings.
                     </EditingInstructions>
-                    <PostingsGrid>
-                        {jobPostings.map((post, i) => (
-                            <JobPosting
-                                key={i}
-                                post={post}
-                                openEditModal={openEditModal}
-                            />
-                        ))}
-                    </PostingsGrid>
+                    {jobsStatus === "loading" && <p>Loading...</p>}
+                    {jobs.length > 0 && (
+                        <PostingsGrid>
+                            {jobs.map((post, i) => (
+                                <JobPosting
+                                    key={i}
+                                    post={post}
+                                    openEditModal={openEditModal}
+                                />
+                            ))}
+                        </PostingsGrid>
+                    )}
                 </CurrentPostingsSection>
             </MainContainer>
             {editModalIsOpen && (
@@ -137,34 +149,6 @@ const JobPosting = ({ post, openEditModal }) => {
         </JobCard>
     );
 };
-
-// Dummy data
-const jobPostings = [
-    {
-        title: "Front-End Developer",
-        companyName: "Company Name",
-        location: "Location",
-        tags: ["Javascript", "HTML", "Development", "+3"],
-        description:
-            "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
-    },
-    {
-        title: "Front-End Developer",
-        companyName: "Company Name",
-        location: "Location",
-        tags: ["Javascript", "HTML", "Development", "+3"],
-        description:
-            "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
-    },
-    {
-        title: "Front-End Developer",
-        companyName: "Company Name",
-        location: "Location",
-        tags: ["Javascript", "HTML", "Development", "+3"],
-        description:
-            "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
-    },
-];
 
 // Styled Components
 const UnderlineText = styled.span`

@@ -68,6 +68,8 @@ class JobsController extends Controller
     public function update(UpdateJobsRequest $request, Jobs $job)
     {
         $job->update($request->all());
+
+        return new JobsResource($job);
     }
 
     /**
