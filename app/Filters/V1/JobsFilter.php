@@ -15,12 +15,14 @@ class JobsFilter extends ApiFilter
         'location' => ['eq'],
         'postingStatus' => ['eq'],
         'jobType' => ['eq'],
-        'company' => ['eq']
+        'company' => ['eq'],
+        'userId' => ['eq'],
     ];
 
     protected $columnMap = [
         'postingStatus' => 'posting_status',
-        'jobType' => 'job_type'
+        'jobType' => 'job_type',
+        'userId' => 'user_id'
     ];
 
     protected $operatorMap = [

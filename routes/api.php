@@ -52,6 +52,8 @@ Route::get('/user-id', function () {
 Route::get('/download/{id}', [DocumentsController::class, 'download'])->name('file.download');
 
 Route::post('/update-profile/{user}', [UserController::class, 'updateProfile'])->name('profile.update')->middleware('auth');
+Route::get('/usersindex', [UserController::class, 'index'])->name('users.index');
+Route::get('/studentStatusPercents', [UserController::class, 'getStudentStatusPercentages'])->name('users.getStudentStatusPercentages');
 
 Route::middleware('auth:sanctum')->post('/apply/{jobId}', [ApplicationController::class, 'apply']);
 Route::middleware('auth:sanctum')->get('/check-application/{jobId}', [ApplicationController::class, 'checkApplication']);

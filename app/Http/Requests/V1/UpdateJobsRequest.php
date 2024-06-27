@@ -29,7 +29,7 @@ class UpdateJobsRequest extends FormRequest
                 'skills' => ['required'],
                 'location' => ['required'],
                 'postingStatus' => ['required', Rule::in(['open', 'closed'])],
-                'jobType' => ['required', Rule::in(['full-time', 'part-time', 'contract', 'remote'])],
+                'jobType' => ['required'],
                 'company' => ['required']
             ];
         } else {
@@ -39,7 +39,7 @@ class UpdateJobsRequest extends FormRequest
                 'skills' => ['sometimes', 'required'],
                 'location' => ['sometimes', 'required'],
                 'postingStatus' => ['sometimes', 'required', Rule::in(['open', 'closed'])],
-                'jobType' => ['sometimes', 'required', Rule::in(['full-time', 'part-time', 'contract', 'remote'])],
+                'jobType' => ['sometimes', 'required'],
                 'company' => ['sometimes', 'required']
             ];
         }
