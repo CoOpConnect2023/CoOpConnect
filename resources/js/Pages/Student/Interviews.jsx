@@ -16,6 +16,7 @@ import {
     postInterview,
     selectInterviewsStatus,
     selectInterviews,
+    deleteInterview,
 } from "@/Features/interviews/interviewsSlice";
 const localizer = momentLocalizer(moment);
 const DnDCalendar = withDragAndDrop(Calendar);

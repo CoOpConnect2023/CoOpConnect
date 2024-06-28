@@ -136,16 +136,19 @@ const Modal = ({ onClose, onSubmit, defaultDate, applicants }) => {
                 <Label>End Time:</Label>
                 <Input type="time" value={endTime} onChange={handleEndTimeChange} />
 
-                <Label>Applicant:</Label>
-                <Select value={selectedApplicant} onChange={handleApplicantChange}>
-                    <Option value="">Select an applicant</Option>
-                    {applicants.map((applicant) => (
-                        <option key={applicant.id} value={applicant.id}>
-                            {applicant.name} - {applicant.email}
-                        </option>
-                    ))}
-                </Select>
-
+                {applicants && (
+                <>
+                    <Label>Applicant:</Label>
+                    <Select value={selectedApplicant} onChange={handleApplicantChange}>
+                        <Option value="">Select an applicant</Option>
+                        {applicants.map((applicant) => (
+                            <option key={applicant.id} value={applicant.id}>
+                                {applicant.name} - {applicant.email}
+                            </option>
+                        ))}
+                    </Select>
+                </>
+            )}
                 <ButtonContainer>
                     <Button onClick={handleSubmit}>Save</Button>
                     <Button onClick={onClose}>Cancel</Button>

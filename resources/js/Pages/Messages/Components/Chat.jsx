@@ -1,92 +1,86 @@
 import React, { useEffect, useState } from 'react';
-import styled from "styled-components";
+import { useSelector, useDispatch } from 'react-redux';
+import styled, { keyframes } from "styled-components";
 import SidePanel from "./SidePanel";
 import NewMessage from "./NewMessage";
 import TypeMessage from "./TypeMessage";
 import UserPanel from "./UserPanel";
 import MessageContent from "./MessageContent";
+import {
+    getUser, selectUser, selectUserStatus
+} from "@/Features/users/userSlice";
+import {
+    getMessages, selectMessages, selectMessagesStatus, getConversations, selectConversations, selectConversationsStatus, getSelectedConversation, selectCurrentConversation, selectCurrentConversationsStatus
+} from "@/Features/messages/messagesSlice";
 const appUrl = import.meta.env.VITE_APP_URL;
 
 export default function Chat() {
-    // Assuming user_id 3 is the current user
-    const [messages, setMessages] = useState([]);
-    const [user, setUser] = useState(null);
-    const [conversations, setConversations] = useState(null);
-    const [conversationID, setConversationsID] = useState(null)
+
+    const [conversationID, setConversationsID] = useState(null);
+
+
     const [selectedConversation, setSelectedConversation] = useState(null);
     const [newMessage, setNewMessage] = useState('');
     const [recipientEmail, setRecipientEmail] = useState('');
-    const [shortlists, setShortlists] = useState(null)
+    const [shortlists, setShortlists] = useState(null);
 
+
+    const dispatch = useDispatch();
+    const user = useSelector(selectUser);
+    const userStatus = useSelector(selectUserStatus);
+    const messages = useSelector(selectMessages);
+    const messageStatus = useSelector(selectMessagesStatus);
+
+    const conversationsStatus = useSelector(selectConversationsStatus);
+
+    useEffect(() => {
+        dispatch(getUser());
+
+    }, [dispatch]);
+
+    const userInfo = user;
+    const currentUser = userInfo?.id;
 
 
     useEffect(() => {
-        // Fetch the XSRF token from cookies and set it in Axios headers
-        const csrfToken = document.cookie
-            .split("; ")
-            .find((row) => row.startsWith("XSRF-TOKEN="))
-            ?.split("=")[1];
-        axios.defaults.headers.common["X-XSRF-TOKEN"] = csrfToken;
-
-        // Function to fetch the user ID
-        const fetchUserId = async () => {
-            try {
-                const response = await axios.get(`${appUrl}/api/user-id`);
-                const userData = response.data.user;
-                userData.skills = JSON.parse(userData.skills || "[]");
-                setUser(userData);
-
-            } catch (error) {
-                console.error("Error fetching user ID:", error);
-            }
-        };
-
-        fetchUserId();
-    }, []);
-
-    const fetchMessages = async () => {
-        try {
-            const response = await axios.get(`${appUrl}/api/conversation/${conversationID}/messages`);
-            setMessages(response.data);
-        } catch (error) {
-            console.error('Error fetching messages:', error);
-        }
-    };
-
-    useEffect(() => {
-
-
-        // Fetch messages whenever conversationID changes
         if (conversationID !== null) {
-            fetchMessages();
+            dispatch(getMessages({ conversationID }));
+
         }
-    }, [conversationID]);
+    }, [dispatch, conversationID]);
 
+    useEffect(() => {
+        if (conversationID !== null) {
+            dispatch(getSelectedConversation({ conversationID }));
 
-
-    const fetchConversations = async () => {
-        try {
-            const response = await axios.get(`${appUrl}/api/conversation/${user?.id}`);
-            setConversations(response.data.conversations);
-
-        } catch (error) {
-            console.error('Error fetching conversations:', error);
         }
-    };
+    }, [dispatch, conversationID]);
+
+
+
+    const convoStatus = useSelector(selectMessagesStatus);
+
+    useEffect(() => {
+        if (currentUser !== null) {
+            dispatch(getConversations({ userId: currentUser }));
+        }
+    }, [dispatch, currentUser]);
+
+    const convos = useSelector(selectConversations);
 
     useEffect(() => {
 
-        // Check if user.id is not null before fetching conversations
-        if (user?.id) {
-            fetchConversations();
-        }
-    }, [user]);
+    }, [convos]);
+    const conversations = convos.conversations;
+
+
+
 
     const fetchConversationDetails = async () => {
         try {
             const response = await axios.get(`${appUrl}/api/conversations/${conversationID}/current`);
             setSelectedConversation(response.data.conversation);
-            console.log(response.data);
+
         } catch (error) {
             console.error('Error fetching conversation details:', error);
         }
@@ -104,15 +98,15 @@ export default function Chat() {
         try {
             const response = await axios.post(`${appUrl}/api/sendmessages`, {
                 content: newMessage,
-                user_id: user.id,
+                user_id: userInfo.id,
                 conversation_id: conversationID
             });
 
-            setMessages([...messages, response.data]);
+
             setNewMessage('');
 
-            setTimeout(fetchMessages, 500);
-            setTimeout(fetchConversations, 500);
+            setTimeout(dispatch(getMessages({ conversationID })), 500);
+            setTimeout(dispatch(getConversations({ userId: userInfo.id })), 500);
         } catch (error) {
             console.error('Error sending message:', error);
         }
@@ -123,7 +117,7 @@ export default function Chat() {
 
         const requestData = {
             content: newMessage,
-            user_id: user.id,
+            user_id: userInfo.id,
             recipient_email: recipientEmail
         };
 
@@ -147,7 +141,7 @@ export default function Chat() {
 
 
 
-    const currentUser = user?.id || null;
+
 
     const fetchShortlists = async (currentUser) => {
         try {
@@ -170,8 +164,15 @@ export default function Chat() {
         }
     }, [currentUser]);
 
-    if (!user) {
-        return <LoadingScreen>Loading...</LoadingScreen>;
+    if (userStatus === 'loading') {
+        return <LoadingScreen><Spinner /></LoadingScreen>;
+    }
+    if (messageStatus === 'loading') {
+        return <LoadingScreen><Spinner /></LoadingScreen>;
+    }
+
+    if (convoStatus === 'loading') {
+        return <LoadingScreen><Spinner /></LoadingScreen>;
     }
 
 
@@ -182,24 +183,24 @@ export default function Chat() {
                 <Column>
                     <LeftColumn>
                         <NewMessage newMessage={newMessage} setNewMessage={setNewMessage} onSendNewMessage={handleSendNewMessage} recipientEmail={recipientEmail} setRecipientEmail={setRecipientEmail} shortlists={shortlists} />
-                        {conversations && <SidePanel conversations={conversations} setConversationsID={setConversationsID} currentUser={currentUser}  />}
+                        {conversations && <SidePanel conversations={conversations} setConversationsID={setConversationsID} currentUser={currentUser} />}
                     </LeftColumn>
                 </Column>
                 <Column2>
                     <RightColumn>
-                    {selectedConversation &&<UserPanel conversation={selectedConversation} currentUser={currentUser}  />}
+                        {selectedConversation && <UserPanel conversation={selectedConversation} currentUser={currentUser} />}
                         <ScrollableContainer>
-                        <MessageContainer>
-                            {messages.map((message, index) => (
-                                <MessageContent
-                                    key={index}
-                                    message={message}
-                                    isCurrentUser={message.user_id === currentUser}
-                                    conversationID={conversationID}
+                            <MessageContainer>
+                                {messages.map((message, index) => (
+                                    <MessageContent
+                                        key={index}
+                                        message={message}
+                                        isCurrentUser={message.user_id === currentUser}
+                                        conversationID={conversationID}
 
-                                />
-                            ))}
-                        </MessageContainer>
+                                    />
+                                ))}
+                            </MessageContainer>
                         </ScrollableContainer>
                         <TypeMessage newMessage={newMessage} setNewMessage={setNewMessage} onSendMessage={handleSendMessage} />
                     </RightColumn>
@@ -216,6 +217,7 @@ const MainContainer = styled.div`
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
     background-color: #fff;
     padding: 20px;
+
 `;
 
 const Content = styled.div`
@@ -429,10 +431,28 @@ const Div95 = styled.div`
     letter-spacing: 0.5px;
     padding: 10px;
 `;
+const spin = keyframes`
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+`;
+
+// Styled component with a loading animation
 const LoadingScreen = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     font-size: 20px;
+    background-color: #f0f0f0; /* Adjust background color as needed */
+    color: #333; /* Adjust text color as needed */
+`;
+
+// Additional styling for the spinning element
+const Spinner = styled.div`
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-top: 4px solid #3498db; /* Adjust loading spinner color */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: ${spin} 1s linear infinite; /* Apply the spin animation */
 `;
