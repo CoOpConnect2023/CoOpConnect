@@ -44,7 +44,7 @@ class EmployerController extends Controller
 
     public function messages()
     {
-        return Inertia::render('Messages/Messages');
+        return Inertia::render('Employer/Messages/Messages');
     }
 
     public function interviews()

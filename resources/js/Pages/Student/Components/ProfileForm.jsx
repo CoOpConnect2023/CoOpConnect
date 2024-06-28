@@ -16,9 +16,25 @@ const Dropzone = ({ onDrop }) => {
     );
 };
 
-function ProfileForm() {
+const ProfileForm = () => {
     const [user, setUser] = useState(null);
     const [droppedImage, setDroppedImage] = useState(null);
+
+    // Fetch user data on component mount
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const response = await axios.get(`${appUrl}/api/user-id`);
+                const userData = response.data.user;
+                userData.skills = JSON.parse(userData.skills || "[]");
+                setUser(userData);
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+            }
+        };
+
+        fetchUserData();
+    }, []);
 
     const handleDrop = (acceptedFiles) => {
         if (acceptedFiles && acceptedFiles.length > 0) {
@@ -27,30 +43,6 @@ function ProfileForm() {
             setDroppedImage(imageUrl);
         }
     };
-
-    useEffect(() => {
-        // Fetch the XSRF token from cookies and set it in Axios headers
-        const csrfToken = document.cookie
-            .split("; ")
-            .find((row) => row.startsWith("XSRF-TOKEN="))
-            ?.split("=")[1];
-        axios.defaults.headers.common["X-XSRF-TOKEN"] = csrfToken;
-
-        // Function to fetch the user ID
-        const fetchUserId = async () => {
-            try {
-                const response = await axios.get(`${appUrl}/api/user-id`);
-                const userData = response.data.user;
-                userData.skills = JSON.parse(userData.skills || "[]");
-                setUser(userData);
-                console.log("test",response.data.user)
-            } catch (error) {
-                console.error("Error fetching user ID:", error);
-            }
-        };
-
-        fetchUserId();
-    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -83,20 +75,14 @@ function ProfileForm() {
         try {
             const formData = new FormData();
 
-            // Check if droppedImage is set and append it to formData
-            if (droppedImage) {
-                // If droppedImage is a File object (if using Dropzone), directly append it
-                if (droppedImage instanceof File) {
-                    formData.append("profile_image", droppedImage);
-                } else {
-                    // If droppedImage is a URL (if using an image preview), fetch the file and append
-                    const response = await fetch(droppedImage);
-                    const blob = await response.blob();
-                    formData.append("profile_image", blob, "profile_image.png"); // Adjust filename as needed
-                }
+            if (droppedImage instanceof File) {
+                formData.append("profile_image", droppedImage);
+            } else if (typeof droppedImage === 'string') {
+                const response = await fetch(droppedImage);
+                const blob = await response.blob();
+                formData.append("profile_image", blob, "profile_image.png");
             }
 
-            // Append other form fields
             formData.append("description", user.description);
             formData.append("name", user.name);
             formData.append("email", user.email);
@@ -111,9 +97,7 @@ function ProfileForm() {
                 {
                     headers: {
                         "Content-Type": "multipart/form-data",
-                        Authorization: `Bearer ${localStorage.getItem(
-                            "accessToken"
-                        )}`,
+                        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                     },
                 }
             );
@@ -126,7 +110,6 @@ function ProfileForm() {
     };
 
     const handleClear = () => {
-        // Update user state to clear profile image
         setUser({ ...user, profile_image: null });
     };
 
