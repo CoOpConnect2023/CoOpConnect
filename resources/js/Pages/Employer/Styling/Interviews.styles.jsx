@@ -145,3 +145,14 @@ export const DateCell = styled.div`
     }
 `
 
+export const TodayDateCell = styled(DateCell)`
+    border: 1px solid var(--Stroke, #d5d4df);
+    background: var(--Schemes-Primary, #6b538c);
+    color: #fff; // Ensures the text is readable
+`;
+
+export const InactiveDateCell = styled(DateCell)`
+    background-color: var(--Inactive, #f2f3f7);
+`;
+
+

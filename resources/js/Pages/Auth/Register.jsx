@@ -14,6 +14,7 @@ export default function Register() {
         email: "",
         password: "",
         password_confirmation: "",
+        role: "",
     });
 
     useEffect(() => {
@@ -24,6 +25,8 @@ export default function Register() {
 
     const submit = (e) => {
         e.preventDefault();
+
+        console.log(data);
 
         post(route("register"));
     };
@@ -164,6 +167,11 @@ export default function Register() {
                                         id="radio1"
                                         type="radio"
                                         name="radio"
+                                        value="teacher"
+                                        checked={data.role === "teacher"}
+                                        onChange={(e) =>
+                                            setData("role", e.target.value)
+                                        }
                                         className="hidden"
                                     />
                                     <label
@@ -182,6 +190,11 @@ export default function Register() {
                                         id="radio2"
                                         type="radio"
                                         name="radio"
+                                        value="employee"
+                                        checked={data.role === "employee"}
+                                        onChange={(e) =>
+                                            setData("role", e.target.value)
+                                        }
                                         className="hidden"
                                     />
                                     <label
@@ -200,6 +213,11 @@ export default function Register() {
                                         id="radio3"
                                         type="radio"
                                         name="radio"
+                                        value="student"
+                                        checked={data.role === "student"}
+                                        onChange={(e) =>
+                                            setData("role", e.target.value)
+                                        }
                                         className="hidden"
                                     />
                                     <label

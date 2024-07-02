@@ -1,7 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
-import downarrow from "../Images/Icon.svg";
 import { Link } from "@inertiajs/react";
 import { useDispatch, useSelector } from "react-redux";
 import {

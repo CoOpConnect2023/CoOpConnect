@@ -42,6 +42,7 @@ import {
     JobCardFeatured,
     CompanyImage,
     CompanyInfo,
+    CompanyDetails,
     CompanyName,
     CompanyLocation,
     ApplyButton,
