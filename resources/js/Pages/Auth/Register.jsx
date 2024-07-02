@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import GuestLayout from "@/Layouts/GuestLayout";
 import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
@@ -17,6 +17,8 @@ export default function Register() {
         role: "",
     });
 
+    const [roleError, setRoleError] = useState("");
+
     useEffect(() => {
         return () => {
             reset("password", "password_confirmation");
@@ -26,8 +28,12 @@ export default function Register() {
     const submit = (e) => {
         e.preventDefault();
 
-        console.log(data);
+        if (!data.role) {
+            setRoleError("Please select a role.");
+            return;
+        }
 
+        setRoleError("");
         post(route("register"));
     };
 
@@ -230,6 +236,12 @@ export default function Register() {
                                 </div>
                             </div>
                         </div>
+
+                        {roleError && (
+                            <div className="mt-2 text-red-600 text-sm">
+                                {roleError}
+                            </div>
+                        )}
 
                         <div className="flex flex-col items-center">
                             <PrimaryButton disabled={processing} className="">
