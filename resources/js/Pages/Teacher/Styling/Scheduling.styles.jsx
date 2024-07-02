@@ -9,7 +9,7 @@ export const MainContainer = styled.div`
     flex: 1 0 0;
     align-self: stretch;
     background-color: var(--Schemes-Background, #fff7ff);
-`
+`;
 
 export const Container = styled.div`
     align-items: center;
@@ -21,21 +21,21 @@ export const Container = styled.div`
     justify-content: center;
     padding: 20px;
     border-radius: 10px;
-`
+`;
 
 export const Wrapper = styled.div`
     display: flex;
     width: 782px;
     max-width: 100%;
     flex-direction: column;
-`
+`;
 
 export const Header = styled.div`
     color: var(--Schemes-Primary, #6b538c);
     text-decoration-line: underline;
     align-self: center;
     font: 600 32px Poppins, sans-serif;
-`
+`;
 
 export const CalendarWrapper = styled.div`
     border-radius: 16px;
@@ -53,7 +53,7 @@ export const CalendarWrapper = styled.div`
         max-width: 100%;
         padding: 0 20px;
     }
-`
+`;
 
 export const CalendarHeader = styled.div`
     justify-content: space-between;
@@ -64,20 +64,20 @@ export const CalendarHeader = styled.div`
         max-width: 100%;
         flex-wrap: wrap;
     }
-`
+`;
 
 export const Month = styled.div`
     color: var(--Schemes-Primary, #6b538c);
     margin: auto 0;
     font: 900 24px Inter, sans-serif;
-`
+`;
 
 export const NavIcons = styled.div`
     display: flex;
     gap: 8px;
     justify-content: space-between;
     padding: 16px;
-`
+`;
 
 export const Icon = styled.img`
     aspect-ratio: 1;
@@ -88,7 +88,7 @@ export const Icon = styled.img`
     filter: ${({ isDisabled }) =>
         isDisabled ? "grayscale(100%) brightness(150%)" : "none"};
     opacity: ${({ isDisabled }) => (isDisabled ? 0.5 : 1)};
-`
+`;
 
 export const DaysOfWeek = styled.div`
     display: flex;
@@ -107,13 +107,13 @@ export const DaysOfWeek = styled.div`
         padding-right: 20px;
         white-space: initial;
     }
-`
+`;
 
 export const Day = styled.div`
     display: flex;
     font-variant-numeric: lining-nums tabular-nums;
     font-family: Inter, sans-serif;
-`
+`;
 
 export const DatesGrid = styled.div`
     display: grid;
@@ -129,7 +129,7 @@ export const DatesGrid = styled.div`
         flex-wrap: wrap;
         white-space: initial;
     }
-`
+`;
 
 export const DateCell = styled.div`
     font-variant-numeric: lining-nums tabular-nums;
@@ -143,5 +143,14 @@ export const DateCell = styled.div`
         white-space: initial;
         padding: 0 20px;
     }
-`
+`;
 
+export const TodayDateCell = styled(DateCell)`
+    border: 1px solid var(--Stroke, #d5d4df);
+    background: var(--Schemes-Primary, #6b538c);
+    color: #fff; // Ensures the text is readable
+`;
+
+export const InactiveDateCell = styled(DateCell)`
+    background-color: var(--Inactive, #f2f3f7);
+`;

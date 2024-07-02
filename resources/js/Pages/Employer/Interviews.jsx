@@ -16,6 +16,8 @@ import {
     Day,
     DatesGrid,
     DateCell,
+    TodayDateCell,
+    InactiveDateCell,
 } from "./Styling/Interviews.styles";
 
 const Interviews = () => {

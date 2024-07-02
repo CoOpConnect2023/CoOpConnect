@@ -60,14 +60,7 @@ function Profile() {
     };
 
     useEffect(() => {
-        // Fetch the XSRF token from cookies and set it in Axios headers
-        const csrfToken = document.cookie
-            .split("; ")
-            .find((row) => row.startsWith("XSRF-TOKEN="))
-            ?.split("=")[1];
-        axios.defaults.headers.common["X-XSRF-TOKEN"] = csrfToken;
 
-        // Function to fetch the user ID
         const fetchUserId = async () => {
             try {
                 const response = await axios.get(`${appUrl}/api/user-id`);

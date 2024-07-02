@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import GuestLayout from "@/Layouts/GuestLayout";
 import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
@@ -14,7 +14,10 @@ export default function Register() {
         email: "",
         password: "",
         password_confirmation: "",
+        role: "",
     });
+
+    const [roleError, setRoleError] = useState("");
 
     useEffect(() => {
         return () => {
@@ -25,6 +28,12 @@ export default function Register() {
     const submit = (e) => {
         e.preventDefault();
 
+        if (!data.role) {
+            setRoleError("Please select a role.");
+            return;
+        }
+
+        setRoleError("");
         post(route("register"));
     };
 
@@ -164,6 +173,11 @@ export default function Register() {
                                         id="radio1"
                                         type="radio"
                                         name="radio"
+                                        value="teacher"
+                                        checked={data.role === "teacher"}
+                                        onChange={(e) =>
+                                            setData("role", e.target.value)
+                                        }
                                         className="hidden"
                                     />
                                     <label
@@ -182,6 +196,11 @@ export default function Register() {
                                         id="radio2"
                                         type="radio"
                                         name="radio"
+                                        value="employee"
+                                        checked={data.role === "employee"}
+                                        onChange={(e) =>
+                                            setData("role", e.target.value)
+                                        }
                                         className="hidden"
                                     />
                                     <label
@@ -200,6 +219,11 @@ export default function Register() {
                                         id="radio3"
                                         type="radio"
                                         name="radio"
+                                        value="student"
+                                        checked={data.role === "student"}
+                                        onChange={(e) =>
+                                            setData("role", e.target.value)
+                                        }
                                         className="hidden"
                                     />
                                     <label
@@ -212,6 +236,12 @@ export default function Register() {
                                 </div>
                             </div>
                         </div>
+
+                        {roleError && (
+                            <div className="mt-2 text-red-600 text-sm">
+                                {roleError}
+                            </div>
+                        )}
 
                         <div className="flex flex-col items-center">
                             <PrimaryButton disabled={processing} className="">
