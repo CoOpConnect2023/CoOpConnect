@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-const appUrl = import.meta.env.VITE_APP_URL;
+axios.defaults.baseURL = "http://127.0.0.1:8000/api/v1";
 
 const initialState = {
     messages: [],
@@ -63,7 +63,7 @@ export const messagesSlice = createSlice({
 export const getMessages = createAsyncThunk("messages/getMessages", async (params) => {
     const { conversationID } = params;
     const response = await axios({
-        url: `${appUrl}/api/conversation/${conversationID}/messages`,
+        url: `/conversation/${conversationID}/messages`,
         method: "GET",
     });
 
@@ -73,7 +73,7 @@ export const getMessages = createAsyncThunk("messages/getMessages", async (param
 export const getConversations = createAsyncThunk("messages/getConversations", async (params) => {
     const { userId } = params;
     const response = await axios({
-        url: `${appUrl}/api/conversation/${userId}`,
+        url: `/conversation/${userId}`,
         method: "GET",
 
     });
@@ -87,7 +87,7 @@ export const getSelectedConversation = createAsyncThunk(
     async (params) => {
         const { conversationID } = params;
         const response = await axios({
-            url: `${appUrl}/api/conversations/${conversationID}/current`,
+            url: `/api/conversations/${conversationID}/current`,
             method: "GET",
         });
         return response.data;

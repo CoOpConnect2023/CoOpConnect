@@ -22,6 +22,19 @@ export const getUser = createAsyncThunk(
     }
 );
 
+export const updateUserProfile = createAsyncThunk(
+    "user/updateUserProfile",
+    async (userData) => {
+        const { id, ...data } = userData;  // Extracting ID from userData
+        const response = await axios({
+            url: `${appUrl}/api/update-profile/${id}`,
+            method: "POST",
+            data: data,
+        });
+        return response.data.user;
+    }
+);
+
 export const userSlice = createSlice({
     name: "user",
     initialState,
@@ -47,7 +60,17 @@ export const userSlice = createSlice({
 
                 state.status.user = "failed";
 
-            });
+            })
+            .addCase(updateUserProfile.pending, (state, action) => {
+                state.status.user = "loading";
+            })
+            .addCase(updateUserProfile.fulfilled, (state, action) => {
+                state.user = action.payload;
+                state.status.user = "succeeded";
+            })
+            .addCase(updateUserProfile.rejected, (state, action) => {
+                state.status.user = "failed";
+            })
     },
 });
 

@@ -66,10 +66,10 @@ function DocumentDropZone({ onFileDrop, imgSrc, altText, description, clearPrevi
                     })
                 ) : (
                     <img
-                                loading="lazy"
-                                src="https://cdn.builder.io/api/v1/image/assets/TEMP/7b639287ff19d9cea52b278a5c41582ed4e1bf799e4a4826575e0a9b46474d1b?apiKey=d66532d056b14640a799069157705b77&"
-                                alt=""
-                            />
+                        loading="lazy"
+                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/7b639287ff19d9cea52b278a5c41582ed4e1bf799e4a4826575e0a9b46474d1b?apiKey=d66532d056b14640a799069157705b77&"
+                        alt=""
+                    />
                 )}
                 <DropZoneText>Drag your files here</DropZoneText>
             </DropZone>
@@ -80,22 +80,22 @@ function DocumentDropZone({ onFileDrop, imgSrc, altText, description, clearPrevi
 
 const TabMenu = ({ activeTab, handleTabChange }) => (
     <TabList>
-      <TabItem onClick={() => handleTabChange("Progress Reports")} className={activeTab === "Progress Reports" ? "active" : ""}>
-        Progress Reports
-      </TabItem>
-      <TabItem onClick={() => handleTabChange("Student Logs")} className={activeTab === "Student Logs" ? "active" : ""}>
-        Student Logs
-      </TabItem>
-      <TabItem onClick={() => handleTabChange("Student Documents")} className={activeTab === "Student Documents" ? "active" : ""}>
-        Student Documents
-      </TabItem>
-      <TabItem onClick={() => handleTabChange("My Files")} className={activeTab === "My Files" ? "active" : ""}>
-        My Files
-      </TabItem>
+        <TabItem onClick={() => handleTabChange("Progress Reports")} className={activeTab === "Progress Reports" ? "active" : ""}>
+            Progress Reports
+        </TabItem>
+        <TabItem onClick={() => handleTabChange("Student Logs")} className={activeTab === "Student Logs" ? "active" : ""}>
+            Student Logs
+        </TabItem>
+        <TabItem onClick={() => handleTabChange("Student Documents")} className={activeTab === "Student Documents" ? "active" : ""}>
+            Student Documents
+        </TabItem>
+        <TabItem onClick={() => handleTabChange("My Files")} className={activeTab === "My Files" ? "active" : ""}>
+            My Files
+        </TabItem>
     </TabList>
-  );
+);
 
-const FileItem = ({ title, type, downloadDocument, doc, handleDelete }) => (
+const FileItem = ({ title, type, downloadDocument, doc, handleDelete, userName }) => (
     <FileContainer>
         <FileIcons>
             <img onClick={() => handleDelete(type)}
@@ -113,7 +113,7 @@ const FileItem = ({ title, type, downloadDocument, doc, handleDelete }) => (
         </FileIcons>
         <FileDetails>
             <div>
-                <FileTitle>{title}</FileTitle>
+                <FileTitle>{title} - {userName}</FileTitle>
                 <FileSize>{type}</FileSize>
             </div>
             <FileActions>
@@ -144,7 +144,7 @@ const Document = () => {
     const [userId, setUserId] = useState(null);
     const [userDocuments, setUserDocuments] = useState([]);
     const [activeTab, setActiveTab] = useState("Progress Reports");
-    const [shortlistDocuments, setShortlistDocuments] = useState([]);
+
 
 
     useEffect(() => {
@@ -170,32 +170,62 @@ const Document = () => {
     }, []);
 
 
-    useEffect(() => {
-        const fetchDocuments = async () => {
-            try {
-                if (!userId) {
-                    return; // Exit early if userId is null or undefined
-                }
 
-                const response = await axios.get(`${appUrl}/api/fetchdocs`, {
-                    params: {
-                        user_id: userId,
-                    },
-                });
-
-                if (response.data.status === 1) {
-                    setUserDocuments(response.data.data);
-                    console.log("Documents fetched successfully:", response.data.data);
-                } else {
-                    console.error("Error fetching documents:", response.data.message);
-                }
-            } catch (error) {
-                console.error("Error fetching documents:", error);
+    const fetchDocuments = async () => {
+        try {
+            if (!userId) {
+                return; // Exit early if userId is null or undefined
             }
-        };
 
-        fetchDocuments();
-    }, [userId]);
+            const response = await axios.get(`${appUrl}/api/fetchdocs`, {
+                params: {
+                    user_id: userId,
+                },
+            });
+
+            if (response.data.status === 1) {
+                const documents = response.data.data.length > 0 ? response.data.data : [];
+                setUserDocuments(documents);
+                console.log("Documents fetched successfully:", documents);
+            } else {
+                console.error("Error fetching documents:", response.data.message);
+                setUserDocuments([]);
+            }
+        } catch (error) {
+            console.error("Error fetching documents:", error);
+        }
+    };
+
+
+
+
+    const fetchClassDocuments = async (userId) => {
+        try {
+            const response = await axios.get(`http://127.0.0.1:8000/api/v1/courses/documents/teacher/${userId}`);
+
+            if (response.data && response.data.data && response.data.data.length > 0) {
+                const allDocuments = response.data.data.flatMap(course =>
+                    course.users.flatMap(user =>
+                        user.documents.map(doc => ({
+                            ...doc,
+                            userName: user.name,
+                            courseName: course.name,
+                        }))
+                    )
+                );
+                setUserDocuments(allDocuments);
+                return allDocuments;
+
+            } else {
+                console.error('No course documents found in the response:', response);
+                return [];
+            }
+        } catch (error) {
+            console.error('Error fetching course documents:', error);
+            return [];
+        }
+    };
+
 
 
 
@@ -209,8 +239,11 @@ const Document = () => {
         setActiveTab(tab);
 
         // Fetch shortlist documents when Shortlist Documents tab is clicked
-        if (tab === 'Shortlist Documents') {
-            fetchShortlistDocuments();
+        if (tab === 'Student Documents') {
+            fetchClassDocuments(userId);
+        }
+        if (tab === 'My Files') {
+            fetchDocuments(userId);
         }
     };
 
@@ -222,19 +255,19 @@ const Document = () => {
 
     const handleDelete = async (id) => {
         try {
-          const response = await axios.delete(`${appUrl}/api/deletedoc/${id}`);
-          if (response.data.status === 1) {
-            setUserDocuments((prevDocuments) =>
-              prevDocuments.filter((doc) => doc.id !== id)
-            );
-            console.log("Document deleted successfully");
-          } else {
-            console.error("Error deleting document:", response.data.message);
-          }
+            const response = await axios.delete(`${appUrl}/api/deletedoc/${id}`);
+            if (response.data.status === 1) {
+                setUserDocuments((prevDocuments) =>
+                    prevDocuments.filter((doc) => doc.id !== id)
+                );
+                console.log("Document deleted successfully");
+            } else {
+                console.error("Error deleting document:", response.data.message);
+            }
         } catch (error) {
-          console.error("Error deleting document:", error);
+            console.error("Error deleting document:", error);
         }
-      };
+    };
 
     const handleUpload = async () => {
         const formData = new FormData();
@@ -307,52 +340,54 @@ const Document = () => {
 
 
 
-    return(
-    <NavBar header={"Documents"}>
-        <Wrapper>
-            <Content>
-                <FileSection>
-                    <SectionHeader>
-                        <TabMenu
-                            tabs={[
-                                "Progress Reports",
-                                "Student Logs",
-                                "Student Documents",
-                                "My Files",
-                            ]}
-                            activeTab={activeTab}
-                            setActiveTab={setActiveTab}
-                            handleTabChange={handleTabChange}
-                        />
-                    </SectionHeader>
-                    <FileList>
-                    {(activeTab === 'Student Documents' && userDocuments.length > 0) &&
+    return (
+        <NavBar header={"Documents"}>
+            <Wrapper>
+                <Content>
+                    <FileSection>
+                        <SectionHeader>
+                            <TabMenu
+                                tabs={[
+                                    "Progress Reports",
+                                    "Student Logs",
+                                    "Student Documents",
+                                    "My Files",
+                                ]}
+                                activeTab={activeTab}
+                                setActiveTab={setActiveTab}
+                                handleTabChange={handleTabChange}
+                            />
+                        </SectionHeader>
+                        <FileList>
+                            {(activeTab === 'Student Documents' && userDocuments.length > 0) &&
                                 userDocuments.map((doc, index) => (
                                     <FileItem
                                         key={index}
                                         title={doc.title}
-                                        type={doc.id}
+                                        type={doc.courseName}
+                                        userName={(doc.userName)}
                                         downloadDocument={() => downloadDocument(doc.id, doc.title)}
 
                                         doc={doc}
                                     />
                                 ))}
-                                {(activeTab === 'My Files' && userDocuments.length > 0) &&
+                            {(activeTab === 'My Files' && userDocuments.length > 0) &&
                                 userDocuments.map((doc, index) => (
                                     <FileItem
                                         key={index}
                                         title={doc.title}
                                         type={doc.id}
+
                                         downloadDocument={() => downloadDocument(doc.id, doc.title)}
                                         handleDelete={() => handleDelete(doc.id)}
                                         doc={doc}
                                     />
                                 ))}
-                    </FileList>
-                </FileSection>
-                <FormSection>
-                    <Form>
-                    <Title>Add Documents</Title>
+                        </FileList>
+                    </FileSection>
+                    <FormSection>
+                        <Form>
+                            <Title>Add Documents</Title>
                             <Label htmlFor="fileUpload">Attach Documents</Label>
                             <DropZoneWrapper>
                                 <DocumentDropZone
@@ -360,31 +395,31 @@ const Document = () => {
                                     clearPreviewsTrigger={clearPreviewsTrigger}
                                 />
                             </DropZoneWrapper>
-                        <div
-                            style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                            }}
-                        >
-                            <FileTypes>
-                                Accepted File Types: .doc, .docx, .pdf only
-                            </FileTypes>
-                            <SecurityNote>
-                                <img
-                                    loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/8b7ec72c66d30f8ec5c35d4cec5db08f1877f1a7d86ea8b6c08df8054b4a9a85?apiKey=d66532d056b14640a799069157705b77&"
-                                    alt=""
-                                />
-                                Secure
-                            </SecurityNote>
-                        </div>
-                        <SubmitButton onClick={handleUpload}>Upload</SubmitButton>
-                    </Form>
-                </FormSection>
-            </Content>
-        </Wrapper>
-    </NavBar>
-    )
+                            <div
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                }}
+                            >
+                                <FileTypes>
+                                    Accepted File Types: .doc, .docx, .pdf only
+                                </FileTypes>
+                                <SecurityNote>
+                                    <img
+                                        loading="lazy"
+                                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/8b7ec72c66d30f8ec5c35d4cec5db08f1877f1a7d86ea8b6c08df8054b4a9a85?apiKey=d66532d056b14640a799069157705b77&"
+                                        alt=""
+                                    />
+                                    Secure
+                                </SecurityNote>
+                            </div>
+                            <SubmitButton onClick={handleUpload}>Upload</SubmitButton>
+                        </Form>
+                    </FormSection>
+                </Content>
+            </Wrapper>
+        </NavBar>
+    );
 };
 
 const Wrapper = styled.main`

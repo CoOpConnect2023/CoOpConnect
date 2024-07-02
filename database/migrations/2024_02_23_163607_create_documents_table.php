@@ -17,6 +17,8 @@ return new class extends Migration
         $table->string('title');
         $table->string('path');
         $table->string('type');
+        $table->boolean('visible')->default(true);
+
         $table->timestamps();
     });
 }

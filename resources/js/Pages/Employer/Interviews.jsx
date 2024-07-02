@@ -92,20 +92,98 @@ const Interviews = () => {
         return `${year}-${month}-${day}`;
     }
 
-    const handleEventResize = ({ event, start, end }) => {
-        const nextEvents = events.map((existingEvent) =>
-            existingEvent.id === event.id ? { ...existingEvent, start, end } : existingEvent
-        );
+    const handleEventResize = async ({ event, start, end }) => {
+        // Check if start and end are valid Date objects
 
-        setEvents(nextEvents);
+
+        const formatDateTime = (dateTime) => {
+            const year = dateTime.getFullYear();
+            const month = String(dateTime.getMonth() + 1).padStart(2, "0");
+            const day = String(dateTime.getDate()).padStart(2, "0");
+            const hours = String(dateTime.getHours()).padStart(2, "0");
+            const minutes = String(dateTime.getMinutes()).padStart(2, "0");
+            const seconds = String(dateTime.getSeconds()).padStart(2, "0");
+
+            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        };
+
+        try {
+            // Prepare payload with necessary fields, including start_date and end_date
+            const payload = {
+                title: event.title,
+                start_date: formatDateTime(start),
+                end_date: formatDateTime(end),
+                status: event.status,
+                description: event.description,
+                interviewee_id: event.intervieweeId,
+                interviewer_id: event.interviewerId,
+            };
+
+            // Send PUT request to update event
+            const response = await axios.put(
+                `http://127.0.0.1:8000/api/v1/interviews/${event.id}`,
+                payload
+            );
+
+            console.log(response.data.message); // Optionally log success message
+
+            // Update events state with the new position
+            const updatedEvents = events.map((existingEvent) =>
+                existingEvent.id === event.id ? { ...existingEvent, start, end } : existingEvent
+            );
+
+            setEvents(updatedEvents);
+        } catch (error) {
+            console.error("Error updating event:", error);
+        }
     };
 
-    const handleEventDrop = ({ event, start, end }) => {
-        const nextEvents = events.map((existingEvent) =>
-            existingEvent.id === event.id ? { ...existingEvent, start, end } : existingEvent
-        );
 
-        setEvents(nextEvents);
+    const handleEventDrop = async ({ event, start, end }) => {
+
+        const formatDateTime = (dateTime) => {
+            const year = dateTime.getFullYear();
+            const month = String(dateTime.getMonth() + 1).padStart(2, "0");
+            const day = String(dateTime.getDate()).padStart(2, "0");
+            const hours = String(dateTime.getHours()).padStart(2, "0");
+            const minutes = String(dateTime.getMinutes()).padStart(2, "0");
+            const seconds = String(dateTime.getSeconds()).padStart(2, "0");
+
+            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        };
+
+
+
+        try {
+            // Prepare payload with necessary fields, including start_date and end_date
+            const payload = {
+                title: event.title,
+                start_date: formatDateTime(start),
+                end_date: formatDateTime(end),
+                status: event.status,
+                description: event.description,
+                interviewee_id: event.intervieweeId,
+                interviewer_id: event.interviewerId,
+            };
+            console.log(event);
+
+            // Send PUT request to update event
+            const response = await axios.put(
+                `http://127.0.0.1:8000/api/v1/interviews/${event.id}`,
+                payload
+            );
+
+            console.log(response.data.message); // Optionally log success message
+
+            // Update events state with the new position
+            const updatedEvents = events.map((existingEvent) =>
+                existingEvent.id === event.id ? { ...existingEvent, start, end } : existingEvent
+            );
+
+            setEvents(updatedEvents);
+        } catch (error) {
+            console.error("Error updating event:", error);
+        }
     };
 
     const openModal = (day) => {
@@ -180,22 +258,42 @@ const Interviews = () => {
     }, [userId]); // Ensure useEffect runs when userId changes
 
 
-    const handleDeleteClick = async (shortlist) => {
+    const handleDeleteClickShortlist = async (shortlist) => {
         try {
+            const response = await axios.delete(
+                `http://127.0.0.1:8000/api/jobs/${shortlist.job.id}/shortlist`
+            );
+            handleShortlistDelete(shortlist.id); // Update state or perform any necessary cleanup
+            console.log(response.data.message); // Optionally log the response message
+        } catch (error) {
+            console.error("Error deleting shortlist:", error);
+            // Handle error
+        }
+    };
+
+    const handleShortlistDelete = (shortlistId) => {
+        const updatedShortlists = shortlists.filter((shortlist) => shortlist.id !== shortlistId);
+        setShortlists(updatedShortlists);
+    };
+
+    const handleDeleteClick = async (event) => {
+        try {
+          // Assuming you have an endpoint to delete events by event id
           const response = await axios.delete(
-            `http://127.0.0.1:8000/api/jobs/${shortlist.job.id}/shortlist`
+            `http://127.0.0.1:8000/api/v1/interviews/${event.id}`
           );
-          handleShortlistDelete(shortlist.id); // Update state or perform any necessary cleanup
+          handleEventDelete(event.id); // Update state or perform any necessary cleanup
           console.log(response.data.message); // Optionally log the response message
         } catch (error) {
-          console.error("Error deleting shortlist:", error);
+          console.error("Error deleting event:", error);
           // Handle error
         }
       };
 
-      const handleShortlistDelete = (shortlistId) => {
-        const updatedShortlists = shortlists.filter((shortlist) => shortlist.id !== shortlistId);
-        setShortlists(updatedShortlists);
+      const handleEventDelete = (eventId) => {
+        const updatedEvents = events.filter((event) => event.id !== eventId);
+        setEvents(updatedEvents);
+
       };
 
     return (
@@ -217,6 +315,8 @@ const Interviews = () => {
                                     style={{ height: "100%" }}
                                     selectable
                                     onSelectSlot={openModal}
+                                    startAccessor={"start"}
+                                    endAccessor="end"
                                 />
                             </DndProvider>
                         </CalendarDiv>
@@ -226,7 +326,7 @@ const Interviews = () => {
                         {shortlists && shortlists.length > 0 ? (
                             shortlists.map((shortlist) => (
                                 <Shortlist key={shortlist.id}>
-                                    <DeleteButton onClick={() => handleDeleteClick(shortlist)}>X</DeleteButton>
+                                    <DeleteButton onClick={() => handleDeleteClickShortlist(shortlist)}>X</DeleteButton>
                                     <div>{shortlist.job.title}</div>
                                     <div>
                                         Applicants:
@@ -246,6 +346,26 @@ const Interviews = () => {
                             <NoShortlistsMessage>No shortlists found</NoShortlistsMessage>
                         )}
                     </ShortlistsContainer>
+                    <EventsContainer>
+                        <EventsHeader>All Events</EventsHeader>
+                        {events && events.length > 0 ? (
+                            events.map((event) => (
+                                <Event key={event.id}>
+                                    <DeleteButton onClick={() => handleDeleteClick(event)}>X</DeleteButton>
+                                    <div>Title: {event.title}</div>
+                                    <div>Description: {event.description}</div>
+                                    <div>
+                                        Start Date: {moment(event.start).format("YYYY-MM-DD HH:mm:ss")}
+                                    </div>
+                                    <div>
+                                        End Date: {moment(event.end).format("YYYY-MM-DD HH:mm:ss")}
+                                    </div>
+                                </Event>
+                            ))
+                        ) : (
+                            <NoEventsMessage>No events found</NoEventsMessage>
+                        )}
+                    </EventsContainer>
                 </Container>
             </MainContainer>
             {showModal && (
@@ -354,6 +474,31 @@ const NoShortlistsMessage = styled.p`
     font-size: 18px;
     color: #6b538c;
     margin-top: 20px;
+`;
+const NoEventsMessage = styled.p`
+  font-size: 18px;
+  color: #6b538c;
+  margin-top: 20px;
+`;
+
+const EventsContainer = styled.div`
+  width: 100%; /* Take full width of Container */
+  max-width: 400px; /* Adjust as per your design */
+`;
+
+const EventsHeader = styled.h2`
+  font-size: 24px;
+  color: #6b538c;
+  margin-bottom: 20px;
+`;
+
+const Event = styled.div`
+  background-color: #ffffff;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  position: relative; /* Ensure relative positioning for absolute children */
 `;
 
 export default Interviews;

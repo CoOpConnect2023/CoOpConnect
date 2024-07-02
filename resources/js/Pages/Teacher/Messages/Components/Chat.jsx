@@ -12,7 +12,7 @@ import {
 import {
     getMessages, selectMessages, selectMessagesStatus, getConversations, selectConversations, selectConversationsStatus, getSelectedConversation, selectCurrentConversation, selectCurrentConversationsStatus
 } from "@/Features/messages/messagesSlice";
-const appUrl = import.meta.env.VITE_APP_URL;
+axios.defaults.baseURL = "http://127.0.0.1:8000/api/v1";
 
 export default function Chat() {
 
@@ -78,7 +78,7 @@ export default function Chat() {
 
     const fetchConversationDetails = async () => {
         try {
-            const response = await axios.get(`${appUrl}/api/conversations/${conversationID}/current`);
+            const response = await axios.get(`/conversations/${conversationID}/current`);
             setSelectedConversation(response.data.conversation);
 
         } catch (error) {
@@ -96,7 +96,7 @@ export default function Chat() {
         if (newMessage.trim() === '') return; // Prevent sending empty messages
 
         try {
-            const response = await axios.post(`${appUrl}/api/sendmessages`, {
+            const response = await axios.post(`/sendmessages`, {
                 content: newMessage,
                 user_id: userInfo.id,
                 conversation_id: conversationID
@@ -124,15 +124,15 @@ export default function Chat() {
         try {
             console.log('Sending message with data:', requestData);
 
-            const response = await axios.post(`${appUrl}/api/sendnewmessages`, requestData);
+            const response = await axios.post(`/sendnewmessages`, requestData);
 
             console.log('Response from server:', response.data); // Log the response data
 
-            setMessages([...messages, response.data]);
+
             setNewMessage('');
 
-            setTimeout(fetchMessages, 500);
-            setTimeout(fetchConversations, 500);
+            setTimeout(dispatch(getMessages({ conversationID })), 500);
+            setTimeout(dispatch(getConversations({ userId: userInfo.id })), 500);
         } catch (error) {
             console.error('Error sending message:', error);
         }
@@ -146,10 +146,10 @@ export default function Chat() {
     const fetchShortlists = async (currentUser) => {
         try {
             const response = await axios.get(
-                `http://127.0.0.1:8000/api/users/${currentUser}/shortlists`
+                `http://127.0.0.1:8000/api/v1/courses/teacher/${currentUser}`
             );
-            setShortlists(response.data.shortlists);
-            console.log("shortlists", response.data.shortlists);
+            setShortlists(response.data.data);
+            console.log("shortlists", response.data);
         } catch (error) {
             console.error("Error fetching shortlists:", error);
             // Handle error gracefully

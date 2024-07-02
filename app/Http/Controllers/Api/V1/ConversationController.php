@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Conversation;
+use App\Http\Controllers\Controller;
 use App\Models\Message; // Make sure to use your actual Message model
 use Illuminate\Http\Request;
 use Inertia\Inertia;

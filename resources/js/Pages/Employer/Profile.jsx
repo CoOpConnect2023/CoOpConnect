@@ -23,13 +23,7 @@ const Dropzone = ({ onDrop }) => {
 };
 
 function Profile() {
-    const [fullName, setFullName] = React.useState("John Doe");
-    const [email, setEmail] = React.useState("email123@gmail.com");
-    const [accountType, setAccountType] = React.useState(
-        "Employer, Teacher, Student"
-    );
-    const [company, setCompany] = React.useState("Microsoft");
-    const [position, setPosition] = React.useState("IT Department Manager");
+
 
 
     const [user, setUser] = useState(null);

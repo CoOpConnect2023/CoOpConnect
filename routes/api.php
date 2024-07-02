@@ -10,8 +10,8 @@ use App\Http\Controllers\Api\V1\UserJobsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MessagingController;
-use App\Http\Controllers\MessagesController;
-use App\Http\Controllers\ConversationController;
+use App\Http\Controllers\Api\V1\MessagesController;
+use App\Http\Controllers\Api\V1\ConversationController;
 use App\Http\Controllers\DocumentsController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\ReflectionController;
@@ -56,19 +56,9 @@ Route::post('jobs/{job}/shortlist', [ShortlistController::class, 'addToShortlist
     Route::get('/jobs/user/{userId}', [JobController::class, 'getJobsByUserId']);
 
 
-    Route::post('/conversation', 'ConversationController@store');
-
-    Route::post('/sendmessages', [MessagesController::class, 'store']);
-    Route::post('/sendnewmessages', [MessagesController::class, 'createConversation']);
-
-    Route::post('/conversation', 'ConversationController@store');
-    Route::get('/conversation/{user_id}', [ConversationController::class, 'show']);
-    Route::post('/message', 'MessageController@store');
 
 
-    Route::get('/conversation/{conversation_id}/messages', [ConversationController::class, 'getMessages']);
 
-    Route::get('/conversations/{conversation_id}/current', [ConversationController::class, 'getCurrentConversation']);
 
 
 
@@ -130,6 +120,8 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
     Route::apiResource('jobs', JobsController::class);
     Route::apiResource('userjobs', UserJobsController::class);
     Route::get('/courses/user/{userId}', [CoursesController::class, 'getCourseforUser']);
+    Route::get('/courses/teacher/{userId}', [CoursesController::class, 'getCoursesForTeacher']);
+    Route::get('/courses/documents/teacher/{userId}', [CoursesController::class, 'getCourseDocumentsForTeacher']);
 
 
     Route::post('jobs/{job}/shortlist', [ShortlistController::class, 'addToShortlist']);
@@ -146,6 +138,17 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
     Route::middleware('auth:sanctum')->post('/apply/{jobId}', [ApplicationController::class, 'apply']);
     Route::middleware('auth:sanctum')->get('/check-application/{jobId}', [ApplicationController::class, 'checkApplication']);
     Route::get('/jobs/user/{userId}', [JobController::class, 'getJobsByUserId']);
+
+    Route::post('/sendmessages', [MessagesController::class, 'store']);
+    Route::post('/sendnewmessages', [MessagesController::class, 'createConversation']);
+    Route::get('/conversation/{user_id}', [ConversationController::class, 'show']);
+    Route::get('/conversation/{conversation_id}/messages', [ConversationController::class, 'getMessages']);
+    Route::get('/conversations/{conversation_id}/current', [ConversationController::class, 'getCurrentConversation']);
+
+
+
+
+
 
 
 

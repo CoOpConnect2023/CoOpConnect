@@ -2,7 +2,7 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 
-export default function NewMessage({ newMessage, setNewMessage, onSendNewMessage, recipientEmail, setRecipientEmail, shortlists}) {
+export default function NewMessage({ newMessage, setNewMessage, onSendNewMessage, recipientEmail, setRecipientEmail, shortlists }) {
     const [defaultRecipientEmail, setDefaultRecipientEmail] = useState('');
 
     const handleInputChange = (e) => {
@@ -17,24 +17,28 @@ export default function NewMessage({ newMessage, setNewMessage, onSendNewMessage
         setRecipientEmail(e.target.value);
     };
 
-
-
     let uniqueEmails = new Set();
 
     // Collect unique emails from all shortlists and their applicants
     if (shortlists && Array.isArray(shortlists)) {
-        shortlists.forEach(shortlist => {
-            if (shortlist && shortlist.applicants && Array.isArray(shortlist.applicants)) {
-                shortlist.applicants.forEach(applicant => {
-                    if (applicant && applicant.email) {
-                        uniqueEmails.add(applicant.email);
+        shortlists.forEach(course => {
+            if (course && course.users && Array.isArray(course.users)) {
+                course.users.forEach(user => {
+                    if (user && user.email) {
+                        uniqueEmails.add(user.email);
                     }
                 });
             }
         });
     }
-    const hasApplicants = shortlists && shortlists.some(shortlist => shortlist.applicants.length > 0);
+    console.log(uniqueEmails)
 
+    const hasUsers = shortlists && shortlists.some(course => course.users.length > 0);
+    console.log('Shortlists:', shortlists);
+
+    if (!shortlists) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <Div4>
@@ -42,17 +46,21 @@ export default function NewMessage({ newMessage, setNewMessage, onSendNewMessage
             <Div6>
                 <Div7>
                     <Div8>To: </Div8>
-                    <Div9> {hasApplicants ? (<select value={recipientEmail} onChange={handleSelectChange}>
-                            {[...uniqueEmails].map(email => (
-                                <option key={email} value={email}>
-                                    {email}
-                                </option>
-                            ))}
-                        </select>) : (
+                    <Div9>
+                        {hasUsers ? (
+                            <select value={recipientEmail} onChange={handleSelectChange}>
+                                {[...uniqueEmails].map(email => (
+                                    <option key={email} value={email}>
+                                        {email}
+                                    </option>
+                                ))}
+                            </select>
+                        ) : (
                             <StyledMessage>
-                                Add some applicants to your shortlist to message them.
+                                Add some users to your course to message them.
                             </StyledMessage>
-                        )}</Div9>
+                        )}
+                    </Div9>
                 </Div7>
             </Div6>
             <Div10>
@@ -62,13 +70,15 @@ export default function NewMessage({ newMessage, setNewMessage, onSendNewMessage
                             loading="lazy"
                             src="https://cdn.builder.io/api/v1/image/assets/TEMP/b1fe555b0ffdbe13c397278b479bee6782aab134a4d597d83c876620c9e724f1?apiKey=d66532d056b14640a799069157705b77&"
                         />
-                        <Div13><Input
-                            type="text"
-                            placeholder="Type your message"
-                            value={newMessage}
-                            onChange={handleInputChange}
-
-                        /></Div13><SendButton onClick={onSendNewMessage}>Send</SendButton>
+                        <Div13>
+                            <Input
+                                type="text"
+                                placeholder="Type your message"
+                                value={newMessage}
+                                onChange={handleInputChange}
+                            />
+                        </Div13>
+                        <SendButton onClick={onSendNewMessage}>Send</SendButton>
                     </Div12>
                     <Div14>
                         <img
@@ -85,6 +95,7 @@ export default function NewMessage({ newMessage, setNewMessage, onSendNewMessage
         </Div4>
     );
 }
+
 
 const Div4 = styled.div`
     border-radius: 10px;

@@ -80,6 +80,9 @@ const Div17 = styled.div`
     display: flex;
     margin-top: 10px;
     gap: 10px;
+   flex-grow: 1; /* Set a fixed height for scrolling */
+    overflow-y: auto; /* Enable vertical scrolling */
+    max-height: 50vh;
     @media (max-width: 991px) {
         max-width: 100%;
         flex-wrap: wrap;

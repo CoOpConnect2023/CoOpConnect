@@ -12,6 +12,8 @@ class CoursesFilter extends ApiFilter
         'name' => ['eq'],
         'startDate' => ['eq'],
         'endDate' => ['eq'],
+        'teacherID' => ['eq'],
+        'school' => ['eq'],
     ];
 
     protected $columnMap = [
