@@ -242,10 +242,10 @@ const Interviews = () => {
         const fetchShortlists = async (userId) => {
             try {
                 const response = await axios.get(
-                    `http://127.0.0.1:8000/api/users/${userId}/shortlists`
+                    `http://127.0.0.1:8000/api/v1/courses/teacher/${userId}`
                 );
-                setShortlists(response.data.shortlists);
-                console.log("shortlists", response.data.shortlists);
+                setShortlists(response.data.data);
+                console.log("data", response.data.data);
             } catch (error) {
                 console.error("Error fetching shortlists:", error);
                 // Handle error gracefully
@@ -321,31 +321,7 @@ const Interviews = () => {
                             </DndProvider>
                         </CalendarDiv>
                     </Wrapper>
-                    <ShortlistsContainer>
-                        <ShortlistsHeader>Student Events</ShortlistsHeader>
-                        {shortlists && shortlists.length > 0 ? (
-                            shortlists.map((shortlist) => (
-                                <Shortlist key={shortlist.id}>
-                                    <DeleteButton onClick={() => handleDeleteClickShortlist(shortlist)}>X</DeleteButton>
-                                    <div>{shortlist.job.title}</div>
-                                    <div>
-                                        Applicants:
-                                        <ApplicantList>
-                                            {shortlist.applicants.map((applicant) => (
-                                                <ApplicantItem key={applicant.id}>
-                                                    {applicant.name} - {applicant.email}
-                                                </ApplicantItem>
-                                            ))}
-                                        </ApplicantList>
-                                    </div>
 
-                                    {/* Add more fields as needed */}
-                                </Shortlist>
-                            ))
-                        ) : (
-                            <NoShortlistsMessage>No shortlists found</NoShortlistsMessage>
-                        )}
-                    </ShortlistsContainer>
                     <EventsContainer>
                         <EventsHeader>All Events</EventsHeader>
                         {events && events.length > 0 ? (
@@ -373,7 +349,7 @@ const Interviews = () => {
                     onClose={closeModal}
                     onSubmit={handleAddEvent}
                     defaultDate={new Date(getTodayDate())}
-                    applicants={shortlists.flatMap((shortlist) => shortlist.applicants)}
+                    applicants={shortlists.flatMap((shortlist) => shortlist.users)}
                 />
             )}
         </NavBar>
@@ -484,6 +460,8 @@ const NoEventsMessage = styled.p`
 const EventsContainer = styled.div`
   width: 100%; /* Take full width of Container */
   max-width: 400px; /* Adjust as per your design */
+  overflow-y: auto; /* Make it scrollable */
+height: 80vh;
 `;
 
 const EventsHeader = styled.h2`

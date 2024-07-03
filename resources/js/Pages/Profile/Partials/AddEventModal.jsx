@@ -138,9 +138,9 @@ const Modal = ({ onClose, onSubmit, defaultDate, applicants }) => {
 
                 {applicants && (
                 <>
-                    <Label>Applicant:</Label>
+                    <Label>Student:</Label>
                     <Select value={selectedApplicant} onChange={handleApplicantChange}>
-                        <Option value="">Select an applicant</Option>
+                        <Option value="">Select a student</Option>
                         {applicants.map((applicant) => (
                             <option key={applicant.id} value={applicant.id}>
                                 {applicant.name} - {applicant.email}
