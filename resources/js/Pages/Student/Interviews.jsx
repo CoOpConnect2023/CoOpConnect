@@ -18,6 +18,22 @@ import {
     selectInterviews,
     deleteInterview,
 } from "@/Features/interviews/interviewsSlice";
+import {
+    MainContainer,
+    Container,
+    Wrapper,
+    Header,
+    CalendarDiv,
+    CalendarHeader,
+    Month,
+    NavIcons,
+    Icon,
+    DaysOfWeek,
+    Day,
+    DatesGrid,
+    DateCell,
+} from "./Styling/Interviews.styles";
+
 const localizer = momentLocalizer(moment);
 const DnDCalendar = withDragAndDrop(Calendar);
 
@@ -71,7 +87,10 @@ const Interviews = () => {
 
     useEffect(() => {
         if (interviewsStatus.postInterview == "succeeded") {
-            console.log("True Check", transformedInterviews(data.postInterview));
+            console.log(
+                "True Check",
+                transformedInterviews(data.postInterview)
+            );
             setEvents(...events, transformedInterviews(data.postInterview));
         }
     }, [interviews.postInterview]);
@@ -122,20 +141,34 @@ const Interviews = () => {
         // Format start and end dates to ISO 8601 string format
         /*         const formattedStart = start.toISOString(); // Convert Date object to ISO string
         const formattedEnd = end.toISOString(); */
-        const formattedStart = `${start.getFullYear()}-${String(start.getMonth() + 1).padStart(2, '0')}-${String(start.getDate()).padStart(2, '0')} ${String(start.getHours()).padStart(2, '0')}:${String(start.getMinutes()).padStart(2, '0')}:${String(start.getSeconds()).padStart(2, '0')}`;
-    const formattedEnd = `${end.getFullYear()}-${String(end.getMonth() + 1).padStart(2, '0')}-${String(end.getDate()).padStart(2, '0')} ${String(end.getHours()).padStart(2, '0')}:${String(end.getMinutes()).padStart(2, '0')}:${String(end.getSeconds()).padStart(2, '0')}`;
+        const formattedStart = `${start.getFullYear()}-${String(
+            start.getMonth() + 1
+        ).padStart(2, "0")}-${String(start.getDate()).padStart(
+            2,
+            "0"
+        )} ${String(start.getHours()).padStart(2, "0")}:${String(
+            start.getMinutes()
+        ).padStart(2, "0")}:${String(start.getSeconds()).padStart(2, "0")}`;
+        const formattedEnd = `${end.getFullYear()}-${String(
+            end.getMonth() + 1
+        ).padStart(2, "0")}-${String(end.getDate()).padStart(2, "0")} ${String(
+            end.getHours()
+        ).padStart(2, "0")}:${String(end.getMinutes()).padStart(
+            2,
+            "0"
+        )}:${String(end.getSeconds()).padStart(2, "0")}`;
 
         // Create newEvent object with formatted dates
 
         dispatch(
             postInterview({
                 title,
-        startDate: formattedStart,
-        endDate: formattedEnd,
-        status: "scheduled",
-        description,
-        intervieweeId: userId,   // Assuming userId is defined
-        interviewerId: userId,
+                startDate: formattedStart,
+                endDate: formattedEnd,
+                status: "scheduled",
+                description,
+                intervieweeId: userId, // Assuming userId is defined
+                interviewerId: userId,
             })
         );
 
@@ -177,149 +210,5 @@ const Interviews = () => {
         </NavBar>
     );
 };
-const MainContainer = styled.div`
-    display: flex;
-    padding: 20px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 40px;
-    flex: 1 0 0;
-    align-self: stretch;
-    background-color: var(--Schemes-Background, #fff7ff);
-`;
-
-const Container = styled.div`
-    align-items: center;
-    align-self: stretch;
-    border-radius: 10px;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-    background-color: #fff;
-    display: flex;
-    justify-content: center;
-    padding: 20px;
-    border-radius: 10px;
-`;
-
-const Wrapper = styled.div`
-    display: flex;
-    width: 782px;
-    max-width: 100%;
-    flex-direction: column;
-`;
-
-const Header = styled.div`
-    color: var(--Schemes-Primary, #6b538c);
-    text-decoration-line: underline;
-    align-self: center;
-    font: 600 32px Poppins, sans-serif;
-`;
-
-const CalendarDiv = styled.div`
-    background-color: #ffffff;
-height: 80vh;
-margin-bottom: 3vh;
-margin-top: 3vh;
-    }
-`;
-
-const CalendarHeader = styled.div`
-    justify-content: space-between;
-    display: flex;
-    width: 100%;
-    gap: 20px;
-    @media (max-width: 991px) {
-        max-width: 100%;
-        flex-wrap: wrap;
-    }
-`;
-
-const Month = styled.div`
-    color: var(--Schemes-Primary, #6b538c);
-    margin: auto 0;
-    font: 900 24px Inter, sans-serif;
-`;
-
-const NavIcons = styled.div`
-    display: flex;
-    gap: 8px;
-    justify-content: space-between;
-    padding: 16px;
-`;
-
-const Icon = styled.img`
-    aspect-ratio: 1;
-    object-fit: auto;
-    object-position: center;
-    width: 30px;
-    cursor: ${({ isDisabled }) => (isDisabled ? "default" : "pointer")};
-    filter: ${({ isDisabled }) =>
-        isDisabled ? "grayscale(100%) brightness(150%)" : "none"};
-    opacity: ${({ isDisabled }) => (isDisabled ? 0.5 : 1)};
-`;
-
-const DaysOfWeek = styled.div`
-    display: flex;
-    margin-top: 12px;
-    gap: -1px;
-    font-size: 14px;
-    color: #000;
-    font-weight: 600;
-    white-space: nowrap;
-    text-align: center;
-    justify-content: space-between;
-    padding: 40px 80px 40px 0;
-    @media (max-width: 991px) {
-        max-width: 100%;
-        flex-wrap: wrap;
-        padding-right: 20px;
-        white-space: initial;
-    }
-`;
-
-const Day = styled.div`
-    display: flex;
-    font-variant-numeric: lining-nums tabular-nums;
-    font-family: Inter, sans-serif;
-`;
-
-const DatesGrid = styled.div`
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: -1px;
-    font-size: 14px;
-    color: #000;
-    font-weight: 400;
-    white-space: nowrap;
-    text-align: center;
-    justify-content: space-between;
-    @media (max-width: 991px) {
-        flex-wrap: wrap;
-        white-space: initial;
-    }
-`;
-
-const DateCell = styled.div`
-    font-variant-numeric: lining-nums tabular-nums;
-    font-family: Inter, sans-serif;
-    justify-content: center;
-    border-color: rgba(213, 212, 223, 1);
-    border-style: solid;
-    border-width: 1px;
-    padding: 40px;
-    @media (max-width: 991px) {
-        white-space: initial;
-        padding: 0 20px;
-    }
-`;
-
-const InactiveDateCell = styled(DateCell)`
-    background-color: var(--Inactive, #f2f3f7);
-`;
-
-const TodayDateCell = styled(DateCell)`
-    border: 1px solid var(--Stroke, #d5d4df);
-    background: var(--Schemes-Primary, #6b538c);
-    color: #fff; // Ensures the text is readable
-`;
 
 export default Interviews;

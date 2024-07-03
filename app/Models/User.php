@@ -22,7 +22,9 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'status',
         'school',
+        'class',
         'profile_image',
         'company_name',
         'company',
@@ -56,6 +58,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'skills' => 'array',
 
     ];
 
@@ -100,9 +103,9 @@ class User extends Authenticatable
         return $this->hasMany(Interviews::class, 'interviewer_id');
     }
     public function applications()
-{
-    return $this->hasMany(Application::class);
-}
+    {
+        return $this->hasMany(Application::class);
+    }
 
 public function conversations()
 {

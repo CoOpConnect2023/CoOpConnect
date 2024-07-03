@@ -3,6 +3,23 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
+import {
+    MainContainer,
+    Container,
+    Wrapper,
+    Header,
+    CalendarWrapper,
+    CalendarHeader,
+    Month,
+    NavIcons,
+    Icon,
+    DaysOfWeek,
+    Day,
+    DatesGrid,
+    DateCell,
+    TodayDateCell,
+    InactiveDateCell,
+} from "./Styling/Scheduling.styles.jsx";
 import Modal from "../Profile/Partials/AddEventModal";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";

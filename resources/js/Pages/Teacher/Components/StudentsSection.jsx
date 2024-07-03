@@ -1,37 +1,23 @@
 import * as React from "react";
 import styled from "styled-components";
+import { useState, useEffect } from "react";
 
 function StudentsSection() {
-    const students = [
-        {
-            name: "Alex Norton",
-            imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/cb388c4792d2da12914aa0e249254d3a981fcff8dd25ec90cae6e0e0a59e3cbb?apiKey=d66532d056b14640a799069157705b77&",
-            email: "alex@co-opconnect.com",
-            id: "01",
-            class: "Alpha",
-        },
-        {
-            name: "Samuel Raltman",
-            imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/cb388c4792d2da12914aa0e249254d3a981fcff8dd25ec90cae6e0e0a59e3cbb?apiKey=d66532d056b14640a799069157705b77&",
-            email: "samuel@co-opconnect.com",
-            id: "02",
-            class: "Beta",
-        },
-        {
-            name: "Joshua Chan",
-            imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/cb388c4792d2da12914aa0e249254d3a981fcff8dd25ec90cae6e0e0a59e3cbb?apiKey=d66532d056b14640a799069157705b77&",
-            email: "joshchan@co-opconnect.com",
-            id: "03",
-            class: "Xeta",
-        },
-        {
-            name: "Navdeep Singh",
-            imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/cb388c4792d2da12914aa0e249254d3a981fcff8dd25ec90cae6e0e0a59e3cbb?apiKey=d66532d056b14640a799069157705b77&",
-            email: "navdeep@co-opconnect.com",
-            id: "04",
-            class: "Omega",
-        },
-    ];
+    const [students, setStudents] = useState([]);
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const response = await axios.get(
+                    `http://127.0.0.1:8000/api/usersindex`
+                );
+                console.log(response.data);
+                setStudents(response.data.slice(0, 4));
+            } catch (error) {
+                console.error("Error fetching user ID:", error);
+            }
+        };
+        fetchUsers();
+    }, []);
 
     return (
         <Section>
@@ -65,7 +51,7 @@ function StudentsSection() {
                                 <StudentImageWrapper>
                                     <StudentImage
                                         loading="lazy"
-                                        src={student.imgSrc}
+                                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb388c4792d2da12914aa0e249254d3a981fcff8dd25ec90cae6e0e0a59e3cbb?apiKey=d66532d056b14640a799069157705b77&"
                                         alt={`Image of ${student.name}`}
                                     />
                                     <StudentName>{student.name}</StudentName>

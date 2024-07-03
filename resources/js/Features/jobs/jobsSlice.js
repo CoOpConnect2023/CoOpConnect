@@ -4,6 +4,16 @@ axios.defaults.baseURL = "http://127.0.0.1:8000/api/v1";
 
 const initialState = {
     jobs: [],
+    jobFormData: {
+        title: "",
+        description: "",
+        location: "",
+        postingStatus: "open",
+        jobType: "",
+        company: "",
+        skills: [],
+        userId: "",
+    },
     status: {
         jobs: "idle",
         postJob: "idle",
@@ -16,7 +26,17 @@ const initialState = {
 export const jobsSlice = createSlice({
     name: "jobs",
     initialState,
-    reducers: {},
+    reducers: {
+        updateJobFormData: (state, action) => {
+            state.jobFormData = {
+                ...state.jobFormData,
+                ...action.payload,
+            };
+        },
+        resetJobFormData: (state) => {
+            state.jobFormData = initialState.jobFormData;
+        },
+    },
     extraReducers(builder) {
         builder
             .addCase(getJobs.pending, (state, action) => {
@@ -47,6 +67,16 @@ export const jobsSlice = createSlice({
                 state.status.jobs = "succeeded";
             })
             .addCase(getJobsforUser.rejected, (state, action) => {
+                state.status.jobs = "failed";
+            })
+            .addCase(getJobsforEmployer.pending, (state, action) => {
+                state.status.jobs = "loading";
+            })
+            .addCase(getJobsforEmployer.fulfilled, (state, action) => {
+                state.jobs = action.payload;
+                state.status.jobs = "succeeded";
+            })
+            .addCase(getJobsforEmployer.rejected, (state, action) => {
                 state.status.jobs = "failed";
             })
             .addCase(getUsersForJob.pending, (state, action) => {
@@ -105,6 +135,10 @@ export const jobsSlice = createSlice({
             })
             .addCase(patchJob.fulfilled, (state, action) => {
                 state.status.patchJob = "succeeded";
+                console.log(action.payload);
+                state.jobs = state.jobs.map((job) =>
+                    job.id === action.payload.id ? action.payload : job
+                );
             })
             .addCase(patchJob.rejected, (state, action) => {
                 state.status.patchJob = "failed";
@@ -150,6 +184,18 @@ export const getJobsforUser = createAsyncThunk(
     }
 );
 
+export const getJobsforEmployer = createAsyncThunk(
+    "jobs/getJobsforEmployer",
+    async (params) => {
+        const { userId } = params;
+        const response = await axios({
+            url: `/jobs?userId[eq]=${userId}`,
+            method: "GET",
+        });
+        return response.data.data;
+    }
+);
+
 export const getUsersForJob = createAsyncThunk(
     "jobs/getUsersForJob",
     async (params) => {
@@ -163,29 +209,33 @@ export const getUsersForJob = createAsyncThunk(
 );
 
 export const searchJobsbySkill = createAsyncThunk(
-    "budgets/searchJobsbySkill",
+    "jobs/searchJobsbySkill",
     async (params) => {
         const { skills } = params;
         const response = await axios({
             url: "/jobs/match",
             method: "GET",
-            data: {
+            params: {
                 skills,
             },
         });
+
+        console.log(response.data);
+
         return response.data.data;
     }
 );
 
 export const searchJobsBySkillAndLocation = createAsyncThunk(
-    "budgets/getJobs",
+    "jobs/searchJobsBySkillAndLocation",
     async (params) => {
-        const { skills, location } = params;
+        const { searchTerm, location } = params;
+        console.log("test", searchTerm);
         const response = await axios({
             url: "/jobs/search",
             method: "GET",
-            data: {
-                skills,
+            params: {
+                searchTerm,
                 location,
             },
         });
@@ -193,7 +243,7 @@ export const searchJobsBySkillAndLocation = createAsyncThunk(
     }
 );
 
-export const postJob = createAsyncThunk("budgets/postJob", async (params) => {
+export const postJob = createAsyncThunk("jobs/postJob", async (params) => {
     const {
         title,
         description,
@@ -202,7 +252,9 @@ export const postJob = createAsyncThunk("budgets/postJob", async (params) => {
         postingStatus,
         jobType,
         company,
+        userId,
     } = params;
+    console.log(params);
     const response = await axios({
         url: "/jobs",
         method: "POST",
@@ -214,12 +266,13 @@ export const postJob = createAsyncThunk("budgets/postJob", async (params) => {
             postingStatus,
             jobType,
             company,
+            userId,
         },
     });
     return response.data.data;
 });
 
-export const putJob = createAsyncThunk("budgets/putJob", async (params) => {
+export const putJob = createAsyncThunk("jobs/putJob", async (params) => {
     const {
         jobsId,
         title,
@@ -229,6 +282,7 @@ export const putJob = createAsyncThunk("budgets/putJob", async (params) => {
         postingStatus,
         jobType,
         company,
+        userId,
     } = params;
     const response = await axios({
         url: `/jobs/${jobsId}`,
@@ -241,12 +295,13 @@ export const putJob = createAsyncThunk("budgets/putJob", async (params) => {
             postingStatus,
             jobType,
             company,
+            userId,
         },
     });
     return response.data.data;
 });
 
-export const patchJob = createAsyncThunk("budgets/patchJob", async (params) => {
+export const patchJob = createAsyncThunk("jobs/patchJob", async (params) => {
     const {
         jobsId,
         title,
@@ -261,6 +316,7 @@ export const patchJob = createAsyncThunk("budgets/patchJob", async (params) => {
         url: `/jobs/${jobsId}`,
         method: "PATCH",
         data: {
+            jobsId,
             title,
             description,
             skills,
@@ -270,6 +326,7 @@ export const patchJob = createAsyncThunk("budgets/patchJob", async (params) => {
             company,
         },
     });
+    console.log(response.data.data);
     return response.data.data;
 });
 
@@ -286,6 +343,7 @@ export const deleteJob = createAsyncThunk("jobs/deleteJob", async (params) => {
 export const selectJobs = (state) => state.jobs.jobs;
 export const selectJobsStatus = (state) => state.jobs.status.jobs;
 // Action creators are generated for each case reducer function
-export const {} = jobsSlice.actions;
+export const { updateJobFormData, resetJobFormData } = jobsSlice.actions;
+export const selectJobFormData = (state) => state.jobs.jobFormData;
 
 export default jobsSlice.reducer;

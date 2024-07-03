@@ -1,5 +1,7 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import axios from "axios";
+import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 
 const Container = styled.section`
     border-radius: 10px;
@@ -7,13 +9,14 @@ const Container = styled.section`
     background-color: #fdfdfd;
     display: flex;
     flex-direction: column;
+    align-items: center;
     padding: 24px;
     font-size: 16px;
     color: #1a1919;
     font-weight: 400;
     line-height: 150%;
-    height: 364px;
-    width: 306px;
+    height: 400px;
+    width: 400px;
 `;
 
 const Title = styled.h2`
@@ -31,54 +34,56 @@ const Image = styled.img`
     max-width: 100%;
 `;
 
-const Status = styled.div`
-    display: flex;
-    margin-top: 24px;
-    gap: 20px;
-    justify-content: space-between;
-`;
-
-const StatusInfo = styled.div`
-    display: flex;
-    gap: 12px;
-`;
-
-const Circle = styled.div`
-    background-color: ${(props) => props.color};
-    border-radius: 50%;
-    width: 16px;
-    height: 16px;
-    margin: auto 0;
-`;
-
-const Text = styled.span`
-    font-family: Inter, sans-serif;
-`;
-
-const studentStatus = [
-    { label: "Currently Working", percentage: "54%", color: "#006aff" },
-    { label: "Interviewing", percentage: "20%", color: "#52c93f" },
-    { label: "Still Searching", percentage: "26%", color: "#ff2727" },
-];
+const COLORS = ["#006aff", "#52c93f", "#ff2727"];
 
 function StudentStatus() {
+    const [percentages, setPercentages] = useState({
+        working: 0,
+        interviewing: 0,
+        searching: 0,
+    });
+
+    useEffect(() => {
+        axios
+            .get("http://127.0.0.1:8000/api/studentStatusPercents")
+            .then((response) => {
+                setPercentages(response.data);
+            })
+            .catch((error) => {
+                console.log("Error: ", error);
+            });
+    }, []);
+
+    const data = [
+        { name: "Working", value: Math.round(percentages.working) },
+        { name: "Interviewing", value: Math.round(percentages.interviewing) },
+        { name: "Searching", value: Math.round(percentages.searching) },
+    ];
+
     return (
         <Container>
-            <Title> Student Status</Title>
-            <Image
-                loading="lazy"
-                src="https://cdn.builder.io/api/v1/image/assets/TEMP/88fa98e4a7eb9ab5b95b008c117a7d5f3c19965866591848d9d4ebeadc5ffadd?apiKey=d66532d056b14640a799069157705b77&"
-                alt="Student"
-            />
-            {studentStatus.map((status, index) => (
-                <Status key={index}>
-                    <StatusInfo>
-                        <Circle color={status.color} />
-                        <Text>{status.label}</Text>
-                    </StatusInfo>
-                    <Text>{status.percentage}</Text>
-                </Status>
-            ))}
+            <Title>Student Status</Title>
+            <PieChart width={300} height={300}>
+                <Pie
+                    data={data}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ value }) => `${value}%`}
+                    outerRadius={100}
+                    fill="#8884d8"
+                    dataKey="value"
+                >
+                    {data.map((entry, index) => (
+                        <Cell
+                            key={`cell-${index}`}
+                            fill={COLORS[index % COLORS.length]}
+                        />
+                    ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+            </PieChart>
         </Container>
     );
 }

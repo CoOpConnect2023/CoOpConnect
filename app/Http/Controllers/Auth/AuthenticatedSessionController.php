@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Support\Facades\Log;
+
 
 class AuthenticatedSessionController extends Controller
 {
@@ -34,7 +36,20 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        $user = Auth::user();
+
+        Log::info("Test" . print_r($user, true));
+
+        // Redirect based on user role
+        switch ($user->role) {
+            case 'teacher':
+                return redirect()->intended(RouteServiceProvider::HOME_TEACHER);
+            case 'employee':
+                return redirect()->intended(RouteServiceProvider::HOME_EMPLOYER);
+            case 'student':
+            default:
+                return redirect()->intended(RouteServiceProvider::HOME_STUDENT);
+        }
     }
 
     /**

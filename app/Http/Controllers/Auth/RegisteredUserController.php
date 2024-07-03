@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
 
 class RegisteredUserController extends Controller
 {
@@ -33,20 +35,35 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'role' => ['required', Rule::in(['student', 'employee', 'teacher'])]
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => $request->role,
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        $user = Auth::user();
+
+        Log::info("Test" . print_r($user, true));
+
+        // Redirect based on user role
+        switch ($user->role) {
+            case 'teacher':
+                return redirect()->intended(RouteServiceProvider::HOME_TEACHER);
+            case 'employee':
+                return redirect()->intended(RouteServiceProvider::HOME_EMPLOYER);
+            case 'student':
+            default:
+                return redirect()->intended(RouteServiceProvider::HOME_STUDENT);
+        }
     }
 }

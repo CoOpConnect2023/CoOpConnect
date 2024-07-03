@@ -27,6 +27,24 @@ const Dropzone = ({ onDrop }) => {
 };
 
 
+import {
+    Main,
+    Section,
+    Title,
+    ProfileWrapper,
+    ProfileDetails,
+    ProfileImageWrapper,
+    ProfileImage,
+    BioSection,
+    BioTitle,
+    BioDescription,
+    BioLine,
+    BioLineGroup,
+    SmallBioLine,
+    FieldTitle,
+    Input,
+    EditProfileButton,
+} from "./Styling/Profile.styles";
 
 function Profile() {
     const dispatch = useDispatch();

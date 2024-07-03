@@ -29,7 +29,8 @@ class StoreJobsRequest extends FormRequest
             'location' => ['required'],
             'postingStatus' => ['required', Rule::in(['open', 'closed'])],
             'jobType' => ['required', Rule::in(['full-time', 'part-time', 'contract', 'remote'])],
-            'company' => ['required']
+            'company' => ['required'],
+            'userId' => ['required']
         ];
     }
 
@@ -37,7 +38,8 @@ class StoreJobsRequest extends FormRequest
     {
         $this->merge(array_filter([
             'posting_status' => $this->postingStatus,
-            'job_type' => $this->jobType
+            'job_type' => $this->jobType,
+            'user_id' => $this->userId
         ]));
     }
 }
