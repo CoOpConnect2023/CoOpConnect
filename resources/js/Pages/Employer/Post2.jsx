@@ -119,9 +119,11 @@ function Post2() {
                                 <Link href="/employer/post1">
                                     <ActionButton>Go Back</ActionButton>
                                 </Link>
-                                <SubmitButton onClick={handleSubmit}>
-                                    Finished
-                                </SubmitButton>
+                                <Link href="/employer/home">
+                                    <SubmitButton onClick={handleSubmit}>
+                                        Finished
+                                    </SubmitButton>
+                                </Link>
                             </ButtonGroup>
                         </FormContainer>
                     </FormWrapper>

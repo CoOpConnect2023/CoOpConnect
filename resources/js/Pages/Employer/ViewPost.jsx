@@ -55,7 +55,7 @@ function ViewPost() {
         // Fetch job details including applications based on jobId
         const fetchJobDetails = async () => {
             try {
-                const response = await fetch(`${appUrl}/api/jobs/${jobId}`); // Replace with your API endpoint
+                const response = await fetch(`${appUrl}/api/v1/jobs/${jobId}`); // Replace with your API endpoint
                 if (!response.ok) {
                     throw new Error("Failed to fetch job details");
                 }
@@ -150,10 +150,10 @@ function ViewPost() {
                             </JobInfoLeft>
                             <JobInfoRight>
                                 <StatusTag>
-                                    Posting Status: {job.posting_status}
+                                    Posting Status: {job.postingStatus}
                                 </StatusTag>
                                 <JobTypeTag>
-                                    Job Type: {job.job_type}
+                                    Job Type: {job.jobType}
                                 </JobTypeTag>
                                 <LocationTag>
                                     Work Location: {job.location}

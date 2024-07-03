@@ -33,7 +33,7 @@ use App\Http\Controllers\TeacherController;
 Route::get('/', [HomeController::class, 'showLanding'])->name('landing');
 Route::get('/about', [HomeController::class, 'showAbout'])->name('about');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'student'])->group(function () {
     Route::get('/student/home', [StudentController::class, 'home'])->name('student.home');
     Route::get('/student/jobs', [StudentController::class, 'jobs'])->name('student.jobs');
     Route::get('/student/interviews', [StudentController::class, 'interviews'])->name('student.interviews');
@@ -44,7 +44,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/student/messages', [EmployerController::class, 'messages'])->name('student.messages');
 });
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'teacher'])->group(function () {
     Route::get('/teacher/home', [TeacherController::class, 'home'])->name('teacher.home');
     Route::get('/teacher/documents', [TeacherController::class, 'documents'])->name('teacher.documents');
     Route::get('/teacher/messages', [TeacherController::class, 'messages'])->name('teacher.messages');
@@ -53,7 +53,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/teacher/settings', [TeacherController::class, 'settings'])->name('teacher.settings');
 });
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'employee'])->group(function () {
     Route::get('/employer/home', [EmployerController::class, 'home'])->name('employer.home');
     Route::get('/employer/post1', [EmployerController::class, 'post1'])->name('employer.post1');
     Route::get('/employer/post2', [EmployerController::class, 'post2'])->name('employer.post2');
