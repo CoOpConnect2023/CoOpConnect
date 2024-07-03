@@ -44,6 +44,6 @@ class StudentController extends Controller
 
     public function messages()
     {
-        return Inertia::render('Messages/Messages');
+        return Inertia::render('Student/Messages/Messages');
     }
 }

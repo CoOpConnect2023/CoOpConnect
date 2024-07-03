@@ -121,15 +121,22 @@ function DocumentDropZone({
     );
 }
 
-const TabMenu = ({ tabs }) => (
+
+const TabMenu = ({ activeTab, handleTabChange }) => (
     <TabList>
-        {tabs.map((tab, index) => (
-            <TabItem key={index} className={index === 0 ? "active" : ""}>
-                {tab}
-            </TabItem>
-        ))}
+      <TabItem onClick={() => handleTabChange("Employer Documents")} className={activeTab === "Employer Documents" ? "active" : ""}>
+        Employer Documents
+      </TabItem>
+      <TabItem onClick={() => handleTabChange("Shortlist Documents")} className={activeTab === "Shortlist Documents" ? "active" : ""}>
+        Shortlist Documents
+      </TabItem>
+      <TabItem onClick={() => handleTabChange("Applicant Documents")} className={activeTab === "Applicant Documents" ? "active" : ""}>
+        Applicant Documents
+      </TabItem>
     </TabList>
-);
+  );
+
+
 
 const FileItem = ({ title, type, downloadDocument, doc, handleDelete }) => (
     <FileContainer>
@@ -180,6 +187,12 @@ function Document() {
     const [clearPreviewsTrigger, setClearPreviewsTrigger] = useState(false);
     const [userId, setUserId] = useState(null);
     const [userDocuments, setUserDocuments] = useState([]);
+    const [activeTab, setActiveTab] = useState("Progress Reports");
+    const [shortlistDocuments, setShortlistDocuments] = useState([]);
+
+
+
+
 
     useEffect(() => {
         // Fetch the XSRF token from cookies and set it in Axios headers
@@ -234,6 +247,29 @@ function Document() {
 
         fetchDocuments();
     }, [userId]);
+
+    const fetchShortlistDocuments = async () => {
+        try {
+            const response = await axios.get(`http://127.0.0.1:8000/api/users/${userId}/shortlists`);
+
+            if (response.data && response.data.shortlists && response.data.shortlists.length > 0) {
+                const allDocuments = response.data.shortlists.flatMap(shortlist =>
+                    shortlist.applicants.flatMap(applicant =>
+                        applicant.documents.map(doc => ({
+                            ...doc,
+                            applicantName: applicant.name,
+                        }))
+                    )
+                );
+                setShortlistDocuments(allDocuments);
+                console.log('Shortlist documents fetched successfully:', allDocuments);
+            } else {
+                console.error('No shortlist documents found in the response:', response);
+            }
+        } catch (error) {
+            console.error('Error fetching shortlist documents:', error);
+        }
+    };
 
     const handleFileDrop = async (files) => {
         setFilesToUpload((prevFiles) => [...prevFiles, ...files]);
@@ -327,46 +363,68 @@ function Document() {
             link.parentNode.removeChild(link);
             window.URL.revokeObjectURL(url);
 
-            console.log("Download successful");
-        } catch (error) {
-            console.error("Error downloading document:", error);
-        }
-    };
+        console.log("Download successful");
+    } catch (error) {
+        console.error("Error downloading document:", error);
+    }
+};
 
-    return (
-        <NavBar header={"Documents"}>
+const handleTabChange = (tab) => {
+    setActiveTab(tab);
+
+    // Fetch shortlist documents when Shortlist Documents tab is clicked
+    if (tab === 'Shortlist Documents') {
+        fetchShortlistDocuments();
+    }
+};
+
+return(
+
+    <NavBar header={"Documents"}>
             <Wrapper>
                 <Content>
                     <FileSection>
                         <SectionHeader>
                             <TabMenu
                                 tabs={[
+                                    "Employer Documents",
+                                    "Shortlist Documents",
+                                    "Applicant Documents",
                                     "Progress Reports",
-                                    "Student Logs",
-                                    "Student Documents",
-                                    "All Files",
                                 ]}
+                                activeTab={activeTab}
+                                setActiveTab={setActiveTab}
+                                handleTabChange={handleTabChange}
                             />
                         </SectionHeader>
                         <FileList>
-                            {userDocuments.map((doc, index) => (
-                                <FileItem
-                                    key={index}
-                                    title={doc.title}
-                                    type={doc.id}
-                                    id={doc.id}
-                                    downloadDocument={() =>
-                                        downloadDocument(doc.id, doc.title)
-                                    }
-                                    handleDelete={() => handleDelete(doc.id)}
-                                />
-                            ))}
+                            {(activeTab === 'Employer Documents' && userDocuments.length > 0) &&
+                                userDocuments.map((doc, index) => (
+                                    <FileItem
+                                        key={index}
+                                        title={doc.title}
+                                        type={doc.id}
+                                        downloadDocument={() => downloadDocument(doc.id, doc.title)}
+                                        handleDelete={() => handleDelete(doc.id)}
+                                        doc={doc}
+                                    />
+                                ))}
+                            {(activeTab === 'Shortlist Documents' && shortlistDocuments.length > 0) &&
+                                shortlistDocuments.map((doc, index) => (
+                                    <FileItem
+                                        key={index}
+                                        title={doc.title}
+                                        type={doc.applicantName}
+                                        downloadDocument={() => downloadDocument(doc.id, doc.title)}
+
+                                        doc={doc}
+                                    />
+                                ))}
                         </FileList>
                     </FileSection>
                     <FormSection>
                         <Form>
                             <Title>Add Documents</Title>
-
                             <Label htmlFor="fileUpload">Attach Documents</Label>
                             <DropZoneWrapper>
                                 <DocumentDropZone
@@ -374,33 +432,307 @@ function Document() {
                                     clearPreviewsTrigger={clearPreviewsTrigger}
                                 />
                             </DropZoneWrapper>
-                            <div
-                                style={{
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                }}
-                            >
-                                <FileTypes>
-                                    Accepted File Types: .doc, .docx, .pdf only
-                                </FileTypes>
+                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <FileTypes>Accepted File Types: .doc, .docx, .pdf only</FileTypes>
                                 <SecurityNote>
-                                    <img
-                                        loading="lazy"
-                                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/8b7ec72c66d30f8ec5c35d4cec5db08f1877f1a7d86ea8b6c08df8054b4a9a85?apiKey=d66532d056b14640a799069157705b77&"
-                                        alt=""
-                                    />
+                                    {/* Security icon */}
                                     Secure
                                 </SecurityNote>
                             </div>
-                            <SubmitButton onClick={handleUpload}>
-                                Upload
-                            </SubmitButton>
+                            <SubmitButton onClick={handleUpload}>Upload</SubmitButton>
                         </Form>
                     </FormSection>
                 </Content>
             </Wrapper>
         </NavBar>
     );
-}
+};
+
+const Wrapper = styled.main`
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+`;
+
+const Content = styled.div`
+    display: flex;
+    justify-content: center;
+    @media (max-width: 991px) {
+        flex-direction: column;
+    }
+`;
+
+const FileSection = styled.section`
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    align-self: stretch;
+    flex: 1 0 0;
+    padding: 20px 0px;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    @media (max-width: 991px) {
+        padding: 0;
+        width: 100%;
+    }
+`;
+
+const SectionHeader = styled.header`
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+`;
+
+const TabList = styled.nav`
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid #000;
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #334155;
+    @media (max-width: 991px) {
+      flex-wrap: wrap;
+    }
+  `;
+
+  const TabItem = styled.div`
+    padding: 6px 20px;
+    position: relative;
+    cursor: pointer;
+    &.active {
+      border-bottom: 2px solid #6b538c;
+      color: #0f172a;
+    }
+  `;
+
+const FileList = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 80px;
+    @media (max-width: 991px) {
+        padding: 0 20px;
+    }
+`;
+
+const FileContainer = styled.article`
+    display: flex;
+    gap: 10px;
+    padding: 20px 10px;
+    border: 1px solid #7b757f;
+    border-radius: 10px;
+    @media (max-width: 991px) {
+        flex-wrap: wrap;
+    }
+`;
+
+const FileIcons = styled.div`
+    display: flex;
+    gap: 20px;
+    border-right: 1px solid #7b757f;
+    padding-right: 10px;
+`;
+
+const FileDetails = styled.div`
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 10px;
+`;
+
+const FileTitle = styled.h2`
+    font-weight: 500;
+    font-size: 14px;
+    color: #000;
+`;
+
+const FileSize = styled.p`
+    font-size: 12px;
+    font-weight: 400;
+    color: #7b757f;
+`;
+
+const FileActions = styled.div`
+    display: flex;
+    gap: 10px;
+    align-self: end;
+`;
+
+const ActionButton = styled.button`
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: ${({ outline }) => (outline ? "transparent" : "#6b538c")};
+    color: ${({ outline }) => (outline ? "#6b538c" : "#fff")};
+    border: ${({ outline }) => (outline ? "1px solid #6b538c" : "none")};
+
+    img {
+        width: 14px;
+    }
+`;
+
+const FormSection = styled.section`
+    width: 28%;
+    margin-left: 20px;
+    @media (max-width: 991px) {
+        margin-left: 0;
+        width: 100%;
+    }
+`;
+
+const Form = styled.form`
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    margin: 0 auto;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    color: #7b757f;
+`;
+
+const Title = styled.h2`
+    font-size: 24px;
+    font-weight: 500;
+    color: #6b538c;
+`;
+
+const Label = styled.label`
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 20px;
+`;
+
+const Input = styled.input`
+    height: 48px;
+    margin-top: 8px;
+    border: 2px solid #7b757f;
+    border-radius: 6px;
+    background: #fff;
+`;
+
+const FileDropContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 22px 40px;
+    margin-top: 10px;
+    border: 2px dashed #6b538c;
+    border-radius: 10px;
+    background-color: #eddcff;
+    font-size: 16px;
+    font-weight: 600;
+    color: #6b538c;
+    @media (max-width: 991px) {
+        padding: 20px;
+    }
+`;
+
+const DropText = styled.p`
+    margin-top: 10px;
+`;
+
+const FileTypes = styled.p`
+    margin-top: 10px;
+    font-size: 10px;
+    font-weight: 400;
+`;
+
+const SecurityNote = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 500;
+    margin-top: 10px;
+`;
+
+const SubmitButton = styled.button`
+    align-self: center;
+    margin-top: 40px;
+    padding: 10px 24px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    background: #6b538c;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    @media (max-width: 991px) {
+        padding: 20px;
+    }
+`;
+
+
+const DropZoneWrapper = styled.div`
+    gap: 20px;
+    display: flex;
+    @media (max-width: 991px) {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+    }
+`;
+
+const DropZoneContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-left: 20px;
+    @media (max-width: 991px) {
+        width: 100%;
+        margin-left: 0;
+        margin-top: 20px;
+    }
+`;
+
+const DropZone = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    border: 2px dashed rgba(107, 83, 140, 1);
+    background-color: #eddcff;
+    font-size: 23px;
+    color: #000;
+    line-height: 40px;
+    padding: 40px;
+    @media (max-width: 991px) {
+        padding: 0 20px;
+    }
+`;
+
+const DropZoneText = styled.div`
+    font-family: Poppins, sans-serif;
+    margin-top: 10px;
+    @media (max-width: 991px) {
+        margin: 0 8px;
+    }
+`;
+
+const DropZoneDescription = styled.p`
+    color: #6b538c;
+    align-self: center;
+    margin-top: 10px;
+    font: bold 28px Poppins, sans-serif;
+`;
+
+const PreviewImage = styled.img`
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 10px;
+`;
 
 export default Document;

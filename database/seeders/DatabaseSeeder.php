@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
             UserCoursesSeeder::class,
             ReflectionsSeeder::class,
             InterviewsSeeder::class,
+            ConversationSeeder::class,
+            MessageSeeder::class,
         ]);
     }
 }

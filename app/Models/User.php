@@ -77,8 +77,16 @@ class User extends Authenticatable
 
     public function courses()
     {
-        return $this->belongsToMany(Courses::class, 'user_courses');
+        return $this->belongsToMany(Course::class, 'user_courses', 'user_id', 'courses_id')->withTimestamps();
     }
+
+    public function teachingCourses()
+    {
+        return $this->hasMany(Course::class, 'teacher_id');
+    }
+
+
+
 
     public function reflections()
     {
@@ -99,11 +107,21 @@ class User extends Authenticatable
         return $this->hasMany(Application::class);
     }
 
+public function conversations()
+{
+    return $this->belongsToMany(Conversation::class);
+}
+
 
     public function messages()
     {
         return $this->hasMany(Message::class);
     }
+
+    public function shortlists()
+{
+    return $this->hasMany(Shortlist::class);
+}
 
 
     /**

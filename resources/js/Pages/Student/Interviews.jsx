@@ -16,6 +16,7 @@ import {
     postInterview,
     selectInterviewsStatus,
     selectInterviews,
+    deleteInterview,
 } from "@/Features/interviews/interviewsSlice";
 import {
     MainContainer,

@@ -1,13 +1,52 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Response;
+use App\Http\Requests\V1\StoreApplicationsRequest;
+use App\Http\Requests\V1\UpdateApplicationsRequest;
+use App\Http\Resources\V1\ApplicationResource;
+use App\Http\Resources\V1\ApplicationCollection;
+
 
 class ApplicationController extends Controller
 {
+
+ /**
+     * Display a listing of the applications.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        try {
+            // Retrieve all applications from the database
+            $applications = Application::all();
+
+            // Return a JSON response with the application collection
+            return response()->json(new ApplicationCollection($applications), Response::HTTP_OK);
+        } catch (\Exception $e) {
+            // Handle any exceptions that occur during retrieval
+            // Log the error or handle it appropriately
+            return response()->json([
+                'error' => 'Failed to retrieve applications',
+                'message' => $e->getMessage()  // Include the actual error message for debugging
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+
+
+
+
+
+
+
     // Show the form for creating a new application
     public function create()
     {
@@ -38,7 +77,7 @@ class ApplicationController extends Controller
     // Display the specified application (if needed)
     public function show(Application $application)
     {
-        // Logic to show a specific application
+        return new ApplicationResource($application);
     }
 
     // Show the form for editing the specified application (if needed)

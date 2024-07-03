@@ -43,12 +43,37 @@ class CoursesController extends Controller
         return new CoursesCollection($userJobs);
     }
 
+    public function getCoursesForTeacher($userId)
+{
+    $teacherCourses = Courses::where('teacher_id', $userId)
+                            ->with('users') // Load users enrolled in each course
+                            ->get();
+
+    return new CoursesCollection($teacherCourses);
+}
+
+public function getCourseDocumentsForTeacher($userId)
+{
+    $teacherCourses = Courses::where('teacher_id', $userId)
+        ->with(['users' => function ($query) {
+            $query->select('users.id', 'users.name'); // Specify 'users.id' to avoid ambiguity
+        }, 'users.documents' => function ($query) {
+            $query->where('documents.visible', true); // Specify 'documents.visible' for clarity
+        }])
+        ->get();
+
+    return new CoursesCollection($teacherCourses);
+}
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(StoreCoursesRequest $request)
     {
-        return new CoursesResource(Courses::create($request->all()));
+        $course = Courses::create($request->validated());
+
+        // Return the new course resource
+        return new CoursesResource($course);
     }
 
     /**

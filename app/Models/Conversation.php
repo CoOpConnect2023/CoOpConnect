@@ -9,6 +9,15 @@ class Conversation extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['send_id','recv_id'];
+    protected $guarded = [];
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
 }

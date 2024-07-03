@@ -81,21 +81,26 @@ const Button = styled.button`
     }
 `;
 
-const Modal = ({ onClose, onSubmit, defaultDate }) => {
+const Select = styled.select`
+    margin-bottom: 10px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+`;
+
+const Option = styled.option`
+    /* Add any specific styles for option if needed */
+`;
+
+const Modal = ({ onClose, onSubmit, defaultDate, applicants }) => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [startDate, setStartDate] = useState(
-        defaultDate.toISOString().substring(0, 10)
-    ); // Initial value in yyyy-MM-dd format
-    const [startTime, setStartTime] = useState(
-        defaultDate.toISOString().substring(11, 16)
-    ); // Initial value in HH:mm format
-    const [endDate, setEndDate] = useState(
-        defaultDate.toISOString().substring(0, 10)
-    ); // Initial value in yyyy-MM-dd format
-    const [endTime, setEndTime] = useState(
-        defaultDate.toISOString().substring(11, 16)
-    ); // Initial value in HH:mm format
+    const [startDate, setStartDate] = useState(defaultDate.toISOString().substring(0, 10));
+    const [startTime, setStartTime] = useState(defaultDate.toISOString().substring(11, 16));
+    const [endDate, setEndDate] = useState(defaultDate.toISOString().substring(0, 10));
+    const [endTime, setEndTime] = useState(defaultDate.toISOString().substring(11, 16));
+    const [selectedApplicant, setSelectedApplicant] = useState("");
 
     const handleTitleChange = (e) => setTitle(e.target.value);
     const handleDescriptionChange = (e) => setDescription(e.target.value);
@@ -103,11 +108,13 @@ const Modal = ({ onClose, onSubmit, defaultDate }) => {
     const handleStartTimeChange = (e) => setStartTime(e.target.value);
     const handleEndDateChange = (e) => setEndDate(e.target.value);
     const handleEndTimeChange = (e) => setEndTime(e.target.value);
+    const handleApplicantChange = (e) => setSelectedApplicant(e.target.value);
 
     const handleSubmit = () => {
         const start = new Date(`${startDate}T${startTime}`);
         const end = new Date(`${endDate}T${endTime}`);
-        onSubmit(title, description, start, end);
+        console.log(selectedApplicant)
+        onSubmit(title, description, start, end, selectedApplicant);
         onClose();
     };
 
@@ -119,34 +126,29 @@ const Modal = ({ onClose, onSubmit, defaultDate }) => {
                 <Label>Title:</Label>
                 <Input type="text" value={title} onChange={handleTitleChange} />
                 <Label>Description:</Label>
-                <Textarea
-                    value={description}
-                    onChange={handleDescriptionChange}
-                />
+                <Textarea value={description} onChange={handleDescriptionChange} />
                 <Label>Start Date:</Label>
-                <Input
-                    type="date"
-                    value={startDate}
-                    onChange={handleStartDateChange}
-                />
+                <Input type="date" value={startDate} onChange={handleStartDateChange} />
                 <Label>Start Time:</Label>
-                <Input
-                    type="time"
-                    value={startTime}
-                    onChange={handleStartTimeChange}
-                />
+                <Input type="time" value={startTime} onChange={handleStartTimeChange} />
                 <Label>End Date:</Label>
-                <Input
-                    type="date"
-                    value={endDate}
-                    onChange={handleEndDateChange}
-                />
+                <Input type="date" value={endDate} onChange={handleEndDateChange} />
                 <Label>End Time:</Label>
-                <Input
-                    type="time"
-                    value={endTime}
-                    onChange={handleEndTimeChange}
-                />
+                <Input type="time" value={endTime} onChange={handleEndTimeChange} />
+
+                {applicants && (
+                <>
+                    <Label>Student:</Label>
+                    <Select value={selectedApplicant} onChange={handleApplicantChange}>
+                        <Option value="">Select a student</Option>
+                        {applicants.map((applicant) => (
+                            <option key={applicant.id} value={applicant.id}>
+                                {applicant.name} - {applicant.email}
+                            </option>
+                        ))}
+                    </Select>
+                </>
+            )}
                 <ButtonContainer>
                     <Button onClick={handleSubmit}>Save</Button>
                     <Button onClick={onClose}>Cancel</Button>
