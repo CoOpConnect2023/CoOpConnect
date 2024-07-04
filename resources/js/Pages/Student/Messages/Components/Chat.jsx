@@ -78,7 +78,7 @@ export default function Chat() {
 
     const fetchConversationDetails = async () => {
         try {
-            const response = await axios.get(`${appUrl}/api/conversations/${conversationID}/current`);
+            const response = await axios.get(`${appUrl}/api/v1/conversations/${conversationID}/current`);
             setSelectedConversation(response.data.conversation);
 
         } catch (error) {
@@ -96,7 +96,7 @@ export default function Chat() {
         if (newMessage.trim() === '') return; // Prevent sending empty messages
 
         try {
-            const response = await axios.post(`${appUrl}/api/sendmessages`, {
+            const response = await axios.post(`${appUrl}/api/v1/sendmessages`, {
                 content: newMessage,
                 user_id: userInfo.id,
                 conversation_id: conversationID
@@ -124,11 +124,11 @@ export default function Chat() {
         try {
             console.log('Sending message with data:', requestData);
 
-            const response = await axios.post(`${appUrl}/api/sendnewmessages`, requestData);
+            const response = await axios.post(`${appUrl}/api/v1/sendnewmessages`, requestData);
 
             console.log('Response from server:', response.data); // Log the response data
 
-            setMessages([...messages, response.data]);
+
             setNewMessage('');
 
             setTimeout(fetchMessages, 500);

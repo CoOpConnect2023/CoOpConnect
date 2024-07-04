@@ -244,7 +244,7 @@ const Document = () => {
 
             } else {
                 console.error('No course documents found in the response:', response);
-                return [];
+                setUserDocuments([]);
             }
         } catch (error) {
             console.error('Error fetching course documents:', error);

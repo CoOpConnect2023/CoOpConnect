@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { useDropzone } from 'react-dropzone';
 const appUrl = import.meta.env.VITE_APP_URL;
 
@@ -113,8 +113,8 @@ const ProfileForm = () => {
         setUser({ ...user, profile_image: null });
     };
 
-    if (!user) {
-        return <div>Loading...</div>;
+    if (user === null) {
+        return <LoadingScreen><Spinner /></LoadingScreen>;
     }
 
     return (
@@ -242,6 +242,8 @@ const ProfileForm = () => {
         </ProfileWrapper>
     );
 }
+
+
 
 
 
@@ -490,6 +492,31 @@ const AddSkillButton = styled.button`
     &:hover {
         background-color: #7c4e7e;
     }
+`;
+
+const spin = keyframes`
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+`;
+// Styled component with a loading animation
+const LoadingScreen = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 20px;
+    background-color: #f0f0f0; /* Adjust background color as needed */
+    color: #333; /* Adjust text color as needed */
+`;
+
+// Additional styling for the spinning element
+const Spinner = styled.div`
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-top: 4px solid #3498db; /* Adjust loading spinner color */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: ${spin} 1s linear infinite; /* Apply the spin animation */
 `;
 
 

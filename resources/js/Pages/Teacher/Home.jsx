@@ -4,6 +4,7 @@ import AddDocuments from "./Components/AddDocuments";
 import StudentsSection from "./Components/StudentsSection";
 import StudentStatus from "./Components/StudentStatus";
 import AdminPanel from "./Components/AdminPanel";
+import ReflectionDocuments from "./Components/ReflectionDocuments";
 import NavBar from "./Components/NavBar";
 import {
     MainContainer,
@@ -12,6 +13,7 @@ import {
     StudentsSectionContainer,
     AdminPanelContainer,
 } from "./Styling/Home.styles";
+
 
 export default function Home() {
     return (
@@ -26,7 +28,7 @@ export default function Home() {
                         <StudentStatus />
                     </TopContainer>
                     <BottomContainer>
-                        <AddDocuments />
+                        <ReflectionDocuments />
 
                         <AdminPanelContainer>
                             <AdminPanel />

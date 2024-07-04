@@ -154,3 +154,53 @@ export const TodayDateCell = styled(DateCell)`
 export const InactiveDateCell = styled(DateCell)`
     background-color: var(--Inactive, #f2f3f7);
 `;
+
+export const CalendarDiv = styled.div`
+background-color: #ffffff;
+height: 80vh;
+margin-bottom: 3vh;
+margin-top: 3vh;
+
+`;
+
+export const EventsContainer = styled.div`
+  width: 100%; /* Take full width of Container */
+  max-width: 400px; /* Adjust as per your design */
+  overflow-y: auto; /* Make it scrollable */
+height: 80vh;
+padding: 1vh;
+`;
+
+export const EventsHeader = styled.h2`
+  font-size: 24px;
+  color: #6b538c;
+  margin-bottom: 20px;
+`;
+
+export const Event = styled.div`
+  background-color: #ffffff;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  position: relative; /* Ensure relative positioning for absolute children */
+`;
+
+export const NoEventsMessage = styled.p`
+  font-size: 18px;
+  color: #6b538c;
+  margin-top: 20px;
+`;
+
+export const DeleteButton = styled.button`
+background-color: red;
+color: white;
+border: none;
+padding: 4px 8px;
+border-radius: 4px;
+cursor: pointer;
+font-size: 14px;
+position: absolute;
+top: 10px;
+right: 10px;
+`;

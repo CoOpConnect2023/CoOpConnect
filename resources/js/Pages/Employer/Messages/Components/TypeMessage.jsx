@@ -48,11 +48,10 @@ export default function TypeMessage({ newMessage, setNewMessage, onSendMessage }
     );
 }
 const Container = styled.div`
-    display: flex;
+     display: flex;
     flex-direction: column;
-    padding: 10px;
-    background-color: #fff;
-    margin-top: 1vh;
+    justify-content: flex-end;
+    height: 100%;
 `;
 
 const Div98 = styled.div`
@@ -63,7 +62,13 @@ const Div98 = styled.div`
     padding: 10px;
     background-color: #f9f9f9;
     border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 10px;
+    border-color: rgba(123, 117, 127, 1);
+    border-style: solid;
+    border-width: 1px;
+    gap: 10px;
+    padding: 10px 20px;
+
 `;
 
 const Div99 = styled.div`
@@ -71,10 +76,18 @@ const Div99 = styled.div`
     align-items: center;
     gap: 10px;
     flex-grow: 1;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--Schemes-Outline, #7b757f);
+    font-weight: 600;
+    letter-spacing: 0.25px;
+    line-height: 143%;
 `;
 
 const Div100 = styled.div`
     flex-grow: 1;
+    font-family: Poppins, sans-serif;
+    margin: auto 0;
 `;
 
 const Input = styled.input`
@@ -89,9 +102,11 @@ const Input = styled.input`
 `;
 
 const Div101 = styled.div`
+    justify-content: center;
+    align-content: flex-start;
+    flex-wrap: wrap;
     display: flex;
     gap: 10px;
-    align-items: center;
 `;
 
 const SendButton = styled.button`
