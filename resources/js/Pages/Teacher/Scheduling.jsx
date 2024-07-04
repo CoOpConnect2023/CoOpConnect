@@ -394,7 +394,7 @@ const Container = styled.div`
     justify-content: center;
     padding: 20px;
     border-radius: 10px;
-    gap: 40px; /* Add gap between CalendarDiv and ShortlistsContainer */
+    gap: 40px; 
 `;
 
 const Wrapper = styled.div`
@@ -475,8 +475,8 @@ const NoEventsMessage = styled.p`
 `;
 
 const EventsContainer = styled.div`
-  width: 100%; /* Take full width of Container */
-  max-width: 400px; /* Adjust as per your design */
+  width: 100%; 
+  max-width: 400px; 
   overflow-y: auto; /* Make it scrollable */
 height: 80vh;
 `;

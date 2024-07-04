@@ -24,7 +24,8 @@ class JobsResource extends JsonResource
             'jobType' => $this->job_type,
             'company' => $this->company,
             'userId' => $this->user_id,
-            'users' => $this->whenLoaded('users')
+            'users' => $this->whenLoaded('users'),
+            'applications' => ApplicationResource::collection($this->whenLoaded('applications')),
         ];
     }
 }

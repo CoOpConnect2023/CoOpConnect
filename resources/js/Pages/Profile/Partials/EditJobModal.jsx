@@ -84,9 +84,9 @@ const EditJobModal = ({ isOpen, onRequestClose, job, onSave }) => {
                                     onChange={handleChange}
                                     required
                                 >
-                                    <option value="hybrid">Full-time</option>
-                                    <option value="remote">Part-time</option>
-                                    <option value="on-site">Contract</option>
+                                    <option value="Full-time">Full-time</option>
+                                    <option value="Part-time">Part-time</option>
+                                    <option value="Contract">Contract</option>
                                 </Select>
                             </Label>
                             <Label>

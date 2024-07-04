@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    getJobsforEmployer,
+    patchJob,
+    selectJobs,
+    selectJobsStatus,
+} from "@/Features/jobs/jobsSlice";
 import ApplicantModal from "../Profile/Partials/ApplicantModal";
 import EditJobModal from "../Profile/Partials/EditJobModal";
 import {
@@ -48,6 +55,11 @@ function ViewPost() {
   const [selectedApplicant, setSelectedApplicant] = useState(null);
   const [editModalIsOpen, setEditModalIsOpen] = useState(false);
   const [isOnShortlist, setIsOnShortlist] = useState(false);
+  const [jobToEdit, setJobToEdit] = useState(null);
+
+    const dispatch = useDispatch();
+    const jobs = useSelector(selectJobs);
+    const jobsStatus = useSelector(selectJobsStatus);
 
 
     // Extract job ID from URL using useParams hook
@@ -62,8 +74,8 @@ function ViewPost() {
                     throw new Error("Failed to fetch job details");
                 }
                 const data = await response.json();
-                setJob(data);
-                console.log(data);
+                setJob(data.data);
+                console.log("viewpost",data);
                 setLoading(false);
             } catch (error) {
                 console.error("Error fetching job details:", error);
@@ -96,7 +108,8 @@ function ViewPost() {
         setSelectedApplicant(null);
     };
 
-    const openEditModal = () => {
+    const openEditModal = (job) => {
+        setJobToEdit(job);
         setEditModalIsOpen(true);
     };
 
@@ -105,25 +118,20 @@ function ViewPost() {
     };
 
     const handleSave = async (updatedJob) => {
-        try {
-            const response = await fetch(`${appUrl}/api/jobs/${job.id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(updatedJob),
-            });
+        // Dispatch the patchJob action and wait for it to complete
+        dispatch(
+            patchJob({
+                jobsId: updatedJob.id,
+                title: updatedJob.title,
+                description: updatedJob.description,
+                company: updatedJob.company,
+                location: updatedJob.location,
+                postingStatus: updatedJob.postingStatus,
+                jobType: updatedJob.jobType,
+            })
+        );
 
-            if (!response.ok) {
-                throw new Error("Failed to update job");
-            }
-
-            const data = await response.json();
-            setJob(data); // Update state with the updated job data
-            closeEditModal();
-        } catch (error) {
-            console.error("Error updating job:", error);
-        }
+        closeEditModal();
     };
 
 
@@ -217,8 +225,8 @@ function ViewPost() {
                 />
               </JobInfoLeft>
               <JobInfoRight>
-                <StatusTag>Posting Status: {job.posting_status}</StatusTag>
-                <JobTypeTag>Job Type: {job.job_type}</JobTypeTag>
+                <StatusTag>Posting Status: {job.postingStatus}</StatusTag>
+                <JobTypeTag>Job Type: {job.jobType}</JobTypeTag>
                 <LocationTag>Work Location: {job.location}</LocationTag>
               </JobInfoRight>
             </JobInfo>

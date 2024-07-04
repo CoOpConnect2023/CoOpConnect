@@ -59,6 +59,7 @@ class JobsController extends Controller
      */
     public function show(Jobs $job)
     {
+        $job->load('applications.user');
         return new JobsResource($job);
     }
 
