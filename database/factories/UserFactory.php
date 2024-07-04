@@ -47,4 +47,16 @@ class UserFactory extends Factory
             'email_verified_at' => null,
         ]);
     }
+
+
+    public function admin(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'name' => 'Admin',
+            'email' => 'admin@a.ca',
+            'class' => 'A',
+            'password' => Hash::make('password'), // You can also use the hash you provided
+            'role' => 'admin',
+        ]);
+    }
 }
