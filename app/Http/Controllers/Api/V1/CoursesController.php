@@ -52,6 +52,16 @@ class CoursesController extends Controller
     return new CoursesCollection($teacherCourses);
 }
 
+public function getCoursesForSchool($schoolId)
+{
+    // Assuming 'school_id' is a foreign key in the courses table
+    $schoolCourses = Courses::where('school_id', $schoolId)
+                            // Load users enrolled in each course
+                            ->get();
+
+    return new CoursesCollection($schoolCourses);
+}
+
 public function getCourseDocumentsForTeacher($userId)
 {
     $teacherCourses = Courses::where('teacher_id', $userId)

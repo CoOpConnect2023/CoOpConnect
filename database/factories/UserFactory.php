@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\User;
+use App\Models\School;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -35,6 +36,7 @@ class UserFactory extends Factory
             'role' => $this->faker->randomElement(['student', 'teacher', 'employee']),
             'skills' => $this->faker->randomElements(['JavaScript', 'PHP', 'HTML', 'CSS', 'Python'], $this->faker->numberBetween(1, 4)),
             'status' => $this->faker->randomElement(['searching', 'interviewing', 'working']),
+            'school_id' => School::inRandomOrder()->first()->id,
         ];
     }
 

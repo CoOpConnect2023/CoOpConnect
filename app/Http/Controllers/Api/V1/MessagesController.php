@@ -38,6 +38,7 @@ class MessagesController extends Controller
     $message->conversation_id = $validatedData['conversation_id'];
     $message->user_id = Auth::id();
     $message->content = $validatedData['content'];
+    $message->viewed = false;
     $message->save();
 
     return response()->json(['message' => 'Message sent successfully', 'message' => $message], 201);

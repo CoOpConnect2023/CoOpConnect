@@ -23,7 +23,7 @@ class User extends Authenticatable
         'password',
         'role',
         'status',
-        'school',
+        'school_id',
         'class',
         'profile_image',
         'company_name',
@@ -77,7 +77,7 @@ class User extends Authenticatable
 
     public function courses()
     {
-        return $this->belongsToMany(Course::class, 'user_courses', 'user_id', 'courses_id')->withTimestamps();
+        return $this->belongsToMany(Courses::class, 'user_courses', 'user_id', 'courses_id')->withTimestamps();
     }
 
     public function teachingCourses()
@@ -122,6 +122,11 @@ public function conversations()
 {
     return $this->hasMany(Shortlist::class);
 }
+
+public function school()
+    {
+        return $this->belongsTo(School::class);
+    }
 
 
     /**

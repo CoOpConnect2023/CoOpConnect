@@ -5,6 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Courses;
 use App\Models\User;
+use App\Models\School;
 
 class CoursesFactory extends Factory
 {
@@ -27,7 +28,7 @@ class CoursesFactory extends Factory
             'start_date' => $this->faker->dateTimeBetween('-1 year', 'now'),
             'end_date' => $this->faker->dateTimeBetween('now', '+1 year'),
             'teacher_id' => User::factory()->create()->id, // Example: Create a random user and use their ID as teacher_id
-            'school' => $this->faker->company,
+            'school_id' => School::inRandomOrder()->first()->id,
         ];
     }
 }

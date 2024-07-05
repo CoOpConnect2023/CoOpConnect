@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Courses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -28,7 +29,24 @@ class UserController extends Controller
 
     public function getUserId()
     {
-        return response()->json(['user_id' => Auth::id()]);
+        $userId = Auth::id();
+
+        // Fetch the user with their courses using eager loading
+        $user = User::with('courses')->find($userId);
+
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        // Fetch all user courses directly from the pivot table
+        $userCourses = $user->courses()->get();
+
+        // Return user ID, user courses, and any other necessary user data
+        return response()->json([
+            'user' => $user,
+            'user_courses' => $userCourses,
+
+        ]);
     }
 
     public function getStudentStatusPercentages(): JsonResponse
@@ -89,14 +107,39 @@ class UserController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->role = $request->role;
-        $user->school = $request->school;
+        $user->school_id = $request->school_id;
         $user->positiontitle = $request->positiontitle;
         $user->company_name = $request->company_name;
-        $user->skills = $request->skills;
 
+
+        $skills = $request->input('skills');
+        if (is_string($skills)) {
+            $skills = json_decode($skills, true);
+        }
+
+        $user->skills = $skills;
 
         $user->save();
 
+        if ($request->has('courses')) {
+            $courses = json_decode($request->input('courses'), true);
+
+            if (is_array($courses)) {
+                if (empty($courses)) {
+                    // If courses array is empty, remove all associated courses
+                    $user->courses()->detach();
+                } else {
+                    // Extract course IDs from the courses array
+                    $courseIds = array_column($courses, 'id');
+
+                    // Sync user's courses with the provided course IDs
+                    $user->courses()->sync($courseIds);
+                }
+            }
+        }
+
+
+        info('Updated user data: ' . json_encode($user));
 
         info('Updated user data: ' . json_encode($user));
 

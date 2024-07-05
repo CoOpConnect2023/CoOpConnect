@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\CoursesController;
+use App\Http\Controllers\Api\V1\SchoolsController;
 use App\Http\Controllers\Api\V1\InterviewsController;
 use App\Http\Controllers\Api\V1\JobsController;
 use App\Http\Controllers\Api\V1\ReflectionsController;
@@ -71,6 +72,7 @@ Route::delete("/deletedoc/{id}", [DocumentsController::class, "deleteDoc"]);
 Route::get('/user-id', function () {
     return response()->json(['user' => Auth::user()]);
 })->middleware('auth:sanctum');
+Route::get('user-id/courses', [UserController::class, 'getUserId']);
 
 Route::get('/download/{id}', [DocumentsController::class, 'download'])->name('file.download');
 
@@ -100,6 +102,8 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
     Route::get('/courses/user/{userId}', [CoursesController::class, 'getCourseforUser']);
     Route::get('/courses/teacher/{userId}', [CoursesController::class, 'getCoursesForTeacher']);
     Route::get('/courses/documents/teacher/{userId}', [CoursesController::class, 'getCourseDocumentsForTeacher']);
+    Route::get('/school/{schoolId}/courses', [CoursesController::class, 'getCoursesForSchool']);
+
 
 
     Route::post('jobs/{job}/shortlist', [ShortlistController::class, 'addToShortlist']);
@@ -133,7 +137,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
 
 
 
-
+    Route::apiResource('schools', SchoolController::class);
     Route::apiResource('courses', CoursesController::class);
     Route::apiResource('usercourses', UserCoursesController::class);
     Route::apiResource('reflections', ReflectionsController::class);
