@@ -221,7 +221,7 @@ console.log("coursedata", coursesData)
       };
 
     if (!user) {
-      return <LoadingScreen>Loading...</LoadingScreen>;
+      return <LoadingScreen><Spinner/></LoadingScreen>;
     }
 
     return (
@@ -291,115 +291,100 @@ console.log("coursedata", coursesData)
             />
           </ProfileDetailItem>
           <ProfileDetailItem>
-            <DetailLabel>Education Institute</DetailLabel>
+          <DetailLabel>Education Institute</DetailLabel>
+          <DetailValue
+            type="text"
+            name="school"
+            value={user.school}
+            onChange={handleChange}
+          />
+          {filteredSchools.length > 0 && (
+            <AutocompleteList>
+              {filteredSchools.map((school) => (
+                <AutocompleteItem key={school.id} onClick={() => handleSchoolSelect(school)}>
+                  {school.name}
+                </AutocompleteItem>
+              ))}
+            </AutocompleteList>
+          )}
+        </ProfileDetailItem>
+        <ProfileDetailItem>
+          <DetailLabel>Preferred Position Title</DetailLabel>
+          <DetailValue
+            type="text"
+            name="positiontitle"
+            value={user.positiontitle}
+            onChange={handleChange}
+          />
+        </ProfileDetailItem>
+        <ProfileDetailItem>
+          <DetailLabel>Skills</DetailLabel>
+          <SkillsContainer>
+            {Array.isArray(user.skills) && user.skills.length > 0 ? (
+              user.skills.map((skill, index) => (
+                <SkillChip key={index}>
+                  {skill}
+                  <span style={{ cursor: 'pointer', marginLeft: '6px' }} onClick={() => removeSkill(index)}>
+                    &#10005;
+                  </span>
+                </SkillChip>
+              ))
+            ) : (
+              <p>No skills added yet.</p>
+            )}
             <DetailValue
               type="text"
-              name="school"
-              value={user.school}
+              name="newSkill"
+              value={user.newSkill || ''}
               onChange={handleChange}
+              placeholder="Add a skill..."
             />
-            {filteredSchools.length > 0 && (
+            <AddSkillButton type="button" onClick={addSkill}>
+              Add Skill
+            </AddSkillButton>
+          </SkillsContainer>
+        </ProfileDetailItem>
+        <ProfileDetailItem>
+          <DetailLabel>Courses</DetailLabel>
+          <SkillsContainer>
+            {Array.isArray(user.courses) && user.courses.length > 0 ? (
+              user.courses.map((course, index) => (
+                <SkillChip key={index}>
+                  {course.name}
+                  <span style={{ cursor: 'pointer', marginLeft: '6px' }} onClick={() => removeCourse(index)}>
+                    &#10005;
+                  </span>
+                </SkillChip>
+              ))
+            ) : (
+              <p>No courses added yet.</p>
+            )}
+            <DetailValue
+              type="text"
+              name="newCourse"
+              value={courseQuery}
+              onChange={handleChange}
+              placeholder="Add a course..."
+            />
+            {filteredCourses.length > 0 && (
               <AutocompleteList>
-                {filteredSchools.map((school) => (
-                  <AutocompleteItem
-                    key={school.id}
-                    onClick={() => handleSchoolSelect(school)}
-                  >
-                    {school.name}
+                {filteredCourses.map((course) => (
+                  <AutocompleteItem key={course.id} onClick={() => handleCourseSelect(course)}>
+                    {course.name}
                   </AutocompleteItem>
                 ))}
               </AutocompleteList>
             )}
-          </ProfileDetailItem>
-          <ProfileDetailItem>
-            <DetailLabel>Preferred Position Title</DetailLabel>
-            <DetailValue
-              type="text"
-              name="positiontitle"
-              value={user.positiontitle}
-              onChange={handleChange}
-            />
-          </ProfileDetailItem>
-          <ProfileDetailItem>
-            <DetailLabel>Skills</DetailLabel>
-            <SkillsContainer>
-              {Array.isArray(user.skills) && user.skills.length > 0 ? (
-                user.skills.map((skill, index) => (
-                  <SkillChip key={index}>
-                    {skill}
-                    <span
-                      style={{ cursor: "pointer", marginLeft: "6px" }}
-                      onClick={() => removeSkill(index)}
-                    >
-                      &#10005;
-                    </span>
-                  </SkillChip>
-                ))
-              ) : (
-                <p>No skills added yet.</p>
-              )}
-              <DetailValue
-                type="text"
-                name="newSkill"
-                value={user.newSkill || ""}
-                onChange={handleChange}
-                placeholder="Add a skill..."
-              />
-              <AddSkillButton type="button" onClick={addSkill}>
-                Add Skill
-              </AddSkillButton>
-            </SkillsContainer>
-          </ProfileDetailItem>
-          <ProfileDetailItem>
-            <DetailLabel>Courses</DetailLabel>
-            <SkillsContainer>
-              {Array.isArray(user.courses) && user.courses.length > 0 ? (
-                user.courses.map((course, index) => (
-                  <SkillChip key={index}>
-                    {course.name}
-                    <span
-                      style={{ cursor: "pointer", marginLeft: "6px" }}
-                      onClick={() => removeCourse(index)}
-                    >
-                      &#10005;
-                    </span>
-                  </SkillChip>
-                ))
-              ) : (
-                <p>No courses added yet.</p>
-              )}
-              <DetailValue
-                type="text"
-                name="newCourse"
-                value={courseQuery}
-                onChange={handleChange}
-                placeholder="Add a course..."
-              />
-              {filteredCourses.length > 0 && (
-                <AutocompleteList>
-                  {filteredCourses.map((course) => (
-                    <AutocompleteItem
-                      key={course.id}
-                      onClick={() => handleCourseSelect(course)}
-                    >
-                      {course.name}
-                    </AutocompleteItem>
-                  ))}
-                </AutocompleteList>
-              )}
-              <AddSkillButton type="button" onClick={() => addCourse(courseQuery)}>
-                Add Course
-              </AddSkillButton>
-            </SkillsContainer>
-          </ProfileDetailItem>
-        </ProfileDetail>
-        <EditProfileButton onClick={handleSubmit}>
-          Save Profile Changes
-        </EditProfileButton>
-      </ProfileWrapper>
-    );
-  };
-
+            <AddSkillButton type="button" onClick={() => addCourse(courseQuery)}>
+              Add Course
+            </AddSkillButton>
+          </SkillsContainer>
+        </ProfileDetailItem>
+      </ProfileDetail>
+      <EditProfileButton onClick={handleSubmit}>Save Profile Changes</EditProfileButton>
+    </ProfileWrapper>
+  );
+};
 
 
 
@@ -655,39 +640,38 @@ const spin = keyframes`
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 `;
-// Styled component with a loading animation
+
 const LoadingScreen = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     font-size: 20px;
-    background-color: #f0f0f0; /* Adjust background color as needed */
-    color: #333; /* Adjust text color as needed */
+    background-color: #f0f0f0;
+    color: #333; 
 `;
 
-// Additional styling for the spinning element
+
 const Spinner = styled.div`
     border: 4px solid rgba(0, 0, 0, 0.1);
-    border-top: 4px solid #3498db; /* Adjust loading spinner color */
+    border-top: 4px solid #3498db;
     border-radius: 50%;
     width: 40px;
     height: 40px;
-    animation: ${spin} 1s linear infinite; /* Apply the spin animation */
+    animation: ${spin} 1s linear infinite;
 `;
 const AutocompleteList = styled.ul`
-    position: absolute;
-    max-height: 150px;
-    width: calc(100% - 16px);
-    overflow-y: auto;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #fff;
-    z-index: 1000;
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  background-color: white;
+  border: 1px solid #6b538c;
+  border-radius: 5px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  width: calc(100% - 20px);
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 1000;
 `;
 
 const AutocompleteItem = styled.li`

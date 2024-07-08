@@ -98,9 +98,13 @@ public function getCourseDocumentsForTeacher($userId)
      * Update the specified resource in storage.
      */
     public function update(UpdateCoursesRequest $request, Courses $course)
-    {
-        $course->update($request->all());
-    }
+{
+    $validatedData = $request->validated();
+    $course->update($validatedData);
+
+    // Return the updated course resource
+    return new CoursesResource($course);
+}
 
     /**
      * Remove the specified resource from storage.

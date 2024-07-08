@@ -1,5 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
+import { Link } from "@inertiajs/react";
 
 function AdminPanel() {
     const panels = [
@@ -12,6 +13,8 @@ function AdminPanel() {
             desc: "View student activity. Add, remove, edit, students. View student details.",
             alt1: "Manage Students Icon",
             alt2: "Student Activity Icon",
+            link: "/students",
+
         },
         {
             title: "Manage Classes",
@@ -22,6 +25,7 @@ function AdminPanel() {
             desc: "View class activity. Add content to classes, edit grades, etc.",
             alt1: "Manage Classes Icon",
             alt2: "Class Activity Icon",
+            link: "/teacher/classes",
         },
         {
             title: "Message Students",
@@ -73,21 +77,20 @@ function AdminPanel() {
             <Header>Management</Header>
             <Content>
                 <Section>
-                    <PanelsContainer>
+                <PanelsContainer>
                         {panels.map((panel, index) => (
-                            <PanelSection
-                                key={index}
-                                borderColor={panel.borderColor}
-                            >
-                                <PanelHeader backgroundColor={panel.color}>
-                                    <Title>{panel.title}</Title>
-                                    <Img src={panel.img1} alt={panel.alt1} />
-                                </PanelHeader>
-                                <PanelBody>
-                                    <Icon src={panel.img2} alt={panel.alt2} />
-                                    <Description>{panel.desc}</Description>
-                                </PanelBody>
-                            </PanelSection>
+                            <Link key={index} href={panel.link}>
+                                <PanelSection borderColor={panel.borderColor}>
+                                    <PanelHeader backgroundColor={panel.color}>
+                                        <Title>{panel.title}</Title>
+                                        <Img src={panel.img1} alt={panel.alt1} />
+                                    </PanelHeader>
+                                    <PanelBody>
+                                        <Icon src={panel.img2} alt={panel.alt2} />
+                                        <Description>{panel.desc}</Description>
+                                    </PanelBody>
+                                </PanelSection>
+                            </Link>
                         ))}
                     </PanelsContainer>
                 </Section>

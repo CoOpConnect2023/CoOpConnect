@@ -7,6 +7,8 @@ import calendar from "@/Pages/Images/calendar-days.svg";
 import user from "@/Pages/Images/user.svg";
 import settings from "@/Pages/Images/settings.svg";
 import { Link } from "@inertiajs/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBell } from "@fortawesome/free-solid-svg-icons";
 const appUrl = import.meta.env.VITE_APP_URL;
 
 function Sidebar() {
@@ -52,6 +54,8 @@ function Header({ header }) {
   const [isNotificationModalOpen, setIsNotificationModalOpen] = React.useState(false);
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [user, setUser] = React.useState(null);
+  const [conversations, setConversations] = React.useState(null);
+
   const altAvatarSrc = "https://cdn.builder.io/api/v1/image/assets/TEMP/c449c761188f38db922c89455e070256b822a267e33f51baa6901c76b73a4e78?apiKey=d66532d056b14640a799069157705b77&";
 
   useEffect(() => {
@@ -62,20 +66,73 @@ function Header({ header }) {
         ?.split('=')[1];
     axios.defaults.headers.common['X-XSRF-TOKEN'] = csrfToken;
 
-    // Fetch the user ID, only allows if token is correct
+    // Fetch the user ID
     const fetchUser = async () => {
         try {
             const response = await axios.get(`${appUrl}/api/user-id`);
-            setUser(response.data.user);
-            console.log("user",response.data.user.profile_image)
+            const fetchedUser = response.data.user;
+            setUser(fetchedUser); // Update user state
 
+            // Check if fetchedUser exists and has an id before accessing it
+            if (fetchedUser && fetchedUser.id) {
+                const userId = fetchedUser.id;
+
+                // Fetch notifications/messages for the user
+                const notificationsResponse = await axios.get(
+                    `${appUrl}/api/v1/messages/${userId}`
+                );
+                console.log(notificationsResponse.data);
+                setConversations(notificationsResponse.data.conversations);
+            } else {
+                console.error("User data not found in response");
+            }
         } catch (error) {
-            console.error("Error fetching user ID:", error);
+            console.error("Error fetching user and notifications:", error);
         }
     };
 
     fetchUser();
 }, []);
+
+
+const markMessageAsRead = async (messageId, conversationId) => {
+    try {
+      await axios.patch(`${appUrl}/api/v1/messages/${messageId}/mark-as-read`);
+      console.log(`Message ${messageId} marked as read`);
+
+      // Update the state instantly
+      setConversations(prevConversations =>
+        prevConversations.map(conversation => {
+          if (conversation.id === conversationId) {
+            return {
+              ...conversation,
+              messages: conversation.messages.map(message => {
+                if (message.id === messageId) {
+                  return { ...message, viewed: 1 };
+                }
+                return message;
+              })
+            };
+          }
+          return conversation;
+        })
+      );
+
+      // Optionally, refetch conversations to get updated data
+      // refetchConversations();
+    } catch (error) {
+      console.error(`Error marking message ${messageId} as read:`, error);
+    }
+  };
+
+const handleMarkAsRead = (messageId) => {
+    markMessageAsRead(messageId);
+
+};
+
+const handleRedirect = () => {
+    window.location.href = '/student/messages';
+  };
 
 
   const toggleProfileModal = () => {
@@ -91,17 +148,23 @@ function Header({ header }) {
     setIsExpanded(!isExpanded); // Toggle expanded state
   };
 
+  const hasUnreadMessages =
+    conversations &&
+    conversations.some((conversation) =>
+      conversation.messages.some((message) => !message.viewed)
+    );
+
   return (
     <header>
       <HeaderContainer>
         <Title>{header}</Title>
         <UserProfile>
-          <NotificationIcon
-            src="https://cdn.builder.io/api/v1/image/assets/TEMP/abace578b51f3c9457a40eb525610751844e11d28da3970b407be86705a69459?apiKey=d66532d056b14640a799069157705b77&"
-            alt="Notification"
-            loading="lazy"
-            onClick={toggleNotificationModal}
-          />
+
+          <NotificationIcon onClick={toggleNotificationModal}
+            hasUnreadMessages={hasUnreadMessages}><FontAwesomeIcon icon={faBell} />
+
+
+            </NotificationIcon>
            <UserDetails onClick={toggleProfileModal}>
             {user && user.profile_image ? (
               <Avatar
@@ -120,7 +183,7 @@ function Header({ header }) {
               src="https://cdn.builder.io/api/v1/image/assets/TEMP/c7749e10a4cb727e5ce0c7fd48d44fb683bf93b2fa7c59643148748496b286b0?apiKey=d66532d056b14640a799069157705b77&"
               alt="Expand"
               loading="lazy"
-              isOpen={isExpanded} // Pass the expanded state to the styled component
+              isOpen={isExpanded}
             />
           </UserDetails>
         </UserProfile>
@@ -131,7 +194,7 @@ function Header({ header }) {
             <ModalItem>Logout</ModalItem>
           </ModalContent>
         </Modal>
-        <NotificationModal isOpen={isNotificationModalOpen}>
+        <NotificationModal isOpen={isNotificationModalOpen} conversations={conversations} handleMarkAsRead={handleMarkAsRead} handleRedirect={handleRedirect} currentUser={user}>
           <ModalContent>
             <ModalItem>Notification 1</ModalItem>
             <ModalItem>Notification 2</ModalItem>
@@ -247,15 +310,50 @@ const Title = styled.h1`
 const UserProfile = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 20px;
   cursor: pointer;
   position: relative;
 `;
 
-const NotificationIcon = styled.img`
-  aspect-ratio: 0.85;
-  object-fit: auto;
+const NotificationIcon = styled.div`
   width: 40px;
+  height: 40px;
+  background-color: #EDDCFF;
+  border: 2px solid black;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+
+  /* Icon styling */
+  svg {
+    color: white;
+    font-size: 20px; /* Adjust icon size */
+  }
+
+  /* Indicator for unread messages */
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+    display: ${(props) => (props.hasUnreadMessages ? "block" : "none")};
+  }
+`;
+
+const NotificationBadge = styled.div`
+  width: 8px;
+  height: 8px;
+  background-color: red;
+  border-radius: 50%;
+  margin-right: 5px;
 `;
 
 const UserDetails = styled.div`
@@ -311,17 +409,125 @@ const Modal = styled.div`
   pointer-events: ${({ isOpen }) => (isOpen ? "auto" : "none")};
 `;
 
-const NotificationModal = styled(Modal)`
-  right: 0px; /* Adjust according to the position of your notification icon */
-  top: 70px; /* Adjust according to the position of your notification icon */
-  transform-origin: top right;
-  transform: ${({ isOpen }) => (isOpen ? "scale(1)" : "scale(0.5)")};
+const NotificationModalContainer = styled.div`
+  display: ${(props) => (props.isOpen ? "block" : "none")};
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  overflow: hidden;
+  z-index: 10;
+  max-height: 80vh;
+  overflow-y: auto;
 `;
+
+const NotificationModalContent = styled.ul`
+  list-style: none;
+  margin: 0;
+  padding: 20px;
+`;
+
+const Conversation = styled.div`
+  margin-bottom: 15px;
+  padding: 15px;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  background-color: #fafafa;
+`;
+
+const ConversationInfo = styled.div`
+  margin-bottom: 15px;
+  font-size: 14px;
+  color: #555;
+`;
+
+const MessagesList = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const Message = styled.div`
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+
+`;
+
+const Button = styled.button`
+  margin-top: 10px;
+  padding: 8px 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+
+   &:not(:last-child) {
+    margin-right: 1vw;
+  }
+`;
+
+function NotificationModal({ isOpen, conversations, handleMarkAsRead, handleRedirect, currentUser }) {
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
+  return (
+    <NotificationModalContainer isOpen={isOpen}>
+      {isOpen && (
+        <NotificationModalContent>
+          {conversations === null || conversations.length === 0 ? (
+            <NoNotificationsMessage>No new notifications</NoNotificationsMessage>
+          ) : (
+            conversations.map((conversation) => {
+              const otherUser = conversation.users.find(user => user.id !== currentUser?.id);
+
+              return (
+                <Conversation key={conversation.id}>
+                  <ConversationInfo>
+                    <div>From: {otherUser ? otherUser.name : 'Unknown'}</div>
+                  </ConversationInfo>
+                  <MessagesList>
+                    {conversation.messages.map((message) => (
+                      <Message key={message.id}>
+                        <div>Message: {message.content}</div>
+                        <div>Received: {formatDate(message.created_at)}</div>
+                        <Button onClick={() => handleMarkAsRead(message.id)}>
+                          Mark as Read
+                        </Button>
+                        <Button onClick={handleRedirect}>
+                          Go to Messages
+                        </Button>
+                      </Message>
+                    ))}
+                  </MessagesList>
+                </Conversation>
+              );
+            })
+          )}
+        </NotificationModalContent>
+      )}
+    </NotificationModalContainer>
+  );
+}
 
 const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
   padding: 10px;
+  max-height: 80vh;
 `;
 
 const ModalItem = styled.div`
@@ -331,3 +537,12 @@ const ModalItem = styled.div`
     background-color: rgb(237, 220, 255);
   }
 `;
+
+const NoNotificationsMessage = styled.div`
+  padding: 20px;
+  text-align: center;
+  font-size: 16px;
+  color: #666;
+`;
+
+

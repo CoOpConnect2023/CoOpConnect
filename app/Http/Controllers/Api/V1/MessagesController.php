@@ -9,6 +9,7 @@ use App\Models\Conversation;
 use App\Http\Controllers\Controller;
 use App\Models\Message;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class MessagesController extends Controller
 {
@@ -50,6 +51,41 @@ class MessagesController extends Controller
     return response()->json($messages);
     }
 
+    public function getUnreadMessages($user_id)
+    {
+        try {
+            $userId = Auth::id(); // Get the current user's ID
+
+            // Query to fetch conversations with unread messages
+            $conversations = Conversation::whereHas('users', function ($query) use ($userId) {
+                    $query->where('user_id', $userId); // Current user is a participant
+                })
+                ->whereHas('messages', function ($query) use ($userId) {
+                    $query->where('user_id', '!=', $userId) // Messages not sent by the current user
+                          ->where('viewed', false); // Messages that have not been viewed
+                })
+                ->with(['users', 'messages' => function ($query) use ($userId) {
+                    $query->where('user_id', '!=', $userId) // Exclude messages sent by the current user
+                          ->where('viewed', false); // Optionally fetch only unread messages
+                }])
+                ->orderBy('updated_at', 'desc') // Order by conversation update time
+                ->get();
+
+            return response()->json(['conversations' => $conversations]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to fetch conversations with unread messages'], 500);
+        }
+    }
+
+    public function getAllMessages(Request $request)
+    {
+        $messages = Message::with(['conversation', 'conversation.users'])
+        ->orderBy('created_at', 'desc') // Order messages by created_at descending
+        ->get();
+
+    return response()->json(['messages' => $messages]);
+    }
+
 
     public function createConversation(Request $request)
 {
@@ -88,15 +124,14 @@ class MessagesController extends Controller
         return response()->json(['message' => 'Conversation already exists', 'conversation_id' => $conversation->id], 200);
     }
 
-    // If conversation doesn't exist, this block won't execute
-    // Create a new conversation and message
+
     $conversation = new Conversation();
     $conversation->save();
 
-    // Attach users to the conversation
+
     $conversation->users()->attach([$user->id, $recipient->id]);
 
-    // Create a new message in this conversation
+    
     $message = new Message();
     $message->content = $request->content;
     $message->conversation_id = $conversation->id;
@@ -105,4 +140,21 @@ class MessagesController extends Controller
 
     return response()->json(['message' => 'Conversation created successfully', 'conversation_id' => $conversation->id], 200);
 }
+
+
+public function markMessageAsRead(Request $request, $message_id)
+{
+    try {
+        $message = Message::findOrFail($message_id);
+
+
+        $message->update(['viewed' => true]);
+
+        return response()->json(['message' => 'Message marked as read successfully']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Failed to mark message as read'], 500);
+    }
+}
+
+
 }

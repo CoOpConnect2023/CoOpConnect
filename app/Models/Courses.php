@@ -14,7 +14,7 @@ class Courses extends Model
         'start_date',
         'end_date',
         'teacher_id',
-        'school',
+        'school_id',
 
     ];
 

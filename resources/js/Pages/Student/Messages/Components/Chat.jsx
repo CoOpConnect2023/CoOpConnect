@@ -436,7 +436,7 @@ const spin = keyframes`
     100% { transform: rotate(360deg); }
 `;
 
-// Styled component with a loading animation
+
 const LoadingScreen = styled.div`
     display: flex;
     justify-content: center;
@@ -447,7 +447,7 @@ const LoadingScreen = styled.div`
     color: #333; /* Adjust text color as needed */
 `;
 
-// Additional styling for the spinning element
+
 const Spinner = styled.div`
     border: 4px solid rgba(0, 0, 0, 0.1);
     border-top: 4px solid #3498db; /* Adjust loading spinner color */

@@ -73,6 +73,7 @@ Route::get('/user-id', function () {
     return response()->json(['user' => Auth::user()]);
 })->middleware('auth:sanctum');
 Route::get('user-id/courses', [UserController::class, 'getUserId']);
+Route::get('/students/teacher/{teacherId}', [UserController::class, 'getStudentsByTeacherCourses']);
 
 Route::get('/download/{id}', [DocumentsController::class, 'download'])->name('file.download');
 
@@ -125,8 +126,11 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
     Route::post('/sendnewmessages', [MessagesController::class, 'createConversation']);
     Route::get('/conversation/{user_id}', [ConversationController::class, 'show']);
     Route::get('/conversation/{conversation_id}/messages', [ConversationController::class, 'getMessages']);
+    Route::get('/conversation/unreadmessages', [ConversationController::class, 'getAllMessages']);
     Route::get('/conversations/{conversation_id}/current', [ConversationController::class, 'getCurrentConversation']);
-
+    Route::get('/messages/{user_id}', [MessagesController::class, 'getUnreadMessages']);
+    Route::patch('/messages/{message_id}/mark-as-read', [MessagesController::class, 'markMessageAsRead']);
+    Route::patch('/messages/{message_id}/mark-all-as-read', [MessagesController::class, 'markAllMessageAsRead']);
 
 
 

@@ -63,5 +63,10 @@ public function getCurrentConversation($id)
         return response()->json(['conversation' => $conversation]);
     }
 
+    public function getAllMessages()
+{
+
+}
+
 
 }

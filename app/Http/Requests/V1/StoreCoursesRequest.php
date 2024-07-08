@@ -26,7 +26,7 @@ class StoreCoursesRequest extends FormRequest
             'start_date' => ['required', 'date'],
             'end_date' => ['required', 'date', 'after_or_equal:start_date'],
             'teacher_id' => ['required', 'exists:users,id'],
-            'school_id' => ['required', 'string', 'max:255']
+            'school_id' => ['required']
 
         ];
     }

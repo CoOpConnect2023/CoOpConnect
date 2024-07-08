@@ -52,6 +52,9 @@ function Header({ header }) {
   const [isNotificationModalOpen, setIsNotificationModalOpen] = React.useState(false);
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [user, setUser] = React.useState(null);
+  const [notifications, setNotifications] = React.useState(null);
+
+
   const altAvatarSrc = "https://cdn.builder.io/api/v1/image/assets/TEMP/c449c761188f38db922c89455e070256b822a267e33f51baa6901c76b73a4e78?apiKey=d66532d056b14640a799069157705b77&";
 
   useEffect(() => {

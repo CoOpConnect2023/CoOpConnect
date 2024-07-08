@@ -146,6 +146,43 @@ class UserController extends Controller
         return response()->json(['message' => 'Profile updated successfully', 'user' => $user]);
     }
 
+    public function getStudentsByTeacherCourses(Request $request, $teacherId)
+{
+    // Fetch students enrolled in courses where teacher_id matches $teacherId
+    $students = User::whereHas('courses', function ($query) use ($teacherId) {
+            $query->where('teacher_id', $teacherId);
+        })
+        ->with(['courses:id,name']) // Eager load courses and select only id and name
+        ->where('role', 'student')
+        ->get(['id', 'name', 'email', 'profile_image', 'working', 'interviewing', 'searching']);
+
+    // Calculate percentages for each status
+    $totalStudents = $students->count();
+
+    $workingCount = $students->where('working', 1)->count();
+    $interviewingCount = $students->where('interviewing', 1)->count();
+    $searchingCount = $students->where('searching', 1)->count();
+
+    $percentages = [
+        'working' => $totalStudents > 0 ? ($workingCount / $totalStudents) * 100 : 0,
+        'interviewing' => $totalStudents > 0 ? ($interviewingCount / $totalStudents) * 100 : 0,
+        'searching' => $totalStudents > 0 ? ($searchingCount / $totalStudents) * 100 : 0,
+    ];
+
+    // Transform course data to include course name
+    $students = $students->map(function ($student) {
+        $student['class'] = $student->courses->first()->name ?? 'Unknown Course';
+        unset($student->courses); // Remove courses from main array
+
+        return $student;
+    });
+
+    return response()->json([
+        'students' => $students,
+        'percentages' => $percentages,
+    ]);
+}
+
 
 
 }
