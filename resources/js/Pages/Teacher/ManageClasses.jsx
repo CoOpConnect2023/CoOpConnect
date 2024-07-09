@@ -89,12 +89,13 @@ function ClassesPage() {
     };
 
     return (
-        <NavBar header={"Home"}>
+        <NavBar header={"Manage Classes"}>
             <Section>
                 <SectionTitle>Classes Taught</SectionTitle>
                 <StyledTable>
                     <thead>
                         <tr>
+                            <th>Class ID</th>
                             <th>Class Name</th>
                             <th>Start Date</th>
                             <th>End Date</th>
@@ -105,6 +106,7 @@ function ClassesPage() {
                     <tbody>
                         {classes.map((classItem, index) => (
                             <tr key={index}>
+                                <td>{classItem.id}</td>
                                 <td>{classItem.name}</td>
                                 <td>{classItem.startDate}</td>
                                 <td>{classItem.endDate}</td>

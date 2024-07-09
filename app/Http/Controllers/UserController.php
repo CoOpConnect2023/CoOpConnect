@@ -152,8 +152,10 @@ class UserController extends Controller
     $students = User::whereHas('courses', function ($query) use ($teacherId) {
             $query->where('teacher_id', $teacherId);
         })
-        ->with(['courses:id,name']) // Eager load courses and select only id and name
         ->where('role', 'student')
+        ->with(['courses' => function ($query) use ($teacherId) {
+            $query->where('teacher_id', $teacherId); // Filter courses by teacher_id
+        }])
         ->get(['id', 'name', 'email', 'profile_image', 'working', 'interviewing', 'searching']);
 
     // Calculate percentages for each status
@@ -169,10 +171,15 @@ class UserController extends Controller
         'searching' => $totalStudents > 0 ? ($searchingCount / $totalStudents) * 100 : 0,
     ];
 
-    // Transform course data to include course name
+    // Transform student data to include courses
     $students = $students->map(function ($student) {
-        $student['class'] = $student->courses->first()->name ?? 'Unknown Course';
-        unset($student->courses); // Remove courses from main array
+        $student->courses = $student->courses->map(function ($course) {
+            return [
+                'id' => $course->id,
+                'name' => $course->name,
+            ];
+        });
+         // Remove courses relationship
 
         return $student;
     });
@@ -182,7 +189,6 @@ class UserController extends Controller
         'percentages' => $percentages,
     ]);
 }
-
 
 
 }

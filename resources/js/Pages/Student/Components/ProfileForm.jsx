@@ -375,9 +375,7 @@ console.log("coursedata", coursesData)
                 ))}
               </AutocompleteList>
             )}
-            <AddSkillButton type="button" onClick={() => addCourse(courseQuery)}>
-              Add Course
-            </AddSkillButton>
+
           </SkillsContainer>
         </ProfileDetailItem>
       </ProfileDetail>
@@ -648,7 +646,7 @@ const LoadingScreen = styled.div`
     height: 100vh;
     font-size: 20px;
     background-color: #f0f0f0;
-    color: #333; 
+    color: #333;
 `;
 
 

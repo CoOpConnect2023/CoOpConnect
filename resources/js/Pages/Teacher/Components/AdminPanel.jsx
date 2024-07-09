@@ -13,7 +13,7 @@ function AdminPanel() {
             desc: "View student activity. Add, remove, edit, students. View student details.",
             alt1: "Manage Students Icon",
             alt2: "Student Activity Icon",
-            link: "/students",
+            link: "/teacher/students",
 
         },
         {
@@ -36,6 +36,7 @@ function AdminPanel() {
             desc: "Personally message students and potentially their employers.",
             alt1: "Message Students Icon",
             alt2: "Message Icon",
+            link: "/teacher/messages",
         },
     ];
 

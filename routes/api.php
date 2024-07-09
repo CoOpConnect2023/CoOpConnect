@@ -104,7 +104,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
     Route::get('/courses/teacher/{userId}', [CoursesController::class, 'getCoursesForTeacher']);
     Route::get('/courses/documents/teacher/{userId}', [CoursesController::class, 'getCourseDocumentsForTeacher']);
     Route::get('/school/{schoolId}/courses', [CoursesController::class, 'getCoursesForSchool']);
-
+    Route::delete('usercourses/student/{studentId}', [UserCoursesController::class, 'deleteByStudentId']);
 
 
     Route::post('jobs/{job}/shortlist', [ShortlistController::class, 'addToShortlist']);

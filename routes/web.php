@@ -52,6 +52,7 @@ Route::middleware(['auth', 'teacher'])->group(function () {
     Route::get('/teacher/profile', [TeacherController::class, 'profile'])->name('teacher.profile');
     Route::get('/teacher/settings', [TeacherController::class, 'settings'])->name('teacher.settings');
     Route::get('/teacher/classes', [TeacherController::class, 'classes'])->name('teacher.classes');
+    Route::get('/teacher/students', [TeacherController::class, 'students'])->name('teacher.classes');
 });
 
 Route::middleware(['auth', 'employee'])->group(function () {
