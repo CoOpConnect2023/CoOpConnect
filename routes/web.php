@@ -65,6 +65,8 @@ Route::middleware(['auth', 'employee'])->group(function () {
     Route::get('/employer/interviews', [EmployerController::class, 'interviews'])->name('employer.interviews');
     Route::get('/employer/profile', [EmployerController::class, 'profile'])->name('employer.profile');
     Route::get('/employer/settings', [EmployerController::class, 'settings'])->name('employer.settings');
+    Route::get('/employer/viewapplicants', [EmployerController::class, 'viewApplicants'])->name('employer.viewapplicants');
+    Route::get('/employer/accept-applicant/{id}', [EmployerController::class, 'acceptApplicant'])->name('employer.acceptapplicant');
 });
 
 
