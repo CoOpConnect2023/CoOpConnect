@@ -21,19 +21,22 @@ export default function NewMessage({ newMessage, setNewMessage, onSendNewMessage
 
     let uniqueEmails = new Set();
 
-    // Collect unique emails from all shortlists and their applicants
     if (shortlists && Array.isArray(shortlists)) {
         shortlists.forEach(shortlist => {
-            if (shortlist && shortlist.applicants && Array.isArray(shortlist.applicants)) {
-                shortlist.applicants.forEach(applicant => {
-                    if (applicant && applicant.email) {
-                        uniqueEmails.add(applicant.email);
-                    }
-                });
+            if (shortlist && shortlist.email) {
+                uniqueEmails.add(shortlist.email);
             }
         });
     }
-    const hasApplicants = shortlists && shortlists.some(shortlist => shortlist.applicants.length > 0);
+
+    // Check if there are any applicants across all shortlists
+    const hasApplicants = shortlists && shortlists.some(shortlist => shortlist.email.length > 0);
+
+    console.log('Unique Emails:', Array.from(uniqueEmails));
+    console.log('Shortlists:', shortlists);
+    console.log('Props:', { newMessage, recipientEmail, shortlists });
+    console.log('Unique Emails:', Array.from(uniqueEmails));
+    console.log('Has Applicants:', hasApplicants);
 
 
     return (

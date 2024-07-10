@@ -52,7 +52,7 @@ const Container = styled.div`
      display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    height: 100%;
+
 `;
 
 const Div98 = styled.div`

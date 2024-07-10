@@ -24,6 +24,7 @@ const MessageContainer = styled.div`
     margin-top: 5px; /* Reduced margin */
     align-items: ${({ isCurrentUser }) =>
         isCurrentUser ? "flex-end" : "flex-start"};
+
 `;
 
 const Message = styled.div`

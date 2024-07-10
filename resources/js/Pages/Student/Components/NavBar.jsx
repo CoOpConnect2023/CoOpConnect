@@ -34,6 +34,7 @@ import briefcase from "@/Pages/Images/briefcase.svg";
 import message from "@/Pages/Images/message-square.svg";
 import calendar from "@/Pages/Images/calendar-days.svg";
 import user from "@/Pages/Images/user.svg";
+import { useForm } from '@inertiajs/react';
 import settings from "@/Pages/Images/settings.svg";
 import { Link } from "@inertiajs/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -111,7 +112,7 @@ function Header({ header }) {
     const [isProfileModalOpen, setIsProfileModalOpen] = React.useState(false);
     const [isNotificationModalOpen, setIsNotificationModalOpen] = React.useState(false);
     const [isExpanded, setIsExpanded] = React.useState(false);
-
+    const { post } = useForm();
     const altAvatarSrc = "https://cdn.builder.io/api/v1/image/assets/TEMP/c449c761188f38db922c89455e070256b822a267e33f51baa6901c76b73a4e78?apiKey=d66532d056b14640a799069157705b77&";
 
 
@@ -138,7 +139,9 @@ function Header({ header }) {
 
 
     const handleMarkAsRead = (messageId, conversationId) => {
+        const dummyUserID = user.id;
         dispatch(markMessageAsRead({ messageId, conversationId }));
+        dispatch(getNotifications(dummyUserID));
     };
 
     const handleRedirect = () => {
@@ -158,7 +161,10 @@ function Header({ header }) {
         setIsProfileModalOpen(false);
         setIsExpanded(!isExpanded); // Toggle expanded state
     };
-
+    const handleLogout = (e) => {
+        e.preventDefault();
+        post(route('logout'));
+    };
 
 
     if (!user || !conversations) {
@@ -200,9 +206,13 @@ function Header({ header }) {
                 </UserProfile>
                 <Modal isOpen={isProfileModalOpen}>
                     <ModalContent>
+                        <Link href="/student/profile">
                         <ModalItem>Profile</ModalItem>
+                        </Link>
+                        <Link href="/student/profile">
                         <ModalItem>Settings</ModalItem>
-                        <ModalItem>Logout</ModalItem>
+                        </Link>
+                        <ModalItem as="button" onClick={handleLogout}>Logout</ModalItem>
                     </ModalContent>
                 </Modal>
                 <NotificationModal isOpen={isNotificationModalOpen} conversations={conversations} handleMarkAsRead={handleMarkAsRead} handleRedirect={handleRedirect} currentUser={user} notificationsStatus={notificationsStatus}>

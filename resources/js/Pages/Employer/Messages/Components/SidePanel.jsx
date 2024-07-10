@@ -34,10 +34,10 @@ export default function SidePanel({ conversations, setConversationsID, currentUs
                                 <Div20>
                                     <Div21>
                                         <Div22>{otherUser.name}</Div22>
-                                        {/* You may need to format the timestamp to match your desired format */}
+
                                         <Div23>{new Date(conversation.latest_message.updated_at).toLocaleString()}</Div23>
                                     </Div21>
-                                    {/* Display last message content here if available */}
+
                                     <Div24>{conversation.latest_message ? conversation.latest_message.content : 'No messages yet'}</Div24>
                                 </Div20>
                             </Div19>
@@ -80,6 +80,7 @@ const Div17 = styled.div`
     display: flex;
     margin-top: 10px;
     gap: 10px;
+
     @media (max-width: 991px) {
         max-width: 100%;
         flex-wrap: wrap;
@@ -92,6 +93,8 @@ const Div18 = styled.div`
     font-size: 12px;
     line-height: 133%;
     flex: 1;
+    overflow-y: auto;
+    height:40vh;
 `;
 
 const Div19 = styled.div`

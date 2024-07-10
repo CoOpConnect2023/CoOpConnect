@@ -92,6 +92,8 @@ const Div18 = styled.div`
     font-size: 12px;
     line-height: 133%;
     flex: 1;
+    overflow-y: auto;
+    height:40vh;
 `;
 
 const Div19 = styled.div`

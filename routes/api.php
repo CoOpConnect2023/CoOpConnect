@@ -102,6 +102,9 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
     Route::apiResource('userjobs', UserJobsController::class);
     Route::get('/courses/user/{userId}', [CoursesController::class, 'getCourseforUser']);
     Route::get('/courses/teacher/{userId}', [CoursesController::class, 'getCoursesForTeacher']);
+
+    Route::get('/courses/school/{userId}', [CoursesController::class, 'getUsersWithSameSchool']);
+
     Route::get('/courses/documents/teacher/{userId}', [CoursesController::class, 'getCourseDocumentsForTeacher']);
     Route::get('/school/{schoolId}/courses', [CoursesController::class, 'getCoursesForSchool']);
     Route::delete('usercourses/student/{studentId}', [UserCoursesController::class, 'deleteByStudentId']);

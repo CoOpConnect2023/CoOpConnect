@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Courses;
+use App\Models\User;
 use App\Http\Requests\V1\StoreCoursesRequest;
 use App\Http\Requests\V1\UpdateCoursesRequest;
 use App\Http\Controllers\Controller;
@@ -46,17 +47,29 @@ class CoursesController extends Controller
     public function getCoursesForTeacher($userId)
 {
     $teacherCourses = Courses::where('teacher_id', $userId)
-                            ->with('users') // Load users enrolled in each course
+                            ->with('users')
                             ->get();
 
     return new CoursesCollection($teacherCourses);
 }
 
+public function getUsersWithSameSchool($userId)
+{
+
+    $user = User::find($userId);
+    $schoolId = $user->school_id;
+
+
+    $usersWithSameSchool = User::where('school_id', $schoolId)->get();
+
+    return $usersWithSameSchool;
+}
+
 public function getCoursesForSchool($schoolId)
 {
-    // Assuming 'school_id' is a foreign key in the courses table
+
     $schoolCourses = Courses::where('school_id', $schoolId)
-                            // Load users enrolled in each course
+
                             ->get();
 
     return new CoursesCollection($schoolCourses);

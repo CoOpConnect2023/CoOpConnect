@@ -14,166 +14,8 @@ import {
 } from "@/Features/messages/messagesSlice";
 axios.defaults.baseURL = "http://127.0.0.1:8000/api/v1";
 
-export default function Chat() {
+export default function Chat({newMessage, setNewMessage, handleSendNewMessage, recipientEmail, setRecipientEmail, shortlists, conversations, selectedConversation, messages, handleSendMessage, setConversationsID, currentUser, conversationID, handleFetchConversationDetails }) {
 
-    const [conversationID, setConversationsID] = useState(null);
-
-
-    const [selectedConversation, setSelectedConversation] = useState(null);
-    const [newMessage, setNewMessage] = useState('');
-    const [recipientEmail, setRecipientEmail] = useState('');
-    const [shortlists, setShortlists] = useState(null);
-
-
-    const dispatch = useDispatch();
-    const user = useSelector(selectUser);
-    const userStatus = useSelector(selectUserStatus);
-    const messages = useSelector(selectMessages);
-    const messageStatus = useSelector(selectMessagesStatus);
-
-    const conversationsStatus = useSelector(selectConversationsStatus);
-
-    useEffect(() => {
-        dispatch(getUser());
-
-    }, [dispatch]);
-
-    const userInfo = user;
-    const currentUser = userInfo?.id;
-
-
-    useEffect(() => {
-        if (conversationID !== null) {
-            dispatch(getMessages({ conversationID }));
-
-        }
-    }, [dispatch, conversationID]);
-
-    useEffect(() => {
-        if (conversationID !== null) {
-            dispatch(getSelectedConversation({ conversationID }));
-
-        }
-    }, [dispatch, conversationID]);
-
-
-
-    const convoStatus = useSelector(selectMessagesStatus);
-
-    useEffect(() => {
-        if (currentUser !== null) {
-            dispatch(getConversations({ userId: currentUser }));
-        }
-    }, [dispatch, currentUser]);
-
-    const convos = useSelector(selectConversations);
-
-    useEffect(() => {
-
-    }, [convos]);
-    const conversations = convos.conversations;
-
-
-
-
-    const fetchConversationDetails = async () => {
-        try {
-            const response = await axios.get(`/conversations/${conversationID}/current`);
-            setSelectedConversation(response.data.conversation);
-
-        } catch (error) {
-            console.error('Error fetching conversation details:', error);
-        }
-    };
-
-    useEffect(() => {
-        if (conversationID !== null) {
-            fetchConversationDetails();
-        }
-    }, [conversationID]);
-
-    const handleSendMessage = async () => {
-        if (newMessage.trim() === '') return; // Prevent sending empty messages
-
-        try {
-            const response = await axios.post(`/sendmessages`, {
-                content: newMessage,
-                user_id: userInfo.id,
-                conversation_id: conversationID
-            });
-
-
-            setNewMessage('');
-
-            setTimeout(dispatch(getMessages({ conversationID })), 500);
-            setTimeout(dispatch(getConversations({ userId: userInfo.id })), 500);
-        } catch (error) {
-            console.error('Error sending message:', error);
-        }
-    };
-
-    const handleSendNewMessage = async () => {
-        if (newMessage.trim() === '') return; // Prevent sending empty messages
-
-        const requestData = {
-            content: newMessage,
-            user_id: userInfo.id,
-            recipient_email: recipientEmail
-        };
-
-        try {
-            console.log('Sending message with data:', requestData);
-
-            const response = await axios.post(`/sendnewmessages`, requestData);
-
-            console.log('Response from server:', response.data); // Log the response data
-
-
-            setNewMessage('');
-
-            setTimeout(dispatch(getMessages({ conversationID })), 500);
-            setTimeout(dispatch(getConversations({ userId: userInfo.id })), 500);
-        } catch (error) {
-            console.error('Error sending message:', error);
-        }
-    };
-
-
-
-
-
-
-    const fetchShortlists = async (currentUser) => {
-        try {
-            const response = await axios.get(
-                `http://127.0.0.1:8000/api/v1/courses/teacher/${currentUser}`
-            );
-            setShortlists(response.data.data);
-            console.log("shortlists", response.data);
-        } catch (error) {
-            console.error("Error fetching shortlists:", error);
-            // Handle error gracefully
-        }
-    };
-
-    useEffect(() => {
-
-
-        if (currentUser) {
-            fetchShortlists(currentUser);
-        }
-    }, [currentUser]);
-
-    if (userStatus === 'loading') {
-        return <LoadingScreen><Spinner /></LoadingScreen>;
-    }
-    if (messageStatus === 'loading') {
-        return <LoadingScreen><Spinner /></LoadingScreen>;
-    }
-
-    if (convoStatus === 'loading') {
-        return <LoadingScreen><Spinner /></LoadingScreen>;
-    }
 
 
 
@@ -281,12 +123,13 @@ const RightColumn = styled.div`
 `;
 
 const MessageContainer = styled.div`
-    height: 60vh;
+height: 60vh;
 `;
 
 const ScrollableContainer = styled.div`
 
     overflow-y: auto;
+    height:100%;
 `;
 
 const Div78 = styled.div`

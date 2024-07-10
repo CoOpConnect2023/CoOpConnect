@@ -90,6 +90,18 @@ export const messagesSlice = createSlice({
                 state.status.notifications = "failed";
             })
 
+            .addCase(fetchConversationDetails.pending, (state, action) => {
+                state.status.selectedConversation = "loading";
+            })
+            .addCase(fetchConversationDetails.fulfilled, (state, action) => {
+                state.selectedConversation = action.payload;
+                state.status.selectedConversation = "succeeded";
+
+            })
+            .addCase(fetchConversationDetails.rejected, (state, action) => {
+                state.status.selectedConversation = "failed";
+            })
+
             .addCase(markMessageAsRead.pending, (state) => {
                 state.markMessageAsReadStatus = 'loading';
             })
@@ -111,6 +123,27 @@ export const messagesSlice = createSlice({
             })
             .addCase(markMessageAsRead.rejected, (state) => {
                 state.markMessageAsReadStatus = 'failed';
+            })
+
+            .addCase(sendMessage.pending, (state) => {
+                state.status.newMessage = "loading";
+            })
+            .addCase(sendMessage.fulfilled, (state, action) => {
+                state.newMessage = action.payload.newMessage;
+                state.status.newMessage = "succeeded";
+            })
+            .addCase(sendMessage.rejected, (state) => {
+                state.status.newMessage = "failed";
+            })
+            .addCase(sendNewMessage.pending, (state) => {
+                state.status.newMessage = "loading";
+            })
+            .addCase(sendNewMessage.fulfilled, (state, action) => {
+                state.newMessage = action.payload.newMessage;
+                state.status.newMessage = "succeeded";
+            })
+            .addCase(sendNewMessage.rejected, (state) => {
+                state.status.newMessage = "failed";
             });
 
     },
@@ -143,7 +176,7 @@ export const getSelectedConversation = createAsyncThunk(
     async (params) => {
         const { conversationID } = params;
         const response = await axios({
-            url: `/api/conversations/${conversationID}/current`,
+            url: `/conversations/${conversationID}/current`,
             method: "GET",
         });
         return response.data;
@@ -207,6 +240,65 @@ export const markMessageAsRead = createAsyncThunk(
         }
     }
 );
+
+export const fetchConversationDetails = createAsyncThunk(
+    "messages/fetchConversationDetails",
+    async (conversationID, { getState, dispatch }) => {
+      try {
+        const response = await axios.get(`/conversations/${conversationID}/current`);
+        console.log("fetchdetails",response.data.conversation)
+        return response.data.conversation;
+
+      } catch (error) {
+        console.error("Error fetching conversation details:", error);
+        throw error;
+      }
+    }
+  );
+
+  export const sendMessage = createAsyncThunk(
+    "messages/sendMessage",
+    async ({ newMessage, userInfo, conversationID }, { dispatch, rejectWithValue }) => {
+        try {
+            await axios.post(`/sendmessages`, {
+                content: newMessage,
+                user_id: userInfo.id,
+                conversation_id: conversationID
+            });
+
+            dispatch(getMessages({ conversationID }));
+            dispatch(getConversations({ userId: userInfo.id }));
+
+            return { newMessage: '' };
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
+export const sendNewMessage = createAsyncThunk(
+    "messages/sendNewMessage",
+    async ({ newMessage, userInfo, recipientEmail }, { dispatch, rejectWithValue }) => {
+        try {
+            const requestData = {
+                content: newMessage,
+                user_id: userInfo.id,
+                recipient_email: recipientEmail
+            };
+
+            await axios.post(`/sendnewmessages`, requestData);
+
+            dispatch(getMessages({ conversationID }));
+            dispatch(getConversations({ userId: userInfo.id }));
+
+            return { newMessage: '' };
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
+
 
 
 
