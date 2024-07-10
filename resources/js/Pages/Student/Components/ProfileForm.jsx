@@ -79,7 +79,7 @@ const ProfileForm = () => {
     };
 
     const addCourse = (course) => {
-      console.log("Adding course:", course); // Log course details
+
 
       setUser((prevData) => ({
         ...prevData,
@@ -96,7 +96,7 @@ const ProfileForm = () => {
           courses: updatedCourses,
         }));
 
-        console.log("Updated Courses:", updatedCourses); // Log the updated courses array
+
       };
 
     const handleDrop = (acceptedFiles) => {
@@ -177,7 +177,7 @@ const ProfileForm = () => {
           schoolID: course.schoolID,
         }));
         formData.append("courses", JSON.stringify(coursesData));
-console.log("coursedata", coursesData)
+
         const response = await axios.post(
           `${appUrl}/api/update-profile/${user.id}`,
           formData,
@@ -189,8 +189,7 @@ console.log("coursedata", coursesData)
           }
         );
 
-        console.log("Profile updated:", response.data);
-        // You might handle state update instead of page reload
+
         window.location.reload(); // Reload page or handle state update as needed
       } catch (error) {
         console.error("Error updating profile:", error);

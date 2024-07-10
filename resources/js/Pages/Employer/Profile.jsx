@@ -61,7 +61,7 @@ function Profile() {
                 const userData = response.data.user;
                 userData.skills = userData.skills || "[]";
                 setUser(userData);
-                console.log(response.data.user);
+
             } catch (error) {
                 console.error("Error fetching user ID:", error);
             }
@@ -137,7 +137,7 @@ function Profile() {
                 }
             );
 
-            console.log("Profile updated:", response.data);
+
             window.location.reload();
         } catch (error) {
             console.error("Error updating profile:", error);

@@ -47,7 +47,7 @@ function Post2() {
                 );
                 setUserId(response.data.user.id);
                 dispatch(updateJobFormData({ userId: response.data.user.id }));
-                console.log(response.data.user.id);
+                
             } catch (error) {
                 console.error("Error fetching user ID:", error);
             }

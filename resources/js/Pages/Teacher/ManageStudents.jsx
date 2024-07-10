@@ -47,7 +47,7 @@ function StudentsPage() {
                 if (user) {
                     const response = await axios.get(`http://127.0.0.1:8000/api/v1/courses/teacher/${user.id}`);
                     setCourses(response.data.data);
-                    console.log("courses",response.data)
+
                 }
             } catch (error) {
                 console.error("Error fetching courses:", error);
@@ -60,10 +60,7 @@ function StudentsPage() {
         try {
             const courseId = newStudent.courses.length > 0 ? newStudent.courses[0].id : null;
 
-            console.log("Creating student with data:", {
-                userId: newStudent.id,
-                coursesId: courseId
-            });
+
 
             // Send the POST request
             const response = await axios.post(`http://127.0.0.1:8000/api/v1/usercourses`, {
@@ -124,101 +121,112 @@ function StudentsPage() {
 
     return (
         <NavBar header={"Manage Students"}>
-            <Section>
-                <SectionTitle>Students Enrolled</SectionTitle>
-                <StyledTable>
-                    <thead>
-                        <tr>
-                            <th>Student ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Courses</th> {/* Added Courses column */}
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {students && students.map((student, index) => (
-                            <tr key={index}>
-                                <td>{student.id}</td>
-                                <td>{student.name}</td>
-                                <td>{student.email}</td>
-                                <td>
-                                    <ul>
-                                        {student.courses && student.courses.map((course, idx) => (
-                                            <li key={idx}>{course.name}</li>
-                                        ))}
-                                    </ul>
-                                </td>
-                                <td>
-                                    <Button onClick={() => setEditingStudent(student)}>Edit</Button>
-                                    <DeleteButton onClick={() => handleDeleteStudent(student.id)}>Delete</DeleteButton>
-                                </td>
+            <MainContainer>
+                <Section>
+                    <SectionTitle>Students Enrolled</SectionTitle>
+                    <StyledTable>
+                        <thead>
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Courses</th> {/* Added Courses column */}
+                                <th>Actions</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </StyledTable>
-
-                {editingStudent ? (
-                    <Form>
-                        <Input
-                            type="text"
-                            name="name"
-                            value={editingStudent.name}
-                            onChange={(e) => handleInputChange(e, true)}
-                            placeholder="Student Name"
-                        />
-                        <Input
-                            type="email"
-                            name="email"
-                            value={editingStudent.email}
-                            onChange={(e) => handleInputChange(e, true)}
-                            placeholder="Student Email"
-                        />
-                        <label htmlFor="courses">Courses:</label>
-                        <Select
-                            id="courses"
-                            name="courses"
-                            multiple
-                            value={editingStudent.courses.map(course => course.id)}
-                            onChange={(e) => handleInputChange(e, true)}
-                        >
-                            {courses.map(course => (
-                                <option key={course.id} value={course.id}>{course.name}</option>
+                        </thead>
+                        <tbody>
+                            {students && students.map((student, index) => (
+                                <tr key={index}>
+                                    <td>{student.id}</td>
+                                    <td>{student.name}</td>
+                                    <td>{student.email}</td>
+                                    <td>
+                                        <ul>
+                                            {student.courses && student.courses.map((course, idx) => (
+                                                <li key={idx}>{course.name}</li>
+                                            ))}
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <Button onClick={() => setEditingStudent(student)}>Edit</Button>
+                                        <DeleteButton onClick={() => handleDeleteStudent(student.id)}>Delete</DeleteButton>
+                                    </td>
+                                </tr>
                             ))}
-                        </Select>
-                        <Button onClick={() => handleEditStudent(editingStudent.id)}>Save Changes</Button>
-                    </Form>
-                ) : (
-                    <Form>
-                        <Input
-                            type="text"
-                            name="id"
-                            value={newStudent.id}
-                            onChange={(e) => handleInputChange(e)}
-                            placeholder="Student ID"
-                        />
+                        </tbody>
+                    </StyledTable>
+                </Section>
 
-                        <label htmlFor="courses">Courses:</label>
-                        <Select
-                            id="courses"
-                            name="courses"
-                            multiple
-                            value={newStudent.courses.map(course => course.id)}
-                            onChange={(e) => handleInputChange(e)}
-                        >
-                            {courses.map(course => (
-                                <option key={course.id} value={course.id}>{course.name}</option>
-                            ))}
-                        </Select>
-                        <Button type="button" onClick={handleCreateStudent}>Add Student</Button>
-                    </Form>
-                )}
-            </Section>
+                <FixedBottom>
+                    {editingStudent ? (
+                        <Form>
+                            <Input
+                                type="text"
+                                name="name"
+                                value={editingStudent.name}
+                                onChange={(e) => handleInputChange(e, true)}
+                                placeholder="Student Name"
+                            />
+                            <Input
+                                type="email"
+                                name="email"
+                                value={editingStudent.email}
+                                onChange={(e) => handleInputChange(e, true)}
+                                placeholder="Student Email"
+                            />
+                            <label htmlFor="courses">Courses:</label>
+                            <Select
+                                id="courses"
+                                name="courses"
+                                multiple
+                                value={editingStudent.courses.map(course => course.id)}
+                                onChange={(e) => handleInputChange(e, true)}
+                            >
+                                {courses.map(course => (
+                                    <option key={course.id} value={course.id}>{course.name}</option>
+                                ))}
+                            </Select>
+                            <Button onClick={() => handleEditStudent(editingStudent.id)}>Save Changes</Button>
+                        </Form>
+                    ) : (
+                        <Form>
+                            <Input
+                                type="text"
+                                name="id"
+                                value={newStudent.id}
+                                onChange={(e) => handleInputChange(e)}
+                                placeholder="Student ID"
+                            />
+
+                            <label htmlFor="courses">Courses:</label>
+                            <Select
+                                id="courses"
+                                name="courses"
+                                multiple
+                                value={newStudent.courses.map(course => course.id)}
+                                onChange={(e) => handleInputChange(e)}
+                            >
+                                {courses.map(course => (
+                                    <option key={course.id} value={course.id}>{course.name}</option>
+                                ))}
+                            </Select>
+                            <Button type="button" onClick={handleCreateStudent}>Add Student</Button>
+                        </Form>
+                    )}
+                </FixedBottom>
+            </MainContainer>
         </NavBar>
     );
 }
 
+const MainContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Full height of viewport */
+`;
+
 const Section = styled.section`
+    flex: 1; /* Grow to fill remaining space */
     border-radius: 10px;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
     background-color: #fff;
@@ -226,6 +234,7 @@ const Section = styled.section`
     flex-direction: column;
     padding: 20px;
     gap: 20px;
+    overflow-y: auto; /* Enable scrolling within this section */
 `;
 
 const SectionTitle = styled.h1`
@@ -249,8 +258,8 @@ const StyledTable = styled.table`
         color: var(--gray-600, #4a5568);
     }
     tbody {
-        max-height: 300px;
-        overflow-y: auto;
+        max-height: 300px; /* Adjust as needed */
+        overflow-y: auto; /* Enable scrolling */
     }
 `;
 
@@ -285,18 +294,18 @@ const Button = styled.button`
     background-color: var(--Schemes-Primary, #6b538c);
     color: #fff;
     font-size: 16px;
-    font-family: Poppins, sans-serif;
-    cursor: pointer;
-    &:hover {
-        background-color: #543e6c;
-    }
 `;
 
 const DeleteButton = styled(Button)`
-    background-color: #e53e3e; /* Red color for delete button */
-    &:hover {
-        background-color: #c53030; /* Darker red on hover */
-    }
+    background-color: #f56565; /* Override delete button color */
+`;
+
+const FixedBottom = styled.div`
+    position: sticky;
+    bottom: 0;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 -4px 4px rgba(0, 0, 0, 0.1);
 `;
 
 export default StudentsPage;

@@ -113,7 +113,7 @@ const Modal = ({ onClose, onSubmit, defaultDate, applicants }) => {
     const handleSubmit = () => {
         const start = new Date(`${startDate}T${startTime}`);
         const end = new Date(`${endDate}T${endTime}`);
-        console.log(selectedApplicant)
+        
         onSubmit(title, description, start, end, selectedApplicant);
         onClose();
     };

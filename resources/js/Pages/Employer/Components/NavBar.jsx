@@ -125,7 +125,7 @@ function Header({ header }) {
         if (user && user.id) {
             const dummyUserID = user.id;
             dispatch(getNotifications(dummyUserID));
-            console.log(user, conversations);
+
         }
     }, [user, dispatch]);
 

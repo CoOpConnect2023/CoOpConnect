@@ -83,7 +83,7 @@ export default function Messages() {
     useEffect(() => {
         if (currentUser) {
             dispatch(getShortlists(currentUser)).then(response => {
-                console.log("Shortlists response:", response);
+
 
             });
         }

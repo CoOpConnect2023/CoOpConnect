@@ -166,7 +166,7 @@ export const getConversations = createAsyncThunk("messages/getConversations", as
         method: "GET",
 
     });
-    console.log(response.data);
+
     return response.data;
 
 });
@@ -184,7 +184,7 @@ export const getSelectedConversation = createAsyncThunk(
 );
 
 export const getNotifications = createAsyncThunk("notifications/getNotifications", async (userID) => {
-    console.log("Fetching notifications for userID:", userID);
+
 
     try {
         const response = await axios({
@@ -192,7 +192,7 @@ export const getNotifications = createAsyncThunk("notifications/getNotifications
             method: "GET",
         });
 
-        console.log("Response data:", response.data);
+
         return response.data;
     } catch (error) {
         console.error("Error fetching notifications:", error);
@@ -204,14 +204,14 @@ export const markMessageAsRead = createAsyncThunk(
     "messages/markMessageAsRead",
     async ({ messageId, conversationId }, { getState, dispatch }) => {
         try {
-            console.log(`Marking message ${messageId} in conversation ${conversationId} as read...`);
+
 
             // Perform API call to mark message as read
             await axios.patch(`/messages/${messageId}/mark-as-read`);
 
             // Get conversations from the state
             const conversations = getState().messages.notifications.conversations;
-            console.log("Current conversations:", conversations);
+
 
             // Update conversations by filtering out the read message
             const updatedConversations = conversations.map(conversation => {
@@ -227,7 +227,7 @@ export const markMessageAsRead = createAsyncThunk(
                 return conversation;
             });
 
-            console.log("Updated conversations:", updatedConversations);
+
 
             // Dispatch an action to update Redux state with updated conversations
             dispatch(markMessageReadSuccess(updatedConversations));
@@ -246,7 +246,7 @@ export const fetchConversationDetails = createAsyncThunk(
     async (conversationID, { getState, dispatch }) => {
       try {
         const response = await axios.get(`/conversations/${conversationID}/current`);
-        console.log("fetchdetails",response.data.conversation)
+
         return response.data.conversation;
 
       } catch (error) {

@@ -198,7 +198,7 @@ export const getStudentShortlists = createAsyncThunk(
             url: `/courses/school/${currentUser}`,
             method: "GET",
         });
-console.log(response.data)
+
         return response.data;
     }
 );

@@ -105,8 +105,7 @@ const Interviews = () => {
         }
     }, [interviewsStatus.postInterview, data.postInterview]);
 
-    console.log("Fetched User ID:", userId);
-    console.log("interviews", events);
+
 
     function getTodayDate() {
         const today = new Date();
@@ -150,7 +149,7 @@ const Interviews = () => {
                 payload
             );
 
-            console.log(response.data.message); // Optionally log success message
+
 
             // Update events state with the new position
             const updatedEvents = events.map((existingEvent) =>
@@ -190,7 +189,7 @@ const Interviews = () => {
                 interviewee_id: event.intervieweeId,
                 interviewer_id: event.interviewerId,
             };
-            console.log(event);
+
 
             // Send PUT request to update event
             const response = await axios.put(
@@ -198,7 +197,7 @@ const Interviews = () => {
                 payload
             );
 
-            console.log(response.data.message); // Optionally log success message
+
 
             // Update events state with the new position
             const updatedEvents = events.map((existingEvent) =>
@@ -270,7 +269,7 @@ const Interviews = () => {
                     `http://127.0.0.1:8000/api/v1/courses/teacher/${userId}`
                 );
                 setShortlists(response.data.data);
-                console.log("data", response.data.data);
+
             } catch (error) {
                 console.error("Error fetching shortlists:", error);
                 // Handle error gracefully
@@ -289,7 +288,7 @@ const Interviews = () => {
                 `http://127.0.0.1:8000/api/jobs/${shortlist.job.id}/shortlist`
             );
             handleShortlistDelete(shortlist.id); // Update state or perform any necessary cleanup
-            console.log(response.data.message); // Optionally log the response message
+
         } catch (error) {
             console.error("Error deleting shortlist:", error);
             // Handle error
@@ -308,7 +307,7 @@ const Interviews = () => {
             `http://127.0.0.1:8000/api/v1/interviews/${event.id}`
           );
           handleEventDelete(event.id); // Update state or perform any necessary cleanup
-          console.log(response.data.message); // Optionally log the response message
+
         } catch (error) {
           console.error("Error deleting event:", error);
           // Handle error

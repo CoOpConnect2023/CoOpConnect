@@ -135,7 +135,7 @@ export const jobsSlice = createSlice({
             })
             .addCase(patchJob.fulfilled, (state, action) => {
                 state.status.patchJob = "succeeded";
-                console.log(action.payload);
+                
                 state.jobs = state.jobs.map((job) =>
                     job.id === action.payload.id ? action.payload : job
                 );
@@ -220,7 +220,7 @@ export const searchJobsbySkill = createAsyncThunk(
             },
         });
 
-        console.log(response.data);
+
 
         return response.data.data;
     }
@@ -230,7 +230,7 @@ export const searchJobsBySkillAndLocation = createAsyncThunk(
     "jobs/searchJobsBySkillAndLocation",
     async (params) => {
         const { searchTerm, location } = params;
-        console.log("test", searchTerm);
+
         const response = await axios({
             url: "/jobs/search",
             method: "GET",
@@ -254,7 +254,7 @@ export const postJob = createAsyncThunk("jobs/postJob", async (params) => {
         company,
         userId,
     } = params;
-    console.log(params);
+
     const response = await axios({
         url: "/jobs",
         method: "POST",
@@ -326,7 +326,7 @@ export const patchJob = createAsyncThunk("jobs/patchJob", async (params) => {
             company,
         },
     });
-    console.log(response.data.data);
+
     return response.data.data;
 });
 

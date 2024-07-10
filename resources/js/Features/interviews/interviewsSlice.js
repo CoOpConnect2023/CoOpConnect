@@ -127,7 +127,7 @@ export const getInterviewsForInterviewee = createAsyncThunk(
     "interviews/getInterviewsForInterviewee",
     async (params) => {
         const { intervieweeId } = params;
-        console.log("asd", params);
+        
         const response = await axios({
             url: `/interviews?intervieweeId[eq]=${intervieweeId}`,
             method: "GET",
@@ -140,7 +140,7 @@ export const getInterviewsForInterviewer = createAsyncThunk(
     "interviews/getInterviewsForInterviewer",
     async (params) => {
         const { interviewerId } = params;
-        console.log("asd", params);
+
         const response = await axios({
             url: `/interviews?interviewerId[eq]=${interviewerId}`,
             method: "GET",

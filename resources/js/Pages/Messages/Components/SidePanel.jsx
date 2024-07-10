@@ -6,7 +6,7 @@ export default function SidePanel({ conversations, setConversationsID, currentUs
     const handleConversationClick = (conversationId) => {
         // Pass the conversationId to the parent component (Chat) when clicked
         setConversationsID(conversationId);
-        console.log(conversationId)
+        
     };
 
 

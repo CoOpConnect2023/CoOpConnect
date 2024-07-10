@@ -170,10 +170,7 @@ function Document() {
 
                 if (response.data.status === 1) {
                     setUserDocuments(response.data.data);
-                    console.log(
-                        "Documents fetched successfully:",
-                        response.data.data
-                    );
+                    
                 } else {
                     console.error(
                         "Error fetching documents:",
@@ -202,7 +199,7 @@ function Document() {
                 setUserDocuments((prevDocuments) =>
                     prevDocuments.filter((doc) => doc.id !== id)
                 );
-                console.log("Document deleted successfully");
+
             } else {
                 console.error(
                     "Error deleting document:",
@@ -247,7 +244,7 @@ function Document() {
                     },
                 }
             );
-            console.log("Upload successful:", response.data);
+
             setFilesToUpload([]);
             setClearPreviewsTrigger(true);
             window.location.reload();
@@ -280,7 +277,7 @@ function Document() {
             link.parentNode.removeChild(link);
             window.URL.revokeObjectURL(url);
 
-            console.log("Download successful");
+
         } catch (error) {
             console.error("Error downloading document:", error);
         }

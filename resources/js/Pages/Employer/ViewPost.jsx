@@ -75,7 +75,7 @@ function ViewPost() {
                 }
                 const data = await response.json();
                 setJob(data.data);
-                console.log("viewpost",data);
+                
                 setLoading(false);
             } catch (error) {
                 console.error("Error fetching job details:", error);
@@ -89,7 +89,7 @@ function ViewPost() {
         return <div>Loading...</div>; // You can show a loading indicator here
     }
 
-    console.log("Job from URL:", job);
+
 
     // Check if job.applications exists and is an array
     const applicants =
@@ -189,7 +189,7 @@ function ViewPost() {
           const isOnShortlist = shortlists.some(user => user.id === applicantId);
 
           setIsOnShortlist(isOnShortlist);
-          console.log("Is on shortlist:", isOnShortlist);
+
 
         } catch (error) {
           console.error('Error checking shortlist status:', error);

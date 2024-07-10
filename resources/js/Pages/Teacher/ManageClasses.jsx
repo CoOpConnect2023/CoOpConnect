@@ -90,93 +90,101 @@ function ClassesPage() {
 
     return (
         <NavBar header={"Manage Classes"}>
-            <Section>
-                <SectionTitle>Classes Taught</SectionTitle>
-                <StyledTable>
-                    <thead>
-                        <tr>
-                            <th>Class ID</th>
-                            <th>Class Name</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                            <th>Students</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {classes.map((classItem, index) => (
-                            <tr key={index}>
-                                <td>{classItem.id}</td>
-                                <td>{classItem.name}</td>
-                                <td>{classItem.startDate}</td>
-                                <td>{classItem.endDate}</td>
-                                <td>{classItem.users.length}</td>
-                                <td>
-                                    <Button onClick={() => setEditingClass(classItem)}>Edit</Button>
-                                    <DeleteButton onClick={() => handleDeleteClass(classItem.id)}>Delete</DeleteButton>
-                                </td>
+            <MainContainer>
+                <Section>
+                    <SectionTitle>Classes Taught</SectionTitle>
+                    <StyledTable>
+                        <thead>
+                            <tr>
+                                <th>Class ID</th>
+                                <th>Class Name</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Actions</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </StyledTable>
-
-                {editingClass ? (
-                    <Form>
-                        <Input
-                            type="text"
-                            name="name"
-                            value={editingClass.name}
-                            onChange={(e) => handleInputChange(e, true)}
-                            placeholder="Class Name"
-                        />
-                        <Input
-                            type="date"
-                            name="startDate"
-                            value={editingClass.startDate}
-                            onChange={(e) => handleInputChange(e, true)}
-                            placeholder="Start Date"
-                        />
-                        <Input
-                            type="date"
-                            name="endDate"
-                            value={editingClass.endDate}
-                            onChange={(e) => handleInputChange(e, true)}
-                            placeholder="End Date"
-                        />
-                        <Button onClick={() => handleEditClass(editingClass.id)}>Save Changes</Button>
-                    </Form>
-                ) : (
-                    <Form>
-                        <Input
-                            type="text"
-                            name="name"
-                            value={newClass.name}
-                            onChange={(e) => handleInputChange(e)}
-                            placeholder="Class Name"
-                        />
-                        <Input
-                            type="date"
-                            name="startDate"
-                            value={newClass.startDate}
-                            onChange={(e) => handleInputChange(e)}
-                            placeholder="Start Date"
-                        />
-                        <Input
-                            type="date"
-                            name="endDate"
-                            value={newClass.endDate}
-                            onChange={(e) => handleInputChange(e)}
-                            placeholder="End Date"
-                        />
-                        <Button onClick={handleCreateClass}>Create Class</Button>
-                    </Form>
-                )}
-            </Section>
+                        </thead>
+                        <tbody>
+                            {classes.map((classItem, index) => (
+                                <tr key={index}>
+                                    <td>{classItem.id}</td>
+                                    <td>{classItem.name}</td>
+                                    <td>{classItem.startDate}</td>
+                                    <td>{classItem.endDate}</td>
+                                    <td>
+                                        <Button onClick={() => setEditingClass(classItem)}>Edit</Button>
+                                        <DeleteButton onClick={() => handleDeleteClass(classItem.id)}>Delete</DeleteButton>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </StyledTable>
+                </Section>
+                <FormContainer>
+                    {editingClass ? (
+                        <Form>
+                            <Input
+                                type="text"
+                                name="name"
+                                value={editingClass.name}
+                                onChange={(e) => handleInputChange(e, true)}
+                                placeholder="Class Name"
+                            />
+                            <Input
+                                type="date"
+                                name="startDate"
+                                value={editingClass.startDate}
+                                onChange={(e) => handleInputChange(e, true)}
+                                placeholder="Start Date"
+                            />
+                            <Input
+                                type="date"
+                                name="endDate"
+                                value={editingClass.endDate}
+                                onChange={(e) => handleInputChange(e, true)}
+                                placeholder="End Date"
+                            />
+                            <Button onClick={() => handleEditClass(editingClass.id)}>Save Changes</Button>
+                        </Form>
+                    ) : (
+                        <Form>
+                            <Input
+                                type="text"
+                                name="name"
+                                value={newClass.name}
+                                onChange={(e) => handleInputChange(e)}
+                                placeholder="Class Name"
+                            />
+                            <Input
+                                type="date"
+                                name="startDate"
+                                value={newClass.startDate}
+                                onChange={(e) => handleInputChange(e)}
+                                placeholder="Start Date"
+                            />
+                            <Input
+                                type="date"
+                                name="endDate"
+                                value={newClass.endDate}
+                                onChange={(e) => handleInputChange(e)}
+                                placeholder="End Date"
+                            />
+                            <Button onClick={handleCreateClass}>Create Class</Button>
+                        </Form>
+                    )}
+                </FormContainer>
+            </MainContainer>
         </NavBar>
     );
 }
 
+const MainContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Full height of viewport */
+`;
+
 const Section = styled.section`
+    flex: 1; /* Grow to fill remaining space */
     border-radius: 10px;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
     background-color: #fff;
@@ -184,6 +192,7 @@ const Section = styled.section`
     flex-direction: column;
     padding: 20px;
     gap: 20px;
+    overflow-y: auto; /* Enable scrolling within this section */
 `;
 
 const SectionTitle = styled.h1`
@@ -206,17 +215,22 @@ const StyledTable = styled.table`
     th {
         color: var(--gray-600, #4a5568);
     }
-    tbody {
-        max-height: 300px;
-        overflow-y: auto;
-    }
+`;
+
+const FormContainer = styled.div`
+    position: sticky;
+    bottom: 20px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    margin-top: auto; /* Push to the bottom of the container */
 `;
 
 const Form = styled.form`
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-top: 20px;
 `;
 
 const Input = styled.input`

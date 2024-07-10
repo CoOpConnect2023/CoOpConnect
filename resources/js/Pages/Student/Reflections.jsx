@@ -60,7 +60,7 @@ function Reflections() {
                     `http://127.0.0.1:8000/api/user-id`
                 );
                 setUserId(response.data.user.id);
-                console.log("userinfo", response.data.user.id);
+                
             } catch (error) {
                 console.error("Error fetching user ID:", error);
             }

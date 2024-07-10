@@ -90,7 +90,7 @@ export default function Messages() {
         }
     }, [dispatch, currentUser]);
 
-console.log("studentlists",shortlists)
+
 
 
 

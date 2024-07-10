@@ -87,16 +87,12 @@ const Interviews = () => {
 
     useEffect(() => {
         if (interviewsStatus.postInterview == "succeeded") {
-            console.log(
-                "True Check",
-                transformedInterviews(data.postInterview)
-            );
+           
             setEvents(...events, transformedInterviews(data.postInterview));
         }
     }, [interviews.postInterview]);
 
-    console.log("Fetched User ID:", userId);
-    console.log("interviews", events);
+
 
     function getTodayDate() {
         const today = new Date();
