@@ -1,6 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
+import { Link } from "@inertiajs/react";
 
 function StudentsSection({students}) {
 
@@ -59,9 +60,11 @@ function StudentsSection({students}) {
                                 {student.id}
                             </td>
                             <td>
+                                <Link href="/teacher/students">
                                 <StudentViewButton>
                                     View Student
                                 </StudentViewButton>
+                                </Link>
                             </td>
                         </tr>
                     ))}

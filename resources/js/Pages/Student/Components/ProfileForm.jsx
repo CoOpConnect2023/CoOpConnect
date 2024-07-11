@@ -386,6 +386,11 @@ const ProfileForm = () => {
 
 
 
+const spin = keyframes`
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+`;
+
 const ProfileWrapper = styled.section`
     display: flex;
     flex-direction: column;
@@ -396,7 +401,12 @@ const ProfileWrapper = styled.section`
     background-color: #fff;
     gap: 40px;
     padding: 40px 30px;
+
+    @media (max-width: 991px) {
+        padding: 20px;
+    }
 `;
+
 const ProfileHeader = styled.h1`
     color: #6b538c;
     text-decoration: underline;
@@ -405,58 +415,56 @@ const ProfileHeader = styled.h1`
     font-size: 32px;
     font-family: Poppins, sans-serif;
 `;
+
 const ProfileSection = styled.section`
     margin-top: 40px;
-    @media (max-width: 991px) {
-        max-width: 100%;
-    }
 `;
+
 const ProfileContainer = styled.div`
+    display: grid;
     gap: 20px;
-    display: flex;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+
     @media (max-width: 991px) {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0;
+        grid-template-columns: 1fr;
     }
 `;
+
 const ProfileImageWrapper = styled.figure`
     display: flex;
     flex-direction: column;
     line-height: normal;
-    width: 26%;
-    margin: 0 auto;
+    width: 100%;
+
     @media (max-width: 991px) {
         width: 100%;
         margin-top: 20px;
     }
 `;
+
 const ProfileImage = styled.img`
-    justify-content: center;
-    align-items: center;
     border-radius: 10px;
     border: 2px solid rgba(45, 54, 72, 1);
     background-color: #edf0f7;
     display: block;
-
-
-
-
+    width: 100%;
 
     @media (max-width: 991px) {
         padding: 0 20px;
     }
 `;
+
 const ProfileBio = styled.div`
     display: flex;
     flex-direction: column;
-    width: 74%;
-    margin-left: 20px;
+    width: 100%;
+    margin-left: 0;
+
     @media (max-width: 991px) {
-        width: 100%;
         margin-top: 20px;
     }
 `;
+
 const BioHeader = styled.h2`
     color: #2d3648;
     letter-spacing: 0.1px;
@@ -464,53 +472,15 @@ const BioHeader = styled.h2`
     font-size: 14px;
     font-family: Poppins, sans-serif;
 `;
-const BioContent = styled.div`
-    border-radius: 10px;
-    border: 2px solid #7b757f;
-    background-color: #eedcff;
-    margin-top: 8px;
-    display: flex;
-    flex-direction: column;
-    padding: 12px;
-    white-space: pre-wrap; /* Ensures that whitespace is preserved and text wraps */
-    word-wrap: break-word;
-`;
-const BioLine = styled.div`
-    border-radius: 3px;
-    background-color: #260e44;
-    height: 16px;
-    margin-top: 8px;
-    &:first-child {
-        margin-top: 0;
-    }
-`;
-const BioStatus = styled.div`
-    display: flex;
-    margin-top: 8px;
-    padding-right: 80px;
-    gap: 0;
-    @media (max-width: 991px) {
-        padding-right: 20px;
-    }
-`;
-const BioStatusItem = styled.div`
-    border-radius: 3px;
-    background-color: #260e44;
-    height: 16px;
-    flex: 1;
-    &:first-child {
-        border-radius: 3px 0 0 3px;
-    }
-    &:last-child {
-        border-radius: 0 3px 3px 0;
-    }
-`;
+
 const ProfileDetail = styled.section`
     margin-top: 20px;
 `;
+
 const ProfileDetailItem = styled.div`
     margin-top: 20px;
 `;
+
 const DetailLabel = styled.label`
     color: #6b538c;
     letter-spacing: 0.1px;
@@ -518,6 +488,7 @@ const DetailLabel = styled.label`
     font-size: 14px;
     font-family: Poppins, sans-serif;
 `;
+
 const DetailValue = styled.input`
     align-items: start;
     border-radius: 6px;
@@ -534,11 +505,8 @@ const DetailValue = styled.input`
     box-sizing: border-box;
     white-space: pre-wrap; /* Ensures that whitespace is preserved and text wraps */
     word-wrap: break-word;
-    @media (max-width: 991px) {
-        max-width: 100%;
-        padding-right: 20px;
-    }
 `;
+
 const EditProfileButton = styled.button`
     justify-content: center;
     border-radius: 12px;
@@ -562,29 +530,14 @@ const EditProfileButton = styled.button`
     }
 `;
 
-const ClearProfileButton = styled.button`
-    justify-content: center;
-    border-radius: 12px;
+const ClearProfileButton = styled(EditProfileButton)`
     background: linear-gradient(135deg, #6b538c, #a97bbf);
-    align-self: start;
-    margin-top: 20px;
-    color: #fff;
-    letter-spacing: 0.5px;
-    padding: 8px 16px;
-    font-weight: 700;
-    font-size: 16px;
-    line-height: 150%;
-    font-family: Roboto, sans-serif;
-    border: none;
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s ease;
 
     &:hover {
         background: linear-gradient(135deg, #543b6f, #8e6aae);
         transform: scale(1.05);
     }
 `;
-
 
 const DropzoneContainer = styled.div`
     border: 2px dashed #6b538c;
@@ -633,11 +586,6 @@ const AddSkillButton = styled.button`
     }
 `;
 
-const spin = keyframes`
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-`;
-
 const LoadingScreen = styled.div`
     display: flex;
     justify-content: center;
@@ -648,7 +596,6 @@ const LoadingScreen = styled.div`
     color: #333;
 `;
 
-
 const Spinner = styled.div`
     border: 4px solid rgba(0, 0, 0, 0.1);
     border-top: 4px solid #3498db;
@@ -657,23 +604,24 @@ const Spinner = styled.div`
     height: 40px;
     animation: ${spin} 1s linear infinite;
 `;
-const AutocompleteList = styled.ul`
 
-  background-color: white;
-  border: 1px solid #6b538c;
-  border-radius: 5px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  width: calc(100% - 20px);
-  max-height: 150px;
-  overflow-y: auto;
-  z-index: 1000;
+const AutocompleteList = styled.ul`
+    background-color: white;
+    border: 1px solid #6b538c;
+    border-radius: 5px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    width: calc(100% - 20px);
+    max-height: 150px;
+    overflow-y: auto;
+    z-index: 1000;
 `;
 
 const AutocompleteItem = styled.li`
     padding: 8px;
     cursor: pointer;
+
     &:hover {
         background-color: #f0f0f0;
     }
