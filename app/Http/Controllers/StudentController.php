@@ -46,4 +46,10 @@ class StudentController extends Controller
     {
         return Inertia::render('Student/Messages/Messages');
     }
+
+    public function viewPost($id)
+    {
+        $userId = auth()->user()->id;
+        return Inertia::render('Student/ViewPost', ['jobId' => $id, 'userId' => $userId]);
+    }
 }

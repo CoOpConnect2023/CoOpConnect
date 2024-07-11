@@ -28,7 +28,7 @@ class UpdateJobsRequest extends FormRequest
                 'description' => ['required'],
                 'skills' => ['required'],
                 'location' => ['required'],
-                'postingStatus' => ['required', Rule::in(['open', 'closed'])],
+                'postingStatus' => ['required', Rule::in(['Open', 'Closed'])],
                 'jobType' => ['required'],
                 'company' => ['required']
             ];
@@ -38,7 +38,7 @@ class UpdateJobsRequest extends FormRequest
                 'description' => ['sometimes', 'required'],
                 'skills' => ['sometimes', 'required'],
                 'location' => ['sometimes', 'required'],
-                'postingStatus' => ['sometimes', 'required', Rule::in(['open', 'closed'])],
+                'postingStatus' => ['sometimes', 'required', Rule::in(['Open', 'Closed'])],
                 'jobType' => ['sometimes', 'required'],
                 'company' => ['sometimes', 'required']
             ];

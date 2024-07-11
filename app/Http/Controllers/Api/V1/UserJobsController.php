@@ -55,4 +55,21 @@ class UserJobsController extends Controller
     {
         $userjob->delete();
     }
+
+    public function getUserDetails($jobsId)
+    {
+
+        $userJobs = UserJobs::where('jobs_id', $jobsId)->get();
+
+        $users = $userJobs->map(function ($userJob) {
+            return [
+                'name' => $userJob->user->name,
+                'email' => $userJob->user->email,
+                'resume' => $userJob->resume,
+                'status' => $userJob->status,
+            ];
+        });
+
+        return response()->json($users);
+    }
 }

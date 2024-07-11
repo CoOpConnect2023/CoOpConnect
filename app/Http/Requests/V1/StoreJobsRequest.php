@@ -27,8 +27,8 @@ class StoreJobsRequest extends FormRequest
             'description' => ['required'],
             'skills' => ['required'],
             'location' => ['required'],
-            'postingStatus' => ['required', Rule::in(['open', 'closed'])],
-            'jobType' => ['required', Rule::in(['full-time', 'part-time', 'contract', 'remote'])],
+            'postingStatus' => ['required', Rule::in(['Open', 'Closed'])],
+            'jobType' => ['required'],
             'company' => ['required'],
             'userId' => ['required']
         ];

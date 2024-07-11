@@ -25,11 +25,15 @@ class UpdateUserJobsRequest extends FormRequest
             return [
                 'user_id' => ['required', 'exists:users_id'],
                 'jobs_id' => ['required', 'exists:jobs_id'],
+                'resume' => ['required'],
+                'status' => ['required'],
             ];
         } else {
             return [
                 'user_id' => ['sometimes', 'required', 'exists:users,id'],
                 'jobs_id' => ['sometimes', 'required', 'exists:jobs,id'],
+                'resume' => ['sometimes', 'required'],
+                'status' => ['sometimes', 'required'],
             ];
         }
     }

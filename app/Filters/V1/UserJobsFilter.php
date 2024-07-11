@@ -11,6 +11,8 @@ class UserJobsFilter extends ApiFilter
         'id' => ['eq'],
         'userId' => ['eq'],
         'jobsId' => ['eq'],
+        'resume' => ['eq'],
+        'status' => ['eq'],
     ];
 
     protected $columnMap = [

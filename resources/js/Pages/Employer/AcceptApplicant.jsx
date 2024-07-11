@@ -2,50 +2,10 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
 import { usePage } from "@inertiajs/react";
+import Datetime from "react-datetime";
+import "react-datetime/css/react-datetime.css";
 
 // Styled Components
-const Container = styled.div`
-    padding: 20px;
-`;
-
-const Form = styled.form`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-`;
-
-const FormGroup = styled.div`
-    margin-bottom: 15px;
-    width: 100%;
-`;
-
-const Label = styled.label`
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-`;
-
-const TextArea = styled.textarea`
-    width: 100%;
-    padding: 10px;
-    resize: none;
-`;
-
-const Input = styled.input`
-    width: 100%;
-    padding: 10px;
-`;
-
-const Button = styled.button`
-    margin: 5px;
-    padding: 10px 15px;
-    font-size: 1em;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    background-color: ${(props) => props.color};
-`;
 
 const AcceptApplicant = () => {
     const [message, setMessage] = useState("");
@@ -59,6 +19,12 @@ const AcceptApplicant = () => {
 
     const addTimeSlot = () => {
         setTimeSlots([...timeSlots, ""]);
+    };
+
+    const removeTimeSlot = (index) => {
+        const newTimeSlots = [...timeSlots];
+        newTimeSlots.splice(index, 1);
+        setTimeSlots(newTimeSlots);
     };
 
     const handleSubmit = (e) => {
@@ -91,14 +57,21 @@ const AcceptApplicant = () => {
                     {timeSlots.map((slot, index) => (
                         <FormGroup key={index}>
                             <Label>Time Slot {index + 1}</Label>
-                            <Input
-                                type="text"
+                            <Datetime
                                 value={slot}
-                                onChange={(e) =>
-                                    handleTimeSlotChange(index, e.target.value)
+                                onChange={(value) =>
+                                    handleTimeSlotChange(index, value)
                                 }
-                                placeholder="Enter a time slot"
+                                inputProps={{
+                                    placeholder: "Select a time slot",
+                                }}
                             />
+                            <RemoveButton
+                                type="button"
+                                onClick={() => removeTimeSlot(index)}
+                            >
+                                Remove
+                            </RemoveButton>
                         </FormGroup>
                     ))}
                     <Button type="button" color="blue" onClick={addTimeSlot}>
@@ -114,3 +87,59 @@ const AcceptApplicant = () => {
 };
 
 export default AcceptApplicant;
+
+const Container = styled.div`
+    padding: 20px;
+`;
+
+const Form = styled.form`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`;
+
+const FormGroup = styled.div`
+    margin-bottom: 15px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+`;
+
+const Label = styled.label`
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+`;
+
+const TextArea = styled.textarea`
+    width: 100%;
+    padding: 10px;
+    resize: none;
+`;
+
+const Input = styled(Datetime)`
+    width: 100%;
+    padding: 10px;
+`;
+
+const Button = styled.button`
+    margin: 5px;
+    padding: 10px 15px;
+    font-size: 1em;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    background-color: ${(props) => props.color};
+`;
+
+const RemoveButton = styled.button`
+    margin-left: 10px;
+    padding: 10px;
+    font-size: 0.8em;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    background-color: red;
+`;

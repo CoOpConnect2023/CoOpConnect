@@ -2,36 +2,61 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
 import {
-    deleteJob,
     selectJob,
     selectJobs,
     selectJobsStatus,
 } from "@/Features/jobs/jobsSlice";
+import {
+    postUserJob,
+    checkUserJob,
+    selectCheckUserJobs,
+} from "@/Features/userJobs/userJobsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { usePage, Link } from "@inertiajs/react";
 
 function ViewPost() {
     const { props } = usePage();
-    const { jobId } = props;
+    const { jobId, userId } = props;
 
     const dispatch = useDispatch();
     const job = useSelector(selectJobs);
     const jobStatus = useSelector(selectJobsStatus);
 
+    const applied = useSelector(selectCheckUserJobs);
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [resumeLink, setResumeLink] = useState("");
+
     useEffect(() => {
         dispatch(selectJob({ jobId: jobId }));
     }, [dispatch]);
 
-    const handleDelete = () => {
-        dispatch(deleteJob({ jobId: jobId }));
-        console.log(`Delete job posting with ID: ${jobId}`);
+    useEffect(() => {
+        dispatch(checkUserJob({ userId: userId, jobsId: jobId }));
+    }, [dispatch, job]);
+
+    const handleApply = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleApplyNow = () => {
+        dispatch(
+            postUserJob({
+                jobsId: Number(jobId),
+                userId: userId,
+                resume: resumeLink,
+            })
+        ).then((response) => {
+            dispatch(checkUserJob({ userId: userId, jobsId: jobId }));
+        });
+        console.log("Resume Link:", resumeLink);
+        setIsModalOpen(false);
     };
 
     return (
-        <NavBar header={"Job Postings"}>
+        <NavBar header={"Job Posting"}>
             <MainContainer>
                 <Container>
-                    <Title>Current Company Postings</Title>
                     <JobPostingCard>
                         <JobInfo>
                             <JobInfoLeft>
@@ -46,12 +71,6 @@ function ViewPost() {
                                         {job.description}
                                     </JobDescription>
                                 </JobDetails>
-                                <Link href={`/employer/editpost1/${jobId}`}>
-                                    <StatusIcon
-                                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/0f00bd98ccee0cca896d493616005574e2e5aaa7076659900adbd3e310f5af87?apiKey=d66532d056b14640a799069157705b77&"
-                                        alt="Status Icon"
-                                    />
-                                </Link>
                             </JobInfoLeft>
                             <JobInfoRight>
                                 <StatusTag>
@@ -63,21 +82,44 @@ function ViewPost() {
                                 </LocationTag>
                             </JobInfoRight>
                             <ActionButtons>
-                                <Link
-                                    href={`/employer/viewapplicants/${jobId}`}
+                                <ActionButton
+                                    onClick={handleApply}
+                                    disabled={applied}
                                 >
-                                    <ActionButton>View Applicants</ActionButton>
-                                </Link>
-                                <Link href={`/employer/home`}>
-                                    <ActionButton onClick={handleDelete}>
-                                        Delete Job Posting
-                                    </ActionButton>
-                                </Link>
+                                    {applied ? "Applied" : "Apply"}
+                                </ActionButton>
                             </ActionButtons>
                         </JobInfo>
                     </JobPostingCard>
                 </Container>
             </MainContainer>
+            {isModalOpen && (
+                <ModalBackdrop>
+                    <ModalContent>
+                        <ModalHeader>Apply for Job</ModalHeader>
+                        <ModalBody>
+                            <label>
+                                Resume Link:
+                                <input
+                                    type="text"
+                                    value={resumeLink}
+                                    onChange={(e) =>
+                                        setResumeLink(e.target.value)
+                                    }
+                                />
+                            </label>
+                        </ModalBody>
+                        <ModalFooter>
+                            <ModalButton onClick={() => setIsModalOpen(false)}>
+                                Cancel
+                            </ModalButton>
+                            <ModalButton onClick={handleApplyNow}>
+                                Apply Now
+                            </ModalButton>
+                        </ModalFooter>
+                    </ModalContent>
+                </ModalBackdrop>
+            )}
         </NavBar>
     );
 }
@@ -99,15 +141,6 @@ const Container = styled.section`
     max-width: 100%;
     flex-direction: column;
     padding: 10px 10px 0;
-`;
-
-const Title = styled.h2`
-    color: var(--Schemes-On-Background, #1d1a20);
-    align-self: center;
-    font: 400 36px/122% Poppins, sans-serif;
-    @media (max-width: 991px) {
-        max-width: 100%;
-    }
 `;
 
 const JobPostingCard = styled.article`
@@ -192,14 +225,6 @@ const JobDescription = styled.p`
     }
 `;
 
-const StatusIcon = styled.img`
-    aspect-ratio: 1;
-    object-fit: auto;
-    object-position: center;
-    width: 24px;
-    align-self: start;
-`;
-
 const JobInfoRight = styled.div`
     justify-content: center;
     border-bottom: 1px solid black;
@@ -252,6 +277,73 @@ const ActionButtons = styled.div`
 `;
 
 const ActionButton = styled.button`
+    font-family: Poppins, sans-serif;
+    background-color: ${(props) =>
+        props.applied
+            ? "rgba(119, 61, 195, 0.5)"
+            : "var(--Palettes-Primary-40, #773dc3)"};
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: ${(props) => (props.applied ? "not-allowed" : "pointer")};
+    text-align: center;
+    transition: background-color 0.3s;
+
+    &:hover {
+        background-color: ${(props) =>
+            props.applied
+                ? "rgba(119, 61, 195, 0.5)"
+                : "var(--Palettes-Primary-30, #542a93)"};
+    }
+
+    &:disabled {
+        background-color: rgba(119, 61, 195, 0.5);
+        cursor: not-allowed;
+    }
+`;
+
+const ModalBackdrop = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
+const ModalContent = styled.div`
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    max-width: 100%;
+`;
+
+const ModalHeader = styled.h3`
+    margin: 0;
+    margin-bottom: 10px;
+    font-size: 24px;
+    text-align: center;
+`;
+
+const ModalBody = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+`;
+
+const ModalFooter = styled.div`
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+`;
+
+const ModalButton = styled.button`
     font-family: Poppins, sans-serif;
     background-color: var(--Palettes-Primary-40, #773dc3);
     color: white;
