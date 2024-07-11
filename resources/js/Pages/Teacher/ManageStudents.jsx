@@ -1,75 +1,48 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import axios from "axios";
 import NavBar from "./Components/NavBar";
+import { useDispatch, useSelector } from "react-redux";
+import { getStudents, getSchools, selectSchoolslist, selectStudents, getCourses, deleteStudent, selectCourses, createStudent } from "@/Features/schools/schoolsSlice";
+import { getUser, selectUser } from "@/Features/users/userSlice";
+import { MainContainer, Section, SectionTitle, StyledTable, Form, Input, Select, Button, DeleteButton, FixedBottom } from "./Styling/ManageStudents.styles";
+
 
 const appUrl = import.meta.env.VITE_APP_URL;
 
 function StudentsPage() {
-    const [students, setStudents] = useState([]);
-    const [user, setUser] = useState(null);
+    const dispatch = useDispatch();
+    const user = useSelector(selectUser);
+    const students = useSelector(selectStudents);
+    const courses = useSelector(selectCourses);
+
     const [newStudent, setNewStudent] = useState({ name: "", email: "", courses: [] });
     const [editingStudent, setEditingStudent] = useState(null);
-    const [courses, setCourses] = useState([]);
+
 
     useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const response = await axios.get(`${appUrl}/api/user-id`);
-                setUser(response.data.user);
-            } catch (error) {
-                console.error("Error fetching user:", error);
-            }
-        };
-        fetchUser();
-    }, []);
+        dispatch(getUser());
+    }, [dispatch]);
 
-
-    const fetchStudents = async () => {
-        try {
-            if (user) {
-                const response = await axios.get(`http://127.0.0.1:8000/api/students/teacher/${user.id}`);
-                setStudents(response.data.students);
-            }
-        } catch (error) {
-            console.error("Error fetching students:", error);
+    useEffect(() => {
+        if (user?.id) {
+            dispatch(getStudents(user.id));
+            dispatch(getCourses(user.id));
         }
-    };
+    }, [dispatch, user?.id]);
 
-    useEffect(() => {
 
-        fetchStudents();
-    }, [user]);
-
-    useEffect(() => {
-        const fetchCourses = async () => {
-            try {
-                if (user) {
-                    const response = await axios.get(`http://127.0.0.1:8000/api/v1/courses/teacher/${user.id}`);
-                    setCourses(response.data.data);
-
-                }
-            } catch (error) {
-                console.error("Error fetching courses:", error);
-            }
-        };
-        fetchCourses();
-    }, [user]);
 
     const handleCreateStudent = async () => {
         try {
             const courseId = newStudent.courses.length > 0 ? newStudent.courses[0].id : null;
 
 
+            await dispatch(createStudent({ id: newStudent.id, courses: newStudent.courses }));
 
-            // Send the POST request
-            const response = await axios.post(`http://127.0.0.1:8000/api/v1/usercourses`, {
-                userId: newStudent.id,
-                coursesId: courseId
-            });
 
-            fetchStudents();
-            setStudents([...students, response.data]);
+            dispatch(getStudents(user?.id));
+
             setNewStudent({ id: "", email: "", courses: [] });
         } catch (error) {
             console.error("Error creating student:", error);
@@ -98,10 +71,10 @@ function StudentsPage() {
 
     const handleDeleteStudent = async (studentId) => {
         try {
-            await axios.delete(`http://127.0.0.1:8000/api/v1/usercourses/student/${studentId}`);
-            setStudents(students.filter(std => std.id !== studentId));
+            dispatch(deleteStudent(studentId));
+            dispatch(getStudents(user.id));
         } catch (error) {
-            console.error("Error deleting student:", error);
+            console.error('Error deleting student:', error);
         }
     };
 
@@ -118,6 +91,10 @@ function StudentsPage() {
             }
         }
     };
+
+    if (!user || !courses || !students) {
+        return <LoadingScreen><Spinner /></LoadingScreen>;;
+    }
 
     return (
         <NavBar header={"Manage Students"}>
@@ -148,7 +125,7 @@ function StudentsPage() {
                                         </ul>
                                     </td>
                                     <td>
-                                        <Button onClick={() => setEditingStudent(student)}>Edit</Button>
+
                                         <DeleteButton onClick={() => handleDeleteStudent(student.id)}>Delete</DeleteButton>
                                     </td>
                                 </tr>
@@ -219,93 +196,30 @@ function StudentsPage() {
     );
 }
 
-const MainContainer = styled.div`
+
+
+const spin = keyframes`
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+`;
+
+const LoadingScreen = styled.div`
     display: flex;
-    flex-direction: column;
-    height: 100vh; /* Full height of viewport */
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 20px;
+    background-color: #f0f0f0;
+    color: #333;
 `;
 
-const Section = styled.section`
-    flex: 1; /* Grow to fill remaining space */
-    border-radius: 10px;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-    background-color: #fff;
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    gap: 20px;
-    overflow-y: auto; /* Enable scrolling within this section */
-`;
-
-const SectionTitle = styled.h1`
-    color: var(--Schemes-Primary, #6b538c);
-    font: 500 24px/133% Poppins, sans-serif;
-`;
-
-const StyledTable = styled.table`
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-    border-radius: 10px;
-    border: 1px solid var(--gray-200, #e2e8f0);
-    background: var(--white, #fff);
-    th, td {
-        padding: 12px;
-        border-bottom: 1px solid var(--gray-200, #e2e8f0);
-        color: var(--gray-700, #2d3748);
-    }
-    th {
-        color: var(--gray-600, #4a5568);
-    }
-    tbody {
-        max-height: 300px; /* Adjust as needed */
-        overflow-y: auto; /* Enable scrolling */
-    }
-`;
-
-const Form = styled.form`
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 20px;
-`;
-
-const Input = styled.input`
-    padding: 10px;
-    border: 1px solid var(--gray-300, #cbd5e0);
-    border-radius: 6px;
-    font-size: 16px;
-    font-family: Poppins, sans-serif;
-`;
-
-const Select = styled.select`
-    padding: 10px;
-    border: 1px solid var(--gray-300, #cbd5e0);
-    border-radius: 6px;
-    font-size: 16px;
-    font-family: Poppins, sans-serif;
-`;
-
-const Button = styled.button`
-    padding: 10px 20px;
-    margin-right: 10px; /* Added margin to separate buttons */
-    border: none;
-    border-radius: 6px;
-    background-color: var(--Schemes-Primary, #6b538c);
-    color: #fff;
-    font-size: 16px;
-`;
-
-const DeleteButton = styled(Button)`
-    background-color: #f56565; /* Override delete button color */
-`;
-
-const FixedBottom = styled.div`
-    position: sticky;
-    bottom: 0;
-    background-color: #fff;
-    padding: 20px;
-    box-shadow: 0 -4px 4px rgba(0, 0, 0, 0.1);
+const Spinner = styled.div`
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: ${spin} 1s linear infinite;
 `;
 
 export default StudentsPage;
