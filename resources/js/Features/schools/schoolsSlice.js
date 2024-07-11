@@ -35,8 +35,8 @@ export const getSchools = createAsyncThunk(
             url: `/schools`,
             method: "GET",
         });
-
-        return response.data.schools;
+console.log(response.data)
+        return response.data.data;
     }
 );
 

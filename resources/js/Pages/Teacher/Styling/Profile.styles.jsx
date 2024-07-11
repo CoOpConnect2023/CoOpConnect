@@ -215,3 +215,23 @@ transition: background-color 0.2s ease-in-out;
     background-color: #f3e8ff;
 }
 `;
+
+export const SuggestionsList = styled.ul`
+
+    border: 1px solid #ccc;
+    background-color: #fff;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    width: 100%;
+`;
+
+export const SuggestionItem = styled.li`
+    padding: 8px;
+    cursor: pointer;
+    &:hover {
+        background-color: #f0f0f0;
+    }
+`;
