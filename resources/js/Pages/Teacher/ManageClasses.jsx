@@ -1,83 +1,49 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import axios from "axios";
 import NavBar from "./Components/NavBar";
-const appUrl = import.meta.env.VITE_APP_URL;
+import { useDispatch, useSelector } from "react-redux";
+import { getUser, selectUser } from "@/Features/users/userSlice";
+import { getStudents, getSchools, selectSchoolslist, selectStudents, getCourses, deleteStudent, selectCourses, createStudent, createClass, editClass, deleteClass } from "@/Features/schools/schoolsSlice";
+import { MainContainer, Section, SectionTitle, StyledTable, FormContainer, Form, Input, Button, DeleteButton } from "./Styling/ManageClasses.styles";
+
 
 function ClassesPage() {
-    const [classes, setClasses] = useState([]);
-    const [user, setUser] = useState(null);
+
+    const dispatch = useDispatch();
+    const user = useSelector(selectUser);
+    const classes = useSelector(selectCourses);
     const [newClass, setNewClass] = useState({ name: "", startDate: "", endDate: "" });
     const [editingClass, setEditingClass] = useState(null);
 
     useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const response = await axios.get(`${appUrl}/api/user-id`);
-                setUser(response.data.user);
-            } catch (error) {
-                console.error("Error fetching user:", error);
-            }
-        };
-        fetchUser();
-    }, []);
+        dispatch(getUser());
+    }, [dispatch]);
 
     useEffect(() => {
-        const fetchClasses = async () => {
-            try {
-                if (user) {
-                    const response = await axios.get(`http://127.0.0.1:8000/api/v1/courses/teacher/${user.id}`);
-                    setClasses(response.data.data);
-                }
-            } catch (error) {
-                console.error("Error fetching classes:", error);
-            }
-        };
-        fetchClasses();
-    }, [user]);
+        if (user?.id) {
 
-    const handleCreateClass = async () => {
-        try {
-            const response = await axios.post(`http://127.0.0.1:8000/api/v1/courses`, {
-                ...newClass,
-                teacher_id: user.id,
-                school_id: user.school_id
-            });
-            setClasses([...classes, response.data]);
-            setNewClass({ name: "", startDate: "", endDate: "" });
-        } catch (error) {
-            console.error("Error creating class:", error);
+            dispatch(getCourses(user.id));
         }
+    }, [dispatch, user?.id]);
+
+    const handleCreateClass = () => {
+        dispatch(createClass({ newClass, user }));
+        setNewClass({ name: "", startDate: "", endDate: "" });
     };
 
-    const handleEditClass = async (classId) => {
-        if (user) {
-            const editedClassData = {
-                ...editingClass,
-                teacher_id: user.id,
-                school_id: user.school_id
-            };
-
-            try {
-                const response = await axios.put(`${appUrl}/api/v1/courses/${classId}`, editedClassData);
-                setClasses(classes.map(cls => cls.id === classId ? response.data : cls));
-                setEditingClass(null);
-            } catch (error) {
-                console.error("Error editing class:", error);
-            }
-        } else {
-            console.error("User not found.");
-        }
+    const handleEditClass = (classId) => {
+        const editedClassData = { ...editingClass };
+        dispatch(editClass({ classId, editedClassData, user }));
+        setEditingClass(null);
     };
 
-    const handleDeleteClass = async (classId) => {
-        try {
-            await axios.delete(`http://127.0.0.1:8000/api/v1/courses/${classId}`);
-            setClasses(classes.filter(cls => cls.id !== classId));
-        } catch (error) {
-            console.error("Error deleting class:", error);
-        }
+    const handleDeleteClass = (classId) => {
+        dispatch(deleteClass(classId));
     };
+
+    useEffect(() => {
+    }, [classes]);
 
     const handleInputChange = (e, isEditing = false) => {
         const { name, value } = e.target;
@@ -87,6 +53,10 @@ function ClassesPage() {
             setNewClass({ ...newClass, [name]: value });
         }
     };
+
+    if (!user || !classes) {
+        return <LoadingScreen><Spinner /></LoadingScreen>;;
+    }
 
     return (
         <NavBar header={"Manage Classes"}>
@@ -177,90 +147,30 @@ function ClassesPage() {
     );
 }
 
-const MainContainer = styled.div`
+
+
+const spin = keyframes`
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+`;
+
+const LoadingScreen = styled.div`
     display: flex;
-    flex-direction: column;
-    height: 100vh; /* Full height of viewport */
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 20px;
+    background-color: #f0f0f0;
+    color: #333;
 `;
 
-const Section = styled.section`
-    flex: 1; /* Grow to fill remaining space */
-    border-radius: 10px;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-    background-color: #fff;
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    gap: 20px;
-    overflow-y: auto; /* Enable scrolling within this section */
-`;
-
-const SectionTitle = styled.h1`
-    color: var(--Schemes-Primary, #6b538c);
-    font: 500 24px/133% Poppins, sans-serif;
-`;
-
-const StyledTable = styled.table`
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-    border-radius: 10px;
-    border: 1px solid var(--gray-200, #e2e8f0);
-    background: var(--white, #fff);
-    th, td {
-        padding: 12px;
-        border-bottom: 1px solid var(--gray-200, #e2e8f0);
-        color: var(--gray-700, #2d3748);
-    }
-    th {
-        color: var(--gray-600, #4a5568);
-    }
-`;
-
-const FormContainer = styled.div`
-    position: sticky;
-    bottom: 20px;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-    margin-top: auto; /* Push to the bottom of the container */
-`;
-
-const Form = styled.form`
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-`;
-
-const Input = styled.input`
-    padding: 10px;
-    border: 1px solid var(--gray-300, #cbd5e0);
-    border-radius: 6px;
-    font-size: 16px;
-    font-family: Poppins, sans-serif;
-`;
-
-const Button = styled.button`
-    padding: 10px 20px;
-    margin-right: 10px; /* Added margin to separate buttons */
-    border: none;
-    border-radius: 6px;
-    background-color: var(--Schemes-Primary, #6b538c);
-    color: #fff;
-    font-size: 16px;
-    font-family: Poppins, sans-serif;
-    cursor: pointer;
-    &:hover {
-        background-color: #543e6c;
-    }
-`;
-
-const DeleteButton = styled(Button)`
-    background-color: #e53e3e; /* Red color for delete button */
-    &:hover {
-        background-color: #c53030; /* Darker red on hover */
-    }
+const Spinner = styled.div`
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: ${spin} 1s linear infinite;
 `;
 
 export default ClassesPage;
