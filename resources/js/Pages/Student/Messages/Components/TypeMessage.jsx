@@ -32,8 +32,9 @@ export default function TypeMessage({ newMessage, setNewMessage, onSendMessage }
                             onKeyPress={handleKeyPress}
                         /></Div100>
                 </Div99>
-                <Div101>
                 <SendButton onClick={onSendMessage}>Send</SendButton>
+                <Div101>
+
                     <img
                         loading="lazy"
                         src="https://cdn.builder.io/api/v1/image/assets/TEMP/429c7b4cb95b7c4e354a15b6ad7cd6acbf0861060a65e20f88c199fd588a121b?apiKey=d66532d056b14640a799069157705b77&"

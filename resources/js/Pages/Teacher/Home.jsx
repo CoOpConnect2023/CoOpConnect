@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import styled from "styled-components";
-import AddDocuments from "./Components/AddDocuments";
+import { useDispatch, useSelector } from "react-redux";
 import StudentsSection from "./Components/StudentsSection";
 import StudentStatus from "./Components/StudentStatus";
 import AdminPanel from "./Components/AdminPanel";
@@ -13,58 +12,37 @@ import {
     StudentsSectionContainer,
     AdminPanelContainer,
 } from "./Styling/Home.styles";
-const appUrl = import.meta.env.VITE_APP_URL;
+import styled, { keyframes } from "styled-components";
+import { getUser, selectUser, selectUserStatus } from "@/Features/users/userSlice";
+import { getStudents, getPercentages, selectPercentages, selectStudents, selectStudentsStatus } from "@/Features/schools/schoolsSlice";
+
 
 
 export default function Home() {
 
-    const [students, setStudents] = useState([]);
-    const [percentages, setPercentages] = useState({
-        working: 0,
-        interviewing: 0,
-        searching: 0,
-    });
-    const [user, setUser] = useState(null);
+
+
+    const dispatch = useDispatch();
+    const user = useSelector(selectUser);
+    const students = useSelector(selectStudents);
+    const percentages = useSelector(selectPercentages);
 
     useEffect(() => {
-        // Fetch the XSRF token from cookies and set it in Axios headers
-        const csrfToken = document.cookie
-            .split('; ')
-            .find(row => row.startsWith('XSRF-TOKEN='))
-            ?.split('=')[1];
-        axios.defaults.headers.common['X-XSRF-TOKEN'] = csrfToken;
 
-        // Fetch the user ID
-        const fetchUser = async () => {
-            try {
-                const response = await axios.get(`${appUrl}/api/user-id`);
-                const fetchedUser = response.data.user;
-                setUser(fetchedUser);
+        dispatch(getUser());
+    }, [dispatch]);
 
-            } catch (error) {
-                console.error("Error fetching user and notifications:", error);
-            }
-        };
+    useEffect(() => {
+        if (user?.id) {
+            dispatch(getStudents(user.id));
+            dispatch(getPercentages(user.id));
+        }
+    }, [user, dispatch]);
 
-        fetchUser();
-}, []);
 
-useEffect(() => {
-    // Fetch percentages only if user is defined
-    if (user) {
-        axios
-            .get(`http://127.0.0.1:8000/api/students/teacher/${user.id}`)
-            .then((response) => {
-                setPercentages(response.data.percentages);
-                setStudents(response.data.students)
-            })
-            .catch((error) => {
-                console.error("Error fetching percentages:", error);
-            });
+    if (!user) {
+        return <LoadingScreen><Spinner /></LoadingScreen>;;
     }
-}, [user]);
-
-
 
 
     return (
@@ -72,11 +50,14 @@ useEffect(() => {
             <NavBar header={"Home"}>
                 <MainContainer>
                     <TopContainer>
-                        <StudentsSectionContainer>
-                            <StudentsSection students={students} />
-                        </StudentsSectionContainer>
 
-                        <StudentStatus percentages={percentages} />
+                        {students && (
+                            <StudentsSectionContainer>
+                                <StudentsSection students={students} />
+                            </StudentsSectionContainer>
+                        )}
+                        {percentages && (
+                            <StudentStatus percentages={percentages} />)}
                     </TopContainer>
                     <BottomContainer>
                         <ReflectionDocuments />
@@ -90,3 +71,28 @@ useEffect(() => {
         </>
     );
 }
+
+
+const spin = keyframes`
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+`;
+
+const LoadingScreen = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 20px;
+    background-color: #f0f0f0;
+    color: #333;
+`;
+
+const Spinner = styled.div`
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: ${spin} 1s linear infinite;
+`;

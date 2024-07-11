@@ -6,6 +6,7 @@ import reflectionsReducer from "./Features/reflections/reflectionsSlice";
 import usersReducer from "./Features/users/userSlice";
 import messagesReducer from "./Features/messages/messagesSlice";
 import shortlistsReducer from "./Features/shortlists/shortlistsSlice";
+import schoolsReducer from "./Features/schools/schoolsSlice";
 
 
 export const store = configureStore({
@@ -17,6 +18,7 @@ export const store = configureStore({
         user: usersReducer,
         messages: messagesReducer,
         shortlists: shortlistsReducer,
+        schools: schoolsReducer,
     },
 });
 

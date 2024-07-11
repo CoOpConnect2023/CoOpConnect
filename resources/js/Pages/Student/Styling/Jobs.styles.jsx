@@ -21,6 +21,12 @@ export const SearchContainer = styled.section`
         padding: 0 20px;
     }
 `
+export const FeaturedJobandList = styled.main`
+    @media (max-width: 991px) {
+        display: flex;
+
+    }
+`;
 
 export const SearchInnerContainer = styled.div`
     display: flex;

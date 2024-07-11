@@ -9,7 +9,11 @@ export const MainContainer = styled.div`
     flex: 1 0 0;
     align-self: stretch;
     background-color: var(--Schemes-Background, #fff7ff);
-`
+
+    @media (max-width: 991px) {
+        padding: 10px;
+    }
+`;
 
 export const Container = styled.div`
     align-items: center;
@@ -21,53 +25,65 @@ export const Container = styled.div`
     justify-content: center;
     padding: 20px;
     border-radius: 10px;
-`
+
+    @media (max-width: 991px) {
+        padding: 10px;
+    }
+`;
 
 export const Wrapper = styled.div`
     display: flex;
-    width: 782px;
-    max-width: 100%;
+    width: 100%;
+    max-width: 782px;
     flex-direction: column;
-`
+
+    @media (max-width: 991px) {
+        max-width: 100%;
+    }
+`;
 
 export const Header = styled.div`
     color: var(--Schemes-Primary, #6b538c);
     text-decoration-line: underline;
     align-self: center;
     font: 600 32px Poppins, sans-serif;
-`
+    margin-bottom: 20px;
+`;
 
 export const CalendarDiv = styled.div`
     background-color: #ffffff;
-height: 80vh;
-margin-bottom: 3vh;
-margin-top: 3vh;
+    height: 80vh;
+    margin-bottom: 3vh;
+    margin-top: 3vh;
+
+    @media (max-width: 991px) {
+          max-height: calc(60vh - 6vh);
     }
-`
+`;
 
 export const CalendarHeader = styled.div`
-    justify-content: space-between;
     display: flex;
-    width: 100%;
+    justify-content: space-between;
     gap: 20px;
+
     @media (max-width: 991px) {
-        max-width: 100%;
-        flex-wrap: wrap;
+        flex-direction: column;
+        align-items: center;
     }
-`
+`;
 
 export const Month = styled.div`
     color: var(--Schemes-Primary, #6b538c);
     margin: auto 0;
     font: 900 24px Inter, sans-serif;
-`
+`;
 
 export const NavIcons = styled.div`
     display: flex;
     gap: 8px;
     justify-content: space-between;
     padding: 16px;
-`
+`;
 
 export const Icon = styled.img`
     aspect-ratio: 1;
@@ -78,11 +94,10 @@ export const Icon = styled.img`
     filter: ${({ isDisabled }) =>
         isDisabled ? "grayscale(100%) brightness(150%)" : "none"};
     opacity: ${({ isDisabled }) => (isDisabled ? 0.5 : 1)};
-`
+`;
 
 export const DaysOfWeek = styled.div`
     display: flex;
-    margin-top: 12px;
     gap: -1px;
     font-size: 14px;
     color: #000;
@@ -91,19 +106,19 @@ export const DaysOfWeek = styled.div`
     text-align: center;
     justify-content: space-between;
     padding: 40px 80px 40px 0;
+
     @media (max-width: 991px) {
-        max-width: 100%;
         flex-wrap: wrap;
         padding-right: 20px;
-        white-space: initial;
+        justify-content: center;
     }
-`
+`;
 
 export const Day = styled.div`
     display: flex;
     font-variant-numeric: lining-nums tabular-nums;
     font-family: Inter, sans-serif;
-`
+`;
 
 export const DatesGrid = styled.div`
     display: grid;
@@ -115,11 +130,11 @@ export const DatesGrid = styled.div`
     white-space: nowrap;
     text-align: center;
     justify-content: space-between;
+
     @media (max-width: 991px) {
-        flex-wrap: wrap;
-        white-space: initial;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
     }
-`
+`;
 
 export const DateCell = styled.div`
     font-variant-numeric: lining-nums tabular-nums;
@@ -129,9 +144,9 @@ export const DateCell = styled.div`
     border-style: solid;
     border-width: 1px;
     padding: 40px;
+
     @media (max-width: 991px) {
-        white-space: initial;
-        padding: 0 20px;
+        padding: 20px;
     }
-`
+`;
 

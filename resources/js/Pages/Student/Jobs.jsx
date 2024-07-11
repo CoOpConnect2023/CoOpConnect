@@ -49,6 +49,7 @@ import {
     JobFullDescription,
     SkillsList,
     SkillBadge,
+    FeaturedJobandList
 } from "./Styling/Jobs.styles";
 
 function Jobs() {
@@ -183,6 +184,8 @@ function Jobs() {
                             </SearchField>
                             <SearchButton type="submit">View Jobs</SearchButton>
                         </SearchForm>
+
+                        <FeaturedJobandList>
                         {jobs && jobs.length > 0 ? (
                             <JobList>
                                 <JobColumn>
@@ -261,7 +264,7 @@ function Jobs() {
                             </JobList>
                         ) : (
                             <p>No jobs found.</p>
-                        )}
+                        )}</FeaturedJobandList>
                     </SearchInnerContainer>
                 </SearchContainer>
             </MainContainer>

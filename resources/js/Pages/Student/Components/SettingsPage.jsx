@@ -93,15 +93,23 @@ const Main = styled.main`
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     background-color: #fff;
     display: flex;
-    max-width: 885px;
     flex-direction: column;
     padding: 20px;
+    max-width: 885px;
+
+    @media (max-width: 991px) {
+        padding: 10px;
+        max-width: 100%;
+        display: flex;
+    flex-direction: column;
+    }
 `;
 
 const Section = styled.section`
     display: flex;
     flex-direction: column;
     border-color: rgba(123, 117, 127, 1);
+
     @media (max-width: 991px) {
         max-width: 100%;
     }
@@ -115,6 +123,7 @@ const FormSection = styled.section`
     padding: 20px;
     display: flex;
     gap: 20px;
+
     @media (max-width: 991px) {
         flex-direction: column;
         align-items: stretch;
@@ -127,8 +136,8 @@ const AccountHeader = styled.header`
     border: 1px solid rgba(0, 0, 0, 1);
     align-self: center;
     display: flex;
-    width: 494px;
-    max-width: 100%;
+    width: 100%;
+    max-width: 494px;
     gap: 20px;
     font-size: 14px;
     color: #334155;
@@ -136,6 +145,7 @@ const AccountHeader = styled.header`
     line-height: 143%;
     justify-content: space-between;
     padding: 5px 10px;
+
     @media (max-width: 991px) {
         flex-wrap: wrap;
     }
@@ -149,6 +159,7 @@ const AccountTitle = styled.div`
     color: #0f172a;
     justify-content: center;
     padding: 6px 20px;
+
     @media (max-width: 991px) {
         white-space: normal;
     }
@@ -165,6 +176,7 @@ const FormColumn = styled.div`
     flex-direction: column;
     width: 77%;
     margin-left: 0;
+
     @media (max-width: 991px) {
         width: 100%;
     }
@@ -173,15 +185,16 @@ const FormColumn = styled.div`
 const FormContent = styled.article`
     display: flex;
     flex-direction: column;
+
     @media (max-width: 991px) {
-        max-width: 100%;
-        margin-top: 40px;
+        margin-top: 20px;
     }
 `;
 
 const FormTitle = styled.h2`
     color: #000;
     font: 400 32px Poppins, sans-serif;
+
     @media (max-width: 991px) {
         max-width: 100%;
     }
@@ -192,6 +205,7 @@ const FormDetail = styled.p`
     letter-spacing: 0.25px;
     margin-top: 10px;
     font: 600 14px/20px Poppins, sans-serif;
+
     @media (max-width: 991px) {
         max-width: 100%;
     }
@@ -202,8 +216,11 @@ const FormButtonColumn = styled.div`
     flex-direction: column;
     width: 23%;
     margin-left: 20px;
+
     @media (max-width: 991px) {
         width: 100%;
+        margin-left: 0;
+        margin-top: 20px;
     }
 `;
 
@@ -217,8 +234,9 @@ const DeleteButton = styled.button`
     margin: auto 0;
     padding: 8px 16px;
     font: 600 16px/150% Inter, sans-serif;
+
     @media (max-width: 991px) {
-        margin-top: 40px;
+        margin-top: 20px;
     }
 `;
 
@@ -228,6 +246,7 @@ const SettingsSection = styled.section`
     border-bottom-width: 1px;
     margin-top: 20px;
     padding: 20px;
+
     @media (max-width: 991px) {
         max-width: 100%;
     }
@@ -236,6 +255,7 @@ const SettingsSection = styled.section`
 const SettingsHeader = styled.header`
     gap: 20px;
     display: flex;
+
     @media (max-width: 991px) {
         flex-direction: column;
         align-items: stretch;
@@ -247,6 +267,7 @@ const SettingsColumn = styled.div`
     flex-direction: column;
     width: 75%;
     margin-left: 0;
+
     @media (max-width: 991px) {
         width: 100%;
     }
@@ -255,15 +276,16 @@ const SettingsColumn = styled.div`
 const SettingsContent = styled.article`
     display: flex;
     flex-direction: column;
+
     @media (max-width: 991px) {
-        max-width: 100%;
-        margin-top: 40px;
+        margin-top: 20px;
     }
 `;
 
 const SettingsTitle = styled.h2`
     color: #000;
     font: 400 32px Poppins, sans-serif;
+
     @media (max-width: 991px) {
         max-width: 100%;
     }
@@ -274,6 +296,7 @@ const SettingsDetail = styled.p`
     letter-spacing: 0.25px;
     margin-top: 10px;
     font: 600 14px/20px Poppins, sans-serif;
+
     @media (max-width: 991px) {
         max-width: 100%;
     }
@@ -284,8 +307,11 @@ const SettingsControls = styled.div`
     flex-direction: column;
     width: 25%;
     margin-left: 20px;
+
     @media (max-width: 991px) {
         width: 100%;
+        margin-left: 0;
+        margin-top: 20px;
     }
 `;
 
@@ -308,8 +334,9 @@ const SettingsOptions = styled.div`
     line-height: 143%;
     justify-content: space-between;
     padding: 5px 10px;
+
     @media (max-width: 991px) {
-        white-space: normal;
+        flex-wrap: wrap;
     }
 `;
 
@@ -321,6 +348,7 @@ const OptionButton = styled.button`
     color: ${(props) => (props.className === "private" ? "#fff" : "#334155")};
     justify-content: center;
     padding: 6px 12px;
+
     @media (max-width: 991px) {
         white-space: normal;
     }
@@ -334,65 +362,10 @@ const DummySection = styled.section`
     display: flex;
     margin-top: 20px;
     gap: 20px;
+
     @media (max-width: 991px) {
         flex-direction: column;
         align-items: stretch;
-    }
-`;
-
-const DummyHeader = styled.header`
-    gap: 20px;
-    display: flex;
-    @media (max-width: 991px) {
-        flex-direction: column;
-        align-items: stretch;
-    }
-`;
-
-const DummyColumn = styled.div`
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    @media (max-width: 991px) {
-        max-width: 100%;
-        margin-top: 40px;
-    }
-`;
-
-const DummyContent = styled.article`
-    display: flex;
-    flex-direction: column;
-    @media (max-width: 991px) {
-        max-width: 100%;
-        margin-top: 40px;
-    }
-`;
-
-const DummyTitle = styled.h2`
-    color: #000;
-    font: 400 32px Poppins, sans-serif;
-    @media (max-width: 991px) {
-        max-width: 100%;
-    }
-`;
-
-const DummyDetail = styled.p`
-    color: #7b757f;
-    letter-spacing: 0.25px;
-    margin-top: 10px;
-    font: 600 14px/20px Poppins, sans-serif;
-    @media (max-width: 991px) {
-        max-width: 100%;
-    }
-`;
-
-const DummyButtonColumn = styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 23%;
-    margin-left: 20px;
-    @media (max-width: 991px) {
-        width: 100%;
     }
 `;
 
@@ -406,8 +379,9 @@ const SettingsButton = styled.button`
     margin: auto 0;
     padding: 8px 16px;
     font: 600 16px/150% Inter, sans-serif;
+
     @media (max-width: 991px) {
-        margin-top: 40px;
+        margin-top: 20px;
     }
 `;
 

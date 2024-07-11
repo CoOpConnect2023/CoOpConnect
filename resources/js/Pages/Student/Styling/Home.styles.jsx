@@ -4,7 +4,8 @@ export const MainContainer = styled.main`
     display: flex;
     flex-direction: column;
     background: var(--Schemes-Background, #fff7ff);
-`
+    padding: 20px;
+`;
 
 export const SearchSection = styled.section`
     display: flex;
@@ -14,38 +15,43 @@ export const SearchSection = styled.section`
     color: #7b757f;
     border-radius: 10px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    padding: 20px 10px;
+    padding: 20px;
     margin-top: 40px;
 
     @media (max-width: 991px) {
-        width: 100%;
+        padding: 10px;
     }
-`
+`;
 
 export const SearchTitle = styled.h2`
     font: 600 32px Poppins, sans-serif;
     color: #6b538c;
-`
+    text-align: center;
+
+    @media (max-width: 991px) {
+        font-size: 28px;
+    }
+`;
 
 export const Tagline = styled.h3`
     margin-top: 10px;
     font: 500 24px/133% Poppins, sans-serif;
+    text-align: center;
 
     @media (max-width: 991px) {
-        width: 100%;
+        font-size: 20px;
     }
-`
+`;
 
 export const Description = styled.p`
-    align-self: stretch;
     text-align: center;
     font: 400 22px/28px Poppins, sans-serif;
     margin-top: 30px;
 
     @media (max-width: 991px) {
-        width: 100%;
+        font-size: 18px;
     }
-`
+`;
 
 export const Button = styled.button`
     background-color: #6b538c;
@@ -56,7 +62,17 @@ export const Button = styled.button`
     padding: 8px 16px;
     margin-top: 30px;
     cursor: pointer;
-`
+    align-self: center;
+
+    &:hover {
+        background-color: #5a4175;
+    }
+
+    @media (max-width: 991px) {
+        font-size: 14px;
+        padding: 6px 12px;
+    }
+`;
 
 export const JobsSection = styled.section`
     display: flex;
@@ -65,45 +81,49 @@ export const JobsSection = styled.section`
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    padding: 20px 10px;
+    padding: 20px;
     margin-top: 40px;
 
     @media (max-width: 991px) {
-        padding: 0 20px;
+        padding: 10px;
     }
-`
+`;
 
 export const JobsHeader = styled.h2`
     font: 600 32px Poppins, sans-serif;
     color: #6b538c;
-`
+    text-align: center;
+
+    @media (max-width: 991px) {
+        font-size: 28px;
+    }
+`;
 
 export const JobsSubHeader = styled.p`
     font: 500 24px/32px Poppins, sans-serif;
     color: #7b757f;
     text-decoration: underline;
     margin-top: 10px;
+    text-align: center;
 
     @media (max-width: 991px) {
-        width: 100%;
+        font-size: 20px;
     }
-`
+`;
 
 export const JobListings = styled.div`
     display: flex;
     justify-content: center;
-    flex-direction: row;
     flex-wrap: wrap;
-    align-self: stretch;
-    margin-top: 20px;
     gap: 20px;
+    margin-top: 20px;
+    align-self: stretch;
 
     @media (max-width: 991px) {
         flex-direction: column;
         align-items: stretch;
-        gap: 0;
     }
-`
+`;
 
 export const JobCardContainer = styled.article`
     display: flex;
@@ -115,44 +135,44 @@ export const JobCardContainer = styled.article`
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     max-width: 400px;
     width: 100%;
-    padding: 20px 40px;
+    padding: 20px;
     margin: 0 auto;
     text-align: center;
-`
+
+    @media (max-width: 991px) {
+        max-width: 100%;
+    }
+`;
 
 export const JobTitle = styled.h3`
     font: 28px/129% Poppins, sans-serif;
     align-self: stretch;
-`
+    margin-bottom: 10px;
+`;
 
 export const CompanyName = styled.p`
     font-family: Poppins, sans-serif;
     letter-spacing: 0.15px;
     margin-top: 18px;
-`
+`;
 
 export const Location = styled.p`
     font-family: Poppins, sans-serif;
     letter-spacing: 0.15px;
-`
+`;
 
 export const SkillsList = styled.div`
     display: flex;
-    justify-content: space-between;
-    align-content: space-between;
-    align-self: stretch;
     flex-wrap: wrap;
-    margin-top: 17px;
+    justify-content: center;
     gap: 10px;
     font-size: 12px;
     color: #773dc3;
     letter-spacing: 0.4px;
     line-height: 133%;
-
-    @media (max-width: 991px) {
-        white-space: initial;
-    }
-`
+    margin-top: 17px;
+    text-align: center;
+`;
 
 export const SkillBadge = styled.span`
     font-family: Poppins, sans-serif;
@@ -166,7 +186,7 @@ export const SkillBadge = styled.span`
         color: #fff;
         box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
     }
-`
+`;
 
 export const JobDescription = styled.p`
     text-align: center;
@@ -178,7 +198,7 @@ export const JobDescription = styled.p`
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
-`
+`;
 
 export const Divider = styled.hr`
     width: 86px;
@@ -187,7 +207,7 @@ export const Divider = styled.hr`
     background-color: #260e44;
     border: none;
     align-self: center;
-`
+`;
 
 export const JobButton = styled.button`
     background-color: #6b538c;
@@ -199,7 +219,17 @@ export const JobButton = styled.button`
     padding: 8px 16px;
     margin-top: 15px;
     cursor: pointer;
-`
+    align-self: center;
+
+    &:hover {
+        background-color: #5a4175;
+    }
+
+    @media (max-width: 991px) {
+        font-size: 14px;
+        padding: 6px 12px;
+    }
+`;
 
 export const EmptyMessage = styled.div`
     color: #ff6347; /* Tomato color for visibility */
@@ -208,5 +238,8 @@ export const EmptyMessage = styled.div`
     text-align: center;
     background-color: #f0f0f0;
     border-radius: 8px;
-`
+    margin-top: 20px;
+`;
+
+
 

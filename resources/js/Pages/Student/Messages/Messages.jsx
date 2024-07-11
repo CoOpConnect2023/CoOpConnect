@@ -158,13 +158,13 @@ const Spinner = styled.div`
 const PageContainer = styled.div`
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
+    min-height: 100vh; /* Ensure it covers the entire viewport height */
+     /* Prevents scrolling unless needed */
 `;
 
 const ChatContainer = styled.div`
     flex: 1;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow: auto; /* Allows scrolling content within the container */
 `;

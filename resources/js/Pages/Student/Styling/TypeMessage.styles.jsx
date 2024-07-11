@@ -9,10 +9,9 @@ import styled from "styled-components";
 
 
 export const Container = styled.div`
-     display: flex;
+    display: flex;
     flex-direction: column;
     justify-content: flex-end;
-
 `;
 
 export const Div98 = styled.div`
@@ -20,7 +19,7 @@ export const Div98 = styled.div`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
+    padding: 10px 20px;
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     border-radius: 10px;
@@ -28,8 +27,6 @@ export const Div98 = styled.div`
     border-style: solid;
     border-width: 1px;
     gap: 10px;
-    padding: 10px 20px;
-
 `;
 
 export const Div99 = styled.div`
@@ -37,7 +34,6 @@ export const Div99 = styled.div`
     align-items: center;
     gap: 10px;
     flex-grow: 1;
-    gap: 10px;
     font-size: 14px;
     color: var(--Schemes-Outline, #7b757f);
     font-weight: 600;
@@ -54,19 +50,22 @@ export const Div100 = styled.div`
 export const Input = styled.input`
     width: 100%;
     padding: 10px;
-    border: none;
+    border: 1px solid #ccc;
     border-radius: 5px;
-    outline: none;
     font-size: 14px;
     background-color: #fff;
-    border: 1px solid #ccc;
+    outline: none;
+
+    @media (max-width: 767px) {
+        font-size: 12px;
+    }
 `;
 
 export const Div101 = styled.div`
-    justify-content: center;
-    align-content: flex-start;
-    flex-wrap: wrap;
     display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
     gap: 10px;
 `;
 

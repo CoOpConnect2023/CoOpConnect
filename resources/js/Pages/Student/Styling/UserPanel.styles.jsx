@@ -4,19 +4,19 @@ import styled from "styled-components";
 
 
 export const Div70 = styled.div`
-     justify-content: space-between;
-    border-color: rgba(123, 117, 127, 1);
-    border-style: solid;
+    justify-content: space-between;
+    border: 1px solid rgba(123, 117, 127, 1);
     border-bottom-width: 1px;
     display: flex;
     width: 100%;
     gap: 10px;
     padding: 10px;
     @media (max-width: 991px) {
-        max-width: 100%;
-        flex-wrap: wrap;
+        flex-direction: column;
+        align-items: stretch;
     }
 `;
+
 
 export const Div71 = styled.div`
     justify-content: center;
