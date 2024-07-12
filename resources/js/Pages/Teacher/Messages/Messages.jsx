@@ -94,7 +94,7 @@ export default function Messages() {
 
 
 
-    if (userStatus === 'loading') {
+    if (userStatus === 'loading' || !conversations) {
         return <LoadingScreen><Spinner /></LoadingScreen>;
     }
     if (messageStatus === 'loading') {
