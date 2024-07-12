@@ -139,4 +139,9 @@ public function school()
     {
         return $this->role === $role;
     }
+
+    public function isAdmin()
+{
+    return $this->role === 'admin';
+}
 }

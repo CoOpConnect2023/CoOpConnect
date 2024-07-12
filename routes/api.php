@@ -80,6 +80,10 @@ Route::get('/download/{id}', [DocumentsController::class, 'download'])->name('fi
 Route::post('/update-profile/{user}', [UserController::class, 'updateProfile'])->name('profile.update')->middleware('auth');
 Route::get('/usersindex', [UserController::class, 'index'])->name('users.index');
 Route::get('/studentStatusPercents', [UserController::class, 'getStudentStatusPercentages'])->name('users.getStudentStatusPercentages');
+Route::get('/users', [UserController::class, 'getAllUsers']);
+Route::delete('/users/{id}', [UserController::class, 'deleteUser']);
+Route::post('/upload-users', [UserController::class, 'uploadUsers']);
+
 
 Route::middleware('auth:sanctum')->post('/apply/{jobId}', [ApplicationController::class, 'apply']);
 Route::middleware('auth:sanctum')->get('/check-application/{jobId}', [ApplicationController::class, 'checkApplication']);

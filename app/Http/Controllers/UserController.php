@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Courses;
+use App\Imports\UsersImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
+use Maatwebsite\Excel\Facades\Excel;
 
 
 class UserController extends Controller
@@ -81,7 +83,7 @@ class UserController extends Controller
     public function updateProfile(Request $request, User $user)
     {
 
-        if (Auth::user()->id !== $user->id) {
+        if (!Auth::user()->isAdmin() && Auth::id() != $id) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
@@ -189,6 +191,84 @@ class UserController extends Controller
         'percentages' => $percentages,
     ]);
 }
+
+
+public function getAllUsers(Request $request)
+{
+
+    $users = User::all();
+
+
+    return response()->json($users);
+}
+
+public function isAdmin()
+{
+    return $this->role === 'admin';
+}
+
+public function deleteUser(Request $request, $id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found.'], 404);
+        }
+
+
+        if (!Auth::user()->isAdmin() && Auth::id() != $id) {
+            return response()->json(['message' => 'Unauthorized. You are not allowed to delete this user.'], 403);
+        }
+
+        DB::table('interviews')
+        ->where('interviewee_id', $id)
+        ->orWhere('interviewer_id', $id)
+        ->delete();
+
+
+        $user->delete();
+
+        return response()->json(['message' => 'User deleted successfully.']);
+    }
+
+    public function uploadUsers(Request $request)
+    {
+        $usersData = $request->input('users');
+
+        if (empty($usersData)) {
+            return response()->json(['message' => 'No users data received'], 400);
+        }
+
+        try {
+            foreach ($usersData as $userData) {
+
+                $validator = validator()->make($userData, [
+                    'name' => 'required|string',
+                    'email' => 'required|email|unique:users,email',
+                    'class' => 'required|string',
+                    'password' => 'required|string|min:6',
+                    'role' => 'required|string',
+
+                ]);
+
+                if ($validator->fails()) {
+                    return response()->json(['message' => 'Validation failed', 'errors' => $validator->errors()], 400);
+                }
+
+                // Create user
+                User::create($userData);
+            }
+
+            return response()->json(['message' => 'Users created successfully'], 201);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to create users', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+
+
+
+
 
 
 }

@@ -11,6 +11,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginProviderController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\AdminController;
+
 
 
 
@@ -32,6 +34,11 @@ use App\Http\Controllers\TeacherController;
 // Landing and About pages
 Route::get('/', [HomeController::class, 'showLanding'])->name('landing');
 Route::get('/about', [HomeController::class, 'showAbout'])->name('about');
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/home', [AdminController::class, 'home'])->name('admin.home');
+
+});
 
 Route::middleware(['auth', 'student'])->group(function () {
     Route::get('/student/home', [StudentController::class, 'home'])->name('student.home');
