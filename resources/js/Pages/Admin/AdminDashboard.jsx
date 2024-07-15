@@ -13,7 +13,7 @@ const AdminDashboard = () => {
     const dispatch = useDispatch();
     const user = useSelector(selectUser);
     const users = useSelector(selectAllUsers);
-    const percentages = useSelector(selectPercentages);
+
     const [categorizedUsers, setCategorizedUsers] = useState({});
 
     useEffect(() => {
@@ -70,12 +70,12 @@ const AdminDashboard = () => {
                 <Header>
 
                 </Header>
-                {percentages && categorizedUsers && (
+                {categorizedUsers && (
                     <Content>
                         <UploadUsers />
-                        <Section handleDeleteUser={handleDeleteUser} users={students} percentages={percentages} title="Current Students" />
-                        <Section handleDeleteUser={handleDeleteUser} users={employee} percentages={percentages} title="Current Employers" />
-                        <Section handleDeleteUser={handleDeleteUser} users={teachers} percentages={percentages} title="Current Teachers" />
+                        <Section handleDeleteUser={handleDeleteUser} users={students}  title="Current Students" />
+                        <Section handleDeleteUser={handleDeleteUser} users={employee}  title="Current Employers" />
+                        <Section handleDeleteUser={handleDeleteUser} users={teachers}  title="Current Teachers" />
 
                     </Content>
                 )}

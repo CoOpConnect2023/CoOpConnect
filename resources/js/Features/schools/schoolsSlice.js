@@ -8,6 +8,7 @@ const initialState = {
     percentages: null,
     schoolslist: null,
     courses: null,
+    coursesStudents: null,
     status: {
         schools: "idle",
         percentages: "idle",
@@ -59,6 +60,20 @@ export const getCourses = createAsyncThunk(
             const response = await axios.get(`/courses/teacher/${userID}`);
             console.log(response.data); // Log the response data for debugging
             return response.data.data; // Assuming response data structure has a 'courses' property
+        } catch (error) {
+            console.error("Error fetching courses:", error);
+            throw error; // Propagate the error
+        }
+    }
+);
+
+export const getCoursesStudents = createAsyncThunk(
+    "courses/getCoursesStudents",
+    async (userID) => {
+        try {
+            const response = await axios.get(`/courses/teacher/${userID}`);
+            console.log(response.data); // Log the response data for debugging
+            return response.data; // Assuming response data structure has a 'courses' property
         } catch (error) {
             console.error("Error fetching courses:", error);
             throw error; // Propagate the error
@@ -185,6 +200,17 @@ export const schoolsSlice = createSlice({
                 state.status.courses = "failed";
             })
 
+            .addCase(getCoursesStudents.pending, (state, action) => {
+                state.status.courses = "loading";
+            })
+            .addCase(getCoursesStudents.fulfilled, (state, action) => {
+                state.coursesStudents = action.payload;
+                state.status.courses = "succeeded";
+            })
+            .addCase(getCoursesStudents.rejected, (state, action) => {
+                state.status.courses = "failed";
+            })
+
             .addCase(createClass.pending, (state, action) => {
                 state.status.courses = "loading";
             })
@@ -229,6 +255,7 @@ export const selectPercentagesStatus = (state) => state.percentages.status;
 export const selectSchoolslist = (state) => state.schools.schoolslist;
 export const selectSchoolslistStatus = (state) => state.schoolslist.status;
 export const selectCourses = (state) => state.schools.courses;
+export const selectCoursesStudents = (state) => state.schools.coursesStudents;
 export const selectCoursesStatus = (state) => state.courses.status;
 
 export default schoolsSlice.reducer;

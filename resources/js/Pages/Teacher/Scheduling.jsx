@@ -42,38 +42,31 @@ import {
     selectInterviewsStatus,
     selectInterviews,
 } from "@/Features/interviews/interviewsSlice";
+import { getUser, selectUser } from "@/Features/users/userSlice";
+import { getCourses, selectCourses } from "@/Features/courses/coursesSlice";
 import axios from "axios"; // Don't forget to import axios
+const appUrl = import.meta.env.VITE_APP_URL;
+
 
 const localizer = momentLocalizer(moment);
 const DnDCalendar = withDragAndDrop(Calendar);
 
 const Interviews = () => {
+    const dispatch = useDispatch();
+    const user = useSelector(selectUser);
+
     const [showModal, setShowModal] = useState(false);
     const [selectedDate, setSelectedDate] = useState(null);
     const [events, setEvents] = useState([]);
-
-    const [userId, setUserId] = useState(null);
     const [shortlists, setShortlists] = useState([]);
-
-    useEffect(() => {
-        const fetchUserId = async () => {
-            try {
-                const response = await axios.get(
-                    `http://127.0.0.1:8000/api/user-id`
-                );
-                setUserId(response.data.user.id);
-            } catch (error) {
-                console.error("Error fetching user ID:", error);
-            }
-        };
-        fetchUserId();
-    }, []);
-
-    const dispatch = useDispatch();
-
+    const userId = user?.id;
     const data = useSelector(selectInterviews);
     const interviews = data.interviews;
     const interviewsStatus = useSelector(selectInterviewsStatus);
+
+    useEffect(() => {
+        dispatch(getUser());
+    }, [dispatch]);
 
     useEffect(() => {
         dispatch(
@@ -83,44 +76,66 @@ const Interviews = () => {
         );
     }, [userId]);
 
-    function transformedInterviews(interviews) {
+    useEffect(() => {
+        const fetchShortlists = async (userId) => {
+            try {
+                const response = await axios.get(
+                    `${appUrl}/api/v1/courses/teacher/${userId}`
+                );
+                setShortlists(response.data.data);
+
+            } catch (error) {
+                console.error("Error fetching shortlists:", error);
+
+            }
+        };
+
+        if (userId) {
+            fetchShortlists(userId);
+        }
+    }, [userId]);
+
+    const transformedInterviews = (interviews) => {
+
+        if (!Array.isArray(interviews)) {
+            console.error('transformedInterviews expected an array, but got:', interviews);
+            return [];
+        }
+
         const result = interviews.map((interview) => ({
             ...interview,
-            start: interview.startDate,
-            end: interview.endDate,
+            start: new Date(interview.startDate),
+            end: new Date(interview.endDate),
         }));
         return result;
-    }
+    };
 
     useEffect(() => {
         setEvents(transformedInterviews(interviews));
     }, [interviews]);
 
-    useEffect(() => {
-        if (interviewsStatus.postInterview === "succeeded") {
-            setEvents((prevEvents) => [
-                ...prevEvents,
-                ...transformedInterviews(data.postInterview),
-            ]);
-        }
-    }, [interviewsStatus.postInterview, data.postInterview]);
-
-
-
     function getTodayDate() {
         const today = new Date();
         const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, "0"); // Months are zero-indexed
+        const month = String(today.getMonth() + 1).padStart(2, "0");
         const day = String(today.getDate()).padStart(2, "0");
 
         return `${year}-${month}-${day}`;
     }
 
+    const openModal = (day) => {
+        setSelectedDate(day);
+        setShowModal(true);
+    };
+
+    const closeModal = () => {
+        setSelectedDate(null);
+        setShowModal(false);
+    };
+
     const handleEventResize = async ({ event, start, end }) => {
-        // Check if start and end are valid Date objects
 
-
-        const formatDateTime = (dateTime) => {
+    const formatDateTime = (dateTime) => {
             const year = dateTime.getFullYear();
             const month = String(dateTime.getMonth() + 1).padStart(2, "0");
             const day = String(dateTime.getDate()).padStart(2, "0");
@@ -132,7 +147,7 @@ const Interviews = () => {
         };
 
         try {
-            // Prepare payload with necessary fields, including start_date and end_date
+
             const payload = {
                 title: event.title,
                 start_date: formatDateTime(start),
@@ -143,16 +158,13 @@ const Interviews = () => {
                 interviewer_id: event.interviewerId,
             };
 
-            // Send PUT request to update event
+
             const response = await axios.put(
-                `http://127.0.0.1:8000/api/v1/interviews/${event.id}`,
+                `${appUrl}/api/v1/interviews/${event.id}`,
                 payload
             );
 
-
-
-            // Update events state with the new position
-            const updatedEvents = events.map((existingEvent) =>
+    const updatedEvents = events.map((existingEvent) =>
                 existingEvent.id === event.id ? { ...existingEvent, start, end } : existingEvent
             );
 
@@ -193,7 +205,7 @@ const Interviews = () => {
 
             // Send PUT request to update event
             const response = await axios.put(
-                `http://127.0.0.1:8000/api/v1/interviews/${event.id}`,
+                `${appUrl}/api/v1/interviews/${event.id}`,
                 payload
             );
 
@@ -210,15 +222,7 @@ const Interviews = () => {
         }
     };
 
-    const openModal = (day) => {
-        setSelectedDate(day);
-        setShowModal(true);
-    };
 
-    const closeModal = () => {
-        setSelectedDate(null);
-        setShowModal(false);
-    };
 
     const handleAddEvent = (title, description, start, end, selectedApplicant) => {
         // Check if selectedApplicant is defined and not empty
@@ -257,68 +261,35 @@ const Interviews = () => {
                 intervieweeId: selectedApplicant,
                 interviewerId,
             })
-        );
+        ).then(() => {
+            dispatch(getInterviewsForInterviewer({
+                interviewerId: userId,
+            }));
+
+        });
 
         closeModal();
     };
 
-    useEffect(() => {
-        const fetchShortlists = async (userId) => {
-            try {
-                const response = await axios.get(
-                    `http://127.0.0.1:8000/api/v1/courses/teacher/${userId}`
-                );
-                setShortlists(response.data.data);
-
-            } catch (error) {
-                console.error("Error fetching shortlists:", error);
-                // Handle error gracefully
-            }
-        };
-
-        if (userId) {
-            fetchShortlists(userId);
-        }
-    }, [userId]); // Ensure useEffect runs when userId changes
-
-
-    const handleDeleteClickShortlist = async (shortlist) => {
-        try {
-            const response = await axios.delete(
-                `http://127.0.0.1:8000/api/jobs/${shortlist.job.id}/shortlist`
-            );
-            handleShortlistDelete(shortlist.id); // Update state or perform any necessary cleanup
-
-        } catch (error) {
-            console.error("Error deleting shortlist:", error);
-            // Handle error
-        }
-    };
-
-    const handleShortlistDelete = (shortlistId) => {
-        const updatedShortlists = shortlists.filter((shortlist) => shortlist.id !== shortlistId);
-        setShortlists(updatedShortlists);
-    };
-
     const handleDeleteClick = async (event) => {
         try {
-          // Assuming you have an endpoint to delete events by event id
-          const response = await axios.delete(
-            `http://127.0.0.1:8000/api/v1/interviews/${event.id}`
-          );
-          handleEventDelete(event.id); // Update state or perform any necessary cleanup
+
+            const response = await axios.delete(
+                `${appUrl}/api/v1/interviews/${event.id}`
+            );
+            handleEventDelete(event.id);
 
         } catch (error) {
-          console.error("Error deleting event:", error);
-          // Handle error
-        }
-      };
+            console.error("Error deleting event:", error);
 
-      const handleEventDelete = (eventId) => {
+        }
+    };
+
+    const handleEventDelete = (eventId) => {
         const updatedEvents = events.filter((event) => event.id !== eventId);
         setEvents(updatedEvents);
 
-      };
+    };
 
     return (
         <NavBar header={"Interviews"}>

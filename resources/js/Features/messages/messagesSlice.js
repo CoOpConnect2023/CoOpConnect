@@ -206,14 +206,14 @@ export const markMessageAsRead = createAsyncThunk(
         try {
 
 
-            // Perform API call to mark message as read
+
             await axios.patch(`/messages/${messageId}/mark-as-read`);
 
-            // Get conversations from the state
+
             const conversations = getState().messages.notifications.conversations;
 
 
-            // Update conversations by filtering out the read message
+
             const updatedConversations = conversations.map(conversation => {
                 if (conversation.id === conversationId) {
                     const updatedMessages = conversation.messages.map(message =>
@@ -229,10 +229,10 @@ export const markMessageAsRead = createAsyncThunk(
 
 
 
-            // Dispatch an action to update Redux state with updated conversations
+
             dispatch(markMessageReadSuccess(updatedConversations));
 
-            // Return the messageId and conversationId as payload
+
             return { messageId, conversationId };
         } catch (error) {
             console.error(`Error marking message ${messageId} as read: ${error.message}`);
@@ -312,7 +312,7 @@ export const selectNotifications = (state) => state.messages.notifications;
 export const selectNotificationsStatus = (state) => state.messages.status.notifications;
 export const selectMarkMessageAsReadStatus = (state) => state.messages.markMessageAsReadStatus;
 
-// Action creators are generated for each case reducer function
+
 export const { } = messagesSlice.actions;
 export const { updateMessageViewedState, markMessageReadSuccess } = messagesSlice.actions;
 

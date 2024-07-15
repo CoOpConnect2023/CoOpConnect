@@ -99,7 +99,7 @@ const Card = ({ name, classroom, email, id, profileImage, schoolId, status, onVi
                 ) : (
                     <Button onClick={handleEditClick}>Edit</Button>
                 )}
-                <Button onClick={beginDelete}>Delete</Button>
+                <Button onClick={handleDeleteClick}>Delete</Button>
             </CardActions>
 
 
