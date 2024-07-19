@@ -114,7 +114,7 @@ function Profile() {
                     formData.append("profile_image", blob, "profile_image.png");
                 }
             }
-
+            formData.append("id", user.id);
             formData.append("description", user.description);
             formData.append("name", user.name);
             formData.append("email", user.email);

@@ -44,6 +44,8 @@ class AuthenticatedSessionController extends Controller
         switch ($user->role) {
             case 'teacher':
                 return redirect()->intended(RouteServiceProvider::HOME_TEACHER);
+                case 'admin':
+                    return redirect()->intended(RouteServiceProvider::HOME_ADMIN);
             case 'employee':
                 return redirect()->intended(RouteServiceProvider::HOME_EMPLOYER);
             case 'student':

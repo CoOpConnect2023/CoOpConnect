@@ -32,6 +32,7 @@ function DocumentDropZone({
     altText,
     description,
     clearPreviewsTrigger,
+    dataTestId
 }) {
     const [isDragging, setIsDragging] = useState(false);
     const [filesPreview, setFilesPreview] = useState([]);
@@ -81,6 +82,7 @@ function DocumentDropZone({
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             isDragging={isDragging}
+            data-test-id={dataTestId}
         >
             <DropZone>
                 {filesPreview.length > 0 ? (
@@ -170,7 +172,7 @@ function Document() {
 
                 if (response.data.status === 1) {
                     setUserDocuments(response.data.data);
-                    
+
                 } else {
                     console.error(
                         "Error fetching documents:",
@@ -294,6 +296,7 @@ function Document() {
                                 {...doc}
                                 onFileDrop={handleFileDrop}
                                 clearPreviewsTrigger={clearPreviewsTrigger}
+                                dataTestId={`drop-zone-${index}`}
                             />
                         ))}
                     </DropZoneWrapper>
@@ -302,7 +305,7 @@ function Document() {
                     {userDocuments.length > 0 ? (
                         <DocumentWrapper>
                             {userDocuments.map((doc, index) => (
-                                <DocumentItem key={index}>
+                                <DocumentItem key={index} dataTestId={`document-item-${index}`}>
                                     <span>{doc.title}</span>
                                     <ButtonContainer>
                                         <DownloadButton

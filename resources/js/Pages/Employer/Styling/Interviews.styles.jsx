@@ -184,6 +184,7 @@ export const Shortlist = styled.div`
     padding: 16px;
     margin-bottom: 16px;
     position: relative;
+    overflow-wrap: break-word; /* Ensure text wraps when it reaches container edges */
 `;
 
 export const DeleteButton = styled.button`

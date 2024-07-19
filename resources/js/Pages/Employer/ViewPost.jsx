@@ -75,7 +75,7 @@ function ViewPost() {
                 }
                 const data = await response.json();
                 setJob(data.data);
-                
+
                 setLoading(false);
             } catch (error) {
                 console.error("Error fetching job details:", error);
@@ -149,6 +149,7 @@ function ViewPost() {
             const updatedShortlist = response.data.shortlist;
             const updatedJob = { ...job, shortlist: updatedShortlist };
             setJob(updatedJob); // Update job state with updated shortlist
+            checkShortlistStatus()
         } catch (error) {
             console.error('Error adding applicant to shortlist:', error);
         }
@@ -168,6 +169,7 @@ function ViewPost() {
           const updatedJob = { ...job, shortlist: updatedShortlist };
           setJob(updatedJob); // Update job state with updated shortlist
           setIsOnShortlist(false); // Update state to reflect applicant is not on shortlist anymore
+          checkShortlistStatus()
         } catch (error) {
           console.error('Error removing applicant from shortlist:', error);
         }

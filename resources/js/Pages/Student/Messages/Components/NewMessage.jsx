@@ -4,11 +4,11 @@ import styled from "styled-components";
 
 import { Div4, Div5, Div6, Div7, Div8, Div9, Div10, Div11, Div12, Div13, Div14, Img, Input, SendButton, StyledMessage  } from "../../Styling/NewMessage.styles";
 
-export default function NewMessage({ newMessage, setNewMessage, onSendNewMessage, recipientEmail, setRecipientEmail, shortlists}) {
+export default function NewMessage({ newMessage, setNewMessage,  onSendNewMessage, recipientEmail, setRecipientEmail, shortlists, brandNewMessage, setBrandNewMessage}) {
 
 
     const handleInputChange = (e) => {
-        setNewMessage(e.target.value);
+        setBrandNewMessage(e.target.value);
     };
 
     const handleRecipientChange = (e) => {
@@ -66,7 +66,7 @@ export default function NewMessage({ newMessage, setNewMessage, onSendNewMessage
                         <Div13><Input
                             type="text"
                             placeholder="Type your message"
-                            value={newMessage}
+                            value={brandNewMessage}
                             onChange={handleInputChange}
 
                         /></Div13><SendButton onClick={onSendNewMessage}>Send</SendButton>

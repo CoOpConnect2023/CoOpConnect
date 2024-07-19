@@ -92,6 +92,7 @@ function DocumentDropZone({
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             isDragging={isDragging}
+            data-testid="document-item-employer"
         >
             <DropZone>
                 {filesPreview.length > 0 ? (

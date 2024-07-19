@@ -83,7 +83,7 @@ class UserController extends Controller
     public function updateProfile(Request $request, User $user)
     {
 
-        if (!Auth::user()->isAdmin() && Auth::id() != $id) {
+        if (!Auth::user()->isAdmin() && Auth::id() != $user->id) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 

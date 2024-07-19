@@ -24,7 +24,7 @@ export default function TypeMessage({ newMessage, setNewMessage, onSendMessage }
                         loading="lazy"
                         src="https://cdn.builder.io/api/v1/image/assets/TEMP/b1fe555b0ffdbe13c397278b479bee6782aab134a4d597d83c876620c9e724f1?apiKey=d66532d056b14640a799069157705b77&"
                     />
-                    <Div100> <Input
+                    <Div100> <Input data-testid="student-typeMessage"
                             type="text"
                             placeholder="Type your message"
                             value={newMessage}
@@ -32,7 +32,7 @@ export default function TypeMessage({ newMessage, setNewMessage, onSendMessage }
                             onKeyPress={handleKeyPress}
                         /></Div100>
                 </Div99>
-                <SendButton onClick={onSendMessage}>Send</SendButton>
+                <SendButton data-testid="student-sendMessage"  onClick={onSendMessage}>Send</SendButton>
                 <Div101>
 
                     <img

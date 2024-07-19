@@ -96,6 +96,11 @@ class MessagesController extends Controller
         'user_id' => 'required|exists:users,id',
     ]);
 
+    Log::info('Request validation passed', [
+        'recipient_email' => $request->recipient_email,
+        'user_id' => $request->user_id,
+    ]);
+
     // Get the authenticated user based on user_id
     $user = User::findOrFail($request->user_id);
 
@@ -103,8 +108,11 @@ class MessagesController extends Controller
     $recipient = User::where('email', $request->recipient_email)->first();
 
     if (!$recipient) {
+        Log::warning('Recipient not found', ['recipient_email' => $request->recipient_email]);
         return response()->json(['error' => 'Recipient not found'], 404);
     }
+
+    Log::info('Recipient found', ['recipient_id' => $recipient->id, 'user_id' => $user->id]);
 
     // Check if a conversation already exists between these two users
     $conversation = Conversation::whereHas('users', function ($query) use ($user) {
@@ -113,33 +121,59 @@ class MessagesController extends Controller
     ->whereHas('users', function ($query) use ($recipient) {
         $query->where('user_id', $recipient->id);
     })
-    ->whereHas('users', function ($query) use ($user, $recipient) {
-        $query->where('user_id', '<>', $user->id)
-              ->where('user_id', '<>', $recipient->id);
+    ->whereHas('messages', function ($query) use ($user, $recipient) {
+        $query->where(function ($q) use ($user, $recipient) {
+            $q->where('user_id', $user->id)
+              ->orWhere('user_id', $recipient->id);
+        })
+        ->havingRaw('COUNT(DISTINCT user_id) = 2'); // Ensure messages are from both users
     })
     ->first();
 
-    // If conversation exists, return a message
     if ($conversation) {
-        return response()->json(['message' => 'Conversation already exists', 'conversation_id' => $conversation->id], 200);
+        Log::info('Conversation found', ['conversation_id' => $conversation->id]);
+
+        // Create a new message
+        $message = new Message();
+        $message->content = $request->content;
+        $message->conversation_id = $conversation->id;
+        $message->user_id = $user->id;
+        $message->save();
+
+        Log::info('Message sent', ['message_id' => $message->id, 'conversation_id' => $conversation->id]);
+
+        return response()->json(['message' => 'Message sent successfully', 'message_id' => $message->id], 200);
     }
 
+    Log::info('No existing conversation found. Creating new conversation.');
 
-    $conversation = new Conversation();
-    $conversation->save();
+    // If conversation does not exist, create a new one
+    $newConversation = new Conversation();
+    $newConversation->save();
 
+    Log::info('New conversation created', ['conversation_id' => $newConversation->id]);
 
-    $conversation->users()->attach([$user->id, $recipient->id]);
+    // Attach users to the new conversation, ensuring no duplicates
+    $existingUserIds = $newConversation->users->pluck('id')->toArray();
+    $newUserIds = array_unique(array_merge($existingUserIds, [$user->id, $recipient->id]));
 
-    
+    $newConversation->users()->sync($newUserIds);
+
+    Log::info('Users attached to new conversation', ['user_ids' => $newUserIds]);
+
+    // Create a new message in the new conversation
     $message = new Message();
     $message->content = $request->content;
-    $message->conversation_id = $conversation->id;
-    $message->user_id = $user->id; // Assuming the sender is the authenticated user
+    $message->conversation_id = $newConversation->id;
+    $message->user_id = $user->id;
     $message->save();
 
-    return response()->json(['message' => 'Conversation created successfully', 'conversation_id' => $conversation->id], 200);
+    Log::info('Message sent in new conversation', ['message_id' => $message->id, 'conversation_id' => $newConversation->id]);
+
+    return response()->json(['message' => 'Conversation created successfully', 'conversation_id' => $newConversation->id], 200);
 }
+
+
 
 
 public function markMessageAsRead(Request $request, $message_id)

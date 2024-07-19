@@ -16,7 +16,7 @@ export default function SidePanel({ conversations, setConversationsID, currentUs
             <Div16>Conversations</Div16>
             <Div17>
                 <Div18>
-                    {conversations.map((conversation) => {
+                    {conversations.map((conversation, index) => {
 
                         const otherUser = conversation.users.find(user => user.id !== currentUser);
 
@@ -26,7 +26,7 @@ export default function SidePanel({ conversations, setConversationsID, currentUs
                         }
 
                         return (
-                            <Div19 key={conversation.id} onClick={() => handleConversationClick(conversation.id)}>
+                            <Div19 key={conversation.id} data-testid={`conversation-${index}`} onClick={() => handleConversationClick(conversation.id)}>
 
                                 <Img4
                                     loading="lazy"

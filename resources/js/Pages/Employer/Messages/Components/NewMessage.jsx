@@ -4,11 +4,12 @@ import styled from "styled-components";
 import { Div4, Div5, Div6, Div7, Div8, Div9, Div10, Div11, Div12, Div13, Div14, Img, Input, SendButton, StyledMessage  } from "../../Styling/NewMessage.styles";
 
 
-export default function NewMessage({ newMessage, setNewMessage, onSendNewMessage, recipientEmail, setRecipientEmail, shortlists}) {
-    const [defaultRecipientEmail, setDefaultRecipientEmail] = useState('');
+
+export default function NewMessage({ newMessage, setNewMessage, onSendNewMessage, recipientEmail, setRecipientEmail, shortlists, brandNewMessage, setBrandNewMessage}) {
+
 
     const handleInputChange = (e) => {
-        setNewMessage(e.target.value);
+        setBrandNewMessage(e.target.value);
     };
 
     const handleRecipientChange = (e) => {
@@ -37,9 +38,15 @@ export default function NewMessage({ newMessage, setNewMessage, onSendNewMessage
     }
     const hasApplicants = shortlists && shortlists.some(shortlist => shortlist.applicants.length > 0);
 
+    useEffect(() => {
+        if (uniqueEmails.size > 0) {
+            setRecipientEmail([...uniqueEmails][0]);
+        }
+    }, [uniqueEmails]);
+
 
     return (
-        <Div4>
+        <Div4 data-testid="new-message-component">
             <Div5>New Message</Div5>
             <Div6>
                 <Div7>
@@ -67,10 +74,11 @@ export default function NewMessage({ newMessage, setNewMessage, onSendNewMessage
                         <Div13><Input
                             type="text"
                             placeholder="Type your message"
-                            value={newMessage}
+                            value={brandNewMessage}
                             onChange={handleInputChange}
+                            data-testid="message-input"
 
-                        /></Div13><SendButton onClick={onSendNewMessage}>Send</SendButton>
+                        /></Div13><SendButton data-testid="send-button" onClick={onSendNewMessage}>Send</SendButton>
                     </Div12>
                     <Div14>
                         <img

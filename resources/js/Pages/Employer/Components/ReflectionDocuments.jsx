@@ -86,7 +86,7 @@ const ReflectionDocuments = () => (
             alt="Documents Icon"
             loading="lazy"
           />
-          <OptionText>Documents</OptionText>
+          <OptionText>My Documents</OptionText>
         </Link>
             </OptionCard>
         </OptionsWrapper>

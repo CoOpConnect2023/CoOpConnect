@@ -94,7 +94,7 @@ class DocumentsController extends Controller
             "status" => 0,
             "message" => "No documents found for the user.",
             "data" => [],
-            "user_id" => $user_id  // Add user ID to the response for debugging NOT DISPLAYING
+            "user_id" => $user_id  
         ]);
     }
 
@@ -130,7 +130,7 @@ public function download($id)
     {
         try {
             $document = Document::findOrFail($docId);
-            Storage::delete($document->path); // Optionally delete the file from storage
+            Storage::delete($document->path);
 
             $document->delete();
 

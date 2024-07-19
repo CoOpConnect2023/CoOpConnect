@@ -186,21 +186,21 @@ function Header({ header }) {
 
 
                     </NotificationIcon>
-                    <UserDetails onClick={toggleProfileModal}>
+                    <UserDetails data-testid="user-details" onClick={toggleProfileModal}>
                         {user && user.profile_image ? (
-                            <Avatar
+                            <Avatar data-testid="user-details"
                                 src={user.profile_image}
                                 alt="User Avatar"
                                 loading="lazy"
                             />
                         ) : (
-                            <Avatar
+                            <Avatar data-testid="user-details"
                                 src={altAvatarSrc}
                                 alt="Default Avatar"
                                 loading="lazy"
                             />
                         )}
-                        <ExpandIcon
+                        <ExpandIcon data-testid="user-details"
                             src="https://cdn.builder.io/api/v1/image/assets/TEMP/c7749e10a4cb727e5ce0c7fd48d44fb683bf93b2fa7c59643148748496b286b0?apiKey=d66532d056b14640a799069157705b77&"
                             alt="Expand"
                             loading="lazy"

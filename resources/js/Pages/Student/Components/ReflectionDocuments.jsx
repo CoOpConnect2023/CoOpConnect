@@ -79,7 +79,7 @@ const ReflectionDocuments = () => (
                     alt="Reflection Icon"
                     loading="lazy"
                 />
-                <OptionText>Reflections</OptionText>
+                <OptionText>My Reflections</OptionText>
                 </Link>
             </OptionCard>
             <OptionCard color="var(--Schemes-Tertiary, #7c4e7e)">
@@ -89,7 +89,7 @@ const ReflectionDocuments = () => (
             alt="Documents Icon"
             loading="lazy"
           />
-          <OptionText>Documents</OptionText>
+          <OptionText>My Documents</OptionText>
         </Link>
             </OptionCard>
         </OptionsWrapper>

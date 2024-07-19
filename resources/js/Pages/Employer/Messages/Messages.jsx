@@ -18,6 +18,7 @@ export default function Messages() {
     const [conversationID, setConversationsID] = useState(null);
     const [newMessage, setNewMessage] = useState('');
     const [recipientEmail, setRecipientEmail] = useState('');
+    const [brandNewMessage, setBrandNewMessage] = useState('');
 
     const dispatch = useDispatch();
     const user = useSelector(selectUser);
@@ -71,6 +72,7 @@ export default function Messages() {
         if (newMessage.trim() === '') return;
 
         dispatch(sendMessage({ newMessage, userInfo, conversationID }));
+        setNewMessage('')
     };
 
     const handleSendNewMessage = () => {
@@ -78,6 +80,7 @@ export default function Messages() {
 
         dispatch(sendNewMessage({ newMessage, userInfo, recipientEmail }));
         window.location.reload()
+        setBrandNewMessage('')
     };
 
     useEffect(() => {
@@ -109,6 +112,8 @@ export default function Messages() {
                         newMessage={newMessage}
                         setNewMessage={setNewMessage}
                         handleSendNewMessage={handleSendNewMessage}
+                        brandNewMessage={brandNewMessage}
+                        setBrandNewMessage={setBrandNewMessage}
                         recipientEmail={recipientEmail}
                         setRecipientEmail={setRecipientEmail}
                         shortlists={shortlists}

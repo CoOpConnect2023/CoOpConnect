@@ -125,7 +125,7 @@ function Header({ header }) {
         if (user && user.id) {
             const dummyUserID = user.id;
             dispatch(getNotifications(dummyUserID));
-            
+
         }
     }, [user, dispatch]);
 
@@ -173,11 +173,11 @@ function Header({ header }) {
 
     return (
         <header>
-            <HeaderContainer>
+            <HeaderContainer data-testid="nav-student-component">
                 <Title>{header}</Title>
                 <UserProfile>
 
-                    <NotificationIcon onClick={toggleNotificationModal}
+                    <NotificationIcon data-testid="nav-student-notification" onClick={toggleNotificationModal}
                         hasUnreadMessages={hasUnreadMessages}><FontAwesomeIcon icon={faBell} />
 
 
@@ -215,7 +215,7 @@ function Header({ header }) {
                         <ModalItem as="button" onClick={handleLogout}>Logout</ModalItem>
                     </ModalContent>
                 </Modal>
-                <NotificationModal isOpen={isNotificationModalOpen} conversations={conversations} handleMarkAsRead={handleMarkAsRead} handleRedirect={handleRedirect} currentUser={user} notificationsStatus={notificationsStatus}>
+                <NotificationModal data-testid="nav-student-notification-modal" isOpen={isNotificationModalOpen} conversations={conversations} handleMarkAsRead={handleMarkAsRead} handleRedirect={handleRedirect} currentUser={user} notificationsStatus={notificationsStatus}>
                     <ModalContent>
                         <ModalItem>Notification 1</ModalItem>
                         <ModalItem>Notification 2</ModalItem>
@@ -251,14 +251,13 @@ export default NavBar;
 
 
 
-function NotificationModal({ isOpen, conversations, handleMarkAsRead, handleRedirect, currentUser, notificationsStatus, markMessageStatus }) {
+const NotificationModal = ({ isOpen, conversations, handleMarkAsRead, handleRedirect, currentUser, notificationsStatus, markMessageStatus }) => {
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
         return new Date(dateString).toLocaleDateString(undefined, options);
     };
-
     return (
-        <NotificationModalContainer isOpen={isOpen}>
+        <NotificationModalContainer isOpen={isOpen} data-testid="notification-modal">
             {markMessageStatus === 'loading' ? (
                 <LoadingMessage>Loading...</LoadingMessage>
             ) : conversations === null || conversations.length === 0 ? (
@@ -268,7 +267,7 @@ function NotificationModal({ isOpen, conversations, handleMarkAsRead, handleRedi
                     const otherUser = conversation.users.find(user => user.id !== currentUser?.id);
 
                     return (
-                        <Conversation key={conversation.id}>
+                        <Conversation key={conversation.id} data-testid="conversation">
                             <ConversationInfo>
                                 <div>From: {otherUser ? otherUser.name : 'Unknown'}</div>
                             </ConversationInfo>
@@ -292,7 +291,9 @@ function NotificationModal({ isOpen, conversations, handleMarkAsRead, handleRedi
             )}
         </NotificationModalContainer>
     );
-}
+};
+
+
 
 
 

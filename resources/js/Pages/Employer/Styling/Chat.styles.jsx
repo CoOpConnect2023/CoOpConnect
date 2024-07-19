@@ -18,7 +18,7 @@ justify-content: center;
 export const Content = styled.div`
     gap: 20px;
     display: flex;
-    @media (max-width: 991px) {
+    @media (max-width: 600px) {
         flex-direction: column;
         align-items: stretch;
         gap: 0px;
@@ -31,7 +31,7 @@ export const Column = styled.div`
     line-height: normal;
     width: 36%;
     margin-left: 0px;
-    @media (max-width: 991px) {
+    @media (max-width: 600px) {
         width: 100%;
     }
 `;
@@ -41,7 +41,7 @@ export const LeftColumn = styled.div`
     display: flex;
     flex-grow: 1;
     flex-direction: column;
-    @media (max-width: 991px) {
+    @media (max-width: 600px) {
         max-width: 100%;
         margin-top: 40px;
     }
@@ -53,7 +53,7 @@ export const Column2 = styled.div`
     line-height: normal;
     width: 64%;
     margin-left: 20px;
-    @media (max-width: 991px) {
+    @media (max-width: 600px) {
         width: 100%;
     }
 `;
@@ -69,7 +69,7 @@ export const RightColumn = styled.div`
     flex-direction: column;
     width: 100%;
     padding: 10px;
-    @media (max-width: 991px) {
+    @media (max-width: 600px) {
         max-width: 100%;
         margin-top: 40px;
     }

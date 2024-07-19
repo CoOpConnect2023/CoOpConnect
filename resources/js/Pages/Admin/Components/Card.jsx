@@ -70,7 +70,7 @@ const Card = ({ name, classroom, email, id, profileImage, schoolId, status, onVi
     };
 
     return (
-        <CardContainer>
+        <CardContainer data-testid={`user-card-${email}`}>
             <CardInfo>
                 <Avatar src={profileImage} alt={`${name}'s avatar`} />
                 {isEditing ? (
@@ -90,7 +90,7 @@ const Card = ({ name, classroom, email, id, profileImage, schoolId, status, onVi
                 )}
             </CardInfo>
             <CardActions>
-                <Button onClick={handleViewClick}>View</Button>
+                <Button data-testid={`view-button-${email}`} onClick={handleViewClick}>View</Button>
                 {isEditing ? (
                     <>
                         <Button onClick={handleSaveClick}>Save</Button>
@@ -99,7 +99,7 @@ const Card = ({ name, classroom, email, id, profileImage, schoolId, status, onVi
                 ) : (
                     <Button onClick={handleEditClick}>Edit</Button>
                 )}
-                <Button onClick={handleDeleteClick}>Delete</Button>
+                <Button data-testid={`delete-button-${email}`} onClick={handleDeleteClick}>Delete</Button>
             </CardActions>
 
 

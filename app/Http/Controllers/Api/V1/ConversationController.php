@@ -24,25 +24,27 @@ class ConversationController extends Controller
     }
 
     public function show($user_id)
-{
-    // Find all conversations where the given user ID participates
-    $conversations = Conversation::whereHas('users', function ($query) use ($user_id) {
-        $query->where('users.id', $user_id);
-    })
-    ->with(['users', 'messages' => function ($query) {
-        $query->orderBy('created_at', 'desc'); // Order messages by created_at descending
-    }])
-    ->orderBy('updated_at', 'desc') // Ensure conversations are ordered chronologically by last update
-    ->get();
+    {
 
-    // Attach the most recent message to each conversation
-    $conversations->each(function ($conversation) {
-        $conversation->latest_message = $conversation->messages->first();
-        $conversation->unsetRelation('messages'); // Remove the messages relation to only include the latest message
-    });
+        $conversations = Conversation::whereHas('users', function ($query) use ($user_id) {
+                $query->where('users.id', $user_id);
+            })
+            ->with(['users', 'latestMessage' => function ($query) {
+                $query->orderBy('created_at', 'desc');
+            }])
+            ->orderByDesc('updated_at')
+            ->get();
 
-    return response()->json(['conversations' => $conversations]);
-}
+        // Attach the most recent message to each conversation
+        $conversations->each(function ($conversation) {
+            // Set the latest_message attribute to the latest message or null if no message exists
+            $conversation->latest_message = $conversation->latestMessage ? $conversation->latestMessage : null;
+            $conversation->unsetRelation('latestMessage'); // Remove the latestMessage relation
+        });
+
+        return response()->json(['conversations' => $conversations]);
+    }
+
 
     public function getMessages($conversation_id)
 {

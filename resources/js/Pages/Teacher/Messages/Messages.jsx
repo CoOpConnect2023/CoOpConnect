@@ -18,6 +18,7 @@ export default function Messages() {
     const [conversationID, setConversationsID] = useState(null);
     const [newMessage, setNewMessage] = useState('');
     const [recipientEmail, setRecipientEmail] = useState('');
+    const [brandNewMessage, setBrandNewMessage] = useState('');
 
     const dispatch = useDispatch();
     const user = useSelector(selectUser);
@@ -71,13 +72,15 @@ export default function Messages() {
         if (newMessage.trim() === '') return;
 
         dispatch(sendMessage({ newMessage, userInfo, conversationID }));
+        setNewMessage('')
     };
 
     const handleSendNewMessage = () => {
-        if (newMessage.trim() === '') return;
+        if (brandNewMessage.trim() === '') return;
 
-        dispatch(sendNewMessage({ newMessage, userInfo, recipientEmail }));
+        dispatch(sendNewMessage({ brandNewMessage, userInfo, recipientEmail }));
         window.location.reload()
+        setBrandNewMessage('')
     };
 
 
@@ -113,6 +116,8 @@ export default function Messages() {
                     <Chat
                         newMessage={newMessage}
                         setNewMessage={setNewMessage}
+                        brandNewMessage={brandNewMessage}
+                        setBrandNewMessage={setBrandNewMessage}
                         handleSendNewMessage={handleSendNewMessage}
                         recipientEmail={recipientEmail}
                         setRecipientEmail={setRecipientEmail}

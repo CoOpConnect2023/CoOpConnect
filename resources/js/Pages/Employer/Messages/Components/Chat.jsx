@@ -10,7 +10,7 @@ import { MainContainer, Content, Column, LeftColumn, Column2, RightColumn, Messa
 
 
 
-export default function Chat({newMessage, setNewMessage, handleSendNewMessage, recipientEmail, setRecipientEmail, shortlists, conversations, selectedConversation, messages, handleSendMessage, setConversationsID, currentUser, conversationID, handleFetchConversationDetails }) {
+export default function Chat({newMessage, setNewMessage, brandNewMessage, setBrandNewMessage, handleSendNewMessage, recipientEmail, setRecipientEmail, shortlists, conversations, selectedConversation, messages, handleSendMessage, setConversationsID, currentUser, conversationID, handleFetchConversationDetails }) {
 
 
 
@@ -21,7 +21,7 @@ export default function Chat({newMessage, setNewMessage, handleSendNewMessage, r
             <Content>
                 <Column>
                     <LeftColumn>
-                        <NewMessage newMessage={newMessage} setNewMessage={setNewMessage} onSendNewMessage={handleSendNewMessage} recipientEmail={recipientEmail} setRecipientEmail={setRecipientEmail} shortlists={shortlists} />
+                        <NewMessage newMessage={newMessage} setNewMessage={setNewMessage} brandNewMessage={brandNewMessage} setBrandNewMessage={setBrandNewMessage}  onSendNewMessage={handleSendNewMessage} recipientEmail={recipientEmail} setRecipientEmail={setRecipientEmail} shortlists={shortlists} />
                         {conversations && <SidePanel conversations={conversations} setConversationsID={setConversationsID} currentUser={currentUser} />}
                     </LeftColumn>
                 </Column>

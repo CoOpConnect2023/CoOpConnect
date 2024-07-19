@@ -278,10 +278,10 @@ export const fetchConversationDetails = createAsyncThunk(
 
 export const sendNewMessage = createAsyncThunk(
     "messages/sendNewMessage",
-    async ({ newMessage, userInfo, recipientEmail }, { dispatch, rejectWithValue }) => {
+    async ({ brandNewMessage, userInfo, recipientEmail }, { dispatch, rejectWithValue }) => {
         try {
             const requestData = {
-                content: newMessage,
+                content: brandNewMessage,
                 user_id: userInfo.id,
                 recipient_email: recipientEmail
             };

@@ -1,7 +1,5 @@
 import styled from "styled-components";
 
-
-
 export const Div4 = styled.div`
     border-radius: 10px;
     border-color: rgba(123, 117, 127, 1);
@@ -25,7 +23,6 @@ export const Div5 = styled.div`
 `;
 
 export const Div6 = styled.div`
-
     align-items: center;
     border-radius: 10px;
     border-color: rgba(123, 117, 127, 1);
@@ -57,6 +54,13 @@ export const Div9 = styled.div`
     letter-spacing: 0.25px;
     margin: auto 0;
     font: 400 14px/143% Poppins, sans-serif;
+    overflow: hidden; /* Hide any content that exceeds the container's dimensions */
+    white-space: nowrap; /* Prevent text from wrapping */
+    text-overflow: ellipsis; /* Show an ellipsis (...) when text overflows */
+
+    /* Optionally, add max-width or width properties to limit the size */
+    /* max-width: 100%; */
+    /* width: 100%; */
 `;
 
 export const Div10 = styled.div`
@@ -102,6 +106,8 @@ export const Img = styled.img`
 export const Div13 = styled.div`
     font-family: Poppins, sans-serif;
     margin: auto 0;
+    max-width: 100%;
+    white-space: wrap;
 `;
 
 export const Div14 = styled.div`
@@ -121,6 +127,7 @@ export const Input = styled.input`
     font-size: 14px;
     background-color: #fff;
     border: 1px solid #ccc;
+    white-space: wrap;
 `;
 
 export const SendButton = styled.button`
@@ -139,4 +146,7 @@ export const SendButton = styled.button`
 export const StyledMessage = styled.div`
     color: #260e44;
     font-size: 14px;
+    overflow: hidden; /* Hide any content that exceeds the container's dimensions */
+    white-space: wrap; /* Prevent text from wrapping */
+    text-overflow: ellipsis; /* Show an ellipsis (...) when text overflows */
 `;
