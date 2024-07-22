@@ -46,6 +46,7 @@ Route::middleware(['auth', 'student'])->group(function () {
     Route::get('/student/interviews', [StudentController::class, 'interviews'])->name('student.interviews');
     Route::get('/student/profile', [StudentController::class, 'profile'])->name('student.profile');
     Route::get('/student/reflections', [StudentController::class, 'reflections'])->name('student.reflections');
+    Route::get('/student/myreflections', [StudentController::class, 'myreflections'])->name('student.myreflections');
     Route::get('/student/documents', [StudentController::class, 'documents'])->name('student.documents');
     Route::get('/student/settings', [StudentController::class, 'settings'])->name('student.settings');
     Route::get('/student/messages', [StudentController::class, 'messages'])->name('student.messages');

@@ -24,6 +24,8 @@ import {
     SuccessMessage,
 } from "./Styling/Reflections.styles";
 
+import { Link } from "@inertiajs/react";
+
 const badWords = [
     "bitch",
     "nigger",
@@ -60,7 +62,7 @@ function Reflections() {
                     `http://127.0.0.1:8000/api/user-id`
                 );
                 setUserId(response.data.user.id);
-                
+
             } catch (error) {
                 console.error("Error fetching user ID:", error);
             }
@@ -166,6 +168,11 @@ function Reflections() {
                                         {successMessage}
                                     </SuccessMessage>
                                 )}
+                                <Link to={`student/myreflections/${userId}`}>
+                                <Button >
+                                    View My Reflections
+                                </Button>
+                                </Link>
                             </Form>
                         </FormContainer>
                     </FormWrapper>

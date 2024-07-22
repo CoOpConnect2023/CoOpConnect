@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Div4, Div5, Div6, Div7, Div8, Div9, Div10, Div11, Div12, Div13, Div14, Img, Input, SendButton, StyledMessage  } from "../../Styling/NewMessage.styles";
+import { Div4, Div5, Div6, Div7, Div8, Div9, Div10, Div11, Div12, Div13, Div14, Img, Input, SendButton, StyledMessage, StyledSelect  } from "../../Styling/NewMessage.styles";
 
 
 
@@ -51,13 +51,14 @@ export default function NewMessage({ newMessage, setNewMessage, onSendNewMessage
             <Div6>
                 <Div7>
                     <Div8>To: </Div8>
-                    <Div9> {hasApplicants ? (<select value={recipientEmail} onChange={handleSelectChange}>
-                            {[...uniqueEmails].map(email => (
-                                <option key={email} value={email}>
-                                    {email}
-                                </option>
-                            ))}
-                        </select>) : (
+                    <Div9> {hasApplicants ? (
+      <StyledSelect value={recipientEmail} onChange={handleSelectChange}>
+        {[...uniqueEmails].map(email => (
+          <option key={email} value={email}>
+            {email}
+          </option>
+        ))}
+      </StyledSelect>) : (
                             <StyledMessage>
                                 Add some applicants to your shortlist to message them.
                             </StyledMessage>

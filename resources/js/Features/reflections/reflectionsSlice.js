@@ -6,6 +6,7 @@ const initialState = {
     reflections: [],
     status: {
         reflections: "idle",
+        myreflections: "idle",
         postReflection: "idle",
         putReflection: "idle",
         patchReflection: "idle",
@@ -39,6 +40,17 @@ export const reflectionsSlice = createSlice({
             .addCase(selectReflection.rejected, (state, action) => {
                 state.status.reflections = "failed";
             })
+            .addCase(getMyReflections.pending, (state, action) => {
+                state.status.myreflections = "loading";
+            })
+            .addCase(getMyReflections.fulfilled, (state, action) => {
+                state.myreflections = action.payload;
+                state.status.myreflections = "succeeded";
+            })
+            .addCase(getMyReflections.rejected, (state, action) => {
+                state.status.myreflections = "failed";
+            })
+
             .addCase(getReflectionsForUser.pending, (state, action) => {
                 state.status.reflections = "loading";
             })
@@ -90,8 +102,9 @@ export const reflectionsSlice = createSlice({
                 state.status.deleteReflection = "loading";
             })
             .addCase(deleteReflection.fulfilled, (state, action) => {
-                state.status.deleteReflection = "succeeded";
-            })
+
+                return state.myreflections.filter(reflection => reflection.id !== action.payload);
+              })
             .addCase(deleteReflection.rejected, (state, action) => {
                 state.status.deleteReflection = "failed";
             });
@@ -105,6 +118,18 @@ export const getReflections = createAsyncThunk(
             url: "/reflections",
             method: "GET",
         });
+        return response.data.data;
+    }
+);
+
+export const getMyReflections = createAsyncThunk(
+    "reflections/getMyReflections",
+    async () => {
+        const response = await axios({
+            url: "/myreflections",
+            method: "GET",
+        });
+        console.log(response.data.data)
         return response.data.data;
     }
 );
@@ -218,6 +243,7 @@ export const deleteReflection = createAsyncThunk(
 );
 
 export const selectReflections = (state) => state.reflections.reflections;
+export const selectMyReflections = (state) => state.reflections.myreflections;
 export const selectReflectionsStatus = (state) =>
     state.reflections.status.reflections;
 // Action creators are generated for each case reducer function

@@ -152,6 +152,8 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
     Route::apiResource('courses', CoursesController::class);
     Route::apiResource('usercourses', UserCoursesController::class);
     Route::apiResource('reflections', ReflectionsController::class);
+    Route::get('/myreflections', [ReflectionsController::class, 'showforuser']);
+
     Route::apiResource('interviews', InterviewsController::class);
     Route::apiResource('applications', ApplicationController::class);
     Route::apiResource('shortlists', ShortListController::class);

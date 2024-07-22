@@ -53,10 +53,21 @@ export const Div8 = styled.div`
 `;
 
 export const Div9 = styled.div`
+width: 100%;
     color: var(--Schemes-On-Primary-Container, #260e44);
     letter-spacing: 0.25px;
     margin: auto 0;
     font: 400 14px/143% Poppins, sans-serif;
+    display: flex;
+  flex-direction: column;
+  align-items: stretch;
+`;
+
+export const StyledSelect = styled.select`
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
 `;
 
 export const Div10 = styled.div`
