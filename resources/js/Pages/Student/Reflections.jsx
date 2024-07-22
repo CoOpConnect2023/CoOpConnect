@@ -168,7 +168,7 @@ function Reflections() {
                                         {successMessage}
                                     </SuccessMessage>
                                 )}
-                                <Link to={`student/myreflections/${userId}`}>
+                                <Link href={`/student/myreflections`}>
                                 <Button >
                                     View My Reflections
                                 </Button>
