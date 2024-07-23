@@ -13,11 +13,14 @@ class UserJobsFilter extends ApiFilter
         'jobsId' => ['eq'],
         'resume' => ['eq'],
         'status' => ['eq'],
+        'message' => ['eq'],
+        'timeSlots' => ['eq'],
     ];
 
     protected $columnMap = [
         'userId' => 'user_id',
         'jobsId' => 'jobs_id',
+        'timeSlots' => 'time_slots'
     ];
 
     protected $operatorMap = [

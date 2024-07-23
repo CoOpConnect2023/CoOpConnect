@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
 import {
+    patchUserJob,
     selectApplicants,
     getUserDetails,
 } from "@/Features/userJobs/userJobsSlice";
@@ -63,7 +64,14 @@ const ViewApplicants = () => {
     };
 
     const handleDeclineSubmit = (message) => {
-        // Handle decline logic here (e.g., send message to API)
+        dispatch(
+            patchUserJob({
+                userJobsId: selectedApplicant.id,
+                status: "Rejected",
+                message: message,
+                timeSlots: [""],
+            })
+        );
         console.log(
             `Declined ${selectedApplicant.name} with message: ${message}`
         );
@@ -105,7 +113,18 @@ const ViewApplicants = () => {
                                     <TableData>{applicant.status}</TableData>
                                     <TableData>
                                         <Button
-                                            color="green"
+                                            color={
+                                                applicant.status ===
+                                                    "Interview" ||
+                                                applicant.status === "Rejected"
+                                                    ? "gray"
+                                                    : "green"
+                                            }
+                                            disabled={
+                                                applicant.status ===
+                                                    "Interview" ||
+                                                applicant.status === "Rejected"
+                                            }
                                             onClick={() =>
                                                 handleAccept(applicant)
                                             }
@@ -113,7 +132,18 @@ const ViewApplicants = () => {
                                             Accept
                                         </Button>
                                         <Button
-                                            color="red"
+                                            color={
+                                                applicant.status ===
+                                                    "Interview" ||
+                                                applicant.status === "Rejected"
+                                                    ? "gray"
+                                                    : "red"
+                                            }
+                                            disabled={
+                                                applicant.status ===
+                                                    "Interview" ||
+                                                applicant.status === "Rejected"
+                                            }
                                             onClick={() =>
                                                 handleDecline(applicant)
                                             }

@@ -1,15 +1,32 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
 import { usePage } from "@inertiajs/react";
 import Datetime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
+import {
+    selectApplicant,
+    patchUserJob,
+    getUserJob,
+    selectUserJob,
+    getSingleUserDetails,
+} from "@/Features/userJobs/userJobsSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { Inertia } from "@inertiajs/inertia";
 
 // Styled Components
 
 const AcceptApplicant = () => {
     const [message, setMessage] = useState("");
     const [timeSlots, setTimeSlots] = useState([""]);
+
+    const dispatch = useDispatch();
+
+    const applicant = useSelector(selectApplicant);
+    const userJob = useSelector(selectUserJob);
+
+    const { props } = usePage();
+    const { applicantId } = props;
 
     const handleTimeSlotChange = (index, value) => {
         const newTimeSlots = [...timeSlots];
@@ -27,22 +44,40 @@ const AcceptApplicant = () => {
         setTimeSlots(newTimeSlots);
     };
 
+    useEffect(() => {
+        dispatch(getSingleUserDetails({ userJobsId: applicantId }));
+        dispatch(getUserJob({ userJobId: applicantId }));
+    }, [dispatch, applicantId]);
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Handle form submission (e.g., send data to the server)
-        console.log({
-            message,
-            timeSlots,
+        const timeSlotsAsDates = timeSlots.map((slot) => slot.toDate());
+
+        dispatch(
+            patchUserJob({
+                userJobsId: applicantId,
+                status: "Interview",
+                message: message,
+                timeSlots: timeSlotsAsDates,
+            })
+        ).then(() => {
+            console.log(userJob.jobsId);
+            window.location.href = `/employer/viewapplicants/${userJob.jobsId}`;
         });
     };
-
-    const { props } = usePage();
-    const { applicantId } = props;
 
     return (
         <NavBar header={"Accept Applicant"}>
             <Container>
-                <p>Applicant ID: {applicantId}</p>
+                <p>Name: {applicant.name}</p>
+                <p>Email: {applicant.email}</p>
+                <ResumeLink
+                    href={applicant.resume}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    View Resume
+                </ResumeLink>
                 <h2>Send Interview Details</h2>
                 <Form onSubmit={handleSubmit}>
                     <FormGroup>
@@ -142,4 +177,13 @@ const RemoveButton = styled.button`
     border-radius: 5px;
     color: white;
     background-color: red;
+`;
+
+const ResumeLink = styled.a`
+    color: #007bff;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
 `;

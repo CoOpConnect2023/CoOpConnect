@@ -131,6 +131,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
 
     Route::apiResource('token', TokenController::class);
     Route::get('/userjobs/list/{jobsId}', [UserJobsController::class, 'getUserDetails'])->name('jobs.getUserDetails');
+    Route::get('/userjobs/user/{userJobsId}', [UserJobsController::class, 'getSingleUserDetails'])->name('jobs.getSingleUserDetails');
     Route::apiResource('userjobs', UserJobsController::class);
     Route::apiResource('courses', CoursesController::class);
     Route::apiResource('usercourses', UserCoursesController::class);

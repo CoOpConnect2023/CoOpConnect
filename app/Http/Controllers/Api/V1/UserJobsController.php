@@ -46,6 +46,8 @@ class UserJobsController extends Controller
     public function update(UpdateUserJobsRequest $request, UserJobs $userjob)
     {
         $userjob->update($request->all());
+
+        return new UserJobsResource($userjob);
     }
 
     /**
@@ -63,6 +65,7 @@ class UserJobsController extends Controller
 
         $users = $userJobs->map(function ($userJob) {
             return [
+                'id' => $userJob->id,
                 'name' => $userJob->user->name,
                 'email' => $userJob->user->email,
                 'resume' => $userJob->resume,
@@ -71,5 +74,27 @@ class UserJobsController extends Controller
         });
 
         return response()->json($users);
+    }
+
+    public function getSingleUserDetails($userJobsId)
+    {
+        // Retrieve the UserJobs record based on the provided userJobs ID
+        $userJob = UserJobs::find($userJobsId);
+
+        if (!$userJob) {
+            return response()->json(['error' => 'User job not found'], 404);
+        }
+
+        // Prepare the user details
+        $userDetails = [
+            'id' => $userJob->user->id,
+            'name' => $userJob->user->name,
+            'email' => $userJob->user->email,
+            'resume' => $userJob->resume,
+            'status' => $userJob->status,
+        ];
+
+        // Return the user details as JSON
+        return response()->json($userDetails);
     }
 }

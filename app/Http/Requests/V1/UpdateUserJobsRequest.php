@@ -27,6 +27,8 @@ class UpdateUserJobsRequest extends FormRequest
                 'jobs_id' => ['required', 'exists:jobs_id'],
                 'resume' => ['required'],
                 'status' => ['required'],
+                'message' => ['required'],
+                'timeSlots' => ['required'],
             ];
         } else {
             return [
@@ -34,6 +36,8 @@ class UpdateUserJobsRequest extends FormRequest
                 'jobs_id' => ['sometimes', 'required', 'exists:jobs,id'],
                 'resume' => ['sometimes', 'required'],
                 'status' => ['sometimes', 'required'],
+                'message' => ['sometimes', 'required'],
+                'timeSlots' => ['sometimes', 'required'],
             ];
         }
     }
@@ -41,7 +45,8 @@ class UpdateUserJobsRequest extends FormRequest
     {
         $this->merge(array_filter([
             'user_id' => $this->userId,
-            'jobs_id' => $this->jobsId
+            'jobs_id' => $this->jobsId,
+            'time_slots' => $this->timeSlots,
         ]));
     }
 }

@@ -20,6 +20,8 @@ class UserJobsResource extends JsonResource
             'jobsId' => $this->jobs_id,
             'resume' => $this->resume,
             'status' => $this->status,
+            'message' => $this->message,
+            'timeSlots' => $this->timeSlots,
         ];
     }
 }

@@ -4,7 +4,9 @@ axios.defaults.baseURL = "http://127.0.0.1:8000/api/v1";
 
 const initialState = {
     userJobs: [],
+    userJob: "",
     applicants: [],
+    applicant: "",
     userJobExist: false,
     status: {
         userJobs: "idle",
@@ -14,6 +16,7 @@ const initialState = {
         deleteUserJob: "idle",
         checkUserJob: "idle",
         getUserDetails: "idle",
+        getSingleUserDetails: "idle",
     },
 };
 
@@ -37,7 +40,7 @@ export const userJobsSlice = createSlice({
                 state.status.userJobs = "loading";
             })
             .addCase(getUserJob.fulfilled, (state, action) => {
-                state.userJobs = action.payload;
+                state.userJob = action.payload;
                 state.status.userJobs = "succeeded";
             })
             .addCase(getUserJob.rejected, (state) => {
@@ -66,7 +69,8 @@ export const userJobsSlice = createSlice({
             })
             .addCase(patchUserJob.fulfilled, (state, action) => {
                 state.status.patchUserJob = "succeeded";
-                if (state.userJobs.length > 0) {
+                console.log(action.payload)
+                if (state.userJobs) {
                     state.userJobs = state.userJobs.map((userJob) =>
                         userJob.id === action.payload.id
                             ? action.payload
@@ -74,6 +78,15 @@ export const userJobsSlice = createSlice({
                     );
                 } else {
                     state.userJobs = action.payload;
+                }
+                if (state.applicants) {
+                    state.applicants = state.applicants.map((applicant) =>
+                        applicant.id === action.payload.id
+                            ? action.payload
+                            : applicant
+                    );
+                } else {
+                    state.applicants = action.payload;
                 }
             })
             .addCase(patchUserJob.rejected, (state) => {
@@ -106,12 +119,21 @@ export const userJobsSlice = createSlice({
                 state.status.getUserDetails = "loading";
             })
             .addCase(getUserDetails.fulfilled, (state, action) => {
-                console.log(action.payload);
                 state.applicants = action.payload;
                 state.status.getUserDetails = "succeeded";
             })
             .addCase(getUserDetails.rejected, (state) => {
                 state.status.getUserDetails = "failed";
+            })
+            .addCase(getSingleUserDetails.pending, (state) => {
+                state.status.getSingleUserDetails = "loading";
+            })
+            .addCase(getSingleUserDetails.fulfilled, (state, action) => {
+                state.applicant = action.payload;
+                state.status.getSingleUserDetails = "succeeded";
+            })
+            .addCase(getSingleUserDetails.rejected, (state) => {
+                state.status.getSingleUserDetails = "failed";
             });
     },
 });
@@ -163,6 +185,7 @@ export const putUserJob = createAsyncThunk(
     "userJobs/putUserJob",
     async (params) => {
         const { userJobsId, userId, jobsId, resume, status } = params;
+        console.log(userJobsId, userId, jobsId, resume, status);
         const response = await axios({
             url: `/userjobs/${userJobsId}`,
             method: "PUT",
@@ -180,15 +203,15 @@ export const putUserJob = createAsyncThunk(
 export const patchUserJob = createAsyncThunk(
     "userJobs/patchUserJob",
     async (params) => {
-        const { userJobsId, userId, jobsId, resume, status } = params;
+        const { userJobsId, status, message, timeSlots } = params;
+        console.log(userJobsId, status, message, timeSlots);
         const response = await axios({
             url: `/userjobs/${userJobsId}`,
             method: "PATCH",
             data: {
-                userId,
-                jobsId,
-                resume,
                 status,
+                message,
+                timeSlots,
             },
         });
         return response.data.data;
@@ -231,10 +254,24 @@ export const getUserDetails = createAsyncThunk(
     }
 );
 
+export const getSingleUserDetails = createAsyncThunk(
+    "userJobs/getSingleUserDetails",
+    async (params) => {
+        const { userJobsId } = params;
+        const response = await axios({
+            url: `/userjobs/user/${userJobsId}`,
+            method: "GET",
+        });
+        return response.data;
+    }
+);
+
 export const selectUserJobs = (state) => state.userJobs.userJobs;
+export const selectUserJob = (state) => state.userJobs.userJob;
 export const selectApplicants = (state) => state.userJobs.applicants;
+export const selectApplicant = (state) => state.userJobs.applicant;
 export const selectCheckUserJobs = (state) => state.userJobs.checkUserJob;
-export const selectUserJobsStatus = (state) => state.userJobs.status.userJobs;
+export const selectUserJobsStatus = (state) => state.userJobs.status;
 
 export const {} = userJobsSlice.actions;
 
