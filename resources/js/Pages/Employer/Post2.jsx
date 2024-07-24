@@ -47,7 +47,7 @@ function Post2() {
                 );
                 setUserId(response.data.user.id);
                 dispatch(updateJobFormData({ userId: response.data.user.id }));
-                
+
             } catch (error) {
                 console.error("Error fetching user ID:", error);
             }
@@ -66,6 +66,7 @@ function Post2() {
     const handleSubmit = (e) => {
         // Dispatch postJob action with jobFormData
         dispatch(postJob(jobFormData));
+
         dispatch(resetJobFormData());
     };
 
@@ -95,6 +96,7 @@ function Post2() {
                                     name="description"
                                     value={jobFormData.description}
                                     onChange={handleInputChange}
+                                    data-test-id="description-input"
                                 />
                             </Form>
                             <HorizontalRule />

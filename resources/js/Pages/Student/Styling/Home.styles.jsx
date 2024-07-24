@@ -122,6 +122,8 @@ export const JobListings = styled.div`
     @media (max-width: 991px) {
         flex-direction: column;
         align-items: stretch;
+        max-height: 80vh; /* Adjust the max-height as needed for your layout */
+        overflow-y: auto; /* Enable vertical scrolling */
     }
 `;
 
@@ -139,8 +141,10 @@ export const JobCardContainer = styled.article`
     margin: 0 auto;
     text-align: center;
 
+
     @media (max-width: 991px) {
         max-width: 100%;
+        height: 400px; /* Set a fixed height for universal height */
     }
 `;
 

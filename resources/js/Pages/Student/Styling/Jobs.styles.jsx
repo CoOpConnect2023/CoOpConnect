@@ -24,6 +24,7 @@ export const SearchContainer = styled.section`
 export const FeaturedJobandList = styled.main`
     @media (max-width: 991px) {
         display: flex;
+        flex-direction: column;
 
     }
 `;
@@ -105,6 +106,10 @@ export const JobList = styled.div`
     padding: 10px 10px 0;
     @media (max-width: 991px) {
         max-width: 100%;
+        flex-direction: column;
+        margin-top: 2vh;
+        margin-bottom: 2vh;
+        padding: 0;
     }
 `
 
@@ -219,9 +224,10 @@ export const FeaturedJob = styled.div`
     width: 57%;
     margin-left: 20px;
 
-    @media (max-width: 991px) {
+      @media (max-width: 991px) {
         width: 100%;
         margin-left: 0;
+        margin-top: 2vh;
     }
 `
 

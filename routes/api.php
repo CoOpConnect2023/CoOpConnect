@@ -93,7 +93,7 @@ Route::get('/applications/{application}', [ApplicationController::class, 'show']
 
 
 Route::delete("/deletedoc/{doc_id}", [DocumentsController::class, "deleteDoc"]);
-
+Route::middleware('auth:sanctum')->put('/change-password', [UserController::class, 'changePassword']);
 
 
 

@@ -1,16 +1,159 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { useForm } from '@inertiajs/react';
+import { useDispatch, useSelector } from "react-redux";
+import { updateUserPassword, deleteUser, getUser, selectUser } from "@/Features/users/userSlice";
+import Modal from "./ConfirmationModal";
+import {
+    Main,
+    Section,
+    FormSection,
+    AccountHeader,
+    AccountTitle,
+    AccountDetail,
+    FormColumn,
+    FormContent,
+    FormTitle,
+    FormDetail,
+    FormButtonColumn,
+    DeleteButton,
+    SettingsSection,
+    SettingsHeader,
+    SettingsColumn,
+    SettingsContent,
+    SettingsTitle,
+    SettingsDetail,
+    SettingsControls,
+    CurrentSelection,
+    SettingsOptions,
+    OptionButton,
+    DummySection,
+    SettingsButton,
+    PasswordChangeForm,
+    FormField,
+    Label,
+    Input,
+    SubmitButton,
+    Message
+} from "../Styling/SettingsPage.styles";
+
+const appUrl = import.meta.env.VITE_APP_URL;
 
 function SettingsPanel() {
+    const dispatch = useDispatch();
+    const user = useSelector(selectUser);
+    const { post } = useForm();
+    const [activeTab, setActiveTab] = useState(null);
+    const [currentPassword, setCurrentPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmNewPassword, setConfirmNewPassword] = useState("");
+    const [message, setMessage] = useState("");
+    const [privacySetting, setPrivacySetting] = useState("Private");
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+    useEffect(() => {
+        dispatch(getUser());
+    }, [dispatch]);
+
+    const userID = user?.id;
+
+    const handleTabClick = (tab) => {
+        setActiveTab(activeTab === tab ? null : tab);
+    };
+
+    const handlePasswordChange = (e) => {
+        e.preventDefault();
+        const passwordData = {
+            current_password: currentPassword,
+            new_password: newPassword,
+            new_password_confirmation: confirmNewPassword,
+        };
+        console.log('Dispatching updateUserPassword with:', passwordData);
+        dispatch(updateUserPassword(passwordData))
+            .unwrap()
+            .then(() => {
+                setMessage("Password updated successfully");
+            })
+            .catch((error) => {
+                setMessage(error.message || "An error occurred");
+            });
+
+        setTimeout(() => {
+            setMessage("");
+            setCurrentPassword("");
+            setNewPassword("");
+            setConfirmNewPassword("");
+        }, 3000);
+    };
+
+
+    const handlePrivacyChange = (setting) => {
+        setPrivacySetting(setting);
+    };
+
+    const handleDeleteAccount = () => {
+        setShowDeleteModal(true);
+    };
+
+    const confirmDeleteAccount = () => {
+        dispatch(deleteUser(userID))
+            .unwrap()
+            .then(() => {
+                setMessage("Account deleted successfully");
+                setShowDeleteModal(false);
+                // Assuming `post` is a function to log out the user
+                post(route('logout')).then(() => {
+                    window.location.reload();
+                });
+            })
+            .catch((error) => {
+                setMessage(error.message || "An error occurred");
+            });
+    };
+
+
     return (
         <Main>
             <Section className="account-section">
                 <AccountHeader>
                     <AccountTitle>Account</AccountTitle>
-                    <AccountDetail>Password</AccountDetail>
-                    <AccountDetail>Password</AccountDetail>
-                    <AccountDetail>Password</AccountDetail>
+                    <AccountDetail onClick={() => handleTabClick('password')} active={activeTab === 'password'}>Password</AccountDetail>
+                    <AccountDetail onClick={() => handleTabClick('notifications')} active={activeTab === 'notifications'}>Notifications</AccountDetail>
+                    <AccountDetail onClick={() => handleTabClick('preferences')} active={activeTab === 'preferences'}>Preferences</AccountDetail>
                 </AccountHeader>
+                {activeTab === 'password' && (
+                    <PasswordChangeForm onSubmit={handlePasswordChange}>
+                        <FormField>
+                            <Label>Current Password</Label>
+                            <Input
+                                type="password"
+                                placeholder="Current Password"
+                                value={currentPassword}
+                                onChange={(e) => setCurrentPassword(e.target.value)}
+                            />
+                        </FormField>
+                        <FormField>
+                            <Label>New Password</Label>
+                            <Input
+                                type="password"
+                                placeholder="New Password"
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                            />
+                        </FormField>
+                        <FormField>
+                            <Label>Confirm New Password</Label>
+                            <Input
+                                type="password"
+                                placeholder="Confirm New Password"
+                                value={confirmNewPassword}
+                                onChange={(e) => setConfirmNewPassword(e.target.value)}
+                            />
+                        </FormField>
+                        {message && <Message>{message}</Message>}
+                        <SubmitButton>Change Password</SubmitButton>
+                    </PasswordChangeForm>
+                )}
                 <FormSection>
                     <FormColumn>
                         <FormContent>
@@ -24,7 +167,7 @@ function SettingsPanel() {
                         </FormContent>
                     </FormColumn>
                     <FormButtonColumn>
-                        <DeleteButton>Delete Account</DeleteButton>
+                        <DeleteButton onClick={handleDeleteAccount}>Delete Account</DeleteButton>
                     </FormButtonColumn>
                 </FormSection>
             </Section>
@@ -42,13 +185,21 @@ function SettingsPanel() {
                     </SettingsColumn>
                     <SettingsControls>
                         <CurrentSelection>
-                            Currently Selected: Private
+                            Currently Selected: {privacySetting}
                         </CurrentSelection>
                         <SettingsOptions>
-                            <OptionButton className="private">
+                            <OptionButton
+                                className={privacySetting === "Private" ? "private" : ""}
+                                onClick={() => handlePrivacyChange("Private")}
+                            >
                                 Private
                             </OptionButton>
-                            <OptionButton>Public</OptionButton>
+                            <OptionButton
+                                className={privacySetting === "Public" ? "public" : ""}
+                                onClick={() => handlePrivacyChange("Public")}
+                            >
+                                Public
+                            </OptionButton>
                         </SettingsOptions>
                     </SettingsControls>
                 </SettingsHeader>
@@ -83,306 +234,17 @@ function SettingsPanel() {
                     <SettingsButton>Settings Button</SettingsButton>
                 </FormButtonColumn>
             </DummySection>
+            {showDeleteModal && (
+                <Modal
+                    title="Confirm Account Deletion"
+                    onConfirm={confirmDeleteAccount}
+                    onCancel={() => setShowDeleteModal(false)}
+                >
+                    Are you sure you want to delete your account? This action cannot be undone.
+                </Modal>
+            )}
         </Main>
     );
 }
-
-const Main = styled.main`
-    align-self: stretch;
-    border-radius: 10px;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    background-color: #fff;
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    max-width: 885px;
-
-    @media (max-width: 991px) {
-        padding: 10px;
-        max-width: 100%;
-        display: flex;
-    flex-direction: column;
-    }
-`;
-
-const Section = styled.section`
-    display: flex;
-    flex-direction: column;
-    border-color: rgba(123, 117, 127, 1);
-
-    @media (max-width: 991px) {
-        max-width: 100%;
-    }
-`;
-
-const FormSection = styled.section`
-    border-color: rgba(123, 117, 127, 1);
-    border-style: solid;
-    border-bottom-width: 1px;
-    margin-top: 40px;
-    padding: 20px;
-    display: flex;
-    gap: 20px;
-
-    @media (max-width: 991px) {
-        flex-direction: column;
-        align-items: stretch;
-    }
-`;
-
-const AccountHeader = styled.header`
-    align-items: center;
-    border-radius: 6px;
-    border: 1px solid rgba(0, 0, 0, 1);
-    align-self: center;
-    display: flex;
-    width: 100%;
-    max-width: 494px;
-    gap: 20px;
-    font-size: 14px;
-    color: #334155;
-    font-weight: 500;
-    line-height: 143%;
-    justify-content: space-between;
-    padding: 5px 10px;
-
-    @media (max-width: 991px) {
-        flex-wrap: wrap;
-    }
-`;
-
-const AccountTitle = styled.div`
-    font-family: Inter, sans-serif;
-    border-bottom: 2px solid rgba(107, 83, 140, 1);
-    background-color: #fff;
-    align-self: stretch;
-    color: #0f172a;
-    justify-content: center;
-    padding: 6px 20px;
-
-    @media (max-width: 991px) {
-        white-space: normal;
-    }
-`;
-
-const AccountDetail = styled.div`
-    font-family: Inter, sans-serif;
-    align-self: stretch;
-    margin: auto 0;
-`;
-
-const FormColumn = styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 77%;
-    margin-left: 0;
-
-    @media (max-width: 991px) {
-        width: 100%;
-    }
-`;
-
-const FormContent = styled.article`
-    display: flex;
-    flex-direction: column;
-
-    @media (max-width: 991px) {
-        margin-top: 20px;
-    }
-`;
-
-const FormTitle = styled.h2`
-    color: #000;
-    font: 400 32px Poppins, sans-serif;
-
-    @media (max-width: 991px) {
-        max-width: 100%;
-    }
-`;
-
-const FormDetail = styled.p`
-    color: #7b757f;
-    letter-spacing: 0.25px;
-    margin-top: 10px;
-    font: 600 14px/20px Poppins, sans-serif;
-
-    @media (max-width: 991px) {
-        max-width: 100%;
-    }
-`;
-
-const FormButtonColumn = styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 23%;
-    margin-left: 20px;
-
-    @media (max-width: 991px) {
-        width: 100%;
-        margin-left: 0;
-        margin-top: 20px;
-    }
-`;
-
-const DeleteButton = styled.button`
-    justify-content: center;
-    border-radius: 6px;
-    background-color: #e53e3e;
-    align-self: stretch;
-    color: #fff;
-    width: 100%;
-    margin: auto 0;
-    padding: 8px 16px;
-    font: 600 16px/150% Inter, sans-serif;
-
-    @media (max-width: 991px) {
-        margin-top: 20px;
-    }
-`;
-
-const SettingsSection = styled.section`
-    border-color: rgba(123, 117, 127, 1);
-    border-style: solid;
-    border-bottom-width: 1px;
-    margin-top: 20px;
-    padding: 20px;
-
-    @media (max-width: 991px) {
-        max-width: 100%;
-    }
-`;
-
-const SettingsHeader = styled.header`
-    gap: 20px;
-    display: flex;
-
-    @media (max-width: 991px) {
-        flex-direction: column;
-        align-items: stretch;
-    }
-`;
-
-const SettingsColumn = styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 75%;
-    margin-left: 0;
-
-    @media (max-width: 991px) {
-        width: 100%;
-    }
-`;
-
-const SettingsContent = styled.article`
-    display: flex;
-    flex-direction: column;
-
-    @media (max-width: 991px) {
-        margin-top: 20px;
-    }
-`;
-
-const SettingsTitle = styled.h2`
-    color: #000;
-    font: 400 32px Poppins, sans-serif;
-
-    @media (max-width: 991px) {
-        max-width: 100%;
-    }
-`;
-
-const SettingsDetail = styled.p`
-    color: #7b757f;
-    letter-spacing: 0.25px;
-    margin-top: 10px;
-    font: 600 14px/20px Poppins, sans-serif;
-
-    @media (max-width: 991px) {
-        max-width: 100%;
-    }
-`;
-
-const SettingsControls = styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 25%;
-    margin-left: 20px;
-
-    @media (max-width: 991px) {
-        width: 100%;
-        margin-left: 0;
-        margin-top: 20px;
-    }
-`;
-
-const CurrentSelection = styled.div`
-    text-align: center;
-    color: #7b757f;
-    letter-spacing: 0.4px;
-    font: 600 12px/133% Poppins, sans-serif;
-`;
-
-const SettingsOptions = styled.div`
-    border-radius: 6px;
-    border: 1px solid rgba(0, 0, 0, 1);
-    background-color: #fff;
-    display: flex;
-    margin-top: 10px;
-    gap: 10px;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 143%;
-    justify-content: space-between;
-    padding: 5px 10px;
-
-    @media (max-width: 991px) {
-        flex-wrap: wrap;
-    }
-`;
-
-const OptionButton = styled.button`
-    font-family: Inter, sans-serif;
-    border-radius: 3px;
-    background-color: ${(props) =>
-        props.className === "private" ? "#6b538c" : "transparent"};
-    color: ${(props) => (props.className === "private" ? "#fff" : "#334155")};
-    justify-content: center;
-    padding: 6px 12px;
-
-    @media (max-width: 991px) {
-        white-space: normal;
-    }
-`;
-
-const DummySection = styled.section`
-    border-color: rgba(123, 117, 127, 1);
-    border-style: solid;
-    border-bottom-width: 1px;
-    padding: 20px;
-    display: flex;
-    margin-top: 20px;
-    gap: 20px;
-
-    @media (max-width: 991px) {
-        flex-direction: column;
-        align-items: stretch;
-    }
-`;
-
-const SettingsButton = styled.button`
-    justify-content: center;
-    border-radius: 6px;
-    background-color: #6b538c;
-    align-self: stretch;
-    color: #fff;
-    width: 100%;
-    margin: auto 0;
-    padding: 8px 16px;
-    font: 600 16px/150% Inter, sans-serif;
-
-    @media (max-width: 991px) {
-        margin-top: 20px;
-    }
-`;
 
 export default SettingsPanel;

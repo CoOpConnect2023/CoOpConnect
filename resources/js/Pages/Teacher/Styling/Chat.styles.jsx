@@ -1,22 +1,22 @@
 import styled from "styled-components";
 
-
-
-
-
-
 export const MainContainer = styled.div`
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-self: stretch;
     border-radius: 10px;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
     background-color: #fff;
     padding: 20px;
+    height: 100%; /* Make sure it stretches to the bottom */
+    flex-grow: 1; /* Allow it to grow */
 `;
 
 export const Content = styled.div`
     gap: 20px;
     display: flex;
+    flex-grow: 1; /* Allow it to grow */
     @media (max-width: 991px) {
         flex-direction: column;
         align-items: stretch;
@@ -36,10 +36,9 @@ export const Column = styled.div`
 `;
 
 export const LeftColumn = styled.div`
-    align-self: stretch;
     display: flex;
-    flex-grow: 1;
     flex-direction: column;
+    flex-grow: 1; /* Allow it to grow */
     @media (max-width: 991px) {
         max-width: 100%;
         margin-top: 40px;
@@ -64,8 +63,8 @@ export const RightColumn = styled.div`
     border: 1px solid rgba(123, 117, 127, 1);
     background-color: #fff7ff;
     display: flex;
-    flex-grow: 1;
     flex-direction: column;
+    flex-grow: 1; /* Allow it to grow */
     padding: 10px;
     @media (max-width: 991px) {
         max-width: 100%;
@@ -83,9 +82,9 @@ export const MessageContainer = styled.div`
 
 export const ScrollableContainer = styled.div`
     overflow-y: auto;
+    flex-grow: 1; /* Allow it to grow */
     @media (max-width: 991px) {
         max-height: 60vh;
         overflow-y: auto;
     }
 `;
-

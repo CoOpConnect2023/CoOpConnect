@@ -34,8 +34,7 @@ export default function LandingLayout({ auth }) {
         }
       }
 
-      console.log("Auth object:", auth);
-      console.log("User type:", auth.userType);
+      
 
       const userLinks = getUserLinks(auth.userType);
 

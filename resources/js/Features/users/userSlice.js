@@ -50,6 +50,25 @@ export const updateUserProfile = createAsyncThunk(
     }
 );
 
+
+export const updateUserPassword = createAsyncThunk(
+    "user/updateUserPassword",
+    async (userData) => {
+        const { current_password, new_password, new_password_confirmation } = userData;  // Extracting necessary fields from userData
+        const response = await axios({
+            url: `${appUrl}/api/change-password`,
+            method: "PUT",
+            data: {
+                current_password,
+                new_password,
+                new_password_confirmation,
+            },
+        });
+        console.log(response)
+        return response.data.user;
+    }
+);
+
 export const deleteUser = createAsyncThunk(
     "user/deleteUser",
     async (userID) => {
@@ -122,6 +141,17 @@ export const userSlice = createSlice({
               })
             .addCase(deleteUser.rejected, (state, action) => {
                 state.status.deleteUser = "failed";
+            })
+
+            .addCase(updateUserPassword.pending, (state, action) => {
+                state.status.user = "loading";
+            })
+            .addCase(updateUserPassword.fulfilled, (state, action) => {
+                state.user = action.payload;
+                state.status.user = "succeeded";
+            })
+            .addCase(updateUserPassword.rejected, (state, action) => {
+                state.status.user = "failed";
             });
     },
 });

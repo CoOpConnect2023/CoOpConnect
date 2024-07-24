@@ -10,6 +10,7 @@ import {
     patchJob,
     selectJobs,
     selectJobsStatus,
+    deleteJob
 } from "@/Features/jobs/jobsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -37,6 +38,7 @@ import {
     EditPostingButton,
     SkillsList,
     SkillBadge,
+    DeletePostingButton
 } from "./Styling/Home.styles";
 
 const Home = () => {
@@ -145,32 +147,43 @@ const Home = () => {
 };
 // Reusable Components
 const JobPosting = ({ post, openEditModal }) => {
+    const dispatch = useDispatch();
+
     const handleEditClick = () => {
-        openEditModal(post); // Open modal for editing this specific job post
+      openEditModal(post); // Open modal for editing this specific job post
     };
 
+    const handleDeleteClick = (id) => {
+      dispatch(deleteJob({ userId: id }));
+
+    };
+    console.log(post.id)
+
     return (
-        <JobCard>
-            <JobCardTitle>{post.title}</JobCardTitle>
-            <CompanyName>{post.company}</CompanyName>
-            <Location>{post.location}</Location>
-            <SkillsList>
-                {post.skills.map((tag, index) => (
-                    <SkillBadge key={index}>{tag}</SkillBadge>
-                ))}
-            </SkillsList>
-            <JobDescriptionText>{post.description}</JobDescriptionText>
-            <Divider />
-            <CardButtons>
-                <Link href={`/employer/viewpost/${post.id}`}>
-                    <ViewPostingButton>VIEW POSTING</ViewPostingButton>
-                </Link>
-                <EditPostingButton onClick={handleEditClick}>
-                    EDIT POSTING
-                </EditPostingButton>
-            </CardButtons>
-        </JobCard>
+      <JobCard>
+        <JobCardTitle>{post.title}</JobCardTitle>
+        <CompanyName>{post.company}</CompanyName>
+        <Location>{post.location}</Location>
+        <SkillsList>
+          {post.skills.map((tag, index) => (
+            <SkillBadge key={index}>{tag}</SkillBadge>
+          ))}
+        </SkillsList>
+        <JobDescriptionText>{post.description}</JobDescriptionText>
+        <Divider />
+        <CardButtons>
+          <Link href={`/employer/viewpost/${post.id}`}>
+            <ViewPostingButton>VIEW POSTING</ViewPostingButton>
+          </Link>
+          <EditPostingButton onClick={handleEditClick}>
+            EDIT POSTING
+          </EditPostingButton>
+          <DeletePostingButton onClick={() => handleDeleteClick(post.id)}>
+            DELETE POSTING
+          </DeletePostingButton>
+        </CardButtons>
+      </JobCard>
     );
-};
+  };
 
 export default Home;

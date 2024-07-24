@@ -85,7 +85,7 @@ const Reflections = () => {
                                         <p><strong>Content:</strong> {selectedReflection.content}</p>
                                     </ModalBody>
                                     <ModalFooter>
-                                        <CloseButton onClick={closeModal}>Close</CloseButton>
+                                        
                                     </ModalFooter>
                                 </>
                             )}

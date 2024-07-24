@@ -21,6 +21,11 @@ describe('Schedule Student Interview', () => {
         cy.get('form').submit(); // Assumes the form is the first <form> element
 
         // Check for a success message
+        cy.contains('View My Reflections').click();
+
+        cy.wait(3000);
+
+        cy.contains('Delete').click();
 
         cy.get('img[src="https://cdn.builder.io/api/v1/image/assets/TEMP/c7749e10a4cb727e5ce0c7fd48d44fb683bf93b2fa7c59643148748496b286b0?apiKey=d66532d056b14640a799069157705b77&"]').scrollIntoView()
             .should('be.visible')

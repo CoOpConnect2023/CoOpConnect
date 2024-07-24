@@ -63,42 +63,74 @@ import {
 } from "@/Features/messages/messagesSlice";
 
 
+function useWindowSize() {
+    const [windowSize, setWindowSize] = useState({
+        width: undefined,
+        height: undefined,
+    });
+
+    useEffect(() => {
+        function handleResize() {
+            setWindowSize({
+                width: window.innerWidth,
+                height: window.innerHeight,
+            });
+        }
+
+        window.addEventListener("resize", handleResize);
+        handleResize();
+
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+    return windowSize;
+}
+
 function Sidebar() {
-  return (
-    <aside>
-      <NavContainer>
-        <Link href="/">
-          <Logo src={logo} alt="Logo" loading="lazy" />
-        </Link>
-        <Divider />
-        <Link href="/employer/home">
-          <IconButton>
-            <Icon src={briefcase} alt="Icon 1" loading="lazy" />
-          </IconButton>
-        </Link>
-        <Link href="/employer/messages">
-          <IconButton>
-            <Icon src={message} alt="" loading="lazy" />
-          </IconButton>
-        </Link>
-        <Link href="/employer/interviews">
-          <IconButton>
-            <Icon src={calendar} alt="" loading="lazy" />
-          </IconButton>
-        </Link>
-        <Link href="/employer/profile">
-          <IconButton>
-            <Icon src={user} alt="" loading="lazy" />
-          </IconButton>
-        </Link>
-        <Link href="/employer/settings">
-          <IconButton>
-            <Icon src={settings} alt="" loading="lazy" />
-          </IconButton>
-        </Link>
-      </NavContainer>
-    </aside>
-  );
+
+    const [activeTab, setActiveTab] = useState("/");
+
+    const handleTabClick = (path) => {
+      setActiveTab(path);
+    };
+    return (
+        <aside>
+          <NavContainer>
+            <Link href="/" onClick={() => handleTabClick("/")}>
+              <Logo src={logo} alt="Logo" loading="lazy" active={activeTab === "/"} />
+            </Link>
+            <Divider />
+
+              <Link href="/employer/home" onClick={() => handleTabClick("/employer/home")}>
+                <IconButton active={activeTab === "/employer/home"}>
+                  <Icon src={briefcase} alt="Icon 1" loading="lazy" />
+                </IconButton>
+              </Link>
+              <Link href="/employer/messages" onClick={() => handleTabClick("/employer/messages")}>
+                <IconButton active={activeTab === "/employer/messages"}>
+                  <Icon src={message} alt="" loading="lazy" />
+                </IconButton>
+              </Link>
+              <Link href="/employer/interviews" onClick={() => handleTabClick("/employer/interviews")} >
+                <IconButton active={activeTab === "/employer/interviews"}>
+                  <Icon src={calendar} alt="" loading="lazy" />
+                </IconButton>
+              </Link>
+              <Link href="/employer/profile" onClick={() => handleTabClick("/employer/profile")} data-test-id="profile-link">
+                <IconButton active={activeTab === "/employer/profile"}>
+                  <Icon src={user} alt="" loading="lazy" />
+                </IconButton>
+              </Link>
+              <Link href="/employer/settings" onClick={() => handleTabClick("/employer/settings")}>
+                <IconButton active={activeTab === "/employer/settings"}>
+                  <Icon src={settings} alt="" loading="lazy" />
+                </IconButton>
+              </Link>
+
+          </NavContainer>
+        </aside>
+      );
+
 }
 
 function Header({ header }) {
@@ -145,7 +177,7 @@ function Header({ header }) {
     };
 
     const handleRedirect = () => {
-        window.location.href = '/student/messages';
+        window.location.href = '/employer/messages';
     };
 
 
@@ -206,10 +238,10 @@ function Header({ header }) {
                 </UserProfile>
                 <Modal isOpen={isProfileModalOpen}>
                     <ModalContent>
-                        <Link href="/student/profile">
+                        <Link href="/employer/profile">
                         <ModalItem>Profile</ModalItem>
                         </Link>
-                        <Link href="/student/profile">
+                        <Link href="/employer/profile">
                         <ModalItem>Settings</ModalItem>
                         </Link>
                         <ModalItem as="button" onClick={handleLogout}>Logout</ModalItem>
@@ -228,21 +260,29 @@ function Header({ header }) {
 }
 
 function MainContent({ header, children }) {
+    const windowSize = useWindowSize();
+    const isMobile = windowSize.width <= 991;
+
     return (
         <Main>
             <ContentContainer>
-                <Header header={header} />
+                <Header header={header} />{isMobile && <Sidebar />}
                 {children}
+
             </ContentContainer>
         </Main>
     );
 }
 
 function NavBar({ header, children }) {
+    const windowSize = useWindowSize();
+    const isMobile = windowSize.width <= 991;
+
     return (
         <AppContainer>
-            <Sidebar />
+            {isMobile ? null : <Sidebar />}
             <MainContent header={header}>{children}</MainContent>
+
         </AppContainer>
     );
 }

@@ -13,8 +13,10 @@ export const AppContainer = styled.div`
   display: flex;
   gap: 0px;
   height: 100vh; /* Ensure it takes the full viewport height */
+  flex-direction: row;
+
   @media (max-width: 991px) {
-    flex-wrap: wrap;
+    flex-direction: column;
   }
 `;
 
@@ -28,8 +30,18 @@ export const NavContainer = styled.nav`
   padding: 30px 20px 20px;
   border-radius: 0 10px 10px 0;
   height: 100vh;
+
   @media (max-width: 991px) {
-    display: none;
+    align-items: center;
+    display: flex;
+    width: 100%;
+    height: 12vh;
+    border-radius: 10px 10px 0 0;
+    border-bottom: 1px solid rgba(123, 117, 127, 1);
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 10px;
+    margin-bottom: 1vh;
   }
 `;
 
@@ -37,12 +49,10 @@ export const Logo = styled.img`
   aspect-ratio: 1.25;
   object-fit: auto;
   width: 50px;
-`;
 
-export const Divider = styled.hr`
-  border: 1px solid #000;
-  margin-top: 29px;
-  align-self: stretch;
+  @media (max-width: 991px) {
+    width: 40px; /* Adjust size for mobile view */
+  }
 `;
 
 export const IconButton = styled.button`
@@ -56,8 +66,15 @@ export const IconButton = styled.button`
   border: none;
   margin-top: 30px;
   cursor: pointer;
+  background-color: ${({ active }) => (active ? "rgba(0, 0, 0, 0.1)" : "transparent")};
+  box-shadow: ${({ active }) => (active ? "0px 4px 8px rgba(0, 0, 0, 0.1)" : "none")};
+
   @media (max-width: 991px) {
-    margin-top: 40px;
+    width: auto;
+    height: auto;
+    margin-top: 0;
+    padding: 5px;
+    background-color: ${({ active }) => (active ? "rgba(0, 0, 0, 0.2)" : "transparent")};
   }
 `;
 
@@ -65,14 +82,23 @@ export const Icon = styled.img`
   aspect-ratio: 1;
   object-fit: auto;
   width: 30px;
+
+  @media (max-width: 991px) {
+    width: 24px;
+  }
 `;
 
-export const ContentContainer = styled.section`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  padding: 20px;
+export const Divider = styled.hr`
+  border: 1px solid #000;
+  margin-top: 29px;
+  align-self: stretch;
+
+  @media (max-width: 991px) {
+    display: none;
+  }
 `;
+
+
 
 export const HeaderContainer = styled.div`
   display: flex;
@@ -80,11 +106,13 @@ export const HeaderContainer = styled.div`
   width: 100%;
   gap: 10px;
   margin-bottom: 40px;
-`;
+  align-items: center;
 
-export const Title = styled.h1`
-  color: #000;
-  font: 600 36px/122% Poppins, sans-serif;
+  @media (max-width: 991px) {
+
+    flex-direction: row;
+
+  }
 `;
 
 export const UserProfile = styled.div`
@@ -94,7 +122,43 @@ export const UserProfile = styled.div`
   gap: 20px;
   cursor: pointer;
   position: relative;
+
+   @media (max-width: 991px) {
+    justify-content: flex-end;
+    width: 100%;
+    align-items: center;
+  }
 `;
+
+export const RightAlignedItems = styled.div`
+  display: flex;
+  align-items: center;
+
+  @media (max-width: 991px) {
+    justify-content: flex-end; /* Align items to the far right on mobile */
+    width: 100%; /* Ensure it takes the full width */
+  }
+`;
+
+
+
+
+
+export const ContentContainer = styled.section`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 20px;
+`;
+
+
+
+export const Title = styled.h1`
+  color: #000;
+  font: 600 36px/122% Poppins, sans-serif;
+`;
+
+
 
 export const NotificationIcon = styled.div`
   width: 40px;

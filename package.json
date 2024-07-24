@@ -5,6 +5,7 @@
         "dev": "vite",
         "build": "vite build",
         "cypress": "cypress open -P ."
+
     },
     "devDependencies": {
         "@headlessui/react": "^1.4.2",

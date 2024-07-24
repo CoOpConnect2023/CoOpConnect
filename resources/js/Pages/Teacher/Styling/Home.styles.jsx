@@ -7,7 +7,8 @@ export const MainContainer = styled.div`
     gap: 20px;
     flex: 1 0 0;
     align-self: stretch;
-    width: 100%; /* Ensure MainContainer takes up full width */
+    width: 100%;
+    
 `
 
 export const TopContainer = styled.div`
@@ -15,7 +16,12 @@ export const TopContainer = styled.div`
     align-items: flex-start;
     gap: 20px;
     align-self: stretch;
-    width: 100%; /* Ensure TopContainer takes up full width */
+    width: 100%;
+
+    @media (max-width: 991px) {
+   flex-direction: column;
+    width: 100%; /* Ensure it takes the full width */
+  }
 `
 
 export const BottomContainer = styled.div`
@@ -23,14 +29,24 @@ export const BottomContainer = styled.div`
     align-items: flex-start;
     gap: 20px;
     align-self: stretch;
-    width: 100%; /* Ensure BottomContainer takes up full width */
+    width: 100%;
+
+     @media (max-width: 991px) {
+   flex-direction: column;
+    width: 100%; /* Ensure it takes the full width */
+  }
 `
 
 export const StudentsSectionContainer = styled.div`
-    flex: 1; /* Allow StudentsSectionContainer to grow and fill available space */
+    flex: 1;
+
+    @media (max-width: 991px) {
+   flex-direction: column;
+    width: 100%; /* Ensure it takes the full width */
+  }
 `
 
 export const AdminPanelContainer = styled.div`
-    flex: 1; /* Allow AdminPanelContainer to grow and fill available space */
+    flex: 1;
 `
 

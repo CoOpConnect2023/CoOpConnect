@@ -28,6 +28,7 @@ import {
     ModalContent,
     ModalItem,
     NoNotificationsMessage,
+    RightAlignedItems
 } from "../Styling/NavBar.styles";
 import logo from "@/Pages/Images/puzzle.svg";
 import briefcase from "@/Pages/Images/briefcase.svg";
@@ -63,42 +64,77 @@ import {
 } from "@/Features/messages/messagesSlice";
 
 
+
+
+function useWindowSize() {
+    const [windowSize, setWindowSize] = useState({
+        width: undefined,
+        height: undefined,
+    });
+
+    useEffect(() => {
+        function handleResize() {
+            setWindowSize({
+                width: window.innerWidth,
+                height: window.innerHeight,
+            });
+        }
+
+        window.addEventListener("resize", handleResize);
+        handleResize();
+
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+    return windowSize;
+}
+
+
 function Sidebar() {
+
+    const [activeTab, setActiveTab] = useState("/");
+
+    const handleTabClick = (path) => {
+      setActiveTab(path);
+    };
     return (
         <aside>
-            <NavContainer>
-                <Link href="/">
-                    <Logo src={logo} alt="Logo" loading="lazy" />
-                </Link>
-                <Divider />
-                <Link href="/student/home">
-                    <IconButton>
-                        <Icon src={briefcase} alt="Icon 1" loading="lazy" />
-                    </IconButton>
-                </Link>
-                <Link href="/student/messages">
-                    <IconButton>
-                        <Icon src={message} alt="" loading="lazy" />
-                    </IconButton>
-                </Link>
-                <Link href="/student/interviews">
-                    <IconButton>
-                        <Icon src={calendar} alt="" loading="lazy" />
-                    </IconButton>
-                </Link>
-                <Link href="/student/profile">
-                    <IconButton>
-                        <Icon src={user} alt="" loading="lazy" />
-                    </IconButton>
-                </Link>
-                <Link href="/student/settings">
-                    <IconButton>
-                        <Icon src={settings} alt="" loading="lazy" />
-                    </IconButton>
-                </Link>
-            </NavContainer>
+          <NavContainer>
+            <Link href="/" onClick={() => handleTabClick("/")}>
+              <Logo src={logo} alt="Logo" loading="lazy" active={activeTab === "/"} />
+            </Link>
+            <Divider />
+
+              <Link href="/student/home" onClick={() => handleTabClick("/student/home")}>
+                <IconButton active={activeTab === "/student/home"}>
+                  <Icon src={briefcase} alt="Icon 1" loading="lazy" />
+                </IconButton>
+              </Link>
+              <Link href="/student/messages" onClick={() => handleTabClick("/student/messages")}>
+                <IconButton active={activeTab === "/student/messages"}>
+                  <Icon src={message} alt="" loading="lazy" />
+                </IconButton>
+              </Link>
+              <Link href="/student/interviews" onClick={() => handleTabClick("/student/interviews")}>
+                <IconButton active={activeTab === "/student/interviews"}>
+                  <Icon src={calendar} alt="" loading="lazy" />
+                </IconButton>
+              </Link>
+              <Link href="/student/profile" onClick={() => handleTabClick("/student/profile")} data-test-id="profile-link">
+                <IconButton active={activeTab === "/student/profile"}>
+                  <Icon src={user} alt="" loading="lazy" />
+                </IconButton>
+              </Link>
+              <Link href="/student/settings" onClick={() => handleTabClick("/student/settings")}>
+                <IconButton active={activeTab === "/student/settings"}>
+                  <Icon src={settings} alt="" loading="lazy" />
+                </IconButton>
+              </Link>
+
+          </NavContainer>
         </aside>
-    );
+      );
+
 }
 
 function Header({ header }) {
@@ -228,21 +264,29 @@ function Header({ header }) {
 }
 
 function MainContent({ header, children }) {
+    const windowSize = useWindowSize();
+    const isMobile = windowSize.width <= 991;
+
     return (
         <Main>
             <ContentContainer>
-                <Header header={header} />
+                <Header header={header} />{isMobile && <Sidebar />}
                 {children}
+
             </ContentContainer>
         </Main>
     );
 }
 
 function NavBar({ header, children }) {
+    const windowSize = useWindowSize();
+    const isMobile = windowSize.width <= 991;
+
     return (
         <AppContainer>
-            <Sidebar />
+            {isMobile ? null : <Sidebar />}
             <MainContent header={header}>{children}</MainContent>
+
         </AppContainer>
     );
 }

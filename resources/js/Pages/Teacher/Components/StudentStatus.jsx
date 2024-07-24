@@ -18,6 +18,11 @@ const Container = styled.section`
     line-height: 150%;
     height: 400px;
     width: 400px;
+
+    @media (max-width: 991px) {
+   height: 450px;
+    width: 100%;
+  }
 `;
 
 const Title = styled.h2`
@@ -48,7 +53,7 @@ function StudentStatus({percentages}) {
     return (
         <Container>
             <Title>Student Status</Title>
-            <PieChart width={300} height={300}>
+            <PieChart width={350} height={350}>
                 <Pie
                     data={data}
                     cx="50%"

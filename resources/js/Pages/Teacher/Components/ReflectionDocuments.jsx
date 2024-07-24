@@ -12,6 +12,11 @@ const Container = styled.section`
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     background-color: #fff;
     font-weight: 600;
+
+     @media (max-width: 991px) {
+   
+    width: 100%; /* Ensure it takes the full width */
+  }
 `;
 
 const Title = styled.h2`

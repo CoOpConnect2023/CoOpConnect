@@ -6,9 +6,11 @@ export const Div15 = styled.div`
     border-width: 1px;
     background-color: var(--Schemes-Background, #fff7ff);
     display: flex;
-    margin-top: 20px;
     flex-direction: column;
+    margin-top: 20px;
     padding: 10px 10px 0;
+    flex-grow: 1; /* Allow it to grow and fill the remaining space */
+    height: 100%; /* Ensure it stretches to the bottom */
     @media (max-width: 991px) {
         max-width: 100%;
     }

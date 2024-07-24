@@ -166,6 +166,7 @@ function Jobs() {
                                         setSearchTerm(e.target.value)
                                     }
                                     aria-label="Job Titles, Keywords"
+                                    data-test-id="search-field-input"
                                 />
                             </SearchField>
                             <SearchField>

@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Requests\ChangePasswordRequest;
+use Illuminate\Support\Facades\Hash;
 
 
 class UserController extends Controller
@@ -265,10 +267,25 @@ public function deleteUser(Request $request, $id)
         }
     }
 
+    public function changePassword(ChangePasswordRequest $request)
+    {
+        $user = Auth::user();
 
+        if (!Hash::check($request->current_password, $user->password)) {
+            return response()->json(['message' => 'Current password is incorrect'], 400);
+        }
 
+        $user->password = Hash::make($request->new_password);
+        $user->save();
 
-
-
-
+        return response()->json(['message' => 'Password updated successfully']);
+    }
 }
+
+
+
+
+
+
+
+

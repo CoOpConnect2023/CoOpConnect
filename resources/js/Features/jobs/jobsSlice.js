@@ -135,7 +135,7 @@ export const jobsSlice = createSlice({
             })
             .addCase(patchJob.fulfilled, (state, action) => {
                 state.status.patchJob = "succeeded";
-                
+
                 state.jobs = state.jobs.map((job) =>
                     job.id === action.payload.id ? action.payload : job
                 );
@@ -147,8 +147,9 @@ export const jobsSlice = createSlice({
                 state.status.deleteJob = "loading";
             })
             .addCase(deleteJob.fulfilled, (state, action) => {
-                state.status.deleteJob = "succeeded";
-            })
+                state.jobs = state.jobs.filter((job) => job.id !== action.payload);
+                console.log(state.jobs, "statejobs")
+              })
             .addCase(deleteJob.rejected, (state, action) => {
                 state.status.deleteJob = "failed";
             });
@@ -337,7 +338,7 @@ export const deleteJob = createAsyncThunk("jobs/deleteJob", async (params) => {
         method: "DELETE",
         data: { userId },
     });
-    return response.data.data;
+    return userId;
 });
 
 export const selectJobs = (state) => state.jobs.jobs;

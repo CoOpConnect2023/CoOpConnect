@@ -152,7 +152,10 @@ export const EventsContainer = styled.div`
     min-height: 20vh;
 
     @media (max-width: 991px) {
-        max-height: none; /* Remove max-height on smaller screens */
+
+        overflow-y: auto; /* Enable vertical scrolling */
+    max-height: 400px; /* Limit height for smaller screens */
+    min-height: 20vh;
     }
 `;
 

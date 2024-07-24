@@ -62,6 +62,10 @@ const JobCard = styled.article`
     flex-direction: column;
     padding: 20px 10px;
     margin-top: ${(props) => (props.hasMargin ? "10px" : "0")};
+    @media (max-width: 1001px) {
+        font-size: 16px;
+    }
+
 `;
 
 const JobTitle = styled.h3`
@@ -80,6 +84,7 @@ const JobDetails = styled.section`
     letter-spacing: 0.15px;
     margin-top: 15px;
 
+
     @media (max-width: 991px) {
         flex-direction: column;
     }
@@ -90,6 +95,7 @@ const CompanyInfo = styled.div`
     flex-direction: column;
     margin: auto 0;
     padding: 3px 0;
+    flex-wrap: wrap;
 `;
 
 const CompanyName = styled.p`
