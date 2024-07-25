@@ -21,7 +21,7 @@ export default function Chat({newMessage, setNewMessage, brandNewMessage, setBra
             <Content>
                 <Column>
                     <LeftColumn>
-                        <NewMessage newMessage={newMessage} setNewMessage={setNewMessage} brandNewMessage={brandNewMessage} setBrandNewMessage={setBrandNewMessage}  onSendNewMessage={handleSendNewMessage} recipientEmail={recipientEmail} setRecipientEmail={setRecipientEmail} shortlists={shortlists} />
+                        <NewMessage newMessage={newMessage} setNewMessage={setNewMessage} brandNewMessage={brandNewMessage} setBrandNewMessage={setBrandNewMessage}  handleSendNewMessage={handleSendNewMessage} recipientEmail={recipientEmail} setRecipientEmail={setRecipientEmail} shortlists={shortlists} />
                         {conversations && <SidePanel conversations={conversations} setConversationsID={setConversationsID} currentUser={currentUser} />}
                     </LeftColumn>
                 </Column>

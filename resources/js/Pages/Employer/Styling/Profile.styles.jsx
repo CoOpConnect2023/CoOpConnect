@@ -278,3 +278,9 @@ export const DropzoneContainer = styled.div`
         padding: 10px;
     }
 `
+
+export const SuccessMessage = styled.div`
+color: green;
+margin-top: 10px;
+font: 500 14px Poppins, sans-serif;
+`;

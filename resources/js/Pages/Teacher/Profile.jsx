@@ -12,22 +12,6 @@ import {
 } from "@/Features/users/userSlice";
 import { getSchools, selectSchoolslist } from "@/Features/schools/schoolsSlice";
 import axios from "axios";
-
-const appUrl = import.meta.env.VITE_APP_URL;
-
-
-const Dropzone = ({ onDrop }) => {
-    const { getRootProps, getInputProps } = useDropzone({ onDrop });
-
-    return (
-        <DropzoneContainer {...getRootProps()}>
-            <input {...getInputProps()} />
-            <p>Drop a profile image here</p>
-        </DropzoneContainer>
-    );
-};
-
-
 import {
     Main,
     Section,
@@ -45,6 +29,23 @@ import {
     SuggestionsList,
     SuggestionItem
 } from "./Styling/Profile.styles";
+
+const appUrl = import.meta.env.VITE_APP_URL;
+
+
+const Dropzone = ({ onDrop }) => {
+    const { getRootProps, getInputProps } = useDropzone({ onDrop });
+
+    return (
+        <DropzoneContainer {...getRootProps()}>
+            <input {...getInputProps()} />
+            <p>Drop a profile image here</p>
+        </DropzoneContainer>
+    );
+};
+
+
+
 
 function Profile() {
     const dispatch = useDispatch();

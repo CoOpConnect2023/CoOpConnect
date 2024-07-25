@@ -12,7 +12,7 @@ describe('All', () => {
         //     cy.get('input[name="email"]').type('admin@a.ca');
 
 
-        //     cy.get('input[name="password"]').type('password');
+        //     cy.get('input[name="password"]').type('password2');
         //     cy.get('.flex.flex-col.items-center.mt-4').contains('Sign In').click();
         //     const filepathexcel = '../testupload.xlsx'; // Replace with the actual path to your Excel file
         //     cy.get('input[type="file"]').attachFile(filepathexcel);

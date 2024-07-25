@@ -93,16 +93,16 @@ class UserController extends Controller
         if ($request->hasFile('profile_image')) {
             $image = $request->file('profile_image');
 
-            // Generate a unique file name
+
             $imageName = time() . '.' . $image->getClientOriginalExtension();
 
-            // Store the image in the storage/app/public/profile_images directory
+
             $image->storeAs('public/profile_images', $imageName);
 
-            // Update user's profile_image field in database
+
             $user->profile_image = '/storage/profile_images/' . $imageName;
 
-            // Log the uploaded image path
+
             info('Uploaded image path: ' . $user->profile_image);
         }
 

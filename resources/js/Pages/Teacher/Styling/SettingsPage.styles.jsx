@@ -331,11 +331,12 @@ export const SubmitButton = styled.button`
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
-    background-color: #4a90e2;
+    background-color: rgb(107,83,140);
     color: #fff;
     font-size: 16px;
     cursor: pointer;
-    align-self: flex-start;
+    align-self: flex-end;
+    margin-right: 1vw;
 
     &:hover {
         background-color: #357abd;

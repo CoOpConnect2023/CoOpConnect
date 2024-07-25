@@ -5,7 +5,7 @@ import { Div4, Div5, Div6, Div7, Div8, Div9, Div10, Div11, Div12, Div13, Div14, 
 
 
 
-export default function NewMessage({ newMessage, setNewMessage, onSendNewMessage, recipientEmail, setRecipientEmail, shortlists, brandNewMessage, setBrandNewMessage}) {
+export default function NewMessage({ newMessage, setNewMessage, handleSendNewMessage, recipientEmail, setRecipientEmail, shortlists, brandNewMessage, setBrandNewMessage}) {
 
 
     const handleInputChange = (e) => {
@@ -16,9 +16,7 @@ export default function NewMessage({ newMessage, setNewMessage, onSendNewMessage
         setRecipientEmail(e.target.value);
     };
 
-    const handleSelectChange = (e) => {
-        setRecipientEmail(e.target.value);
-    };
+
 
 
 
@@ -39,10 +37,14 @@ export default function NewMessage({ newMessage, setNewMessage, onSendNewMessage
     const hasApplicants = shortlists && shortlists.some(shortlist => shortlist.applicants.length > 0);
 
     useEffect(() => {
-        if (uniqueEmails.size > 0) {
+        if (uniqueEmails.size > 0 && recipientEmail === '') {
             setRecipientEmail([...uniqueEmails][0]);
         }
     }, [uniqueEmails]);
+
+    const handleSelectChange = (e) => {
+        setRecipientEmail(e.target.value);
+    };
 
 
     return (
@@ -79,7 +81,7 @@ export default function NewMessage({ newMessage, setNewMessage, onSendNewMessage
                             onChange={handleInputChange}
                             data-testid="message-input"
 
-                        /></Div13><SendButton data-testid="send-button" onClick={onSendNewMessage}>Send</SendButton>
+                        /></Div13><SendButton data-testid="send-button" onClick={handleSendNewMessage}>Send</SendButton>
                     </Div12>
                     <Div14>
                         <img

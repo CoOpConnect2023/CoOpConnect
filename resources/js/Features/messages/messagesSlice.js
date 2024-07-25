@@ -290,7 +290,7 @@ export const sendNewMessage = createAsyncThunk(
 
             dispatch(getMessages({ conversationID }));
             dispatch(getConversations({ userId: userInfo.id }));
-
+console.log("firing", requestData )
             return { newMessage: '' };
         } catch (error) {
             return rejectWithValue(error.response.data);

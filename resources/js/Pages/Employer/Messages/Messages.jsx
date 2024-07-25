@@ -76,10 +76,10 @@ export default function Messages() {
     };
 
     const handleSendNewMessage = () => {
-        if (newMessage.trim() === '') return;
+        if (brandNewMessage.trim() === '') return;
 
-        dispatch(sendNewMessage({ newMessage, userInfo, recipientEmail }));
-        window.location.reload()
+        dispatch(sendNewMessage({ brandNewMessage, userInfo, recipientEmail }));
+        dispatch(getConversations({ userId: currentUser }));
         setBrandNewMessage('')
     };
 
@@ -96,13 +96,13 @@ export default function Messages() {
     if (userStatus === 'loading') {
         return <LoadingScreen><Spinner /></LoadingScreen>;
     }
-    if (messageStatus === 'loading') {
-        return <LoadingScreen><Spinner /></LoadingScreen>;
-    }
+    // if (messageStatus === 'loading') {
+    //     return <LoadingScreen><Spinner /></LoadingScreen>;
+    // }
 
-    if (convoStatus === 'loading') {
-        return <LoadingScreen><Spinner /></LoadingScreen>;
-    }
+    // if (convoStatus === 'loading') {
+    //     return <LoadingScreen><Spinner /></LoadingScreen>;
+    // }
 
     return (
         <PageContainer>

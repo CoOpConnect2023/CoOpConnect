@@ -100,13 +100,13 @@ export default function Messages() {
     if (userStatus === 'loading' || !conversations) {
         return <LoadingScreen><Spinner /></LoadingScreen>;
     }
-    if (messageStatus === 'loading') {
-        return <LoadingScreen><Spinner /></LoadingScreen>;
-    }
+    // if (messageStatus === 'loading') {
+    //     return <LoadingScreen><Spinner /></LoadingScreen>;
+    // }
 
-    if (convoStatus === 'loading') {
-        return <LoadingScreen><Spinner /></LoadingScreen>;
-    }
+    // if (convoStatus === 'loading') {
+    //     return <LoadingScreen><Spinner /></LoadingScreen>;
+    // }
 
 
     return (
