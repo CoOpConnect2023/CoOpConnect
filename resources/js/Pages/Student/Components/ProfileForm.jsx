@@ -2,6 +2,15 @@ import React, { useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import { useDropzone } from 'react-dropzone';
 import { spin, ProfileWrapper, ProfileHeader, ProfileSection, ProfileContainer, ProfileImageWrapper, ProfileImage, ProfileBio, BioHeader, ProfileDetail, ProfileDetailItem, DetailLabel, DetailValue, EditProfileButton, ClearProfileButton, DropzoneContainer, SkillsContainer, SkillChip, AddSkillButton, LoadingScreen, Spinner, AutocompleteList, AutocompleteItem } from "../Styling/ProfileForm.styles";
+import { useSelector, useDispatch } from "react-redux";
+import {
+
+    selectUserStatus,
+    selectUser,
+    getUser,
+    updateUserProfile,
+} from "@/Features/users/userSlice";
+
 const appUrl = import.meta.env.VITE_APP_URL;
 
 
@@ -27,7 +36,7 @@ const ProfileForm = () => {
     const [filteredCourses, setFilteredCourses] = useState([]);
     const [courseQuery, setCourseQuery] = useState("");
 
-    // Fetch user data on component mount
+
     useEffect(() => {
       const fetchUserData = async () => {
         try {
@@ -35,7 +44,7 @@ const ProfileForm = () => {
           const userData = response.data.user;
           userData.skills = userData.skills || [];
 
-          // Fetch school name if school_id exists
+
           if (userData.school_id) {
             const schoolResponse = await axios.get(
               `${appUrl}/api/v1/schools/${userData.school_id}`
