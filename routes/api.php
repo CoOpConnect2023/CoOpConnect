@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\CoursesController;
+use App\Http\Controllers\Api\V1\SchoolsController;
 use App\Http\Controllers\Api\V1\InterviewsController;
 use App\Http\Controllers\Api\V1\JobsController;
 use App\Http\Controllers\Api\V1\ReflectionsController;
@@ -69,12 +70,18 @@ Route::delete("/deletedoc/{id}", [DocumentsController::class, "deleteDoc"]);
 Route::get('/user-id', function () {
     return response()->json(['user' => Auth::user()]);
 })->middleware('auth:sanctum');
+Route::get('user-id/courses', [UserController::class, 'getUserId']);
+Route::get('/students/teacher/{teacherId}', [UserController::class, 'getStudentsByTeacherCourses']);
 
 Route::get('/download/{id}', [DocumentsController::class, 'download'])->name('file.download');
 
 Route::post('/update-profile/{user}', [UserController::class, 'updateProfile'])->name('profile.update')->middleware('auth');
 Route::get('/usersindex', [UserController::class, 'index'])->name('users.index');
 Route::get('/studentStatusPercents', [UserController::class, 'getStudentStatusPercentages'])->name('users.getStudentStatusPercentages');
+Route::get('/users', [UserController::class, 'getAllUsers']);
+Route::delete('/users/{id}', [UserController::class, 'deleteUser']);
+Route::post('/upload-users', [UserController::class, 'uploadUsers']);
+
 
 Route::middleware('auth:sanctum')->post('/apply/{jobId}', [ApplicationController::class, 'apply']);
 Route::middleware('auth:sanctum')->get('/check-application/{jobId}', [ApplicationController::class, 'checkApplication']);
@@ -84,7 +91,7 @@ Route::get('/applications/{application}', [ApplicationController::class, 'show']
 
 
 Route::delete("/deletedoc/{doc_id}", [DocumentsController::class, "deleteDoc"]);
-
+Route::middleware('auth:sanctum')->put('/change-password', [UserController::class, 'changePassword']);
 
 
 
@@ -96,7 +103,12 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
 
     Route::get('/courses/user/{userId}', [CoursesController::class, 'getCourseforUser']);
     Route::get('/courses/teacher/{userId}', [CoursesController::class, 'getCoursesForTeacher']);
+
+    Route::get('/courses/school/{userId}', [CoursesController::class, 'getUsersWithSameSchool']);
+
     Route::get('/courses/documents/teacher/{userId}', [CoursesController::class, 'getCourseDocumentsForTeacher']);
+    Route::get('/school/{schoolId}/courses', [CoursesController::class, 'getCoursesForSchool']);
+    Route::delete('usercourses/student/{studentId}', [UserCoursesController::class, 'deleteByStudentId']);
 
 
     Route::post('jobs/{job}/shortlist', [ShortlistController::class, 'addToShortlist']);
@@ -117,7 +129,11 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
     Route::post('/sendnewmessages', [MessagesController::class, 'createConversation']);
     Route::get('/conversation/{user_id}', [ConversationController::class, 'show']);
     Route::get('/conversation/{conversation_id}/messages', [ConversationController::class, 'getMessages']);
+    Route::get('/conversation/unreadmessages', [ConversationController::class, 'getAllMessages']);
     Route::get('/conversations/{conversation_id}/current', [ConversationController::class, 'getCurrentConversation']);
+    Route::get('/messages/{user_id}', [MessagesController::class, 'getUnreadMessages']);
+    Route::patch('/messages/{message_id}/mark-as-read', [MessagesController::class, 'markMessageAsRead']);
+    Route::patch('/messages/{message_id}/mark-all-as-read', [MessagesController::class, 'markAllMessageAsRead']);
 
 
 
@@ -129,6 +145,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
 
 
 
+    Route::apiResource('schools', SchoolController::class);
     Route::apiResource('token', TokenController::class);
     Route::get('/userjobs/list/{jobsId}', [UserJobsController::class, 'getUserDetails'])->name('jobs.getUserDetails');
     Route::get('/userjobs/user/{userJobsId}', [UserJobsController::class, 'getSingleUserDetails'])->name('jobs.getSingleUserDetails');
@@ -138,6 +155,8 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
     Route::apiResource('courses', CoursesController::class);
     Route::apiResource('usercourses', UserCoursesController::class);
     Route::apiResource('reflections', ReflectionsController::class);
+    Route::get('/myreflections', [ReflectionsController::class, 'showforuser']);
+
     Route::apiResource('interviews', InterviewsController::class);
     Route::apiResource('applications', ApplicationController::class);
     Route::apiResource('shortlists', ShortListController::class);

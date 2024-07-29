@@ -1,23 +1,10 @@
 import * as React from "react";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
+import { Link } from "@inertiajs/react";
 
-function StudentsSection() {
-    const [students, setStudents] = useState([]);
-    useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const response = await axios.get(
-                    `http://127.0.0.1:8000/api/usersindex`
-                );
-                console.log(response.data);
-                setStudents(response.data.slice(0, 4));
-            } catch (error) {
-                console.error("Error fetching user ID:", error);
-            }
-        };
-        fetchUsers();
-    }, []);
+function StudentsSection({students}) {
+
 
     return (
         <Section>
@@ -51,7 +38,7 @@ function StudentsSection() {
                                 <StudentImageWrapper>
                                     <StudentImage
                                         loading="lazy"
-                                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/cb388c4792d2da12914aa0e249254d3a981fcff8dd25ec90cae6e0e0a59e3cbb?apiKey=d66532d056b14640a799069157705b77&"
+                                        src={student.profile_image || "https://cdn.builder.io/api/v1/image/assets/TEMP/cb388c4792d2da12914aa0e249254d3a981fcff8dd25ec90cae6e0e0a59e3cbb?apiKey=d66532d056b14640a799069157705b77&"}
                                         alt={`Image of ${student.name}`}
                                     />
                                     <StudentName>{student.name}</StudentName>
@@ -73,9 +60,11 @@ function StudentsSection() {
                                 {student.id}
                             </td>
                             <td>
+                                <Link href="/teacher/students">
                                 <StudentViewButton>
                                     View Student
                                 </StudentViewButton>
+                                </Link>
                             </td>
                         </tr>
                     ))}
@@ -90,7 +79,8 @@ const Section = styled.section`
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
     background-color: #fff;
     display: flex;
-    height: 364px;
+    height: 367px;
+    overflow-y: auto;
     flex-direction: column;
     padding: 20px;
     gap: 20px;

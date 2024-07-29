@@ -12,22 +12,29 @@ export const MainContainer = styled.div`
 `;
 
 export const Container = styled.div`
-    align-items: center;
-    align-self: stretch;
-    border-radius: 10px;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-    background-color: #fff;
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
     padding: 20px;
-    border-radius: 10px;
+    background-color: #fff;
+    height: 110vh;
+
+    @media (max-width: 991px) {
+        padding: 10px;
+        height: auto; /* Adjust height for smaller screens */
+    }
 `;
 
 export const Wrapper = styled.div`
+    width: 100%;
     display: flex;
-    width: 782px;
-    max-width: 100%;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
 `;
 
 export const Header = styled.div`
@@ -153,4 +160,68 @@ export const TodayDateCell = styled(DateCell)`
 
 export const InactiveDateCell = styled(DateCell)`
     background-color: var(--Inactive, #f2f3f7);
+`;
+
+export const CalendarDiv = styled.div`
+width: 100%;
+    min-height: 500px; /* Ensure minimum height for the calendar */
+    height: 80vh; /* Adjust height as needed */
+    overflow: auto; /* Enable vertical scrolling if needed */
+
+    @media (max-width: 991px) {
+        min-height: 60vh; /* Adjust height for smaller screens */
+    }
+
+`;
+
+export const EventsContainer = styled.div`
+    width: 100%;
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow-y: auto; /* Enable vertical scrolling */
+    max-height: 400px; /* Limit height for smaller screens */
+    min-height: 20vh;
+
+    @media (max-width: 991px) {
+
+        overflow-y: auto; /* Enable vertical scrolling */
+    max-height: 400px; /* Limit height for smaller screens */
+    min-height: 20vh;
+    }
+`;
+
+export const EventsHeader = styled.h2`
+  font-size: 24px;
+  color: #6b538c;
+  margin-bottom: 20px;
+`;
+
+export const Event = styled.div`
+  background-color: #ffffff;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  position: relative; /* Ensure relative positioning for absolute children */
+`;
+
+export const NoEventsMessage = styled.p`
+  font-size: 18px;
+  color: #6b538c;
+  margin-top: 20px;
+`;
+
+export const DeleteButton = styled.button`
+background-color: red;
+color: white;
+border: none;
+padding: 4px 8px;
+border-radius: 4px;
+cursor: pointer;
+font-size: 14px;
+position: absolute;
+top: 10px;
+right: 10px;
 `;

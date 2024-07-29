@@ -8,7 +8,7 @@ import TextInput from '@/Components/TextInput';
 import { Head, Link, useForm } from '@inertiajs/react';
 //import './Login.css';
 import logo from './Images/COOPCONNECTLOGO.png';
-import './Login.scss'
+import './Login.scss';
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -166,7 +166,7 @@ export default function Login({ status, canResetPassword }) {
                                     style={{
                                         borderBottom: "1px solid black",
                                         width: "35%",
-                                        }}
+                                    }}
                                 ></div>
                             </div>
                         </div>
@@ -174,19 +174,19 @@ export default function Login({ status, canResetPassword }) {
                         <div style={{ textAlign: 'center', margin: '20px 0' }}>
                             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                 <div style={{ border: '1px solid black', padding: '10px', margin: '5px', width: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <Link onClick={handleGoogleLogin} className="button-link">
-                                    <button style={{ display: 'flex', alignItems: 'center', border: 'none', background: 'none', cursor: 'pointer' }}>
-                                        <img src="/images/google-icon.png" alt="Google" style={{ width: '30px', marginRight: '10px' }} />
-                                        <span>Log in with Google</span>
-                                    </button>
+                                    <Link onClick={handleGoogleLogin} className="button-link">
+                                        <button style={{ display: 'flex', alignItems: 'center', border: 'none', background: 'none', cursor: 'pointer' }}>
+                                            <img src="/images/google-icon.png" alt="Google" style={{ width: '30px', marginRight: '10px' }} />
+                                            <span>Log in with Google</span>
+                                        </button>
                                     </Link>
                                 </div>
                                 <div style={{ border: '1px solid black', padding: '10px', margin: '5px', width: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <Link onClick={handleLinkedInLogin} className="button-link">
-                                    <button style={{ display: 'flex', alignItems: 'center', border: 'none', background: 'none', cursor: 'pointer' }}>
-                                        <img src="/images/linkedin-icon.png" alt="LinkedIn" style={{ width: '30px', marginRight: '10px' }} />
-                                        <span>Log in with LinkedIn</span>
-                                    </button>
+                                    <Link onClick={handleLinkedInLogin} className="button-link">
+                                        <button style={{ display: 'flex', alignItems: 'center', border: 'none', background: 'none', cursor: 'pointer' }}>
+                                            <img src="/images/linkedin-icon.png" alt="LinkedIn" style={{ width: '30px', marginRight: '10px' }} />
+                                            <span>Log in with LinkedIn</span>
+                                        </button>
                                     </Link>
                                 </div>
                             </div>

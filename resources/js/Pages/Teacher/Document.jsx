@@ -212,7 +212,7 @@ const Document = () => {
             if (response.data.status === 1) {
                 const documents = response.data.data.length > 0 ? response.data.data : [];
                 setUserDocuments(documents);
-                console.log("Documents fetched successfully:", documents);
+                
             } else {
                 console.error("Error fetching documents:", response.data.message);
                 setUserDocuments([]);
@@ -244,7 +244,7 @@ const Document = () => {
 
             } else {
                 console.error('No course documents found in the response:', response);
-                return [];
+                setUserDocuments([]);
             }
         } catch (error) {
             console.error('Error fetching course documents:', error);
@@ -286,7 +286,7 @@ const Document = () => {
                 setUserDocuments((prevDocuments) =>
                     prevDocuments.filter((doc) => doc.id !== id)
                 );
-                console.log("Document deleted successfully");
+
             } else {
                 console.error("Error deleting document:", response.data.message);
             }
@@ -324,7 +324,7 @@ const Document = () => {
                     "Content-Type": "multipart/form-data",
                 },
             });
-            console.log("Upload successful:", response.data);
+
             setFilesToUpload([]);
             setClearPreviewsTrigger(true);
             window.location.reload();
@@ -356,7 +356,7 @@ const Document = () => {
             link.parentNode.removeChild(link);
             window.URL.revokeObjectURL(url);
 
-            console.log("Download successful");
+
         } catch (error) {
             console.error("Error downloading document:", error);
         }

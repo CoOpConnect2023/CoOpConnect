@@ -7,7 +7,7 @@ const ApplicantModal = ({ isOpen, onRequestClose, applicant, isOnShortlist, addT
     }
 
     // Check if applicant.skills is present before parsing
-    const skills = applicant.skills ? JSON.parse(applicant.skills) : [];
+    const skills = applicant.skills
 
     const handleAddToShortlist = () => {
         addToShortlist(applicant.id);

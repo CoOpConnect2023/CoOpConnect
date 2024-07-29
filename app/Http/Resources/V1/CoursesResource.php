@@ -20,7 +20,7 @@ class CoursesResource extends JsonResource
             'startDate' => $this->start_date,
             'endDate' => $this->end_date,
             'teacherID' => $this->teacher_id,
-            'school' => $this->school,
+            'schoolID' => $this->school_id,
             'users' => $this->whenLoaded('users'),
         ];
     }

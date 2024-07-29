@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
+const appUrl = import.meta.env.VITE_APP_URL;
 
 const Container = styled.section`
     border-radius: 10px;
@@ -17,6 +18,11 @@ const Container = styled.section`
     line-height: 150%;
     height: 400px;
     width: 400px;
+
+    @media (max-width: 991px) {
+   height: 450px;
+    width: 100%;
+  }
 `;
 
 const Title = styled.h2`
@@ -36,23 +42,7 @@ const Image = styled.img`
 
 const COLORS = ["#006aff", "#52c93f", "#ff2727"];
 
-function StudentStatus() {
-    const [percentages, setPercentages] = useState({
-        working: 0,
-        interviewing: 0,
-        searching: 0,
-    });
-
-    useEffect(() => {
-        axios
-            .get("http://127.0.0.1:8000/api/studentStatusPercents")
-            .then((response) => {
-                setPercentages(response.data);
-            })
-            .catch((error) => {
-                console.log("Error: ", error);
-            });
-    }, []);
+function StudentStatus({percentages}) {
 
     const data = [
         { name: "Working", value: Math.round(percentages.working) },
@@ -63,7 +53,7 @@ function StudentStatus() {
     return (
         <Container>
             <Title>Student Status</Title>
-            <PieChart width={300} height={300}>
+            <PieChart width={350} height={350}>
                 <Pie
                     data={data}
                     cx="50%"

@@ -23,21 +23,21 @@ function EmailForm() {
         },
         body: JSON.stringify({ subject, message }),
       });
-  
+
       if (response.ok) {
-        console.log('Email sent successfully');
+
       } else {
         console.error('Failed to send email');
       }
     } catch (error) {
       console.error('Error sending email:', error);
     }
-  
+
     // Clear form fields after submission
     setSubject('');
     setMessage('');
   };
-  
+
 
   return (
     <form className="email-form" onSubmit={handleSubmit}>

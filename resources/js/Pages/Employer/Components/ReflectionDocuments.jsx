@@ -12,6 +12,10 @@ const Container = styled.section`
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     background-color: #fff;
     font-weight: 600;
+
+    @media (max-width: 768px) {
+    width: 100%;
+    }
 `;
 
 const Title = styled.h2`
@@ -76,18 +80,9 @@ const OptionImage = styled.img`
 
 const ReflectionDocuments = () => (
     <Container>
-        <Title>Reflections & Documents</Title>
+        <Title>Documents</Title>
         <OptionsWrapper>
-            <OptionCard color="var(--Schemes-Primary, #6b538c)">
-            <Link href="/student/reflections">
-                <OptionImage
-                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/f2c092e48480b10a594eda25d3cd6e685945fceb2d8ab8ee8dac19991294fb65?apiKey=d66532d056b14640a799069157705b77&"
-                    alt="Reflection Icon"
-                    loading="lazy"
-                />
-                <OptionText>Reflections</OptionText>
-                </Link>
-            </OptionCard>
+
             <OptionCard color="var(--Schemes-Tertiary, #7c4e7e)">
             <Link href="/employer/documents">
           <OptionImage
@@ -95,7 +90,7 @@ const ReflectionDocuments = () => (
             alt="Documents Icon"
             loading="lazy"
           />
-          <OptionText>Documents</OptionText>
+          <OptionText>My Documents</OptionText>
         </Link>
             </OptionCard>
         </OptionsWrapper>

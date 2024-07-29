@@ -5,6 +5,8 @@ import interviewsReducer from "./Features/interviews/interviewsSlice";
 import reflectionsReducer from "./Features/reflections/reflectionsSlice";
 import usersReducer from "./Features/users/userSlice";
 import messagesReducer from "./Features/messages/messagesSlice";
+import shortlistsReducer from "./Features/shortlists/shortlistsSlice";
+import schoolsReducer from "./Features/schools/schoolsSlice";
 import userJobsReducer from "./Features/userJobs/userJobsSlice";
 
 export const store = configureStore({
@@ -15,6 +17,8 @@ export const store = configureStore({
         reflections: reflectionsReducer,
         user: usersReducer,
         messages: messagesReducer,
+        shortlists: shortlistsReducer,
+        schools: schoolsReducer,
         userJobs: userJobsReducer,
     },
 });

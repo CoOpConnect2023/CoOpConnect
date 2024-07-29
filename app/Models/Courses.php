@@ -14,7 +14,7 @@ class Courses extends Model
         'start_date',
         'end_date',
         'teacher_id',
-        'school',
+        'school_id',
 
     ];
 
@@ -26,5 +26,10 @@ class Courses extends Model
     public function teacher()
     {
         return $this->belongsTo(User::class, 'teacher_id');
+    }
+
+    public function school()
+    {
+        return $this->belongsTo(School::class);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Courses;
+use App\Models\User;
 use App\Http\Requests\V1\StoreCoursesRequest;
 use App\Http\Requests\V1\UpdateCoursesRequest;
 use App\Http\Controllers\Controller;
@@ -46,10 +47,32 @@ class CoursesController extends Controller
     public function getCoursesForTeacher($userId)
 {
     $teacherCourses = Courses::where('teacher_id', $userId)
-                            ->with('users') // Load users enrolled in each course
+                            ->with('users')
                             ->get();
 
     return new CoursesCollection($teacherCourses);
+}
+
+public function getUsersWithSameSchool($userId)
+{
+
+    $user = User::find($userId);
+    $schoolId = $user->school_id;
+
+
+    $usersWithSameSchool = User::where('school_id', $schoolId)->get();
+
+    return $usersWithSameSchool;
+}
+
+public function getCoursesForSchool($schoolId)
+{
+
+    $schoolCourses = Courses::where('school_id', $schoolId)
+
+                            ->get();
+
+    return new CoursesCollection($schoolCourses);
 }
 
 public function getCourseDocumentsForTeacher($userId)
@@ -88,9 +111,13 @@ public function getCourseDocumentsForTeacher($userId)
      * Update the specified resource in storage.
      */
     public function update(UpdateCoursesRequest $request, Courses $course)
-    {
-        $course->update($request->all());
-    }
+{
+    $validatedData = $request->validated();
+    $course->update($validatedData);
+
+    // Return the updated course resource
+    return new CoursesResource($course);
+}
 
     /**
      * Remove the specified resource from storage.

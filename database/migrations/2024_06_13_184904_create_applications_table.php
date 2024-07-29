@@ -11,11 +11,11 @@ class CreateApplicationsTable extends Migration
         Schema::create('applications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('job_id')->constrained()->onDelete('cascade');
+            $table->foreignId('jobs_id')->constrained()->onDelete('cascade');
             $table->timestamps(); // Adds created_at and updated_at columns
 
             // Ensure a user can only apply to a job once
-            $table->unique(['user_id', 'job_id']);
+            $table->unique(['user_id', 'jobs_id']);
 
             // Optionally, you can add additional fields specific to your application
             // For example, you might want to include a status column (applied, interviewed, etc.)

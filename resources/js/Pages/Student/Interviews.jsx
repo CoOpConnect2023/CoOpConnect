@@ -1,4 +1,5 @@
 import * as React from "react";
+const appUrl = import.meta.env.VITE_APP_URL;
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
@@ -18,6 +19,7 @@ import {
     selectInterviews,
     deleteInterview,
 } from "@/Features/interviews/interviewsSlice";
+import { getUser, selectUser } from "@/Features/users/userSlice";
 import {
     MainContainer,
     Container,
@@ -32,37 +34,30 @@ import {
     Day,
     DatesGrid,
     DateCell,
+    EventsContainer,
+    EventsHeader,
+    Event,
+    NoEventsMessage,
+    DeleteButton
 } from "./Styling/Interviews.styles";
 
 const localizer = momentLocalizer(moment);
 const DnDCalendar = withDragAndDrop(Calendar);
 
 const Interviews = () => {
+    const dispatch = useDispatch();
     const [showModal, setShowModal] = useState(false);
     const [selectedDate, setSelectedDate] = useState(null);
+    const user = useSelector(selectUser);
+    const userId = user?.id;
     const [events, setEvents] = useState([]);
-
-    const [userId, setUserId] = useState(null);
-
-    useEffect(() => {
-        const fetchUserId = async () => {
-            try {
-                const response = await axios.get(
-                    `http://127.0.0.1:8000/api/user-id`
-                );
-                setUserId(response.data.user.id);
-            } catch (error) {
-                console.error("Error fetching user ID:", error);
-            }
-        };
-        fetchUserId();
-    }, []);
-
-    const dispatch = useDispatch();
-
     const data = useSelector(selectInterviews);
     const interviews = data.interviews;
     const interviewsStatus = useSelector(selectInterviewsStatus);
+
+    useEffect(() => {
+        dispatch(getUser());
+    }, [dispatch]);
 
     useEffect(() => {
         dispatch(
@@ -75,8 +70,8 @@ const Interviews = () => {
     function transformedInterviews(interviews) {
         const result = interviews.map((interview) => ({
             ...interview,
-            start: interview.startDate,
-            end: interview.endDate,
+            start: new Date(interview.startDate),
+            end: new Date(interview.endDate),
         }));
         return result;
     }
@@ -87,16 +82,12 @@ const Interviews = () => {
 
     useEffect(() => {
         if (interviewsStatus.postInterview == "succeeded") {
-            console.log(
-                "True Check",
-                transformedInterviews(data.postInterview)
-            );
+
             setEvents(...events, transformedInterviews(data.postInterview));
         }
     }, [interviews.postInterview]);
 
-    console.log("Fetched User ID:", userId);
-    console.log("interviews", events);
+
 
     function getTodayDate() {
         const today = new Date();
@@ -107,24 +98,92 @@ const Interviews = () => {
         return `${year}-${month}-${day}`;
     }
 
-    const handleEventResize = ({ event, start, end }) => {
-        const nextEvents = events.map((existingEvent) => {
-            return existingEvent.id === event.id
-                ? { ...existingEvent, start, end }
-                : existingEvent;
-        });
+    const handleEventResize = async ({ event, start, end }) => {
 
-        setEvents(nextEvents);
-    };
+        const formatDateTime = (dateTime) => {
+                const year = dateTime.getFullYear();
+                const month = String(dateTime.getMonth() + 1).padStart(2, "0");
+                const day = String(dateTime.getDate()).padStart(2, "0");
+                const hours = String(dateTime.getHours()).padStart(2, "0");
+                const minutes = String(dateTime.getMinutes()).padStart(2, "0");
+                const seconds = String(dateTime.getSeconds()).padStart(2, "0");
 
-    const handleEventDrop = ({ event, start, end }) => {
-        const nextEvents = events.map((existingEvent) => {
-            return existingEvent.id === event.id
-                ? { ...existingEvent, start, end }
-                : existingEvent;
-        });
+                return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+            };
 
-        setEvents(nextEvents);
+            try {
+
+                const payload = {
+                    title: event.title,
+                    start_date: formatDateTime(start),
+                    end_date: formatDateTime(end),
+                    status: event.status,
+                    description: event.description,
+                    interviewee_id: event.intervieweeId,
+                    interviewer_id: event.interviewerId,
+                };
+
+
+                const response = await axios.put(
+                    `${appUrl}/api/v1/interviews/${event.id}`,
+                    payload
+                );
+
+        const updatedEvents = events.map((existingEvent) =>
+                    existingEvent.id === event.id ? { ...existingEvent, start, end } : existingEvent
+                );
+
+                setEvents(updatedEvents);
+            } catch (error) {
+                console.error("Error updating event:", error);
+            }
+        };
+
+    const handleEventDrop = async ({ event, start, end }) => {
+
+        const formatDateTime = (dateTime) => {
+            const year = dateTime.getFullYear();
+            const month = String(dateTime.getMonth() + 1).padStart(2, "0");
+            const day = String(dateTime.getDate()).padStart(2, "0");
+            const hours = String(dateTime.getHours()).padStart(2, "0");
+            const minutes = String(dateTime.getMinutes()).padStart(2, "0");
+            const seconds = String(dateTime.getSeconds()).padStart(2, "0");
+
+            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        };
+
+
+
+        try {
+
+            const payload = {
+                title: event.title,
+                start_date: formatDateTime(start),
+                end_date: formatDateTime(end),
+                status: event.status,
+                description: event.description,
+                interviewee_id: event.intervieweeId,
+                interviewer_id: event.interviewerId,
+            };
+
+
+
+            const response = await axios.put(
+                `${appUrl}/api/v1/interviews/${event.id}`,
+                payload
+            );
+
+
+
+
+            const updatedEvents = events.map((existingEvent) =>
+                existingEvent.id === event.id ? { ...existingEvent, start, end } : existingEvent
+            );
+
+            setEvents(updatedEvents);
+        } catch (error) {
+            console.error("Error updating event:", error);
+        }
     };
 
     const openModal = (day) => {
@@ -138,27 +197,25 @@ const Interviews = () => {
     };
 
     const handleAddEvent = (title, description, start, end) => {
-        // Format start and end dates to ISO 8601 string format
-        /*         const formattedStart = start.toISOString(); // Convert Date object to ISO string
-        const formattedEnd = end.toISOString(); */
+
+
+
         const formattedStart = `${start.getFullYear()}-${String(
             start.getMonth() + 1
-        ).padStart(2, "0")}-${String(start.getDate()).padStart(
-            2,
-            "0"
-        )} ${String(start.getHours()).padStart(2, "0")}:${String(
-            start.getMinutes()
-        ).padStart(2, "0")}:${String(start.getSeconds()).padStart(2, "0")}`;
+        ).padStart(2, "0")}-${String(start.getDate()).padStart(2, "0")} ${String(
+            start.getHours()
+        ).padStart(2, "0")}:${String(start.getMinutes()).padStart(2, "0")}:${String(
+            start.getSeconds()
+        ).padStart(2, "0")}`;
         const formattedEnd = `${end.getFullYear()}-${String(
             end.getMonth() + 1
         ).padStart(2, "0")}-${String(end.getDate()).padStart(2, "0")} ${String(
             end.getHours()
-        ).padStart(2, "0")}:${String(end.getMinutes()).padStart(
-            2,
-            "0"
-        )}:${String(end.getSeconds()).padStart(2, "0")}`;
+        ).padStart(2, "0")}:${String(end.getMinutes()).padStart(2, "0")}:${String(
+            end.getSeconds()
+        ).padStart(2, "0")}`;
 
-        // Create newEvent object with formatted dates
+
 
         dispatch(
             postInterview({
@@ -167,12 +224,37 @@ const Interviews = () => {
                 endDate: formattedEnd,
                 status: "scheduled",
                 description,
-                intervieweeId: userId, // Assuming userId is defined
+                intervieweeId: userId,
                 interviewerId: userId,
             })
-        );
+        ).then(() => {
+            dispatch(getInterviewsForInterviewee({
+                intervieweeId: userId,
+            }));
+
+        });
 
         closeModal();
+    };
+
+    const handleDeleteClick = async (event) => {
+        try {
+
+            const response = await axios.delete(
+                `${appUrl}/api/v1/interviews/${event.id}`
+            );
+            handleEventDelete(event.id);
+
+        } catch (error) {
+            console.error("Error deleting event:", error);
+
+        }
+    };
+
+    const handleEventDelete = (eventId) => {
+        const updatedEvents = events.filter((event) => event.id !== eventId);
+        setEvents(updatedEvents);
+
     };
 
     return (
@@ -194,10 +276,32 @@ const Interviews = () => {
                                     style={{ height: "100%" }}
                                     selectable
                                     onSelectSlot={openModal}
+                                    startAccessor={"start"}
+                                    endAccessor="end"
                                 />
                             </DndProvider>
                         </CalendarDiv>
                     </Wrapper>
+                    <EventsContainer>
+                        <EventsHeader>All Events</EventsHeader>
+                        {events && events.length > 0 ? (
+                            events.map((event) => (
+                                <Event key={event.id}>
+                                    <DeleteButton onClick={() => handleDeleteClick(event)}>X</DeleteButton>
+                                    <div>Title: {event.title}</div>
+                                    <div>Description: {event.description}</div>
+                                    <div>
+                                        Start Date: {moment(event.start).format("YYYY-MM-DD HH:mm:ss")}
+                                    </div>
+                                    <div>
+                                        End Date: {moment(event.end).format("YYYY-MM-DD HH:mm:ss")}
+                                    </div>
+                                </Event>
+                            ))
+                        ) : (
+                            <NoEventsMessage>No events found</NoEventsMessage>
+                        )}
+                    </EventsContainer>
                 </Container>
             </MainContainer>
             {showModal && (

@@ -10,6 +10,7 @@ use App\Http\Resources\V1\ReflectionsResource;
 use App\Http\Resources\V1\ReflectionsCollection;
 use Illuminate\Http\Request;
 use App\Filters\V1\ReflectionsFilter;
+use Illuminate\Support\Facades\Auth;
 
 class ReflectionsController extends Controller
 {
@@ -38,6 +39,16 @@ class ReflectionsController extends Controller
     {
         return new ReflectionsResource($reflection);
     }
+
+
+    public function showforuser(Reflections $reflection)
+    {
+        $userId = Auth::id();
+    $reflections = Reflections::where('user_id', $userId)->get();
+    return new ReflectionsCollection($reflections);
+    }
+
+
 
     /**
      * Update the specified resource in storage.

@@ -58,14 +58,14 @@ class ApplicationController extends Controller
     {
         // Validate incoming request
         $request->validate([
-            'job_id' => 'required|exists:jobs,id', // Ensure job_id exists in jobs table
+            'jobs_id' => 'required|exists:jobs,id', // Ensure job_id exists in jobs table
             // Additional validation rules as needed
         ]);
 
         // Create a new application record
         $application = new Application();
         $application->user_id = auth()->id(); // Assuming user is authenticated
-        $application->job_id = $request->input('job_id');
+        $application->job_id = $request->input('jobs_id');
         // Additional fields assignment if any
 
         $application->save();
@@ -103,7 +103,7 @@ class ApplicationController extends Controller
         $userId = Auth::id();
 
         // Check if the user has already applied for the job
-        $existingApplication = Application::where('user_id', $userId)->where('job_id', $jobId)->first();
+        $existingApplication = Application::where('user_id', $userId)->where('jobs_id', $jobId)->first();
         if ($existingApplication) {
             return response()->json(['message' => 'You have already applied for this job.', 'applied' => true], 400);
         }
@@ -111,7 +111,7 @@ class ApplicationController extends Controller
         // Create the application
         $application = new Application();
         $application->user_id = $userId;
-        $application->job_id = $jobId;
+        $application->jobs_id = $jobId;
         $application->save();
 
         return response()->json(['message' => 'Application submitted successfully.', 'applied' => false], 201);
@@ -121,7 +121,7 @@ class ApplicationController extends Controller
     {
         $userId = Auth::id();
 
-        $existingApplication = Application::where('user_id', $userId)->where('job_id', $jobId)->first();
+        $existingApplication = Application::where('user_id', $userId)->where('jobs_id', $jobId)->first();
         return response()->json(['applied' => $existingApplication ? true : false]);
     }
 

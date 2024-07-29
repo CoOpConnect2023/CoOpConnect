@@ -54,4 +54,20 @@ class UserCoursesController extends Controller
     {
         $usercourse->delete();
     }
+
+     /**
+     * Delete all user courses associated with the given student ID.
+     *
+     * @param int $studentId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deleteByStudentId($studentId)
+    {
+        try {
+            UserCourses::where('user_id', $studentId)->delete();
+            return response()->json(['message' => 'User courses deleted successfully.'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error deleting user courses.'], 500);
+        }
+    }
 }

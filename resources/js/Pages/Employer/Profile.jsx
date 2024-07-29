@@ -3,6 +3,14 @@ import styled from "styled-components";
 import NavBar from "./Components/NavBar";
 import ReflectionDocuments from "../Employer/Components/ReflectionDocuments";
 import { useDropzone } from "react-dropzone";
+import { useSelector, useDispatch } from "react-redux";
+import {
+
+    selectUserStatus,
+    selectUser,
+    getUser,
+    updateUserProfile,
+} from "@/Features/users/userSlice";
 import {
     Main,
     Section,
@@ -24,6 +32,7 @@ import {
     EditProfileButton,
     DetailValue,
     DropzoneContainer,
+    SuccessMessage
 } from "./Styling/Profile.styles";
 
 const appUrl = import.meta.env.VITE_APP_URL;
@@ -42,8 +51,18 @@ const Dropzone = ({ onDrop }) => {
 function Profile() {
 
 
-    const [user, setUser] = useState(null);
+    const dispatch = useDispatch();
+    const user = useSelector(selectUser);
+
+    const [fullName, setFullName] = useState("");
+    const [email, setEmail] = useState("");
+    const [accountType, setAccountType] = useState("");
+    const [description, setDescription] = useState("");
+    const [company, setCompany] = useState(null);
+    const [specialty, setSpecialty] = useState("");
+    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
     const [droppedImage, setDroppedImage] = useState(null);
+    const [droppedFile, setDroppedFile] = useState(null);
 
     const handleDrop = (acceptedFiles) => {
         if (acceptedFiles && acceptedFiles.length > 0) {
@@ -54,99 +73,90 @@ function Profile() {
     };
 
     useEffect(() => {
+        dispatch(getUser());
 
-        const fetchUserId = async () => {
-            try {
-                const response = await axios.get(`${appUrl}/api/user-id`);
-                const userData = response.data.user;
-                userData.skills = userData.skills || "[]";
-                setUser(userData);
-                console.log(response.data.user);
-            } catch (error) {
-                console.error("Error fetching user ID:", error);
+    }, [dispatch]);
+
+
+    useEffect(() => {
+        if (user) {
+            setFullName(user.name || "");
+            setEmail(user.email || "");
+            setAccountType(user.role || "");
+            setDescription(user.description || "");
+            setSpecialty(user.positiontitle || "");
+            setCompany(user.company_name || "");
+
+
+            if (user.profile_image) {
+                setDroppedImage(user.profile_image);
             }
-        };
-
-        fetchUserId();
-    }, []);
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setUser((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    };
-
-    const addSkill = () => {
-        if (user.newSkill.trim() !== "") {
-            setUser((prevData) => ({
-                ...prevData,
-                skills: [...prevData.skills, prevData.newSkill.trim()],
-                newSkill: "", // Clear the input field after adding the skill
-            }));
         }
-    };
+    }, [user]);
 
-    const removeSkill = (index) => {
-        const updatedSkills = [...user.skills];
-        updatedSkills.splice(index, 1);
-        setUser((prevData) => ({
-            ...prevData,
-            skills: updatedSkills,
-        }));
-    };
 
-    const handleSubmit = async () => {
+
+
+
+    const handleUpdateProfile = async () => {
         try {
             const formData = new FormData();
 
-            // Check if droppedImage is set and append it to formData
             if (droppedImage) {
-                // If droppedImage is a File object (if using Dropzone), directly append it
                 if (droppedImage instanceof File) {
                     formData.append("profile_image", droppedImage);
                 } else {
-                    // If droppedImage is a URL (if using an image preview), fetch the file and append
                     const response = await fetch(droppedImage);
                     const blob = await response.blob();
-                    formData.append("profile_image", blob, "profile_image.png"); // Adjust filename as needed
+                    formData.append("profile_image", blob, "profile_image.png");
                 }
             }
-
-            // Append other form fields
+            formData.append("id", user.id);
             formData.append("description", user.description);
             formData.append("name", user.name);
             formData.append("email", user.email);
             formData.append("role", user.role);
-            formData.append("school", user.school);
+            formData.append("school_id", user.school_id);
             formData.append("positiontitle", user.positiontitle);
             formData.append("company_name", user.company_name);
-            formData.append("skills", user.skills);
 
-            const response = await axios.post(
+            await axios.post(
                 `${appUrl}/api/update-profile/${user.id}`,
                 formData,
                 {
                     headers: {
                         "Content-Type": "multipart/form-data",
-                        Authorization: `Bearer ${localStorage.getItem(
-                            "accessToken"
-                        )}`,
+                        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                     },
                 }
             );
 
-            console.log("Profile updated:", response.data);
-            window.location.reload();
+            dispatch(
+                updateUserProfile({
+                    id: user.id,
+                    name: fullName,
+                    description: description,
+                    company_name: company,
+                    profile_image: droppedImage,
+                    email,
+                    role: accountType,
+                    school_id: user.school_id,
+                    positiontitle: specialty,
+                })
+            );
+            setShowSuccessMessage(true);
+
+            setTimeout(() => {
+                setShowSuccessMessage(false);
+            }, 2000);
         } catch (error) {
             console.error("Error updating profile:", error);
         }
     };
 
     const handleClear = () => {
-        // Update user state to clear profile image
-        setUser({ ...user, profile_image: null });
+
+        setDroppedImage(null)
     };
 
     if (!user) {
@@ -160,36 +170,28 @@ function Profile() {
                     <Title>Employer Profile</Title>
                     <ProfileWrapper>
                         <ProfileDetails>
-                            <ProfileImageWrapper>
+                        <ProfileImageWrapper>
                                 {droppedImage ? (
                                     <ProfileImage
                                         loading="lazy"
                                         src={droppedImage}
                                         alt="Profile"
                                     />
-                                ) : user.profile_image ? (
-                                    <div>
-                                        <ProfileImage
-                                            loading="lazy"
-                                            src={user.profile_image}
-                                            alt="ProfileIMG"
-                                        />
-                                        <ClearProfileButton
-                                            onClick={handleClear}
-                                        >
-                                            Clear
-                                        </ClearProfileButton>
-                                    </div>
                                 ) : (
                                     <Dropzone onDrop={handleDrop} />
+                                )}
+                                {droppedImage && (
+                                    <ClearProfileButton onClick={handleClear}>
+                                        Clear
+                                    </ClearProfileButton>
                                 )}
                             </ProfileImageWrapper>
                             <BioSection>
                                 <BioTitle>Bio:</BioTitle>
                                 <DetailValue
                                     name="description"
-                                    value={user.description}
-                                    onChange={handleChange}
+                                    value={description}
+                                    onChange={(e) => setDescription(e.target.value)}
                                     placeholder="Add a few words about yourself..."
                                 />
                             </BioSection>
@@ -199,35 +201,36 @@ function Profile() {
                     <Input
                         type="text"
                         name="name"
-                        value={user.name}
-                        onChange={handleChange}
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
                     />
                     <FieldTitle>Email</FieldTitle>
                     <Input
                         type="email"
                         name="email"
-                        value={user.email}
-                        onChange={handleChange}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                     />
                     <FieldTitle>Account Type</FieldTitle>
-                    <Input value={user.role} onChange={handleChange} />
+                    <Input value={accountType} onChange={(e) => setAccountType(e.target.value)} />
                     <FieldTitle>Company</FieldTitle>
                     <Input
                         type="text"
                         name="company_name"
-                        value={user.company_name}
-                        onChange={handleChange}
+                        value={company}
+                        onChange={(e) => setCompany(e.target.value)}
                     />
                     <FieldTitle>Position</FieldTitle>
                     <Input
                         type="text"
                         name="positiontitle"
-                        value={user.positiontitle}
-                        onChange={handleChange}
+                        value={specialty}
+                        onChange={(e) => setSpecialty(e.target.value)}
                     />
-                    <EditProfileButton onClick={handleSubmit}>
+                    <EditProfileButton onClick={handleUpdateProfile}>
                         Edit Profile
                     </EditProfileButton>
+                    {showSuccessMessage && <SuccessMessage>Profile updated successfully!</SuccessMessage>}
                 </Section>
                 <RightContainer>
                     <ReflectionDocuments />

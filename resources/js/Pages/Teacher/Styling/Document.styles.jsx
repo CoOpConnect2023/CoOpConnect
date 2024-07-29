@@ -222,4 +222,65 @@ export const SubmitButton = styled.button`
         padding: 20px;
     }
 `
+const DropZoneWrapper = styled.div`
+    gap: 20px;
+    display: flex;
+    @media (max-width: 991px) {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+    }
+`;
+
+const DropZoneContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-left: 20px;
+    @media (max-width: 991px) {
+        width: 100%;
+        margin-left: 0;
+        margin-top: 20px;
+    }
+`;
+
+const DropZone = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    border: 2px dashed rgba(107, 83, 140, 1);
+    background-color: #eddcff;
+    font-size: 23px;
+    color: #000;
+    line-height: 40px;
+    padding: 40px;
+    @media (max-width: 991px) {
+        padding: 0 20px;
+    }
+`;
+
+const DropZoneText = styled.div`
+    font-family: Poppins, sans-serif;
+    margin-top: 10px;
+    @media (max-width: 991px) {
+        margin: 0 8px;
+    }
+`;
+
+const DropZoneDescription = styled.p`
+    color: #6b538c;
+    align-self: center;
+    margin-top: 10px;
+    font: bold 28px Poppins, sans-serif;
+`;
+
+const PreviewImage = styled.img`
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 10px;
+`;
 

@@ -10,6 +10,7 @@ import {
     patchJob,
     selectJobs,
     selectJobsStatus,
+    deleteJob
 } from "@/Features/jobs/jobsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -37,6 +38,7 @@ import {
     EditPostingButton,
     SkillsList,
     SkillBadge,
+    DeletePostingButton
 } from "./Styling/Home.styles";
 
 const Home = () => {
@@ -122,6 +124,6 @@ const JobPosting = ({ post }) => {
             </CardButtons>
         </JobCard>
     );
-};
+  };
 
 export default Home;

@@ -18,6 +18,7 @@ class ApplicationResource extends JsonResource
             'id' => $this->id,
             'userId' => $this->user_id,
             'jobId' => $this->job_id,
+            'user' => new UserResource($this->whenLoaded('user')),
 
         ];
     }

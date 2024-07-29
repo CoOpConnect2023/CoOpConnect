@@ -17,6 +17,8 @@ class MessageFactory extends Factory
             'user_id' => User::inRandomOrder()->first()->id,
             'conversation_id' => Conversation::inRandomOrder()->first()->id,
             'content' => $this->faker->sentence,
+            'viewed' => false,
+
         ];
     }
 }

@@ -19,6 +19,14 @@ import {
     DateCell,
     TodayDateCell,
     InactiveDateCell,
+    CalendarDiv,
+    EventsContainer,
+    EventsHeader,
+    Event,
+    NoEventsMessage,
+    DeleteButton,
+
+
 } from "./Styling/Scheduling.styles.jsx";
 import Modal from "../Profile/Partials/AddEventModal";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -34,38 +42,31 @@ import {
     selectInterviewsStatus,
     selectInterviews,
 } from "@/Features/interviews/interviewsSlice";
+import { getUser, selectUser } from "@/Features/users/userSlice";
+import { getCourses, selectCourses } from "@/Features/courses/coursesSlice";
 import axios from "axios"; // Don't forget to import axios
+const appUrl = import.meta.env.VITE_APP_URL;
+
 
 const localizer = momentLocalizer(moment);
 const DnDCalendar = withDragAndDrop(Calendar);
 
 const Interviews = () => {
+    const dispatch = useDispatch();
+    const user = useSelector(selectUser);
+
     const [showModal, setShowModal] = useState(false);
     const [selectedDate, setSelectedDate] = useState(null);
     const [events, setEvents] = useState([]);
-
-    const [userId, setUserId] = useState(null);
     const [shortlists, setShortlists] = useState([]);
-
-    useEffect(() => {
-        const fetchUserId = async () => {
-            try {
-                const response = await axios.get(
-                    `http://127.0.0.1:8000/api/user-id`
-                );
-                setUserId(response.data.user.id);
-            } catch (error) {
-                console.error("Error fetching user ID:", error);
-            }
-        };
-        fetchUserId();
-    }, []);
-
-    const dispatch = useDispatch();
-
+    const userId = user?.id;
     const data = useSelector(selectInterviews);
     const interviews = data.interviews;
     const interviewsStatus = useSelector(selectInterviewsStatus);
+
+    useEffect(() => {
+        dispatch(getUser());
+    }, [dispatch]);
 
     useEffect(() => {
         dispatch(
@@ -75,45 +76,66 @@ const Interviews = () => {
         );
     }, [userId]);
 
-    function transformedInterviews(interviews) {
+    useEffect(() => {
+        const fetchShortlists = async (userId) => {
+            try {
+                const response = await axios.get(
+                    `${appUrl}/api/v1/courses/teacher/${userId}`
+                );
+                setShortlists(response.data.data);
+
+            } catch (error) {
+                console.error("Error fetching shortlists:", error);
+
+            }
+        };
+
+        if (userId) {
+            fetchShortlists(userId);
+        }
+    }, [userId]);
+
+    const transformedInterviews = (interviews) => {
+
+        if (!Array.isArray(interviews)) {
+            console.error('transformedInterviews expected an array, but got:', interviews);
+            return [];
+        }
+
         const result = interviews.map((interview) => ({
             ...interview,
-            start: interview.startDate,
-            end: interview.endDate,
+            start: new Date(interview.startDate),
+            end: new Date(interview.endDate),
         }));
         return result;
-    }
+    };
 
     useEffect(() => {
         setEvents(transformedInterviews(interviews));
     }, [interviews]);
 
-    useEffect(() => {
-        if (interviewsStatus.postInterview === "succeeded") {
-            setEvents((prevEvents) => [
-                ...prevEvents,
-                ...transformedInterviews(data.postInterview),
-            ]);
-        }
-    }, [interviewsStatus.postInterview, data.postInterview]);
-
-    console.log("Fetched User ID:", userId);
-    console.log("interviews", events);
-
     function getTodayDate() {
         const today = new Date();
         const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, "0"); // Months are zero-indexed
+        const month = String(today.getMonth() + 1).padStart(2, "0");
         const day = String(today.getDate()).padStart(2, "0");
 
         return `${year}-${month}-${day}`;
     }
 
+    const openModal = (day) => {
+        setSelectedDate(day);
+        setShowModal(true);
+    };
+
+    const closeModal = () => {
+        setSelectedDate(null);
+        setShowModal(false);
+    };
+
     const handleEventResize = async ({ event, start, end }) => {
-        // Check if start and end are valid Date objects
 
-
-        const formatDateTime = (dateTime) => {
+    const formatDateTime = (dateTime) => {
             const year = dateTime.getFullYear();
             const month = String(dateTime.getMonth() + 1).padStart(2, "0");
             const day = String(dateTime.getDate()).padStart(2, "0");
@@ -125,7 +147,7 @@ const Interviews = () => {
         };
 
         try {
-            // Prepare payload with necessary fields, including start_date and end_date
+
             const payload = {
                 title: event.title,
                 start_date: formatDateTime(start),
@@ -136,16 +158,13 @@ const Interviews = () => {
                 interviewer_id: event.interviewerId,
             };
 
-            // Send PUT request to update event
+
             const response = await axios.put(
-                `http://127.0.0.1:8000/api/v1/interviews/${event.id}`,
+                `${appUrl}/api/v1/interviews/${event.id}`,
                 payload
             );
 
-            console.log(response.data.message); // Optionally log success message
-
-            // Update events state with the new position
-            const updatedEvents = events.map((existingEvent) =>
+    const updatedEvents = events.map((existingEvent) =>
                 existingEvent.id === event.id ? { ...existingEvent, start, end } : existingEvent
             );
 
@@ -182,15 +201,15 @@ const Interviews = () => {
                 interviewee_id: event.intervieweeId,
                 interviewer_id: event.interviewerId,
             };
-            console.log(event);
+
 
             // Send PUT request to update event
             const response = await axios.put(
-                `http://127.0.0.1:8000/api/v1/interviews/${event.id}`,
+                `${appUrl}/api/v1/interviews/${event.id}`,
                 payload
             );
 
-            console.log(response.data.message); // Optionally log success message
+
 
             // Update events state with the new position
             const updatedEvents = events.map((existingEvent) =>
@@ -203,15 +222,7 @@ const Interviews = () => {
         }
     };
 
-    const openModal = (day) => {
-        setSelectedDate(day);
-        setShowModal(true);
-    };
 
-    const closeModal = () => {
-        setSelectedDate(null);
-        setShowModal(false);
-    };
 
     const handleAddEvent = (title, description, start, end, selectedApplicant) => {
         // Check if selectedApplicant is defined and not empty
@@ -250,68 +261,35 @@ const Interviews = () => {
                 intervieweeId: selectedApplicant,
                 interviewerId,
             })
-        );
+        ).then(() => {
+            dispatch(getInterviewsForInterviewer({
+                interviewerId: userId,
+            }));
+
+        });
 
         closeModal();
     };
 
-    useEffect(() => {
-        const fetchShortlists = async (userId) => {
-            try {
-                const response = await axios.get(
-                    `http://127.0.0.1:8000/api/v1/courses/teacher/${userId}`
-                );
-                setShortlists(response.data.data);
-                console.log("data", response.data.data);
-            } catch (error) {
-                console.error("Error fetching shortlists:", error);
-                // Handle error gracefully
-            }
-        };
-
-        if (userId) {
-            fetchShortlists(userId);
-        }
-    }, [userId]); // Ensure useEffect runs when userId changes
-
-
-    const handleDeleteClickShortlist = async (shortlist) => {
-        try {
-            const response = await axios.delete(
-                `http://127.0.0.1:8000/api/jobs/${shortlist.job.id}/shortlist`
-            );
-            handleShortlistDelete(shortlist.id); // Update state or perform any necessary cleanup
-            console.log(response.data.message); // Optionally log the response message
-        } catch (error) {
-            console.error("Error deleting shortlist:", error);
-            // Handle error
-        }
-    };
-
-    const handleShortlistDelete = (shortlistId) => {
-        const updatedShortlists = shortlists.filter((shortlist) => shortlist.id !== shortlistId);
-        setShortlists(updatedShortlists);
-    };
-
     const handleDeleteClick = async (event) => {
         try {
-          // Assuming you have an endpoint to delete events by event id
-          const response = await axios.delete(
-            `http://127.0.0.1:8000/api/v1/interviews/${event.id}`
-          );
-          handleEventDelete(event.id); // Update state or perform any necessary cleanup
-          console.log(response.data.message); // Optionally log the response message
-        } catch (error) {
-          console.error("Error deleting event:", error);
-          // Handle error
-        }
-      };
 
-      const handleEventDelete = (eventId) => {
+            const response = await axios.delete(
+                `${appUrl}/api/v1/interviews/${event.id}`
+            );
+            handleEventDelete(event.id);
+
+        } catch (error) {
+            console.error("Error deleting event:", error);
+
+        }
+    };
+
+    const handleEventDelete = (eventId) => {
         const updatedEvents = events.filter((event) => event.id !== eventId);
         setEvents(updatedEvents);
 
-      };
+    };
 
     return (
         <NavBar header={"Interviews"}>
@@ -372,55 +350,5 @@ const Interviews = () => {
         </NavBar>
     );
 };
-
-
-const CalendarDiv = styled.div`
-    background-color: #ffffff;
-    height: 80vh;
-    margin-bottom: 3vh;
-    margin-top: 3vh;
-
-`;
-
-const DeleteButton = styled.button`
-    background-color: red;
-    color: white;
-    border: none;
-    padding: 4px 8px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-`;
-
-const NoEventsMessage = styled.p`
-  font-size: 18px;
-  color: #6b538c;
-  margin-top: 20px;
-`;
-
-const EventsContainer = styled.div`
-  width: 100%; /* Take full width of Container */
-  max-width: 400px; /* Adjust as per your design */
-  overflow-y: auto; /* Make it scrollable */
-height: 80vh;
-`;
-
-const EventsHeader = styled.h2`
-  font-size: 24px;
-  color: #6b538c;
-  margin-bottom: 20px;
-`;
-
-const Event = styled.div`
-  background-color: #ffffff;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 16px;
-  position: relative; /* Ensure relative positioning for absolute children */
-`;
 
 export default Interviews;

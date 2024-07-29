@@ -122,11 +122,11 @@ export default function Chat() {
         };
 
         try {
-            console.log('Sending message with data:', requestData);
+
 
             const response = await axios.post(`${appUrl}/api/sendnewmessages`, requestData);
 
-            console.log('Response from server:', response.data); // Log the response data
+            
 
             setMessages([...messages, response.data]);
             setNewMessage('');
@@ -149,7 +149,7 @@ export default function Chat() {
                 `http://127.0.0.1:8000/api/users/${currentUser}/shortlists`
             );
             setShortlists(response.data.shortlists);
-            console.log("shortlists", response.data.shortlists);
+
         } catch (error) {
             console.error("Error fetching shortlists:", error);
             // Handle error gracefully

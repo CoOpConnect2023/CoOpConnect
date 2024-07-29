@@ -18,6 +18,10 @@ const JobContainer = styled.section`
     flex-direction: column;
     font-weight: 500;
     padding: 40px 30px;
+
+    @media (max-width: 991px) {
+        padding: 20px;
+    }
 `;
 
 const Title = styled.h2`
@@ -31,9 +35,6 @@ const Subtitle = styled.p`
     color: var(--Schemes-Outline, #7b757f);
     margin-top: 10px;
     font: 24px/133% Poppins, sans-serif;
-    @media (max-width: 991px) {
-        max-width: 100%;
-    }
 `;
 
 const JobList = styled.div`
@@ -45,29 +46,32 @@ const JobList = styled.div`
     color: var(--Schemes-On-Primary-Container, #260e44);
     line-height: 150%;
     padding: 0 60px 10px;
+
     @media (max-width: 991px) {
-        max-width: 100%;
         padding: 0 20px;
     }
 `;
 
 const JobCard = styled.article`
-    max-width: 400px;
+    max-width: 100%;
+    width: 100%;
     border-radius: 10px;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     background-color: var(--Schemes-Primary-Container, #eddcff);
     display: flex;
-    width: 100%;
     flex-direction: column;
     padding: 20px 10px;
     margin-top: ${(props) => (props.hasMargin ? "10px" : "0")};
+    @media (max-width: 1001px) {
+        font-size: 16px;
+    }
+
 `;
 
 const JobTitle = styled.h3`
     color: var(--Schemes-On-Primary-Container, #260e44);
     text-align: center;
     font-size: 24px;
-    font-style: normal;
     font-weight: 500;
     line-height: 32px; /* 133.333% */
 `;
@@ -75,17 +79,23 @@ const JobTitle = styled.h3`
 const JobDetails = styled.section`
     align-self: center;
     display: flex;
-    margin-top: 15px;
+    flex-wrap: wrap;
     gap: 15px;
     letter-spacing: 0.15px;
+    margin-top: 15px;
+
+
+    @media (max-width: 991px) {
+        flex-direction: column;
+    }
 `;
 
 const CompanyInfo = styled.div`
-    justify-content: center;
     display: flex;
     flex-direction: column;
     margin: auto 0;
     padding: 3px 0;
+    flex-wrap: wrap;
 `;
 
 const CompanyName = styled.p`
@@ -103,11 +113,10 @@ const Divider = styled.hr`
 `;
 
 const ViewButton = styled.button`
-    font-family: Roboto, sans-serif;
     justify-content: center;
+    align-self: center;
     border-radius: 12px;
     background-color: var(--Schemes-Primary, #6b538c);
-    align-self: center;
     margin-top: 15px;
     color: #fff;
     font-weight: 700;

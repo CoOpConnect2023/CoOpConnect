@@ -23,12 +23,20 @@ export default function LandingLayout({ auth }) {
               dashboard: '/teacher/home',
 
             };
+            case 'admin':
+            return {
+
+              dashboard: '/admin/home',
+
+            };
           default:
             return {};
         }
       }
 
+      
 
+      const userLinks = getUserLinks(auth.userType);
 
 
         return (

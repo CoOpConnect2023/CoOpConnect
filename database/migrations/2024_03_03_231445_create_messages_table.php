@@ -13,6 +13,7 @@ class CreateMessagesTable extends Migration
             $table->foreignId('conversation_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->text('content');
+            $table->boolean('viewed')->default(false);
             $table->timestamps();
         });
     }

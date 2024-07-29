@@ -7,11 +7,19 @@ const ModalWrapper = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: white;
-    padding: 30px;
+    padding: 20px;
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 1000;
-    width: 400px;
+    width: 90%;
+    max-width: 400px;
+    max-height: 80%; /* Set a maximum height */
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds height */
+
+    @media (min-width: 768px) {
+        width: 400px;
+        max-height: 90%; /* Adjust maximum height for larger screens */
+    }
 `;
 
 const ModalBackdrop = styled.div`
@@ -45,6 +53,10 @@ const Input = styled.input`
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 1em;
+
+    @media (min-width: 768px) {
+        font-size: 1em;
+    }
 `;
 
 const Textarea = styled.textarea`
@@ -55,6 +67,10 @@ const Textarea = styled.textarea`
     border-radius: 4px;
     font-size: 1em;
     resize: vertical;
+
+    @media (min-width: 768px) {
+        font-size: 1em;
+    }
 `;
 
 const ButtonContainer = styled.div`
@@ -113,7 +129,7 @@ const Modal = ({ onClose, onSubmit, defaultDate, applicants }) => {
     const handleSubmit = () => {
         const start = new Date(`${startDate}T${startTime}`);
         const end = new Date(`${endDate}T${endTime}`);
-        console.log(selectedApplicant)
+
         onSubmit(title, description, start, end, selectedApplicant);
         onClose();
     };

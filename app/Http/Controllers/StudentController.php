@@ -32,10 +32,16 @@ class StudentController extends Controller
         return Inertia::render('Student/Reflections');
     }
 
+    public function myreflections()
+    {
+        return Inertia::render('Student/MyReflections');
+    }
+
     public function documents()
     {
         return Inertia::render('Student/Document');
     }
+
 
     public function settings()
     {

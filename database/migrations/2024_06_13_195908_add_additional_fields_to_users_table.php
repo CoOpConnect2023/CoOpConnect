@@ -9,7 +9,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('school')->nullable();
+            $table->foreignId('school_id')->nullable()->constrained('schools')->onDelete('set null');
             $table->string('profile_image')->nullable();
             $table->string('company_name')->nullable();
             $table->boolean('company')->default(false);
@@ -26,7 +26,8 @@ return new class extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('school');
+            $table->dropForeign(['school_id']);
+            $table->dropColumn('school_id');
             $table->dropColumn('profile_image');
             $table->dropColumn('company_name');
             $table->dropColumn('company');

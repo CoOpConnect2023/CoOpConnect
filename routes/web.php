@@ -11,6 +11,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginProviderController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\AdminController;
+
 
 
 
@@ -33,12 +35,18 @@ use App\Http\Controllers\TeacherController;
 Route::get('/', [HomeController::class, 'showLanding'])->name('landing');
 Route::get('/about', [HomeController::class, 'showAbout'])->name('about');
 
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/home', [AdminController::class, 'home'])->name('admin.home');
+
+});
+
 Route::middleware(['auth', 'student'])->group(function () {
     Route::get('/student/home', [StudentController::class, 'home'])->name('student.home');
     Route::get('/student/jobs', [StudentController::class, 'jobs'])->name('student.jobs');
     Route::get('/student/interviews', [StudentController::class, 'interviews'])->name('student.interviews');
     Route::get('/student/profile', [StudentController::class, 'profile'])->name('student.profile');
     Route::get('/student/reflections', [StudentController::class, 'reflections'])->name('student.reflections');
+    Route::get('/student/myreflections', [StudentController::class, 'myreflections'])->name('student.myreflections');
     Route::get('/student/documents', [StudentController::class, 'documents'])->name('student.documents');
     Route::get('/student/settings', [StudentController::class, 'settings'])->name('student.settings');
     Route::get('/student/messages', [StudentController::class, 'messages'])->name('student.messages');
@@ -54,6 +62,8 @@ Route::middleware(['auth', 'teacher'])->group(function () {
     Route::get('/teacher/scheduling', [TeacherController::class, 'scheduling'])->name('teacher.scheduling');
     Route::get('/teacher/profile', [TeacherController::class, 'profile'])->name('teacher.profile');
     Route::get('/teacher/settings', [TeacherController::class, 'settings'])->name('teacher.settings');
+    Route::get('/teacher/classes', [TeacherController::class, 'classes'])->name('teacher.classes');
+    Route::get('/teacher/students', [TeacherController::class, 'students'])->name('teacher.classes');
 });
 
 Route::middleware(['auth', 'employee'])->group(function () {

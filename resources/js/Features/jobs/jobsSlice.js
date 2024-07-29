@@ -154,8 +154,9 @@ export const jobsSlice = createSlice({
                 state.status.deleteJob = "loading";
             })
             .addCase(deleteJob.fulfilled, (state, action) => {
-                state.status.deleteJob = "succeeded";
-            })
+                state.jobs = state.jobs.filter((job) => job.id !== action.payload);
+                console.log(state.jobs, "statejobs")
+              })
             .addCase(deleteJob.rejected, (state, action) => {
                 state.status.deleteJob = "failed";
             });
@@ -227,7 +228,7 @@ export const searchJobsbySkill = createAsyncThunk(
             },
         });
 
-        console.log(response.data);
+
 
         return response.data.data;
     }
@@ -237,7 +238,7 @@ export const searchJobsBySkillAndLocation = createAsyncThunk(
     "jobs/searchJobsBySkillAndLocation",
     async (params) => {
         const { searchTerm, location } = params;
-        console.log("test", searchTerm);
+
         const response = await axios({
             url: "/jobs/search",
             method: "GET",
@@ -261,7 +262,7 @@ export const postJob = createAsyncThunk("jobs/postJob", async (params) => {
         company,
         userId,
     } = params;
-    console.log(params);
+
     const response = await axios({
         url: "/jobs",
         method: "POST",
@@ -333,7 +334,7 @@ export const patchJob = createAsyncThunk("jobs/patchJob", async (params) => {
             company,
         },
     });
-    console.log(response.data.data);
+
     return response.data.data;
 });
 
@@ -343,7 +344,7 @@ export const deleteJob = createAsyncThunk("jobs/deleteJob", async (params) => {
         url: `/jobs/${jobId}`,
         method: "DELETE",
     });
-    return response.data.data;
+    return userId;
 });
 
 export const applyJob = createAsyncThunk(

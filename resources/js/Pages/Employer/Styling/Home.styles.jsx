@@ -30,13 +30,16 @@ export const CreateJobSection = styled.section`
 export const JobTitle = styled.h2`
     color: #6b538c;
     font: 600 32px Poppins, sans-serif;
+    @media (max-width: 768px) {
+        font-size: 24px;
+    }
 `
 
 export const JobSubtitle = styled.h3`
     margin-top: 10px;
     font: 500 24px/133% Poppins, sans-serif;
-    @media (max-width: 991px) {
-        max-width: 100%;
+    @media (max-width: 768px) {
+        font-size: 20px;
     }
 `
 
@@ -48,8 +51,9 @@ export const JobDescription = styled.p`
     text-align: center;
     margin-top: 30px;
     font: 400 22px/28px Poppins, sans-serif;
-    @media (max-width: 991px) {
-        max-width: 100%;
+    @media (max-width: 768px) {
+        font-size: 18px;
+        margin-top: 20px;
     }
 `
 
@@ -63,6 +67,10 @@ export const PostJobButton = styled.button`
     padding: 8px 16px;
     font: 700 16px/150% Roboto, sans-serif;
     cursor: pointer;
+    @media (max-width: 768px) {
+        font-size: 14px;
+        padding: 6px 12px;
+    }
 `
 
 export const CurrentPostingsSection = styled.section`
@@ -83,8 +91,8 @@ export const CurrentPostingsSection = styled.section`
 export const SectionTitle = styled.h2`
     color: #6b538c;
     font: 600 32px Poppins, sans-serif;
-    @media (max-width: 991px) {
-        max-width: 100%;
+    @media (max-width: 768px) {
+        font-size: 24px;
     }
 `
 
@@ -92,8 +100,8 @@ export const EditingInstructions = styled.p`
     color: #7b757f;
     margin-top: 10px;
     font: 500 24px/32px Poppins, sans-serif;
-    @media (max-width: 991px) {
-        max-width: 100%;
+    @media (max-width: 768px) {
+        font-size: 20px;
     }
 `
 
@@ -121,9 +129,11 @@ export const JobCard = styled.article`
     flex-direction: column;
     margin: 0 auto;
     padding: 20px 40px;
-    @media (max-width: 991px) {
+    word-wrap: break-word;
+    @media (max-width: 768px) {
         margin-top: 20px;
-        padding: 0 20px;
+        padding: 10px 20px;
+        max-width: 300px;
     }
 `
 
@@ -131,6 +141,9 @@ export const JobCardTitle = styled.h3`
     color: #260e44;
     font: 28px/129% Poppins, sans-serif;
     text-align: center;
+    @media (max-width: 768px) {
+        font-size: 20px;
+    }
 `
 
 export const CompanyName = styled.h4`
@@ -139,6 +152,9 @@ export const CompanyName = styled.h4`
     margin-top: 18px;
     letter-spacing: 0.15px;
     text-align: center;
+    @media (max-width: 768px) {
+        font-size: 18px;
+    }
 `
 
 export const Location = styled.p`
@@ -146,6 +162,9 @@ export const Location = styled.p`
     font-family: Poppins, sans-serif;
     letter-spacing: 0.15px;
     text-align: center;
+    @media (max-width: 768px) {
+        font-size: 16px;
+    }
 `
 
 export const Tags = styled.div`
@@ -170,8 +189,9 @@ export const Tag = styled.span`
     border: 1px solid #773dc3;
     padding: 8px 10px;
     white-space: nowrap;
-    @media (max-width: 991px) {
-        white-space: initial;
+    @media (max-width: 768px) {
+        font-size: 10px;
+        padding: 6px 8px;
     }
 `
 
@@ -184,6 +204,9 @@ export const JobDescriptionText = styled.p`
     letter-spacing: 0.25px;
     margin-top: 15px;
     font: 400 14px/20px Poppins, sans-serif;
+    @media (max-width: 768px) {
+        font-size: 12px;
+    }
 `
 
 export const Divider = styled.div`
@@ -199,7 +222,7 @@ export const CardButtons = styled.div`
     display: flex;
     margin-top: 15px;
     gap: 15px;
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: 0.5px;
 `
 
@@ -210,6 +233,10 @@ export const ViewPostingButton = styled.button`
     background-color: #6b538c;
     color: #fff;
     padding: 8px 16px;
+    @media (max-width: 768px) {
+        font-size: 14px;
+        padding: 6px 12px;
+    }
 `
 
 export const EditPostingButton = styled.button`
@@ -219,6 +246,23 @@ export const EditPostingButton = styled.button`
     border: 2px solid #6b538c;
     color: #260e44;
     padding: 8px 16px;
+    @media (max-width: 768px) {
+        font-size: 14px;
+        padding: 6px 12px;
+    }
+`
+
+export const DeletePostingButton = styled.button`
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 12px;
+    @media (max-width: 768px) {
+        font-size: 14px;
+        padding: 6px 12px;
+    }
 `
 
 export const SkillsList = styled.div`
@@ -251,5 +295,9 @@ export const SkillBadge = styled.span`
         color: #fff;
         box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
     }
-`
 
+    @media (max-width: 768px) {
+        font-size: 10px;
+        padding: 6px 8px;
+    }
+`
