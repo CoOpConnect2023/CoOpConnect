@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -15,6 +14,10 @@ return new class extends Migration
             $table->id(); // Add an auto-incrementing primary key
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('jobs_id')->constrained()->onDelete('cascade');
+            $table->string("resume");
+            $table->string("status");
+            $table->text("message")->nullable();
+            $table->json('time_slots')->nullable();
             $table->timestamps();
 
             $table->unique(['user_id', 'jobs_id']);

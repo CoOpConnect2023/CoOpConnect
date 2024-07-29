@@ -373,43 +373,6 @@ const Interviews = () => {
     );
 };
 
-const MainContainer = styled.div`
-    display: flex;
-    padding: 20px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 40px;
-    flex: 1 0 0;
-    align-self: stretch;
-    background-color: var(--Schemes-Background, #fff7ff);
-`;
-
-const Container = styled.div`
-    align-items: center;
-    align-self: stretch;
-    border-radius: 10px;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-    background-color: #fff;
-    display: flex;
-    justify-content: center;
-    padding: 20px;
-    border-radius: 10px;
-    gap: 40px; /* Add gap between CalendarDiv and ShortlistsContainer */
-`;
-
-const Wrapper = styled.div`
-    display: flex;
-    width: 100%; /* Adjusted to take full width of Container */
-    max-width: 782px; /* Adjust as per your design */
-    flex-direction: column;
-`;
-
-const Header = styled.div`
-    color: var(--Schemes-Primary, #6b538c);
-    text-decoration-line: underline;
-    align-self: center;
-    font: 600 32px Poppins, sans-serif;
-`;
 
 const CalendarDiv = styled.div`
     background-color: #ffffff;
@@ -417,26 +380,6 @@ const CalendarDiv = styled.div`
     margin-bottom: 3vh;
     margin-top: 3vh;
 
-`;
-
-const ShortlistsContainer = styled.div`
-    width: 100%; /* Take full width of Container */
-    max-width: 400px; /* Adjust as per your design */
-`;
-
-const ShortlistsHeader = styled.h2`
-    font-size: 24px;
-    color: #6b538c;
-    margin-bottom: 20px;
-`;
-
-const Shortlist = styled.div`
-    background-color: #ffffff;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 16px;
-    position: relative; /* Ensure relative positioning for absolute children */
 `;
 
 const DeleteButton = styled.button`
@@ -452,22 +395,6 @@ const DeleteButton = styled.button`
     right: 10px;
 `;
 
-const ApplicantList = styled.ul`
-    list-style: none;
-    padding: 0;
-    margin-top: 8px;
-`;
-
-const ApplicantItem = styled.li`
-    font-size: 16px;
-    margin-bottom: 4px;
-`;
-
-const NoShortlistsMessage = styled.p`
-    font-size: 18px;
-    color: #6b538c;
-    margin-top: 20px;
-`;
 const NoEventsMessage = styled.p`
   font-size: 18px;
   color: #6b538c;

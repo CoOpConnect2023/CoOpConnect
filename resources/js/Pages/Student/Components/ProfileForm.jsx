@@ -26,7 +26,7 @@ const ProfileForm = () => {
             try {
                 const response = await axios.get(`${appUrl}/api/user-id`);
                 const userData = response.data.user;
-                userData.skills = JSON.parse(userData.skills || "[]");
+                userData.skills = userData.skills || "[]";
                 setUser(userData);
             } catch (error) {
                 console.error("Error fetching user data:", error);
@@ -89,7 +89,7 @@ const ProfileForm = () => {
             formData.append("role", user.role);
             formData.append("school", user.school);
             formData.append("positiontitle", user.positiontitle);
-            formData.append("skills", JSON.stringify(user.skills));
+            formData.append("skills", (user.skills));
 
             const response = await axios.post(
                 `${appUrl}/api/update-profile/${user.id}`,

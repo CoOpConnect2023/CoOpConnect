@@ -22,19 +22,19 @@ class EmployerController extends Controller
         return Inertia::render('Employer/Post2');
     }
 
-    public function viewPost()
+    public function viewPost($id)
     {
-        return Inertia::render('Employer/ViewPost');
+        return Inertia::render('Employer/ViewPost', ['jobId' => $id]);
     }
 
-    public function editPost1()
+    public function editPost1($id)
     {
-        return Inertia::render('Employer/EditPost1');
+        return Inertia::render('Employer/EditPost1', ['jobId' => $id]);
     }
 
-    public function editPost2()
+    public function editPost2($id)
     {
-        return Inertia::render('Employer/EditPost2');
+        return Inertia::render('Employer/EditPost2', ['jobId' => $id]);
     }
 
     public function documents()
@@ -60,6 +60,16 @@ class EmployerController extends Controller
     public function settings()
     {
         return Inertia::render('Employer/Settings');
+    }
+
+    public function viewApplicants($id)
+    {
+        return Inertia::render('Employer/ViewApplicants', ['jobId' => $id]);
+    }
+
+    public function acceptApplicant($id)
+    {
+        return Inertia::render('Employer/AcceptApplicant', ['applicantId' => $id]);
     }
 
 

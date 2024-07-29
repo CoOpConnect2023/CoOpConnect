@@ -1,11 +1,12 @@
 import styled from "styled-components";
+import downarrow from "@/Pages/Images/Icon.svg";
 
 export const Container = styled.section`
     align-self: stretch;
     display: flex;
     flex-direction: column;
     padding: 20px;
-`
+`;
 
 export const Card = styled.article`
     align-items: center;
@@ -19,7 +20,7 @@ export const Card = styled.article`
         max-width: 100%;
         padding: 0 20px;
     }
-`
+`;
 
 export const FormWrapper = styled.div`
     display: flex;
@@ -30,13 +31,13 @@ export const FormWrapper = styled.div`
     @media (max-width: 991px) {
         margin-bottom: 40px;
     }
-`
+`;
 
 export const Title = styled.h1`
     color: var(--Schemes-Primary, #6b538c);
     align-self: center;
     font: 600 32px Poppins, sans-serif;
-`
+`;
 
 export const Subtitle = styled.p`
     color: var(--Schemes-Outline, #7b757f);
@@ -46,7 +47,7 @@ export const Subtitle = styled.p`
         max-width: 100%;
         margin-right: 10px;
     }
-`
+`;
 
 export const Form = styled.form`
     border-radius: 10px;
@@ -59,7 +60,7 @@ export const Form = styled.form`
     @media (max-width: 991px) {
         max-width: 100%;
     }
-`
+`;
 
 export const SectionTitle = styled.h2`
     color: #000;
@@ -67,7 +68,7 @@ export const SectionTitle = styled.h2`
     @media (max-width: 991px) {
         max-width: 100%;
     }
-`
+`;
 
 export const FormRow = styled.div`
     display: flex;
@@ -77,7 +78,7 @@ export const FormRow = styled.div`
         margin-right: 10px;
         flex-wrap: wrap;
     }
-`
+`;
 
 export const FormField = styled.div`
     display: flex;
@@ -87,13 +88,13 @@ export const FormField = styled.div`
     align-items: flex-start;
     gap: 8px;
     flex-shrink: 0;
-`
+`;
 
 export const Label = styled.label`
     font-feature-settings: "calt" off;
     letter-spacing: -0.14px;
     font: 600 14px/114% Inter, sans-serif;
-`
+`;
 
 export const Input = styled.input`
     display: flex;
@@ -104,7 +105,7 @@ export const Input = styled.input`
     border-radius: 6px;
     border: 2px solid var(--WF-Base-400, #cbd2e0);
     background: var(--WF-Base-White, #fff);
-`
+`;
 
 export const Select = styled.select`
     display: flex;
@@ -120,7 +121,7 @@ export const Select = styled.select`
     background-repeat: no-repeat;
     background-position: right 12px center;
     background-size: 24px;
-`
+`;
 
 export const HorizontalRule = styled.hr`
     border: 1px solid rgba(0, 0, 0, 1);
@@ -130,7 +131,7 @@ export const HorizontalRule = styled.hr`
     @media (max-width: 991px) {
         max-width: 100%;
     }
-`
+`;
 
 export const ButtonGroup = styled.div`
     display: flex;
@@ -140,7 +141,7 @@ export const ButtonGroup = styled.div`
     font-weight: 700;
     letter-spacing: 0.5px;
     line-height: 150%;
-`
+`;
 
 export const ActionButton = styled.button`
     font-family: Roboto, sans-serif;
@@ -150,7 +151,7 @@ export const ActionButton = styled.button`
     color: var(--Schemes-Primary, #6b538c);
     padding: 8px 16px;
     background: none;
-`
+`;
 
 export const SubmitButton = styled.button`
     font-family: Roboto, sans-serif;
@@ -163,5 +164,4 @@ export const SubmitButton = styled.button`
     @media (max-width: 991px) {
         white-space: initial;
     }
-`
-
+`;
