@@ -7,7 +7,7 @@ import usersReducer from "./Features/users/userSlice";
 import messagesReducer from "./Features/messages/messagesSlice";
 import shortlistsReducer from "./Features/shortlists/shortlistsSlice";
 import schoolsReducer from "./Features/schools/schoolsSlice";
-
+import userJobsReducer from "./Features/userJobs/userJobsSlice";
 
 export const store = configureStore({
     reducer: {
@@ -19,6 +19,7 @@ export const store = configureStore({
         messages: messagesReducer,
         shortlists: shortlistsReducer,
         schools: schoolsReducer,
+        userJobs: userJobsReducer,
     },
 });
 

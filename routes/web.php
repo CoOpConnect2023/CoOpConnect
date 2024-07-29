@@ -50,6 +50,9 @@ Route::middleware(['auth', 'student'])->group(function () {
     Route::get('/student/documents', [StudentController::class, 'documents'])->name('student.documents');
     Route::get('/student/settings', [StudentController::class, 'settings'])->name('student.settings');
     Route::get('/student/messages', [StudentController::class, 'messages'])->name('student.messages');
+    Route::get('/student/viewapplications', [StudentController::class, 'viewapplications'])->name('student.viewapplications');
+    Route::get('/student/accept-interview/{id}', [StudentController::class, 'acceptinterview'])->name('student.acceptinterview');
+    Route::get('/student/viewpost/{jobId}', [StudentController::class, 'ViewPost'])->name('student.viewpost');
 });
 
 Route::middleware(['auth', 'teacher'])->group(function () {
@@ -68,13 +71,15 @@ Route::middleware(['auth', 'employee'])->group(function () {
     Route::get('/employer/post1', [EmployerController::class, 'post1'])->name('employer.post1');
     Route::get('/employer/post2', [EmployerController::class, 'post2'])->name('employer.post2');
     Route::get('/employer/viewpost/{jobId}', [EmployerController::class, 'ViewPost'])->name('employer.viewpost');
-    Route::get('/employer/editpost1', [EmployerController::class, 'editPost1'])->name('employer.editpost1');
-    Route::get('/employer/editpost2', [EmployerController::class, 'editPost2'])->name('employer.editpost2');
+    Route::get('/employer/editpost1/{jobId}', [EmployerController::class, 'editPost1'])->name('employer.editpost1');
+    Route::get('/employer/editpost2/{jobId}', [EmployerController::class, 'editPost2'])->name('employer.editpost2');
     Route::get('/employer/documents', [EmployerController::class, 'documents'])->name('employer.documents');
     Route::get('/employer/messages', [EmployerController::class, 'messages'])->name('employer.messages');
     Route::get('/employer/interviews', [EmployerController::class, 'interviews'])->name('employer.interviews');
     Route::get('/employer/profile', [EmployerController::class, 'profile'])->name('employer.profile');
     Route::get('/employer/settings', [EmployerController::class, 'settings'])->name('employer.settings');
+    Route::get('/employer/viewapplicants/{jobId}', [EmployerController::class, 'viewApplicants'])->name('employer.viewapplicants');
+    Route::get('/employer/accept-applicant/{id}', [EmployerController::class, 'acceptApplicant'])->name('employer.acceptapplicant');
 });
 
 

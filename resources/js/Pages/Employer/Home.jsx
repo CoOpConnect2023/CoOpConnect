@@ -42,9 +42,6 @@ import {
 } from "./Styling/Home.styles";
 
 const Home = () => {
-    const [editModalIsOpen, setEditModalIsOpen] = useState(false);
-    const [jobToEdit, setJobToEdit] = useState(null);
-
     const dispatch = useDispatch();
     const jobs = useSelector(selectJobs);
     const jobsStatus = useSelector(selectJobsStatus);
@@ -65,32 +62,6 @@ const Home = () => {
 
         fetchUserAndJobs();
     }, [dispatch]);
-
-    const openEditModal = (job) => {
-        setJobToEdit(job);
-        setEditModalIsOpen(true);
-    };
-
-    const closeEditModal = () => {
-        setEditModalIsOpen(false);
-    };
-
-    const handleSave = async (updatedJob) => {
-        // Dispatch the patchJob action and wait for it to complete
-        dispatch(
-            patchJob({
-                jobsId: updatedJob.id,
-                title: updatedJob.title,
-                description: updatedJob.description,
-                company: updatedJob.company,
-                location: updatedJob.location,
-                postingStatus: updatedJob.postingStatus,
-                jobType: updatedJob.jobType,
-            })
-        );
-
-        closeEditModal();
-    };
 
     return (
         <NavBar header={"Job Postings"}>
@@ -114,75 +85,44 @@ const Home = () => {
                 <CurrentPostingsSection>
                     <SectionTitle>Current Company Postings</SectionTitle>
                     <EditingInstructions>
-                        <Link href="/employer/viewpost">
-                            <UnderlineText>View</UnderlineText>
-                        </Link>{" "}
-                        or <UnderlineText>edit</UnderlineText> your company’s
-                        current job postings.
+                        View or edit your company's current job postings.
                     </EditingInstructions>
                     {jobsStatus === "loading" && <p>Loading...</p>}
                     {jobs.length > 0 && (
                         <PostingsGrid>
                             {jobs.map((post, i) => (
-                                <JobPosting
-                                    key={i}
-                                    post={post}
-                                    openEditModal={openEditModal}
-                                />
+                                <JobPosting key={i} post={post} />
                             ))}
                         </PostingsGrid>
                     )}
                 </CurrentPostingsSection>
             </MainContainer>
-            {editModalIsOpen && (
-                <EditJobModal
-                    isOpen={editModalIsOpen}
-                    onRequestClose={closeEditModal}
-                    job={jobToEdit}
-                    onSave={handleSave}
-                />
-            )}
         </NavBar>
     );
 };
-// Reusable Components
-const JobPosting = ({ post, openEditModal }) => {
-    const dispatch = useDispatch();
 
-    const handleEditClick = () => {
-      openEditModal(post); // Open modal for editing this specific job post
-    };
-
-    const handleDeleteClick = (id) => {
-      dispatch(deleteJob({ userId: id }));
-
-    };
-    console.log(post.id)
-
+const JobPosting = ({ post }) => {
     return (
-      <JobCard>
-        <JobCardTitle>{post.title}</JobCardTitle>
-        <CompanyName>{post.company}</CompanyName>
-        <Location>{post.location}</Location>
-        <SkillsList>
-          {post.skills.map((tag, index) => (
-            <SkillBadge key={index}>{tag}</SkillBadge>
-          ))}
-        </SkillsList>
-        <JobDescriptionText>{post.description}</JobDescriptionText>
-        <Divider />
-        <CardButtons>
-          <Link href={`/employer/viewpost/${post.id}`}>
-            <ViewPostingButton>VIEW POSTING</ViewPostingButton>
-          </Link>
-          <EditPostingButton onClick={handleEditClick}>
-            EDIT POSTING
-          </EditPostingButton>
-          <DeletePostingButton onClick={() => handleDeleteClick(post.id)}>
-            DELETE POSTING
-          </DeletePostingButton>
-        </CardButtons>
-      </JobCard>
+        <JobCard>
+            <JobCardTitle>{post.title}</JobCardTitle>
+            <CompanyName>{post.company}</CompanyName>
+            <Location>{post.location}</Location>
+            <SkillsList>
+                {post.skills.map((tag, index) => (
+                    <SkillBadge key={index}>{tag}</SkillBadge>
+                ))}
+            </SkillsList>
+            <JobDescriptionText>{post.description}</JobDescriptionText>
+            <Divider />
+            <CardButtons>
+                <Link href={`/employer/viewpost/${post.id}`}>
+                    <ViewPostingButton>VIEW POSTING</ViewPostingButton>
+                </Link>
+                <Link href={`/employer/editpost1/${post.id}`}>
+                    <EditPostingButton>EDIT POSTING</EditPostingButton>
+                </Link>
+            </CardButtons>
+        </JobCard>
     );
   };
 

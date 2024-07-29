@@ -89,9 +89,9 @@ function Post1() {
                                         value={jobFormData.jobType}
                                         onChange={handleInputChange}
                                     >
-                                        <option value="onsite">Onsite</option>
-                                        <option value="remote">Remote</option>
-                                        <option value="hybrid">Hybrid</option>
+                                        <option value="Onsite">Onsite</option>
+                                        <option value="Remote">Remote</option>
+                                        <option value="Hybrid">Hybrid</option>
                                     </Select>
                                 </FormField>
                                 <FormField>

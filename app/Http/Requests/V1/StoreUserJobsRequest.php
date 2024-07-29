@@ -24,6 +24,8 @@ class StoreUserJobsRequest extends FormRequest
         return [
             'user_id' => ['required', 'exists:users,id'],
             'jobs_id' => ['required', 'exists:jobs,id'],
+            'resume' => ['required'],
+            'status' => ['required'],
         ];
     }
     protected function prepareForValidation()

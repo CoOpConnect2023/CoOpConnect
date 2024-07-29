@@ -11,9 +11,17 @@ class UserJobs extends Model
 
     protected $table = 'user_jobs';
 
+    protected $casts = [
+        'time_slots' => 'array',
+    ];
+
     protected $fillable = [
         'user_id',
         'jobs_id',
+        'resume',
+        'status',
+        'time_slots',
+        'message',
     ];
 
     public function user()

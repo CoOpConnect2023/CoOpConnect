@@ -101,10 +101,9 @@ export const SectionDescription = styled.p`
     }
 `
 
-export const InputField = styled.div`
+export const InputField = styled.input`
     border-radius: 3px;
-    background-color: var(--WF-Base-500, #a0abc0);
-    height: 16px;
+    height: 62px;
     & + & {
         margin-top: 8px;
     }

@@ -430,6 +430,4 @@ const Spinner = styled.div`
     animation: ${spin} 1s linear infinite; /* Apply the spin animation */
 `;
 
-
-
 export default Interviews;

@@ -1,22 +1,12 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 import NavBar from "./Components/NavBar";
 import { Link } from "@inertiajs/react";
 import JobModal from "../Profile/Partials/ViewJobModal";
 import { useSelector, useDispatch } from "react-redux";
 import {
-    getJobs,
     selectJobs,
     selectJobsStatus,
-    selectJob,
-    getJobsforUser,
-    getUsersForJob,
     searchJobsbySkill,
-    searchJobsBySkillAndLocation,
-    postJob,
-    putJob,
-    patchJob,
-    deleteJob,
 } from "@/Features/jobs/jobsSlice";
 import {
     MainContainer,
@@ -44,13 +34,9 @@ import {
 const appUrl = import.meta.env.VITE_APP_URL;
 
 function Home() {
-    const [userId, setUserId] = useState(null);
-    const [defaultSkills, setDefaultSkills] = useState([]);
-    const [showModal, setShowModal] = useState(false);
-    const [selectedJob, setSelectedJob] = useState(null); // State to store the selected job
     const dispatch = useDispatch();
 
-    const jobs = useSelector(selectJobs);
+    const jobs = useSelector(selectJobs) || [];
     const jobsStatus = useSelector(selectJobsStatus);
 
     useEffect(() => {
@@ -61,14 +47,7 @@ function Home() {
         );
     }, [dispatch]);
 
-    const openModal = (job) => {
-        setSelectedJob(job); // Set the selected job
-        setShowModal(true);
-    };
-    const closeModal = () => {
-        setShowModal(false);
-    };
-    const JobCard = ({ job, openModal }) => {
+    const JobCard = ({ job }) => {
         return (
             <JobCardContainer>
                 <JobTitle>{job.title}</JobTitle>
@@ -81,9 +60,9 @@ function Home() {
                 </SkillsList>
                 <JobDescription>{job.description}</JobDescription>
                 <Divider />
-                <JobButton onClick={() => openModal(job)}>
-                    VIEW POSTING
-                </JobButton>
+                <Link href={`/student/viewpost/${job.id}`}>
+                    <JobButton>VIEW POSTING</JobButton>
+                </Link>
             </JobCardContainer>
         );
     };
@@ -122,18 +101,11 @@ function Home() {
                             </EmptyMessage>
                         ) : (
                             jobs.map((job, index) => (
-                                <JobCard
-                                    key={index}
-                                    job={job}
-                                    openModal={openModal}
-                                />
+                                <JobCard key={index} job={job} />
                             ))
                         )}
                     </JobListings>
                 </JobsSection>
-                {showModal && selectedJob && (
-                    <JobModal job={selectedJob} onClose={closeModal} />
-                )}
             </MainContainer>
         </NavBar>
     );

@@ -52,4 +52,20 @@ class StudentController extends Controller
     {
         return Inertia::render('Student/Messages/Messages');
     }
+
+    public function viewapplications()
+    {
+        return Inertia::render('Student/ViewApplications');
+    }
+
+    public function viewPost($id)
+    {
+        $userId = auth()->user()->id;
+        return Inertia::render('Student/ViewPost', ['jobId' => $id, 'userId' => $userId]);
+    }
+
+    public function acceptinterview($id)
+    {
+        return Inertia::render('Student/AcceptInterview', ['userJobsId' => $id]);
+    }
 }

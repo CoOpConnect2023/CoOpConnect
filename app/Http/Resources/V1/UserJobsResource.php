@@ -17,7 +17,11 @@ class UserJobsResource extends JsonResource
         return [
             'id' => $this->id,
             'userId' => $this->user_id,
-            'jobsId' => $this->jobs_id
+            'jobsId' => $this->jobs_id,
+            'resume' => $this->resume,
+            'status' => $this->status,
+            'message' => $this->message,
+            'timeSlots' => $this->timeSlots,
         ];
     }
 }

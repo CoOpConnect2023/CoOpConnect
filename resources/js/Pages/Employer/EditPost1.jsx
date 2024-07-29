@@ -1,7 +1,8 @@
 import * as React from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
-import downarrow from "@/Pages/Images/Icon.svg";
+import { Link } from "@inertiajs/react";
 
 import {
     Container,
@@ -22,7 +23,52 @@ import {
     SubmitButton,
 } from "./Styling/EditPost1.styles";
 
+import { useDispatch, useSelector } from "react-redux";
+import {
+    selectJob,
+    selectJobs,
+    updateJobFormData,
+    selectJobFormData,
+    selectJobsStatus,
+} from "@/Features/jobs/jobsSlice";
+import { usePage } from "@inertiajs/react";
+
 function EditPost1() {
+    const { props } = usePage();
+    const { jobId } = props;
+
+    const dispatch = useDispatch();
+    const jobFormData = useSelector(selectJobFormData);
+    const job = useSelector(selectJobs);
+    const jobStatus = useSelector(selectJobsStatus);
+
+    console.log(jobFormData);
+
+    useEffect(() => {
+        dispatch(selectJob({ jobId })).then((response) => {
+            const job = response.payload; // Assuming the response payload contains the job data
+            if (jobFormData.jobsId == "") {
+                dispatch(
+                    updateJobFormData({
+                        jobsId: job?.id || "",
+                        title: job?.title || "",
+                        company: job?.company || "",
+                        description: job?.description || "",
+                        postingStatus: job?.postingStatus || "open",
+                        jobType: job?.jobType || "hybrid",
+                        location: job?.location || "",
+                        skills: job?.skills || "",
+                    })
+                );
+            }
+        });
+    }, [dispatch, jobId]);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        dispatch(updateJobFormData({ [name]: value }));
+    };
+
     return (
         <NavBar header={"Edit Posting"}>
             <Container>
@@ -43,9 +89,11 @@ function EditPost1() {
                                     </Label>
                                     <Input
                                         type="text"
-                                        id="jobTitle"
-                                        name="jobTitle"
+                                        id="title"
+                                        name="title"
                                         aria-label="Job Title"
+                                        value={jobFormData.title}
+                                        onChange={handleInputChange}
                                     />
                                 </FormField>
                                 <FormField>
@@ -54,9 +102,11 @@ function EditPost1() {
                                     </Label>
                                     <Input
                                         type="text"
-                                        id="companyName"
-                                        name="companyName"
+                                        id="company"
+                                        name="company"
                                         aria-label="Company Name"
+                                        value={jobFormData.company}
+                                        onChange={handleInputChange}
                                     />
                                 </FormField>
                             </FormRow>
@@ -66,13 +116,15 @@ function EditPost1() {
                                         Workplace Type *
                                     </Label>
                                     <Select
-                                        id="workplaceType"
-                                        name="workplaceType"
+                                        id="jobType"
+                                        name="jobType"
                                         aria-label="Workplace Type"
+                                        value={jobFormData.jobType}
+                                        onChange={handleInputChange}
                                     >
-                                        <option value="onsite">Onsite</option>
-                                        <option value="remote">Remote</option>
-                                        <option value="hybrid">Hybrid</option>
+                                        <option value="Onsite">Onsite</option>
+                                        <option value="Remote">Remote</option>
+                                        <option value="Hybrid">Hybrid</option>
                                     </Select>
                                 </FormField>
                                 <FormField>
@@ -81,16 +133,22 @@ function EditPost1() {
                                     </Label>
                                     <Input
                                         type="text"
-                                        id="jobLocation"
-                                        name="jobLocation"
+                                        id="location"
+                                        name="location"
                                         aria-label="Job Location"
+                                        value={jobFormData.location}
+                                        onChange={handleInputChange}
                                     />
                                 </FormField>
                             </FormRow>
                             <HorizontalRule />
                             <ButtonGroup>
-                                <ActionButton>Go Back</ActionButton>
-                                <SubmitButton>Finished</SubmitButton>
+                                <Link href="/employer/home">
+                                    <ActionButton>Go Back</ActionButton>
+                                </Link>
+                                <Link href={`/employer/editpost2/${jobId}`}>
+                                    <SubmitButton>Continue</SubmitButton>
+                                </Link>
                             </ButtonGroup>
                         </Form>
                     </FormWrapper>
