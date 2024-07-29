@@ -6,6 +6,8 @@ const initialState = {
     userJobs: [],
     userJob: "",
     applicants: [],
+    jobs: [],
+    job: "",
     applicant: "",
     userJobExist: false,
     status: {
@@ -69,7 +71,7 @@ export const userJobsSlice = createSlice({
             })
             .addCase(patchUserJob.fulfilled, (state, action) => {
                 state.status.patchUserJob = "succeeded";
-                console.log(action.payload)
+                console.log(action.payload);
                 if (state.userJobs) {
                     state.userJobs = state.userJobs.map((userJob) =>
                         userJob.id === action.payload.id
@@ -87,6 +89,13 @@ export const userJobsSlice = createSlice({
                     );
                 } else {
                     state.applicants = action.payload;
+                }
+                if (state.jobs) {
+                    state.jobs = state.jobs.map((job) =>
+                        job.id === action.payload.id ? action.payload : job
+                    );
+                } else {
+                    state.jobs = action.payload;
                 }
             })
             .addCase(patchUserJob.rejected, (state) => {
@@ -134,6 +143,26 @@ export const userJobsSlice = createSlice({
             })
             .addCase(getSingleUserDetails.rejected, (state) => {
                 state.status.getSingleUserDetails = "failed";
+            })
+            .addCase(getJobsDetails.pending, (state) => {
+                state.status.getJobsDetails = "loading";
+            })
+            .addCase(getJobsDetails.fulfilled, (state, action) => {
+                state.jobs = action.payload;
+                state.status.getJobsDetails = "succeeded";
+            })
+            .addCase(getJobsDetails.rejected, (state) => {
+                state.status.getJobsDetails = "failed";
+            })
+            .addCase(getSingleJobDetails.pending, (state) => {
+                state.status.getSingleJobDetails = "loading";
+            })
+            .addCase(getSingleJobDetails.fulfilled, (state, action) => {
+                state.job = action.payload;
+                state.status.getSingleJobDetails = "succeeded";
+            })
+            .addCase(getSingleJobDetails.rejected, (state) => {
+                state.status.getSingleJobDetails = "failed";
             });
     },
 });
@@ -266,10 +295,36 @@ export const getSingleUserDetails = createAsyncThunk(
     }
 );
 
+export const getJobsDetails = createAsyncThunk(
+    "userJobs/getJobsDetails",
+    async () => {
+        const response = await axios({
+            url: `/userjobs/jobs`,
+            method: "GET",
+        });
+        console.log(response.data);
+        return response.data;
+    }
+);
+
+export const getSingleJobDetails = createAsyncThunk(
+    "userJobs/getSingleJobDetails",
+    async (params) => {
+        const { userJobsId } = params;
+        const response = await axios({
+            url: `/userjobs/job/${userJobsId}`,
+            method: "GET",
+        });
+        return response.data;
+    }
+);
+
 export const selectUserJobs = (state) => state.userJobs.userJobs;
 export const selectUserJob = (state) => state.userJobs.userJob;
 export const selectApplicants = (state) => state.userJobs.applicants;
 export const selectApplicant = (state) => state.userJobs.applicant;
+export const selectJobs = (state) => state.userJobs.jobs;
+export const selectJob = (state) => state.userJobs.job;
 export const selectCheckUserJobs = (state) => state.userJobs.checkUserJob;
 export const selectUserJobsStatus = (state) => state.userJobs.status;
 

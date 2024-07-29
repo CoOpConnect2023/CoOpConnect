@@ -3,7 +3,7 @@ import styled from "styled-components";
 import NavBar from "./Components/NavBar";
 import {
     selectJob,
-    selectJobs,
+    selectSingleJob,
     selectJobsStatus,
 } from "@/Features/jobs/jobsSlice";
 import {
@@ -19,7 +19,7 @@ function ViewPost() {
     const { jobId, userId } = props;
 
     const dispatch = useDispatch();
-    const job = useSelector(selectJobs);
+    const job = useSelector(selectSingleJob);
     const jobStatus = useSelector(selectJobsStatus);
 
     const applied = useSelector(selectCheckUserJobs);

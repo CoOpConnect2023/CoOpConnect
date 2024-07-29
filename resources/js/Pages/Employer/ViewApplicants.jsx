@@ -8,6 +8,7 @@ import {
 } from "@/Features/userJobs/userJobsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { usePage, Link } from "@inertiajs/react";
+import { selectJob, selectSingleJob } from "@/Features/jobs/jobsSlice";
 
 // Decline Modal Component
 const DeclineModal = ({ applicant, onClose, onSubmit }) => {
@@ -21,7 +22,7 @@ const DeclineModal = ({ applicant, onClose, onSubmit }) => {
     return (
         <Modal>
             <ModalContent>
-                <h2>Decline {applicant.name}</h2>
+                <h2>Reject {applicant.name}</h2>
                 <FormGroup>
                     <Label>Message</Label>
                     <TextArea
@@ -48,15 +49,24 @@ const DeclineModal = ({ applicant, onClose, onSubmit }) => {
 const ViewApplicants = () => {
     const { props } = usePage();
     const { jobId } = props;
+    const [activeTab, setActiveTab] = useState("Pending");
     const [selectedApplicant, setSelectedApplicant] = useState(null);
     const [isDeclineModalOpen, setIsDeclineModalOpen] = useState(false);
 
     const dispatch = useDispatch();
     const applicants = useSelector(selectApplicants);
+    const job = useSelector(selectSingleJob);
 
     useEffect(() => {
         dispatch(getUserDetails({ jobsId: jobId }));
+        dispatch(
+            selectJob({
+                jobId: jobId,
+            })
+        );
     }, [dispatch, jobId]);
+
+    const tabs = ["Pending", "Interview", "Scheduled", "Declined", "Rejected"];
 
     const handleDecline = (applicant) => {
         setSelectedApplicant(applicant);
@@ -78,97 +88,108 @@ const ViewApplicants = () => {
     };
 
     const handleAccept = (applicant) => {
-        // Redirect to accept page logic here
         window.location.href = `/employer/accept-applicant/${applicant.id}`;
+    };
+
+    const renderApplicants = () => {
+        return applicants
+            .filter((applicant) => applicant.status === activeTab)
+            .map((applicant) => (
+                <TableRow key={applicant.id}>
+                    <TableData>{applicant.name}</TableData>
+                    <TableData>{applicant.email}</TableData>
+                    <TableData>
+                        <ResumeLink
+                            href={applicant.resume}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            View Resume
+                        </ResumeLink>
+                    </TableData>
+
+                    {applicant.status === "Pending" && (
+                        <TableData>
+                            <Button
+                                color="green"
+                                onClick={() => handleAccept(applicant)}
+                            >
+                                Accept
+                            </Button>
+                            <Button
+                                color="red"
+                                onClick={() => handleDecline(applicant)}
+                            >
+                                Reject
+                            </Button>
+                        </TableData>
+                    )}
+                </TableRow>
+            ));
     };
 
     return (
         <NavBar header={"View Applicants"}>
-            <Container>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableHeader>Name</TableHeader>
-                            <TableHeader>Email</TableHeader>
-                            <TableHeader>Resume</TableHeader>
-                            <TableHeader>Status</TableHeader>
-                            <TableHeader>Actions</TableHeader>
-                        </TableRow>
-                    </TableHead>
-                    <tbody>
-                        {applicants.length > 0 ? (
-                            applicants.map((applicant) => (
-                                <TableRow key={applicant.id}>
-                                    <TableData>{applicant.name}</TableData>
-                                    <TableData>{applicant.email}</TableData>
-                                    <TableData>
-                                        <ResumeLink
-                                            href={applicant.resume}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                        >
-                                            View Resume
-                                        </ResumeLink>
-                                    </TableData>
-                                    <TableData>{applicant.status}</TableData>
-                                    <TableData>
-                                        <Button
-                                            color={
-                                                applicant.status ===
-                                                    "Interview" ||
-                                                applicant.status === "Rejected"
-                                                    ? "gray"
-                                                    : "green"
-                                            }
-                                            disabled={
-                                                applicant.status ===
-                                                    "Interview" ||
-                                                applicant.status === "Rejected"
-                                            }
-                                            onClick={() =>
-                                                handleAccept(applicant)
-                                            }
-                                        >
-                                            Accept
-                                        </Button>
-                                        <Button
-                                            color={
-                                                applicant.status ===
-                                                    "Interview" ||
-                                                applicant.status === "Rejected"
-                                                    ? "gray"
-                                                    : "red"
-                                            }
-                                            disabled={
-                                                applicant.status ===
-                                                    "Interview" ||
-                                                applicant.status === "Rejected"
-                                            }
-                                            onClick={() =>
-                                                handleDecline(applicant)
-                                            }
-                                        >
-                                            Decline
-                                        </Button>
-                                    </TableData>
+            {job && (
+                <>
+                    <p>
+                        <b>Position:</b> {job.title}
+                    </p>
+                    <p>
+                        <b>Company:</b> {job.company}
+                    </p>
+                    <p>
+                        <b>Location:</b> {job.location}
+                    </p>
+                    <p>
+                        <b>Description:</b> {job.description}
+                    </p>
+                    <Container>
+                        <Tabs>
+                            {tabs.map((tab) => (
+                                <Tab
+                                    key={tab}
+                                    $active={activeTab === tab}
+                                    onClick={() => setActiveTab(tab)}
+                                >
+                                    {tab}
+                                </Tab>
+                            ))}
+                        </Tabs>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableHeader>Name</TableHeader>
+                                    <TableHeader>Email</TableHeader>
+                                    <TableHeader>Resume</TableHeader>
+
+                                    {activeTab === "Pending" && (
+                                        <TableHeader>Actions</TableHeader>
+                                    )}
                                 </TableRow>
-                            ))
-                        ) : (
-                            <TableRow>
-                                <TableData colSpan="5">
-                                    No applicants found.
-                                </TableData>
-                            </TableRow>
-                        )}
-                    </tbody>
-                </Table>
-            </Container>
-            {isDeclineModalOpen && (
-                <DeclineModal
-                    applicant={selectedApplicant}
-                    onClose={() => setIsDeclineModalOpen(false)}
-                    onSubmit={handleDeclineSubmit}
-                />
+                            </TableHead>
+                            <tbody>
+                                {applicants.length > 0 ? (
+                                    renderApplicants()
+                                ) : (
+                                    <TableRow>
+                                        <TableData colSpan="5">
+                                            No applicants found.
+                                        </TableData>
+                                    </TableRow>
+                                )}
+                            </tbody>
+                        </Table>
+                    </Container>
+
+                    {isDeclineModalOpen && (
+                        <DeclineModal
+                            applicant={selectedApplicant}
+                            onClose={() => setIsDeclineModalOpen(false)}
+                            onSubmit={handleDeclineSubmit}
+                        />
+                    )}
+                </>
             )}
         </NavBar>
     );
@@ -179,6 +200,26 @@ export default ViewApplicants;
 // Styled Components
 const Container = styled.div`
     padding: 20px;
+`;
+
+const Tabs = styled.div`
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+`;
+
+const Tab = styled.div`
+    padding: 10px 20px;
+    margin: 0 10px;
+    cursor: pointer;
+    background: ${({ $active }) => ($active ? "#007BFF" : "#E0E0E0")};
+    color: ${({ $active }) => ($active ? "#FFF" : "#000")};
+    border-radius: 5px;
+    user-select: none;
+
+    &:hover {
+        background: ${({ $active }) => ($active ? "#0056b3" : "#c7c7c7")};
+    }
 `;
 
 const Table = styled.table`

@@ -97,4 +97,55 @@ class UserJobsController extends Controller
         // Return the user details as JSON
         return response()->json($userDetails);
     }
+
+    public function getJobsDetails()
+    {
+        $userId = auth()->user()->id;
+
+        Log::info('User ID retrieved', ['userId' => $userId]);
+
+        $userJobs = UserJobs::where('user_id', $userId)->get();
+
+        Log::info('User jobs retrieved', ['userJobs' => $userJobs]);
+
+        $jobs = $userJobs->map(function ($userJob) {
+            return [
+                'id' => $userJob->id,
+                'title' => $userJob->job->title,
+                'description' => $userJob->job->description,
+                'location' => $userJob->job->location,
+                'company' => $userJob->job->company,
+                'status' => $userJob->status,
+            ];
+        });
+
+        Log::info('Final jobs array', ['jobs' => $jobs]);
+
+        return response()->json($jobs);
+    }
+
+    public function getSingleJobDetails($userJobsId)
+    {
+        // Retrieve the UserJobs record based on the provided userJobs ID
+        $userJob = UserJobs::find($userJobsId);
+
+        if (!$userJob) {
+            return response()->json(['error' => 'User job not found'], 404);
+        }
+
+        // Prepare the user details
+        $jobDetails = [
+            'title' => $userJob->job->title,
+            'description' => $userJob->job->description,
+            'location' => $userJob->job->location,
+            'company' => $userJob->job->company,
+            'timeSlots' => $userJob->time_slots,
+            'message' => $userJob->message,
+        ];
+
+        Log::info('Final jobs array', ['jobs' => $jobDetails]);
+
+        // Return the user details as JSON
+        return response()->json($jobDetails);
+    }
 }

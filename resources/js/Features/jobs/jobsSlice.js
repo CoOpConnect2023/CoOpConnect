@@ -4,6 +4,7 @@ axios.defaults.baseURL = "http://127.0.0.1:8000/api/v1";
 
 const initialState = {
     jobs: [],
+    job: "",
     jobFormData: {
         jobsId: "",
         title: "",
@@ -17,6 +18,7 @@ const initialState = {
     },
     status: {
         jobs: "idle",
+        job: "idle",
         postJob: "idle",
         putJob: "idle",
         patchJob: "idle",
@@ -51,14 +53,14 @@ export const jobsSlice = createSlice({
                 state.status.jobs = "failed";
             })
             .addCase(selectJob.pending, (state, action) => {
-                state.status.jobs = "loading";
+                state.status.job = "loading";
             })
             .addCase(selectJob.fulfilled, (state, action) => {
-                state.jobs = action.payload;
+                state.job = action.payload;
                 state.status.jobs = "succeeded";
             })
             .addCase(selectJob.rejected, (state, action) => {
-                state.status.jobs = "failed";
+                state.status.job = "failed";
             })
             .addCase(getJobsforUser.pending, (state, action) => {
                 state.status.jobs = "loading";
@@ -359,6 +361,7 @@ export const applyJob = createAsyncThunk(
 );
 
 export const selectJobs = (state) => state.jobs.jobs;
+export const selectSingleJob = (state) => state.jobs.job;
 export const selectJobsStatus = (state) => state.jobs.status.jobs;
 // Action creators are generated for each case reducer function
 export const { updateJobFormData, resetJobFormData } = jobsSlice.actions;

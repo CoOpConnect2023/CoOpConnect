@@ -89,7 +89,7 @@ const ProfileForm = () => {
             formData.append("role", user.role);
             formData.append("school", user.school);
             formData.append("positiontitle", user.positiontitle);
-            formData.append("skills", JSON.stringify(user.skills));
+            formData.append("skills", (user.skills));
 
             const response = await axios.post(
                 `${appUrl}/api/update-profile/${user.id}`,

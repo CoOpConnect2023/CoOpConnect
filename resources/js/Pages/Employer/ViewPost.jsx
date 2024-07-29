@@ -4,7 +4,7 @@ import NavBar from "./Components/NavBar";
 import {
     deleteJob,
     selectJob,
-    selectJobs,
+    selectSingleJob,
     selectJobsStatus,
 } from "@/Features/jobs/jobsSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,7 +15,7 @@ function ViewPost() {
     const { jobId } = props;
 
     const dispatch = useDispatch();
-    const job = useSelector(selectJobs);
+    const job = useSelector(selectSingleJob);
     const jobStatus = useSelector(selectJobsStatus);
 
     useEffect(() => {

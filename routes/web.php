@@ -42,6 +42,8 @@ Route::middleware(['auth', 'student'])->group(function () {
     Route::get('/student/documents', [StudentController::class, 'documents'])->name('student.documents');
     Route::get('/student/settings', [StudentController::class, 'settings'])->name('student.settings');
     Route::get('/student/messages', [StudentController::class, 'messages'])->name('student.messages');
+    Route::get('/student/viewapplications', [StudentController::class, 'viewapplications'])->name('student.viewapplications');
+    Route::get('/student/accept-interview/{id}', [StudentController::class, 'acceptinterview'])->name('student.acceptinterview');
     Route::get('/student/viewpost/{jobId}', [StudentController::class, 'ViewPost'])->name('student.viewpost');
 });
 
