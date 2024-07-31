@@ -70,6 +70,7 @@ class UserJobsController extends Controller
                 'email' => $userJob->user->email,
                 'resume' => $userJob->resume,
                 'status' => $userJob->status,
+                'timeSlots' => $userJob->time_slots,
             ];
         });
 
@@ -116,6 +117,7 @@ class UserJobsController extends Controller
                 'location' => $userJob->job->location,
                 'company' => $userJob->job->company,
                 'status' => $userJob->status,
+                'timeSlots' => $userJob->time_slots,
             ];
         });
 
