@@ -30,7 +30,10 @@ import {
     ModalItem,
     NoNotificationsMessage,
     LoadingContainer,
-    LoadingDot
+    LoadingDot,
+    IconContainer,
+    Footer,
+    CloseButton
 } from "../Styling/NavBar.styles";
 import logo from "@/Pages/Images/puzzle.svg";
 import briefcase from "@/Pages/Images/briefcase.svg";
@@ -40,7 +43,7 @@ import user from "@/Pages/Images/user.svg";
 import settings from "@/Pages/Images/settings.svg";
 import { Link } from "@inertiajs/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBell } from "@fortawesome/free-solid-svg-icons";
+import { faBell, faMap, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useSelector, useDispatch } from "react-redux";
 import {
 
@@ -91,6 +94,7 @@ function useWindowSize() {
 function Sidebar() {
 
     const [activeTab, setActiveTab] = useState("/");
+    const [footerVisible, setFooterVisible] = useState(false);
 
     const handleTabClick = (path) => {
       setActiveTab(path);
@@ -106,6 +110,16 @@ function Sidebar() {
         console.log('Specific Segment:', specificSegment);
         setActiveTab(path)
       }, []);
+
+
+
+      const toggleFooterVisibility = () => {
+        setFooterVisible(!footerVisible);
+      };
+
+      const closeFooter = () => {
+        setFooterVisible(false);
+      };
 
 
     return (
@@ -142,7 +156,16 @@ function Sidebar() {
                 </IconButton>
               </Link>
 
-          </NavContainer>
+              <IconContainer onClick={toggleFooterVisibility}>
+                    <FontAwesomeIcon icon={faMap} className="fa-icon" />
+                </IconContainer>
+            </NavContainer>
+            <Footer isVisible={footerVisible}>
+        <CloseButton onClick={closeFooter}>
+          <FontAwesomeIcon icon={faTimes} />
+        </CloseButton>
+        <p>HTML Sitemap: <a href="/">Home</a> | <a href="/about">About</a> | <a href="/employer/home">Employer Home</a> | <a href="/employer/messages">Employer Messages</a> | <a href="/employer/interviews">Employer Schedule</a> | <a href="/employer/profile">Employer Profile</a> | <a href="/employer/settings">Employer Settings</a> | <a href="/employer/documents">Employer Documents</a> </p>
+      </Footer>
         </aside>
       );
 

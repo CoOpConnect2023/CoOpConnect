@@ -29,7 +29,10 @@ import {
     ModalContent,
     ModalItem,
     NoNotificationsMessage,
-    LoadingDot
+    LoadingDot,
+    IconContainer,
+    Footer,
+    CloseButton
 } from "../Styling/NavBar.styles";
 import logo from "@/Pages/Images/puzzle.svg";
 import briefcase from "@/Pages/Images/briefcase.svg";
@@ -39,7 +42,7 @@ import user from "@/Pages/Images/user.svg";
 import settings from "@/Pages/Images/settings.svg";
 import { Link } from "@inertiajs/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBell } from "@fortawesome/free-solid-svg-icons";
+import { faBell, faMap, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useSelector, useDispatch } from "react-redux";
 import {
 
@@ -88,7 +91,7 @@ function useWindowSize() {
 }
 
 function Sidebar() {
-
+    const [footerVisible, setFooterVisible] = useState(false);
     const [activeTab, setActiveTab] = useState("/");
     useEffect(() => {
         const path = window.location.pathname;
@@ -104,6 +107,14 @@ function Sidebar() {
     const handleTabClick = (path) => {
       setActiveTab(path);
     };
+
+    const toggleFooterVisibility = () => {
+        setFooterVisible(!footerVisible);
+      };
+
+      const closeFooter = () => {
+        setFooterVisible(false);
+      };
     return (
         <aside>
           <NavContainer>
@@ -137,8 +148,16 @@ function Sidebar() {
                   <Icon src={settings} alt="" loading="lazy" />
                 </IconButton>
               </Link>
-
-          </NavContainer>
+          <IconContainer onClick={toggleFooterVisibility}>
+                    <FontAwesomeIcon icon={faMap} className="fa-icon" />
+                </IconContainer>
+            </NavContainer>
+            <Footer isVisible={footerVisible}>
+        <CloseButton onClick={closeFooter}>
+          <FontAwesomeIcon icon={faTimes} />
+        </CloseButton>
+        <p>HTML Sitemap: <a href="/">Home</a> | <a href="/about">About</a> | <a href="/teacher/home">Teacher Home</a> | <a href="/teacher/students">Teacher Manage Students</a> | <a href="/teacher/classes">Teacher Manage Classes</a> | <a href="/teacher/messages">Teacher Messages</a> | <a href="/teacher/scheduling">Teacher Schedule</a> | <a href="/teacher/profile">Teacher Profile</a> | <a href="/teacher/settings">Teacher Settings</a> | <a href="/teacher/documents">Teacher Documents</a> </p>
+      </Footer>
         </aside>
       );
 

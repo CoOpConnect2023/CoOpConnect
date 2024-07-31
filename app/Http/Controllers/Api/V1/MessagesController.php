@@ -126,7 +126,7 @@ class MessagesController extends Controller
             $q->where('user_id', $user->id)
               ->orWhere('user_id', $recipient->id);
         })
-        ->havingRaw('COUNT(DISTINCT user_id) = 2'); // Ensure messages are from both users
+        ->havingRaw('COUNT(DISTINCT user_id) = 2'); 
     })
     ->first();
 

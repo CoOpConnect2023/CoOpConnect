@@ -20,6 +20,17 @@ const slideInFromRight = keyframes`
   }
 `;
 
+const slideInFromBottom = keyframes`
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+`;
+
 export const AppContainer = styled.div`
   background-color: var(--Schemes-Background, #fff7ff);
   display: flex;
@@ -42,6 +53,7 @@ export const NavContainer = styled.nav`
   padding: 30px 20px 20px;
   border-radius: 0 10px 10px 0;
   height: 100vh;
+  z-index: 1000;
 
   @media (max-width: 991px) {
     align-items: center;
@@ -415,3 +427,72 @@ export const LoadingDot = () => (
     <BouncingDot />
   </BouncingLoader>
 );
+
+export const Footer = styled.footer`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #f8f9fa;
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.3s ease;
+  transform: translateY(${({ isVisible }) => (isVisible ? "0%" : "100%")});
+  z-index: 999;
+`;
+
+export const CloseButton = styled.button`
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: none;
+  border: none;
+  font-size: 30px;
+  cursor: pointer;
+  color: #000;
+
+  &:hover {
+    color: #ff0000; // Optional: Change color on hover
+  }
+`;
+export const ScrollToTopButton = styled.button`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  display: ${({ isVisible }) => (isVisible ? 'block' : 'none')};
+  z-index: 1000;
+  transition: opacity 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+export const IconContainer = styled.div`
+  display: none; // Hide by default
+  position: relative;
+  width: 40px; // Adjust the size as needed
+  height: 40px;
+  margin-top: auto; // Push to the bottom
+
+  @media (min-width: 992px) {
+    display: block; // Show on desktop
+  }
+
+  .fa-icon {
+    width: 100%;
+    height: 100%;
+    color: #6B538C; // Icon color
+    background-color: white; // White center
+
+
+
+  }
+`;
+
