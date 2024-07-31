@@ -1,8 +1,22 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import axios from "axios";
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 const appUrl = import.meta.env.VITE_APP_URL;
+
+
+
+// Define the keyframes for the slide-in animations
+const slideInFromSide = keyframes`
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+`;
 
 const Container = styled.section`
     border-radius: 10px;
@@ -16,8 +30,9 @@ const Container = styled.section`
     color: #1a1919;
     font-weight: 400;
     line-height: 150%;
-    height: 400px;
+    height: 367px;
     width: 400px;
+    animation: ${slideInFromSide} 0.5s ease-out;
 
     @media (max-width: 991px) {
    height: 450px;
@@ -53,11 +68,11 @@ function StudentStatus({percentages}) {
     return (
         <Container>
             <Title>Student Status</Title>
-            <PieChart width={350} height={350}>
+            <PieChart width={315} height={315}>
                 <Pie
                     data={data}
-                    cx="50%"
-                    cy="50%"
+                    cx="40%"
+                    cy="40%"
                     labelLine={false}
                     label={({ value }) => `${value}%`}
                     outerRadius={100}
