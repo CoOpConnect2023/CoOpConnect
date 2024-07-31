@@ -29,7 +29,7 @@ const DeclineModal = ({ applicant, onClose, onSubmit }) => {
                         rows="4"
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
-                        placeholder="Enter your message here (optional)"
+                        placeholder="Enter your message here"
                     />
                 </FormGroup>
                 <Actions>
@@ -91,6 +91,20 @@ const ViewApplicants = () => {
         window.location.href = `/employer/accept-applicant/${applicant.id}`;
     };
 
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return new Intl.DateTimeFormat("en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+            timeZoneName: "short",
+        }).format(date);
+    };
+
     const renderApplicants = () => {
         return applicants
             .filter((applicant) => applicant.status === activeTab)
@@ -122,6 +136,11 @@ const ViewApplicants = () => {
                             >
                                 Reject
                             </Button>
+                        </TableData>
+                    )}
+                    {applicant.status === "Scheduled" && (
+                        <TableData>
+                            {formatDate(applicant.timeSlots)}
                         </TableData>
                     )}
                 </TableRow>
@@ -165,6 +184,9 @@ const ViewApplicants = () => {
 
                                     {activeTab === "Pending" && (
                                         <TableHeader>Actions</TableHeader>
+                                    )}
+                                    {activeTab === "Scheduled" && (
+                                        <TableHeader>Date</TableHeader>
                                     )}
                                 </TableRow>
                             </TableHead>

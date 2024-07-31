@@ -39,6 +39,8 @@ import {
 
 function Post2() {
     const [userId, setUserId] = useState(null);
+    const [currentSkill, setCurrentSkill] = useState("");
+
     useEffect(() => {
         const fetchUserId = async () => {
             try {
@@ -47,7 +49,6 @@ function Post2() {
                 );
                 setUserId(response.data.user.id);
                 dispatch(updateJobFormData({ userId: response.data.user.id }));
-
             } catch (error) {
                 console.error("Error fetching user ID:", error);
             }
@@ -68,6 +69,26 @@ function Post2() {
         dispatch(postJob(jobFormData));
 
         dispatch(resetJobFormData());
+    };
+
+    const handleSkillChange = (e) => {
+        setCurrentSkill(e.target.value);
+    };
+
+    const handleSkillKeyDown = (e) => {
+        if (e.key === "Enter" && currentSkill.trim()) {
+            e.preventDefault();
+            const updatedSkills = [...jobFormData.skills, currentSkill.trim()];
+            dispatch(updateJobFormData({ skills: updatedSkills }));
+            setCurrentSkill("");
+        }
+    };
+
+    const removeSkill = (skillToRemove) => {
+        const updatedSkills = jobFormData.skills.filter(
+            (skill) => skill !== skillToRemove
+        );
+        dispatch(updateJobFormData({ skills: updatedSkills }));
     };
 
     return (
@@ -108,14 +129,23 @@ function Post2() {
                             <StyledInput
                                 id="skillInput"
                                 name="skills"
-                                value={jobFormData.skills.join(", ")}
-                                onChange={(e) => {
-                                    const skills = e.target.value
-                                        .split(",")
-                                        .map((skill) => skill.trim());
-                                    dispatch(updateJobFormData({ skills }));
-                                }}
+                                value={currentSkill}
+                                onChange={handleSkillChange}
+                                onKeyDown={handleSkillKeyDown}
                             />
+                            <TagContainer>
+                                {jobFormData.skills.map((skill, index) => (
+                                    <Tag key={index}>
+                                        <TagName>{skill}</TagName>
+                                        <TagIcon
+                                            loading="lazy"
+                                            src="https://cdn.builder.io/api/v1/image/assets/TEMP/f4297c66e6d9622e462ebb187a46dd67cf9ee2c5dfcfd5088583249a1e3bfc3e?apiKey=d66532d056b14640a799069157705b77&"
+                                            alt={`${skill} Icon`}
+                                            onClick={() => removeSkill(skill)}
+                                        />
+                                    </Tag>
+                                ))}
+                            </TagContainer>
                             <HorizontalRule />
                             <ButtonGroup>
                                 <Link href="/employer/post1">

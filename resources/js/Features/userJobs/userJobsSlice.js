@@ -84,7 +84,11 @@ export const userJobsSlice = createSlice({
                 if (state.applicants) {
                     state.applicants = state.applicants.map((applicant) =>
                         applicant.id === action.payload.id
-                            ? action.payload
+                            ? {
+                                  ...applicant,
+                                  status: action.payload.status,
+                                  timeSlots: action.payload.timeSlots,
+                              }
                             : applicant
                     );
                 } else {
@@ -92,10 +96,14 @@ export const userJobsSlice = createSlice({
                 }
                 if (state.jobs) {
                     state.jobs = state.jobs.map((job) =>
-                        job.id === action.payload.id ? action.payload : job
+                        job.id === action.payload.id
+                            ? {
+                                  ...job,
+                                  status: action.payload.status,
+                                  timeSlots: action.payload.timeSlots,
+                              }
+                            : job
                     );
-                } else {
-                    state.jobs = action.payload;
                 }
             })
             .addCase(patchUserJob.rejected, (state) => {

@@ -39,6 +39,20 @@ const ViewApplications = () => {
         }
     };
 
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return new Intl.DateTimeFormat("en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+            timeZoneName: "short",
+        }).format(date);
+    };
+
     const renderApplications = () => {
         return jobs
             .filter((app) => app.status === activeTab)
@@ -66,6 +80,11 @@ const ViewApplications = () => {
                             </ActionButton>
                         </ButtonGroup>
                     )}
+                    {app.status === "Scheduled" && (
+                        <p>
+                            <b>Date:</b> {formatDate(app.timeSlots)}
+                        </p>
+                    )}
                 </ApplicationCard>
             ));
     };
@@ -86,6 +105,7 @@ const ViewApplications = () => {
                 </Tabs>
                 {jobs.length > 0 ? (
                     <ApplicationsContainer>
+                        {console.log(jobs)}
                         {renderApplications()}
                     </ApplicationsContainer>
                 ) : (
