@@ -29,6 +29,7 @@ import {
     ModalContent,
     ModalItem,
     NoNotificationsMessage,
+    LoadingDot
 } from "../Styling/NavBar.styles";
 import logo from "@/Pages/Images/puzzle.svg";
 import briefcase from "@/Pages/Images/briefcase.svg";
@@ -89,6 +90,16 @@ function useWindowSize() {
 function Sidebar() {
 
     const [activeTab, setActiveTab] = useState("/");
+    useEffect(() => {
+        const path = window.location.pathname;
+        console.log('Full Path:', path);
+
+
+        const segments = path.split('/');
+        const specificSegment = segments[segments.length - 1];
+        console.log('Specific Segment:', specificSegment);
+        setActiveTab(path)
+      }, []);
 
     const handleTabClick = (path) => {
       setActiveTab(path);
@@ -204,7 +215,7 @@ function Header({ header }) {
 
 
     if (!user || !conversations) {
-        return <div>Loading...</div>;
+        return LoadingDot;
     }
 
     return (

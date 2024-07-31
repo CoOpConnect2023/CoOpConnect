@@ -1,5 +1,13 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
+const fadeIn = keyframes`
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+`;
 
 export const Main = styled.main`
     align-self: stretch;
@@ -10,11 +18,11 @@ export const Main = styled.main`
     flex-direction: column;
     padding: 20px;
     max-width: 885px;
+    animation: ${fadeIn} 0.8s ease-in-out;
 
     @media (max-width: 991px) {
         padding: 10px;
         max-width: 100%;
-        display: flex;
         flex-direction: column;
     }
 `;
@@ -84,7 +92,7 @@ export const AccountDetail = styled.div`
     align-self: stretch;
     margin: auto 0;
     cursor: pointer;
-    border-bottom: ${props => props.active ? '2px solid rgba(107, 83, 140, 1)' : 'none'};
+    border-bottom: ${(props) => (props.active ? "2px solid rgba(107, 83, 140, 1)" : "none")};
 `;
 
 export const FormColumn = styled.div`
@@ -150,6 +158,13 @@ export const DeleteButton = styled.button`
     margin: auto 0;
     padding: 8px 16px;
     font: 600 16px/150% Inter, sans-serif;
+    cursor: pointer;
+    transition: background-color 0.5s ease, transform 0.5s ease;
+
+    &:hover {
+        background-color: #c53030;
+        transform: scale(1.05);
+    }
 
     @media (max-width: 991px) {
         margin-top: 20px;
@@ -265,12 +280,18 @@ export const OptionButton = styled.button`
     justify-content: center;
     padding: 6px 12px;
     cursor: pointer;
+    transition: background-color 0.5s ease, transform 0.5s ease;
+
+    &:hover {
+        background-color: ${(props) =>
+            props.className === "private" || props.className === "public" ? "#543b6f" : "#f0f0f0"};
+        transform: scale(1.05);
+    }
 
     @media (max-width: 991px) {
         white-space: normal;
     }
 `;
-
 
 export const DummySection = styled.section`
     border-color: rgba(123, 117, 127, 1);
@@ -297,6 +318,13 @@ export const SettingsButton = styled.button`
     margin: auto 0;
     padding: 8px 16px;
     font: 600 16px/150% Inter, sans-serif;
+    cursor: pointer;
+    transition: background-color 0.5s ease, transform 0.5s ease;
+
+    &:hover {
+        background-color: #543b6f;
+        transform: scale(1.05);
+    }
 
     @media (max-width: 991px) {
         margin-top: 20px;
@@ -325,6 +353,12 @@ export const Input = styled.input`
     padding: 10px;
     border: 1px solid #e2e8f0;
     border-radius: 5px;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+
+    &:hover {
+        border-color: #6b538c;
+        background-color: #f3e8ff;
+    }
 `;
 
 export const SubmitButton = styled.button`
@@ -337,9 +371,11 @@ export const SubmitButton = styled.button`
     cursor: pointer;
     align-self: flex-end;
     margin-right: 1vw;
+    transition: background-color 0.5s ease, transform 0.5s ease;
 
     &:hover {
-        background-color: #357abd;
+        background-color: #543b6f;
+        transform: scale(1.05);
     }
 `;
 

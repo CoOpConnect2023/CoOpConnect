@@ -1,20 +1,34 @@
-import styled from "styled-components";
+import styled, { keyframes, css } from 'styled-components';
 
+// Keyframes for vibration animation
+const vibration = keyframes`
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-1px); }
+  50% { transform: translateX(1px); }
+  75% { transform: translateX(-1px); }
+  100% { transform: translateX(0); }
+`;
 
-
-
-
-
-
-
+const slideInFromRight = keyframes`
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+`;
 
 export const AppContainer = styled.div`
   background-color: var(--Schemes-Background, #fff7ff);
   display: flex;
   gap: 0px;
-  height: 100vh; /* Ensure it takes the full viewport height */
+  height: 100vh;
+  flex-direction: row;
+
   @media (max-width: 991px) {
-    flex-wrap: wrap;
+    flex-direction: column;
   }
 `;
 
@@ -28,8 +42,18 @@ export const NavContainer = styled.nav`
   padding: 30px 20px 20px;
   border-radius: 0 10px 10px 0;
   height: 100vh;
+
   @media (max-width: 991px) {
-    display: none;
+    align-items: center;
+    display: flex;
+    width: 100%;
+    height: 12vh;
+    border-radius: 10px 10px 0 0;
+    border-bottom: 1px solid rgba(123, 117, 127, 1);
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 10px;
+    margin-bottom: 1vh;
   }
 `;
 
@@ -37,12 +61,10 @@ export const Logo = styled.img`
   aspect-ratio: 1.25;
   object-fit: auto;
   width: 50px;
-`;
 
-export const Divider = styled.hr`
-  border: 1px solid #000;
-  margin-top: 29px;
-  align-self: stretch;
+  @media (max-width: 991px) {
+    width: 40px;
+  }
 `;
 
 export const IconButton = styled.button`
@@ -56,8 +78,16 @@ export const IconButton = styled.button`
   border: none;
   margin-top: 30px;
   cursor: pointer;
+  background-color: ${({ active }) => (active ? "rgba(0, 0, 0, 0.1)" : "transparent")};
+  box-shadow: ${({ active }) => (active ? "0px 4px 8px rgba(0, 0, 0, 0.1)" : "none")};
+  transform: ${({ active }) => (active ? "translateX(5px)" : "none")};
+
   @media (max-width: 991px) {
-    margin-top: 40px;
+    width: auto;
+    height: auto;
+    margin-top: 0;
+    padding: 5px;
+    background-color: ${({ active }) => (active ? "rgba(0, 0, 0, 0.2)" : "transparent")};
   }
 `;
 
@@ -65,13 +95,20 @@ export const Icon = styled.img`
   aspect-ratio: 1;
   object-fit: auto;
   width: 30px;
+
+  @media (max-width: 991px) {
+    width: 24px;
+  }
 `;
 
-export const ContentContainer = styled.section`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  padding: 20px;
+export const Divider = styled.hr`
+  border: 1px solid #000;
+  margin-top: 29px;
+  align-self: stretch;
+
+  @media (max-width: 991px) {
+    display: none;
+  }
 `;
 
 export const HeaderContainer = styled.div`
@@ -80,11 +117,11 @@ export const HeaderContainer = styled.div`
   width: 100%;
   gap: 10px;
   margin-bottom: 40px;
-`;
+  align-items: center;
 
-export const Title = styled.h1`
-  color: #000;
-  font: 600 36px/122% Poppins, sans-serif;
+  @media (max-width: 991px) {
+    flex-direction: row;
+  }
 `;
 
 export const UserProfile = styled.div`
@@ -94,6 +131,42 @@ export const UserProfile = styled.div`
   gap: 20px;
   cursor: pointer;
   position: relative;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+
+  // Apply slide-in animation when isOpen prop is true
+  ${(props) =>
+
+    css`
+      animation: ${slideInFromRight} 0.5s ease-out;
+    `}
+
+  @media (max-width: 991px) {
+    justify-content: flex-end;
+    width: 100%;
+    align-items: center;
+  }
+`;
+
+export const RightAlignedItems = styled.div`
+  display: flex;
+  align-items: center;
+
+  @media (max-width: 991px) {
+    justify-content: flex-end;
+    width: 100%;
+  }
+`;
+
+export const ContentContainer = styled.section`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 20px;
+`;
+
+export const Title = styled.h1`
+  color: #000;
+  font: 600 36px/122% Poppins, sans-serif;
 `;
 
 export const NotificationIcon = styled.div`
@@ -107,14 +180,22 @@ export const NotificationIcon = styled.div`
   align-items: center;
   cursor: pointer;
   position: relative;
+  transition: transform 0.5s ease;
+  ${(props) =>
+    props.hasUnreadMessages &&
+    css`
+      animation: ${vibration} 0.5s ease infinite;
+    `}
 
-  /* Icon styling */
-  svg {
-    color: white;
-    font-size: 20px; /* Adjust icon size */
+  &:hover {
+    transform: scale(1.05);
   }
 
-  /* Indicator for unread messages */
+  svg {
+    color: white;
+    font-size: 20px;
+  }
+
   &::after {
     content: "";
     position: absolute;
@@ -164,19 +245,19 @@ export const ExpandIcon = styled.img`
   cursor: pointer;
   transition: transform 0.3s ease;
   transform: ${({ isOpen }) =>
-        isOpen ? "rotate(-360deg)" : "rotate(-270deg)"}; // Adjusted rotation here
+        isOpen ? "rotate(-360deg)" : "rotate(-270deg)"};
 `;
 
 export const Main = styled.main`
   display: flex;
   flex-direction: column;
   flex: 1;
-  overflow-y: auto; /* Ensure it scrolls if content overflows */
+  overflow-y: auto;
 `;
 
 export const Modal = styled.div`
   position: absolute;
-  top: 60px; /* Adjust according to your header height */
+  top: 60px;
   right: 20px;
   background-color: white;
   border: 1px solid #ccc;
@@ -235,7 +316,6 @@ export const Message = styled.div`
   border-radius: 5px;
   padding: 10px;
   margin-bottom: 10px;
-
 `;
 
 export const Button = styled.button`
@@ -257,10 +337,6 @@ export const Button = styled.button`
     margin-right: 1vw;
   }
 `;
-
-
-
-
 
 export const ModalContent = styled.div`
   display: flex;
@@ -284,3 +360,58 @@ export const NoNotificationsMessage = styled.div`
   color: #666;
 `;
 
+export const pulse = keyframes`
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.5); opacity: 0.5; }
+  100% { transform: scale(1); opacity: 1; }
+`;
+
+export const Dot = styled.div`
+  width: 20px;
+  height: 20px;
+  background-color: #3498db;
+  border-radius: 50%;
+  animation: ${pulse} 1s infinite;
+`;
+
+export const DotContainer = styled.div`
+  display: flex;
+  justify-content: space-around;
+  width: 60px;
+`;
+
+export const LoadingContainer = () => (
+  <DotContainer>
+    <Dot />
+    <Dot />
+    <Dot />
+  </DotContainer>
+);
+
+const bounce = keyframes`
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+`;
+
+const BouncingDot = styled.div`
+  width: 20px;
+  height: 20px;
+  background-color: #3498db;
+  border-radius: 50%;
+  animation: ${bounce} 0.6s infinite alternate;
+  margin: 0 5px;
+`;
+
+const BouncingLoader = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const LoadingDot = () => (
+  <BouncingLoader>
+    <BouncingDot />
+    <BouncingDot />
+    <BouncingDot />
+  </BouncingLoader>
+);

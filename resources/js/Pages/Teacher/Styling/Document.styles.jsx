@@ -1,9 +1,19 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+const fadeIn = keyframes`
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+`;
 
 export const Wrapper = styled.main`
     display: flex;
     flex-direction: column;
     padding: 20px;
+    animation: ${fadeIn} 0.8s ease-in-out;
 `
 
 export const Content = styled.div`
@@ -75,6 +85,12 @@ export const FileContainer = styled.article`
     padding: 20px 10px;
     border: 1px solid #7b757f;
     border-radius: 10px;
+    transition: transform 0.5s ease;
+
+     &:hover {
+
+        transform: scale(1.01);
+    }
     @media (max-width: 991px) {
         flex-wrap: wrap;
     }
@@ -125,6 +141,12 @@ export const ActionButton = styled.button`
     background-color: ${({ outline }) => (outline ? "transparent" : "#6b538c")};
     color: ${({ outline }) => (outline ? "#6b538c" : "#fff")};
     border: ${({ outline }) => (outline ? "1px solid #6b538c" : "none")};
+     transition:  transform 0.5s ease;
+
+    &:hover {
+
+        transform: scale(1.05);
+    }
 
     img {
         width: 14px;
@@ -218,6 +240,12 @@ export const SubmitButton = styled.button`
     border: none;
     border-radius: 6px;
     cursor: pointer;
+     transition:  transform 0.5s ease;
+
+    &:hover {
+
+        transform: scale(1.05);
+    }
     @media (max-width: 991px) {
         padding: 20px;
     }

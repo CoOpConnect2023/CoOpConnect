@@ -11,14 +11,21 @@ export const MainContainer = styled.div`
         align-items: center;
         gap: 10px;
     }
+
 `;
 
 export const ProfileContainer = styled.div`
     flex: 1;
     min-width: 300px;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
 
     @media (max-width: 768px) {
         min-width: 100%;
+    }
+
+     &:hover {
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+
     }
 `;
 
@@ -28,9 +35,15 @@ export const RightContainer = styled.div`
     display: flex;
     flex-direction: column;
     gap: 10px;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
 
     @media (max-width: 768px) {
         min-width: 100%;
+    }
+
+    &:hover {
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+
     }
 `;
 

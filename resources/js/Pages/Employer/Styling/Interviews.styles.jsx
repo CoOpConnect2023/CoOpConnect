@@ -1,4 +1,16 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+
+
+
+const fadeIn = keyframes`
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+`;
 
 export const MainContainer = styled.div`
     display: flex;
@@ -9,6 +21,7 @@ export const MainContainer = styled.div`
     flex: 1 0 0;
     align-self: stretch;
     background-color: var(--Schemes-Background, #fff7ff);
+    animation: ${fadeIn} 0.8s ease-in-out;
 
 `
 
@@ -24,6 +37,13 @@ export const Container = styled.div`
     background-color: #fff;
     height: auto;
     min-height: 100vh;
+     transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+
+    &:hover {
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+
+    }
 
     @media (max-width: 991px) {
         padding: 10px;
@@ -203,7 +223,13 @@ export const Shortlist = styled.div`
     padding: 16px;
     margin-bottom: 16px;
     position: relative;
-    overflow-wrap: break-word; /* Ensure text wraps when it reaches container edges */
+    overflow-wrap: break-word; 
+     transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+    &:hover {
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        transform: translateY(-5px);
+    }
 `;
 
 export const DeleteButton = styled.button`
@@ -217,6 +243,11 @@ export const DeleteButton = styled.button`
     position: absolute;
     top: 10px;
     right: 10px;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: darkred;
+    }
 `;
 
 export const ApplicantList = styled.ul`
@@ -272,4 +303,10 @@ export const Event = styled.div`
   padding: 16px;
   margin-bottom: 16px;
   position: relative; /* Ensure relative positioning for absolute children */
+   transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+    &:hover {
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        transform: translateY(-5px);
+    }
 `;

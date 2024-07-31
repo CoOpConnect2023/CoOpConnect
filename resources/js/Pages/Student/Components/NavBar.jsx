@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+
 import styled from "styled-components";
 import {
     AppContainer,
@@ -28,7 +29,9 @@ import {
     ModalContent,
     ModalItem,
     NoNotificationsMessage,
-    RightAlignedItems
+    RightAlignedItems,
+    LoadingContainer,
+    LoadingDot
 } from "../Styling/NavBar.styles";
 import logo from "@/Pages/Images/puzzle.svg";
 import briefcase from "@/Pages/Images/briefcase.svg";
@@ -93,48 +96,55 @@ function useWindowSize() {
 function Sidebar() {
 
     const [activeTab, setActiveTab] = useState("/");
+    useEffect(() => {
+        const path = window.location.pathname;
+        console.log('Full Path:', path);
+
+
+        const segments = path.split('/');
+        const specificSegment = segments[segments.length - 1];
+        console.log('Specific Segment:', specificSegment);
+        setActiveTab(path)
+      }, []);
 
     const handleTabClick = (path) => {
       setActiveTab(path);
     };
     return (
         <aside>
-          <NavContainer>
-            <Link href="/" onClick={() => handleTabClick("/")}>
-              <Logo src={logo} alt="Logo" loading="lazy" active={activeTab === "/"} />
-            </Link>
-            <Divider />
-
-              <Link href="/student/home" onClick={() => handleTabClick("/student/home")}>
-                <IconButton active={activeTab === "/student/home"}>
-                  <Icon src={briefcase} alt="Icon 1" loading="lazy" />
-                </IconButton>
-              </Link>
-              <Link href="/student/messages" onClick={() => handleTabClick("/student/messages")}>
-                <IconButton active={activeTab === "/student/messages"}>
-                  <Icon src={message} alt="" loading="lazy" />
-                </IconButton>
-              </Link>
-              <Link href="/student/interviews" onClick={() => handleTabClick("/student/interviews")}>
-                <IconButton active={activeTab === "/student/interviews"}>
-                  <Icon src={calendar} alt="" loading="lazy" />
-                </IconButton>
-              </Link>
-              <Link href="/student/profile" onClick={() => handleTabClick("/student/profile")} data-test-id="profile-link">
-                <IconButton active={activeTab === "/student/profile"}>
-                  <Icon src={user} alt="" loading="lazy" />
-                </IconButton>
-              </Link>
-              <Link href="/student/settings" onClick={() => handleTabClick("/student/settings")}>
-                <IconButton active={activeTab === "/student/settings"}>
-                  <Icon src={settings} alt="" loading="lazy" />
-                </IconButton>
-              </Link>
-
-          </NavContainer>
+            <NavContainer>
+                <Link href="/" onClick={() => handleTabClick("/")}>
+                    <Logo src={logo} alt="Logo" loading="lazy" active={activeTab === "/"} />
+                </Link>
+                <Divider />
+                <Link href="/student/home" onClick={() => handleTabClick("/student/home")}>
+                    <IconButton active={activeTab === "/student/home"}>
+                        <Icon src={briefcase} alt="Home Icon" loading="lazy" />
+                    </IconButton>
+                </Link>
+                <Link href="/student/messages" onClick={() => handleTabClick("/student/messages")}>
+                    <IconButton active={activeTab === "/student/messages"}>
+                        <Icon src={message} alt="Messages Icon" loading="lazy" />
+                    </IconButton>
+                </Link>
+                <Link href="/student/interviews" onClick={() => handleTabClick("/student/interviews")}>
+                    <IconButton active={activeTab === "/student/interviews"}>
+                        <Icon src={calendar} alt="Interviews Icon" loading="lazy" />
+                    </IconButton>
+                </Link>
+                <Link href="/student/profile" onClick={() => handleTabClick("/student/profile")} data-test-id="profile-link">
+                    <IconButton active={activeTab === "/student/profile"}>
+                        <Icon src={user} alt="Profile Icon" loading="lazy" />
+                    </IconButton>
+                </Link>
+                <Link href="/student/settings" onClick={() => handleTabClick("/student/settings")}>
+                    <IconButton active={activeTab === "/student/settings"}>
+                        <Icon src={settings} alt="Settings Icon" loading="lazy" />
+                    </IconButton>
+                </Link>
+            </NavContainer>
         </aside>
-      );
-
+    );
 }
 
 function Header({ header }) {
@@ -204,11 +214,12 @@ function Header({ header }) {
 
 
     if (!user || !conversations) {
-        return <div>Loading...</div>;
+        return LoadingDot;
     }
 
     return (
         <header>
+            {user &&
             <HeaderContainer data-testid="nav-student-component">
                 <Title>{header}</Title>
                 <UserProfile>
@@ -259,6 +270,7 @@ function Header({ header }) {
                     </ModalContent>
                 </NotificationModal>
             </HeaderContainer>
+            }
         </header>
     );
 }

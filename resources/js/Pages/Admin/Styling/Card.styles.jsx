@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 
-
 export const CardContainer = styled.div`
   display: flex;
   align-items: center;
@@ -11,12 +10,29 @@ export const CardContainer = styled.div`
   border-radius: 8px;
   margin-bottom: 10px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 export const CardInfo = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
 `;
 
 export const Avatar = styled.img`
@@ -33,6 +49,11 @@ export const InfoText = styled.div`
 export const CardActions = styled.div`
   display: flex;
   gap: 5px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: space-between;
+  }
 `;
 
 export const Button = styled.button`
@@ -42,9 +63,11 @@ export const Button = styled.button`
   color: white;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 
   &:hover {
     background-color: #5a2c85;
+    transform: scale(1.05);
   }
 `;
 
@@ -53,4 +76,9 @@ export const Input = styled.input`
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 14px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
+

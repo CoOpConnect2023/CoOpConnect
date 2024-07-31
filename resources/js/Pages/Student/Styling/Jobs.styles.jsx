@@ -1,9 +1,32 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+
+const fadeIn = keyframes`
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+`;
+
+const appearFromTop = keyframes`
+    0% {
+        opacity: 0;
+        transform: translateY(-40px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+`;
+
 
 export const MainContainer = styled.main`
     align-self: stretch;
     display: flex;
     flex-direction: column;
+    animation: ${fadeIn} 0.8s ease-in-out;
 `
 
 export const SearchContainer = styled.section`
@@ -141,6 +164,16 @@ export const JobCard = styled.article`
     width: 100%;
     flex-direction: column;
     padding: 20px 40px;
+    margin-top: ${(props) => (props.hasMargin ? "10px" : "0")};
+    animation: ${appearFromTop} 0.8s ease forwards;
+    animation-delay: ${(props) => props.index * 0.3}s;
+    opacity: 0; /* Start hidden */
+    transition: transform 0.7s ease, box-shadow 0.3s ease;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
 
     @media (max-width: 991px) {
         padding: 0 20px;
