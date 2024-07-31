@@ -1,4 +1,5 @@
 import styled from "styled-components";
+
 export const Div15 = styled.div`
     border-radius: 10px;
     border-color: rgba(123, 117, 127, 1);
@@ -11,6 +12,10 @@ export const Div15 = styled.div`
     padding: 10px 10px 0;
     flex-grow: 1; /* Allow it to grow and fill the remaining space */
     height: 100%; /* Ensure it stretches to the bottom */
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+
+
     @media (max-width: 991px) {
         max-width: 100%;
     }
@@ -19,6 +24,7 @@ export const Div15 = styled.div`
 export const Div16 = styled.div`
     color: var(--Palettes-Primary-40, #773dc3);
     font: 600 24px/133% Poppins, sans-serif;
+
     @media (max-width: 991px) {
         max-width: 100%;
     }
@@ -42,7 +48,7 @@ export const Div18 = styled.div`
     line-height: 133%;
     flex: 1;
     overflow-y: auto;
-    height:40vh;
+    height: 50vh;
 `;
 
 export const Div19 = styled.div`
@@ -53,6 +59,11 @@ export const Div19 = styled.div`
     display: flex;
     gap: 10px;
     padding: 10px 5px;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
 `;
 
 export const Img4 = styled.img`
@@ -63,6 +74,11 @@ export const Img4 = styled.img`
     border-color: rgba(123, 117, 127, 1);
     border-style: solid;
     border-width: 2px;
+    transition: transform 0.3s ease;
+
+    &:hover {
+        transform: scale(1.1);
+    }
 `;
 
 export const Div20 = styled.div`
@@ -108,10 +124,21 @@ export const Div67 = styled.div`
     background-color: var(--Schemes-Primary-Container, #eddcff);
     display: flex;
     flex-direction: column;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+
+    &:hover {
+        background-color: #d8c5f0;
+        transform: translateY(-5px);
+    }
 `;
 
 export const Div68 = styled.div`
     border-radius: 100px;
     background-color: var(--Schemes-Primary, #6b538c);
     height: 33px;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: #5a4175;
+    }
 `;

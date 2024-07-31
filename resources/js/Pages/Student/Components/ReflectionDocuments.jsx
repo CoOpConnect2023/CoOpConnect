@@ -12,6 +12,12 @@ const Container = styled.section`
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     background-color: #fff;
     font-weight: 600;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+    &:hover {
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        
+    }
 `;
 
 const Title = styled.h2`
@@ -52,6 +58,13 @@ const OptionCard = styled.div`
     gap: 8px;
     padding: 8px 16px;
     background-color: ${({ color }) => color};
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
     @media (max-width: 991px) {
         padding: 0 20px;
     }
@@ -66,6 +79,11 @@ const OptionImage = styled.img`
     aspect-ratio: 1;
     object-fit: auto;
     object-position: center;
+    transition: transform 0.3s ease;
+
+    &:hover {
+        transform: scale(1.1);
+    }
 `;
 
 const ReflectionDocuments = () => (

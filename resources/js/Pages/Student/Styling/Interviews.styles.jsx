@@ -1,10 +1,23 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+
+
+
+const fadeIn = keyframes`
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+`;
 
 export const MainContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+     animation: ${fadeIn} 0.8s ease-in-out;
 `;
 
 export const Container = styled.div`
@@ -18,6 +31,13 @@ export const Container = styled.div`
     padding: 20px;
     background-color: #fff;
     height: 110vh;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+
+    &:hover {
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        transform: translateY(-5px);
+    }
 
     @media (max-width: 991px) {
         padding: 10px;
@@ -135,6 +155,11 @@ export const DateCell = styled.div`
     border-style: solid;
     border-width: 1px;
     padding: 40px;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: rgba(213, 212, 223, 0.5);
+    }
 
     @media (max-width: 991px) {
         padding: 20px;
@@ -152,10 +177,9 @@ export const EventsContainer = styled.div`
     min-height: 20vh;
 
     @media (max-width: 991px) {
-
         overflow-y: auto; /* Enable vertical scrolling */
-    max-height: 400px; /* Limit height for smaller screens */
-    min-height: 20vh;
+        max-height: 400px; /* Limit height for smaller screens */
+        min-height: 20vh;
     }
 `;
 
@@ -170,6 +194,12 @@ export const Event = styled.div`
     padding: 16px;
     margin-bottom: 16px;
     position: relative; /* Ensure relative positioning for absolute children */
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+    &:hover {
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        transform: translateY(-5px);
+    }
 `;
 
 export const NoEventsMessage = styled.div`
@@ -188,4 +218,9 @@ export const DeleteButton = styled.button`
     position: absolute;
     top: 10px;
     right: 10px;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: darkred;
+    }
 `;

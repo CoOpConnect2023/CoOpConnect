@@ -1,4 +1,13 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+const fadeIn = keyframes`
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+`;
 
 export const Main = styled.main`
     align-items: center;
@@ -8,6 +17,12 @@ export const Main = styled.main`
     display: flex;
     justify-content: center;
     padding: 20px;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    animation: ${fadeIn} 0.8s ease-in-out;
+    &:hover {
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+
+    }
 
     @media (max-width: 768px) {
         flex-direction: column;
@@ -93,6 +108,12 @@ export const ProfileImage = styled.img`
     border: 2px solid rgba(45, 54, 72, 1);
     background-color: #edf0f7;
     display: block;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+        transform: scale(1.05);
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    }
 
     @media (max-width: 768px) {
         padding: 0 20px;
@@ -210,6 +231,12 @@ export const Input = styled.input`
     justify-content: center;
     padding: 19px 12px;
     font: 400 14px Poppins, sans-serif;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+
+    &:hover {
+        border-color: #6b538c;
+        background-color: #f3e8ff;
+    }
 
     @media (max-width: 768px) {
         max-width: 100%;
@@ -227,6 +254,12 @@ export const EditProfileButton = styled.button`
     letter-spacing: 0.5px;
     padding: 8px 16px;
     font: 700 16px Roboto, sans-serif;
+    transition: background 0.3s ease, transform 0.2s ease;
+
+    &:hover {
+        background: linear-gradient(135deg, #543b6f, #8e6aae);
+        transform: scale(1.05);
+    }
 
     @media (max-width: 768px) {
         align-self: center;
@@ -250,6 +283,12 @@ export const DetailValue = styled.input`
     box-sizing: border-box;
     white-space: pre-wrap; /* Ensures that whitespace is preserved and text wraps */
     word-wrap: break-word;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+
+    &:hover {
+        border-color: #6b538c;
+        background-color: #f3e8ff;
+    }
 
     @media (max-width: 768px) {
         max-width: 100%;

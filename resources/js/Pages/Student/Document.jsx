@@ -22,6 +22,19 @@ import {
     DeleteButton,
     MessageContainer,
     Message,
+    FileContainer,
+    FileIcons,
+    FileDetails,
+    FileTitle,
+    FileSize,
+    FileActions,
+    ActionButton,
+
+
+
+
+
+
 } from "./Styling/Document.styles";
 
 const appUrl = import.meta.env.VITE_APP_URL;
@@ -111,6 +124,50 @@ function DocumentDropZone({
         </DropZoneContainer>
     );
 }
+
+const FileItem = ({ title, type, downloadDocument, doc, handleDelete }) => (
+    <FileContainer>
+        <FileIcons>
+            <img
+                onClick={() => handleDelete(type)}
+                loading="lazy"
+                src="https://cdn.builder.io/api/v1/image/assets/TEMP/a4cdb93b18319c472265cce9eb4f7345c821b3f3e0269b1464d286a7094472e4?apiKey=d66532d056b14640a799069157705b77&"
+                alt=""
+                style={{ width: "24px", height: "24px" }}
+            />
+            <img
+                loading="lazy"
+                src="https://cdn.builder.io/api/v1/image/assets/TEMP/3a9403df13b2dd9b0c6d623620f8e8a11ded89bf005c81d6d7336457cda636ca?apiKey=d66532d056b14640a799069157705b77&"
+                alt=""
+                style={{ width: "24px", height: "24px" }}
+            />
+        </FileIcons>
+        <FileDetails>
+            <div>
+                <FileTitle>{title}</FileTitle>
+                <FileSize>{type}</FileSize>
+            </div>
+            <FileActions>
+                <ActionButton onClick={() => downloadDocument(type, title)}>
+                    Download{" "}
+                    <img
+                        loading="lazy"
+                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/2af48e24c34a904b3b5a3559caeea0ddb30ee829cab8a5c4740ff86e9c992067?apiKey=d66532d056b14640a799069157705b77&"
+                        alt="Download icon"
+                    />
+                </ActionButton>
+                <ActionButton outline>
+                    Share{" "}
+                    <img
+                        loading="lazy"
+                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/8a625fb433ce98b0d17f96a94179431e6cdfe22a98d39394247a5eaf65fd6856?apiKey=d66532d056b14640a799069157705b77&"
+                        alt="Share icon"
+                    />
+                </ActionButton>
+            </FileActions>
+        </FileDetails>
+    </FileContainer>
+);
 
 function Document() {
     const documentData = [
@@ -305,26 +362,14 @@ function Document() {
                     {userDocuments.length > 0 ? (
                         <DocumentWrapper>
                             {userDocuments.map((doc, index) => (
-                                <DocumentItem key={index} dataTestId={`document-item-${index}`}>
-                                    <span>{doc.title}</span>
-                                    <ButtonContainer>
-                                        <DownloadButton
-                                            onClick={() =>
-                                                downloadDocument(
-                                                    doc.id,
-                                                    doc.title
-                                                )
-                                            }
-                                        >
-                                            Download
-                                        </DownloadButton>
-                                        <DeleteButton
-                                            onClick={() => handleDelete(doc.id)}
-                                        >
-                                            Delete
-                                        </DeleteButton>
-                                    </ButtonContainer>
-                                </DocumentItem>
+                               <FileItem
+                               key={index}
+                               title={doc.title}
+                               type={doc.id}
+                               downloadDocument={() => downloadDocument(doc.id, doc.title)}
+                               handleDelete={() => handleDelete(doc.id)}
+                               doc={doc}
+                           />
                             ))}
                         </DocumentWrapper>
                     ) : (
@@ -345,3 +390,5 @@ function Document() {
 }
 
 export default Document;
+
+

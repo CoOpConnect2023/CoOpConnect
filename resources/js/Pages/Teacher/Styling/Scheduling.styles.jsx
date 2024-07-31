@@ -1,4 +1,16 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+
+
+
+const fadeIn = keyframes`
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+`;
 
 export const MainContainer = styled.div`
     display: flex;
@@ -9,6 +21,7 @@ export const MainContainer = styled.div`
     flex: 1 0 0;
     align-self: stretch;
     background-color: var(--Schemes-Background, #fff7ff);
+    animation: ${fadeIn} 0.8s ease-in-out;
 `;
 
 export const Container = styled.div`
@@ -205,6 +218,12 @@ export const Event = styled.div`
   padding: 16px;
   margin-bottom: 16px;
   position: relative; /* Ensure relative positioning for absolute children */
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+    &:hover {
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        transform: translateY(-5px);
+    }
 `;
 
 export const NoEventsMessage = styled.p`
@@ -224,4 +243,9 @@ font-size: 14px;
 position: absolute;
 top: 10px;
 right: 10px;
+transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: darkred;
+    }
 `;

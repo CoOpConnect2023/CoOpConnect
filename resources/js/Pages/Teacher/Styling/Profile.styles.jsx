@@ -1,4 +1,18 @@
-import styled from "styled-components";
+import { keyframes, styled } from "styled-components";
+const fadeIn = keyframes`
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+`;
+
+
+export const spin = keyframes`
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+`;
 
 export const Main = styled.main`
 align-items: center;
@@ -8,6 +22,11 @@ background-color: #fff;
 display: flex;
 justify-content: center;
 padding: 20px;
+animation: ${fadeIn} 0.8s ease-in-out;
+&:hover {
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+
+    }
 `;
 
 export const Section = styled.section`
@@ -59,6 +78,12 @@ border-radius: 10px;
 border: 2px solid rgba(45, 54, 72, 1);
 background-color: #edf0f7;
 display: block;
+transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+        transform: scale(1.05);
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    }
 
 
 
@@ -167,6 +192,12 @@ letter-spacing: 0.25px;
 justify-content: center;
 padding: 19px 12px;
 font: 400 14px Poppins, sans-serif;
+transition: border-color 0.3s ease, background-color 0.3s ease;
+
+    &:hover {
+        border-color: #6b538c;
+        background-color: #f3e8ff;
+    }
 @media (max-width: 991px) {
     max-width: 100%;
     padding-right: 20px;

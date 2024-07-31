@@ -1,10 +1,23 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+// Define the keyframes for the slide-in animations
+const slideInFromSide = keyframes`
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+`;
 
 
 export const MainContainer = styled.div`
     display: flex;
     flex-direction: column;
     height: 100vh; /* Full height of viewport */
+     animation: ${slideInFromSide} 0.5s ease-out;
 `;
 
 export const Section = styled.section`

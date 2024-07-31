@@ -1,18 +1,30 @@
-import styled from "styled-components";
+import styled, { keyframes, css } from 'styled-components';
 
+// Keyframes for vibration animation
+const vibration = keyframes`
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-1px); }
+  50% { transform: translateX(1px); }
+  75% { transform: translateX(-1px); }
+  100% { transform: translateX(0); }
+`;
 
-
-
-
-
-
-
+const slideInFromRight = keyframes`
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+`;
 
 export const AppContainer = styled.div`
   background-color: var(--Schemes-Background, #fff7ff);
   display: flex;
   gap: 0px;
-  height: 100vh; /* Ensure it takes the full viewport height */
+  height: 100vh;
   flex-direction: row;
 
   @media (max-width: 991px) {
@@ -51,7 +63,7 @@ export const Logo = styled.img`
   width: 50px;
 
   @media (max-width: 991px) {
-    width: 40px; /* Adjust size for mobile view */
+    width: 40px;
   }
 `;
 
@@ -68,6 +80,7 @@ export const IconButton = styled.button`
   cursor: pointer;
   background-color: ${({ active }) => (active ? "rgba(0, 0, 0, 0.1)" : "transparent")};
   box-shadow: ${({ active }) => (active ? "0px 4px 8px rgba(0, 0, 0, 0.1)" : "none")};
+  transform: ${({ active }) => (active ? "translateX(5px)" : "none")};
 
   @media (max-width: 991px) {
     width: auto;
@@ -98,8 +111,6 @@ export const Divider = styled.hr`
   }
 `;
 
-
-
 export const HeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
@@ -109,9 +120,7 @@ export const HeaderContainer = styled.div`
   align-items: center;
 
   @media (max-width: 991px) {
-
     flex-direction: row;
-
   }
 `;
 
@@ -122,8 +131,16 @@ export const UserProfile = styled.div`
   gap: 20px;
   cursor: pointer;
   position: relative;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 
-   @media (max-width: 991px) {
+  // Apply slide-in animation when isOpen prop is true
+  ${(props) =>
+
+    css`
+      animation: ${slideInFromRight} 0.5s ease-out;
+    `}
+
+  @media (max-width: 991px) {
     justify-content: flex-end;
     width: 100%;
     align-items: center;
@@ -135,14 +152,10 @@ export const RightAlignedItems = styled.div`
   align-items: center;
 
   @media (max-width: 991px) {
-    justify-content: flex-end; /* Align items to the far right on mobile */
-    width: 100%; /* Ensure it takes the full width */
+    justify-content: flex-end;
+    width: 100%;
   }
 `;
-
-
-
-
 
 export const ContentContainer = styled.section`
   display: flex;
@@ -151,14 +164,10 @@ export const ContentContainer = styled.section`
   padding: 20px;
 `;
 
-
-
 export const Title = styled.h1`
   color: #000;
   font: 600 36px/122% Poppins, sans-serif;
 `;
-
-
 
 export const NotificationIcon = styled.div`
   width: 40px;
@@ -171,14 +180,22 @@ export const NotificationIcon = styled.div`
   align-items: center;
   cursor: pointer;
   position: relative;
+  transition: transform 0.5s ease;
+  ${(props) =>
+    props.hasUnreadMessages &&
+    css`
+      animation: ${vibration} 0.5s ease infinite;
+    `}
 
-  /* Icon styling */
-  svg {
-    color: white;
-    font-size: 20px; /* Adjust icon size */
+  &:hover {
+    transform: scale(1.05);
   }
 
-  /* Indicator for unread messages */
+  svg {
+    color: white;
+    font-size: 20px;
+  }
+
   &::after {
     content: "";
     position: absolute;
@@ -228,19 +245,19 @@ export const ExpandIcon = styled.img`
   cursor: pointer;
   transition: transform 0.3s ease;
   transform: ${({ isOpen }) =>
-        isOpen ? "rotate(-360deg)" : "rotate(-270deg)"}; // Adjusted rotation here
+        isOpen ? "rotate(-360deg)" : "rotate(-270deg)"};
 `;
 
 export const Main = styled.main`
   display: flex;
   flex-direction: column;
   flex: 1;
-  overflow-y: auto; /* Ensure it scrolls if content overflows */
+  overflow-y: auto;
 `;
 
 export const Modal = styled.div`
   position: absolute;
-  top: 60px; /* Adjust according to your header height */
+  top: 60px;
   right: 20px;
   background-color: white;
   border: 1px solid #ccc;
@@ -299,7 +316,6 @@ export const Message = styled.div`
   border-radius: 5px;
   padding: 10px;
   margin-bottom: 10px;
-
 `;
 
 export const Button = styled.button`
@@ -321,10 +337,6 @@ export const Button = styled.button`
     margin-right: 1vw;
   }
 `;
-
-
-
-
 
 export const ModalContent = styled.div`
   display: flex;
@@ -348,3 +360,58 @@ export const NoNotificationsMessage = styled.div`
   color: #666;
 `;
 
+export const pulse = keyframes`
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.5); opacity: 0.5; }
+  100% { transform: scale(1); opacity: 1; }
+`;
+
+export const Dot = styled.div`
+  width: 20px;
+  height: 20px;
+  background-color: #3498db;
+  border-radius: 50%;
+  animation: ${pulse} 1s infinite;
+`;
+
+export const DotContainer = styled.div`
+  display: flex;
+  justify-content: space-around;
+  width: 60px;
+`;
+
+export const LoadingContainer = () => (
+  <DotContainer>
+    <Dot />
+    <Dot />
+    <Dot />
+  </DotContainer>
+);
+
+const bounce = keyframes`
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+`;
+
+const BouncingDot = styled.div`
+  width: 20px;
+  height: 20px;
+  background-color: #3498db;
+  border-radius: 50%;
+  animation: ${bounce} 0.6s infinite alternate;
+  margin: 0 5px;
+`;
+
+const BouncingLoader = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const LoadingDot = () => (
+  <BouncingLoader>
+    <BouncingDot />
+    <BouncingDot />
+    <BouncingDot />
+  </BouncingLoader>
+);

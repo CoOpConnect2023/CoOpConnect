@@ -1,6 +1,4 @@
-import {keyframes, styled} from "styled-components";
-
-
+import { keyframes, styled } from "styled-components";
 
 export const spin = keyframes`
     0% { transform: rotate(0deg); }
@@ -64,6 +62,12 @@ export const ProfileImage = styled.img`
     background-color: #edf0f7;
     display: block;
     width: 100%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+        transform: scale(1.05);
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    }
 
     @media (max-width: 991px) {
         padding: 0 20px;
@@ -121,6 +125,12 @@ export const DetailValue = styled.input`
     box-sizing: border-box;
     white-space: pre-wrap; /* Ensures that whitespace is preserved and text wraps */
     word-wrap: break-word;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+
+    &:hover {
+        border-color: #6b538c;
+        background-color: #f3e8ff;
+    }
 `;
 
 export const EditProfileButton = styled.button`

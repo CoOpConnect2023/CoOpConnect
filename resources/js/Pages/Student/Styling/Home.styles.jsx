@@ -1,10 +1,31 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+const fadeIn = keyframes`
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+`;
+
+const fadeInLeft = keyframes`
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+`;
 
 export const MainContainer = styled.main`
     display: flex;
     flex-direction: column;
     background: var(--Schemes-Background, #fff7ff);
     padding: 20px;
+    animation: ${fadeIn} 0.8s ease-in-out;
 `;
 
 export const SearchSection = styled.section`
@@ -17,6 +38,12 @@ export const SearchSection = styled.section`
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     padding: 20px;
     margin-top: 40px;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+    &:hover {
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        
+    }
 
     @media (max-width: 991px) {
         padding: 10px;
@@ -63,9 +90,11 @@ export const Button = styled.button`
     margin-top: 30px;
     cursor: pointer;
     align-self: center;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 
     &:hover {
         background-color: #5a4175;
+        transform: scale(1.05);
     }
 
     @media (max-width: 991px) {
@@ -83,6 +112,12 @@ export const JobsSection = styled.section`
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     padding: 20px;
     margin-top: 40px;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+    &:hover {
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+
+    }
 
     @media (max-width: 991px) {
         padding: 10px;
@@ -140,7 +175,15 @@ export const JobCardContainer = styled.article`
     padding: 20px;
     margin: 0 auto;
     text-align: center;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    animation: ${fadeInLeft} 0.5s ease forwards;
+    animation-delay: ${(props) => props.index * 0.1}s;
+    opacity: 0; /* Start hidden */
 
+    &:hover {
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        transform: translateY(-5px);
+    }
 
     @media (max-width: 991px) {
         max-width: 100%;
@@ -224,9 +267,11 @@ export const JobButton = styled.button`
     margin-top: 15px;
     cursor: pointer;
     align-self: center;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 
     &:hover {
         background-color: #5a4175;
+        transform: scale(1.05);
     }
 
     @media (max-width: 991px) {
@@ -234,6 +279,7 @@ export const JobButton = styled.button`
         padding: 6px 12px;
     }
 `;
+
 
 export const EmptyMessage = styled.div`
     color: #ff6347; /* Tomato color for visibility */
@@ -244,6 +290,3 @@ export const EmptyMessage = styled.div`
     border-radius: 8px;
     margin-top: 20px;
 `;
-
-
-

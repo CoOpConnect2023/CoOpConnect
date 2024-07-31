@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import JobModal from "../../Profile/Partials/ViewJobModal";
 
 const appUrl = import.meta.env.VITE_APP_URL;
@@ -9,6 +9,17 @@ import {
     selectJobsStatus,
     selectJobs,
 } from "@/Features/jobs/jobsSlice";
+
+const appearFromTop = keyframes`
+    0% {
+        opacity: 0;
+        transform: translateY(-40px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+`;
 
 const JobContainer = styled.section`
     border-radius: 10px;
@@ -62,10 +73,19 @@ const JobCard = styled.article`
     flex-direction: column;
     padding: 20px 10px;
     margin-top: ${(props) => (props.hasMargin ? "10px" : "0")};
+    animation: ${appearFromTop} 0.8s ease forwards;
+    animation-delay: ${(props) => props.index * 0.1}s;
+    opacity: 0; /* Start hidden */
+    transition: transform 0.7s ease, box-shadow 0.3s ease;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
     @media (max-width: 1001px) {
         font-size: 16px;
     }
-
 `;
 
 const JobTitle = styled.h3`
@@ -83,7 +103,6 @@ const JobDetails = styled.section`
     gap: 15px;
     letter-spacing: 0.15px;
     margin-top: 15px;
-
 
     @media (max-width: 991px) {
         flex-direction: column;
@@ -123,6 +142,12 @@ const ViewButton = styled.button`
     letter-spacing: 0.5px;
     padding: 8px 16px;
     cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+
+    &:hover {
+        background-color: #543b6f;
+        transform: scale(1.05);
+    }
 `;
 
 function Matches() {

@@ -1,4 +1,24 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+const fadeIn = keyframes`
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+`;
+
+const fadeInLeft = keyframes`
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+`;
 
 export const UnderlineText = styled.span`
     text-decoration: underline;
@@ -10,6 +30,7 @@ export const MainContainer = styled.main`
     flex-direction: column;
     padding: 20px;
     background: var(--Schemes-Background, #fff7ff);
+    animation: ${fadeIn} 0.8s ease-in-out;
 `
 
 export const CreateJobSection = styled.section`
@@ -130,6 +151,15 @@ export const JobCard = styled.article`
     margin: 0 auto;
     padding: 20px 40px;
     word-wrap: break-word;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    animation: ${fadeInLeft} 0.5s ease forwards;
+    animation-delay: ${(props) => props.index * 0.1}s;
+    opacity: 0; /* Start hidden */
+
+    &:hover {
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        transform: translateY(-5px);
+    }
     @media (max-width: 768px) {
         margin-top: 20px;
         padding: 10px 20px;
@@ -224,6 +254,12 @@ export const CardButtons = styled.div`
     gap: 15px;
     font-weight: 600;
     letter-spacing: 0.5px;
+    transition:  transform 0.3s ease;
+
+    &:hover {
+
+        transform: scale(1.05);
+    }
 `
 
 export const ViewPostingButton = styled.button`
