@@ -164,7 +164,7 @@ function Profile() {
     }
 
     return (
-        <NavBar>
+        <NavBar header={"Profile"}>
             <Main>
                 <Section>
                     <Title>Employer Profile</Title>
