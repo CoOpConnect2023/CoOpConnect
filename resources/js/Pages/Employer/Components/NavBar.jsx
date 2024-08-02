@@ -43,7 +43,7 @@ import user from "@/Pages/Images/user.svg";
 import settings from "@/Pages/Images/settings.svg";
 import { Link } from "@inertiajs/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBell, faMap, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faBell, faMap, faTimes, faFile, faList, faClipboard, faFolder, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useSelector, useDispatch } from "react-redux";
 import {
 
@@ -135,6 +135,7 @@ function Sidebar() {
                   <Icon src={briefcase} alt="Icon 1" loading="lazy" />
                 </IconButton>
               </Link>
+              
               <Link href="/employer/messages" onClick={() => handleTabClick("/employer/messages")}>
                 <IconButton active={activeTab === "/employer/messages"}>
                   <Icon src={message} alt="" loading="lazy" />

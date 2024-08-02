@@ -60,6 +60,8 @@ const Card = ({ name, classroom, email, id, profileImage, schoolId, status, onVi
             })
         );
         setIsEditing(false);
+        dispatch(getAllUsers());
+
     };
 
     const handleCancelEdit = () => {

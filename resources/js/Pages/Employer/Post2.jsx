@@ -125,7 +125,7 @@ function Post2() {
                             <SectionDescription>
                                 Add some skill keywords to the job.
                             </SectionDescription>
-                            <Label htmlFor="skillInput">Skill to add</Label>
+                            <Label htmlFor="skillInput">Press Enter to add a skill.</Label>
                             <StyledInput
                                 id="skillInput"
                                 name="skills"

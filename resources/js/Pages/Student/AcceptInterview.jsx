@@ -6,18 +6,30 @@ import {
     getSingleJobDetails,
     patchUserJob,
 } from "@/Features/userJobs/userJobsSlice";
+import {
+    getInterviewsForInterviewer,
+    postInterview,
+    selectInterviewsStatus,
+    selectInterviews,
+} from "@/Features/interviews/interviewsSlice";
+import { getUser, selectUser } from "@/Features/users/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { usePage } from "@inertiajs/react";
 import { Inertia } from "@inertiajs/inertia";
 
 const AcceptInterview = () => {
     const [selectedSlot, setSelectedSlot] = useState(null);
+    const user = useSelector(selectUser);
 
     const dispatch = useDispatch();
     const job = useSelector(selectJob);
 
     const { props } = usePage();
     const { userJobsId } = props;
+console.log(job, user)
+    useEffect(() => {
+        dispatch(getUser());
+    }, [dispatch]);
 
     useEffect(() => {
         dispatch(
@@ -31,21 +43,62 @@ const AcceptInterview = () => {
         setSelectedSlot(slot);
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         // Handle submission logic
         if (selectedSlot) {
-            dispatch(
-                patchUserJob({
-                    userJobsId: userJobsId,
-                    timeSlots: [selectedSlot],
-                    status: "Scheduled",
-                })
-            );
+            const formatDateTime = (date) => {
+                const pad = (n) => (n < 10 ? '0' + n : n);
+                const year = date.getFullYear(); // Correct method name
+                const month = pad(date.getMonth() + 1);
+                const day = pad(date.getDate());
+                const hours = pad(date.getHours());
+                const minutes = pad(date.getMinutes());
+                const seconds = pad(date.getSeconds());
+                return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+            };
+
+            const formattedStart = formatDateTime(new Date(selectedSlot));
+            const endDate = new Date(selectedSlot);
+            endDate.setHours(endDate.getHours() + 1);
+            const formattedEnd = formatDateTime(endDate);
+
+            try {
+
+                await dispatch(
+                    postInterview({
+                        title: job.title,
+                        startDate: formattedStart,
+                        endDate: formattedEnd,
+                        status: "scheduled",
+                        description: `Interview with ${user.name}`,
+                        intervieweeId: user.id,
+                        interviewerId: job.userId
+                    })
+                ).unwrap();
+
+
+                await dispatch(
+                    patchUserJob({
+                        userJobsId: userJobsId,
+                        timeSlots: [selectedSlot],
+                        status: "Scheduled",
+                    })
+                ).unwrap();
+
+
+                window.location.href = `/student/viewapplications`;
+
+            } catch (error) {
+                
+                console.error('Error during submission:', error);
+                alert('An error occurred while scheduling the interview. Please try again.');
+            }
         } else {
             alert("Please select a time slot.");
         }
-        window.location.href = `/student/viewapplications`;
     };
+
+
 
     const handleDecline = () => {
         if (

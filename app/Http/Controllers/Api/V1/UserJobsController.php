@@ -143,6 +143,7 @@ class UserJobsController extends Controller
             'company' => $userJob->job->company,
             'timeSlots' => $userJob->time_slots,
             'message' => $userJob->message,
+            'userId' => $userJob->job->user_id,
         ];
 
         Log::info('Final jobs array', ['jobs' => $jobDetails]);

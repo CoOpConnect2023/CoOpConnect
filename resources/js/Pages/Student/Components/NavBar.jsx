@@ -46,7 +46,7 @@ import { useForm } from '@inertiajs/react';
 import settings from "@/Pages/Images/settings.svg";
 import { Link } from "@inertiajs/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBell, faMap, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faBell, faMap, faTimes, faFile, faList, faClipboard, faFolder, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useSelector, useDispatch } from "react-redux";
 import {
 
@@ -151,6 +151,11 @@ function Sidebar() {
                         <Icon src={briefcase} alt="Home Icon" loading="lazy" />
                     </IconButton>
                 </Link>
+                <Link data-test-id="viewapplications-link" href="/student/viewapplications" onClick={() => handleTabClick("/student/viewapplications")}>
+                    <IconButton active={activeTab === "/student/viewapplications"}>
+                    <FontAwesomeIcon icon={faList} style={{ fontSize: '1.5rem' }} className="fa-icon" />
+                    </IconButton>
+                </Link>
                 <Link href="/student/messages" onClick={() => handleTabClick("/student/messages")}>
                     <IconButton active={activeTab === "/student/messages"}>
                         <Icon src={message} alt="Messages Icon" loading="lazy" />
@@ -171,15 +176,16 @@ function Sidebar() {
                         <Icon src={settings} alt="Settings Icon" loading="lazy" />
                     </IconButton>
                 </Link>
+
                 <IconContainer onClick={toggleFooterVisibility}>
-                    <FontAwesomeIcon icon={faMap} className="fa-icon" />
+                    <FontAwesomeIcon icon={faMap} className="fa-icon"  />
                 </IconContainer>
             </NavContainer>
             <Footer isVisible={footerVisible}>
         <CloseButton onClick={closeFooter}>
           <FontAwesomeIcon icon={faTimes} />
         </CloseButton>
-        <p>HTML Sitemap: <a href="/">Home</a> | <a href="/about">About</a> | <a href="/student/home">Student Home</a> | <a href="/student/home">Student Home</a> | <a href="/student/messages">Student Messages</a> | <a href="/student/interviews">Student Schedule</a> | <a href="/student/profile">Student Profile</a> | <a href="/student/settings">Student Settings</a> | <a href="/student/documents">Student Documents</a> | <a href="/student/reflections">Student Reflections</a> </p>
+        <p>HTML Sitemap: <a href="/">Home</a> | <a href="/about">About</a> | <a href="/student/home">Student Home</a> | <a href="/student/home">Student Home</a> | <a href="/student/messages">Student Messages</a> | <a href="/student/interviews">Student Schedule</a> | <a href="/student/profile">Student Profile</a> | <a href="/student/settings">Student Settings</a> | <a href="/student/documents">Student Documents</a> | <a href="/student/reflections">Student Reflections</a> | <a href="/student/viewapplications">Student Applications</a> </p>
       </Footer>
         </aside>
     );

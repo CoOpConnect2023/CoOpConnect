@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import * as XLSX from 'xlsx';
+import { useDispatch, useSelector } from "react-redux";
 import axios from 'axios';
 import styled from 'styled-components';
 const appUrl = import.meta.env.VITE_APP_URL;
+import { getUser, getAllUsers, selectAllUsers, selectUser, deleteUser } from '@/Features/users/userSlice';
 
 // Styled components
 const SectionContainer = styled.div`
@@ -86,6 +88,7 @@ const UploadUsers = () => {
   const [users, setUsers] = useState([]);
   const [file, setFile] = useState(null);
   const [successMessage, setSuccessMessage] = useState(false);
+  const dispatch = useDispatch();
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -140,6 +143,7 @@ const UploadUsers = () => {
         console.log('Users uploaded successfully');
         setFile(null);
         setUsers([]);
+        dispatch(getAllUsers());
         document.getElementById('fileInput').value = null;
         setSuccessMessage(true);
         setTimeout(() => setSuccessMessage(false), 3000); // Hide message after 3 seconds

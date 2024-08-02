@@ -110,7 +110,7 @@ const ViewApplicants = () => {
             .filter((applicant) => applicant.status === activeTab)
             .map((applicant) => (
                 <TableRow key={applicant.id}>
-                    <TableData>{applicant.name}</TableData>
+                    <TableData>{applicant.name} & {applicant.id} </TableData>
                     <TableData>{applicant.email}</TableData>
                     <TableData>
                         <ResumeLink
@@ -178,7 +178,7 @@ const ViewApplicants = () => {
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    <TableHeader>Name</TableHeader>
+                                    <TableHeader>Name and ID</TableHeader>
                                     <TableHeader>Email</TableHeader>
                                     <TableHeader>Resume</TableHeader>
 

@@ -98,7 +98,7 @@ function ViewPost() {
                     <ModalContent>
                         <ModalHeader>Apply for Job</ModalHeader>
                         <ModalBody>
-                            <label>
+                            <label data-test-id="resume-link-label">
                                 Resume Link:
                                 <input
                                     type="text"
@@ -106,6 +106,7 @@ function ViewPost() {
                                     onChange={(e) =>
                                         setResumeLink(e.target.value)
                                     }
+                                    data-test-id="resume-link-input"
                                 />
                             </label>
                         </ModalBody>

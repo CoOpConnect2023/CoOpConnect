@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { Link } from "@inertiajs/react";
 import NavBar from "./Components/NavBar";
 import JobModal from "../Profile/Partials/ViewJobModal";
 import {
@@ -210,11 +211,9 @@ function Jobs() {
                                                 {job.description}
                                             </JobDescription>
                                             <Divider />
-                                            <ViewButton
-                                                onClick={() => openModal(job)}
-                                            >
+                                            <Link href={`/student/viewpost/${job.id}`}>   <ViewButton>
                                                 VIEW POSTING
-                                            </ViewButton>
+                                            </ViewButton></Link>
                                         </JobCard>
                                     ))}
                                 </JobColumn>
@@ -238,13 +237,10 @@ function Jobs() {
                                                     </CompanyLocation>
                                                 </CompanyDetails>
                                             </CompanyInfo>
-                                            <ApplyButton
-                                                onClick={() =>
-                                                    openModal(featuredJob)
-                                                }
-                                            >
+                                            <Link href={`/student/viewpost/${featuredJob.id}`}>
+                                            <ApplyButton>
                                                 Apply Here!
-                                            </ApplyButton>
+                                            </ApplyButton></Link>
                                             <JobFullDescription>
                                                 <strong>
                                                     What is Lorem Ipsum?

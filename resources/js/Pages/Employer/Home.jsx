@@ -103,7 +103,7 @@ const Home = () => {
 
 const JobPosting = ({ post }) => {
     return (
-        <JobCard>
+        <JobCard data-test-id={`job-card-${post.id}`}>
             <JobCardTitle>{post.title}</JobCardTitle>
             <CompanyName>{post.company}</CompanyName>
             <Location>{post.location}</Location>
@@ -116,7 +116,7 @@ const JobPosting = ({ post }) => {
             <Divider />
             <CardButtons>
                 <Link href={`/employer/viewpost/${post.id}`}>
-                    <ViewPostingButton>VIEW POSTING</ViewPostingButton>
+                    <ViewPostingButton data-test-id={`view-posting-${post.id}`}>VIEW POSTING</ViewPostingButton>
                 </Link>
                 <Link href={`/employer/editpost1/${post.id}`}>
                     <EditPostingButton>EDIT POSTING</EditPostingButton>
