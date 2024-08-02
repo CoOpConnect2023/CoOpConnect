@@ -81,6 +81,7 @@ export default function Messages() {
         dispatch(sendNewMessage({ brandNewMessage, userInfo, recipientEmail }));
         dispatch(getConversations({ userId: currentUser }));
         setBrandNewMessage('')
+        setRecipientEmail('')
     };
 
     useEffect(() => {

@@ -186,6 +186,7 @@ const Img = styled.img`
 const Div13 = styled.div`
     font-family: Poppins, sans-serif;
     margin: auto 0;
+
 `;
 
 const Div14 = styled.div`
@@ -205,6 +206,7 @@ const Input = styled.input`
     font-size: 14px;
     background-color: #fff;
     border: 1px solid #ccc;
+    flex: 1 0 auto; /* Can grow to fill available space */
 `;
 
 const SendButton = styled.button`

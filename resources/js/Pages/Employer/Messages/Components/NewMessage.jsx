@@ -53,18 +53,13 @@ export default function NewMessage({ newMessage, setNewMessage, handleSendNewMes
             <Div6>
                 <Div7>
                     <Div8>To: </Div8>
-                    <Div9> {hasApplicants ? (
-      <StyledSelect value={recipientEmail} onChange={handleSelectChange}>
-        {[...uniqueEmails].map(email => (
-          <option key={email} value={email}>
-            {email}
-          </option>
-        ))}
-      </StyledSelect>) : (
-                            <StyledMessage>
-                                Add some applicants to your shortlist to message them.
-                            </StyledMessage>
-                        )}</Div9>
+                    <Div9> <Input
+                                type="email"
+                                placeholder="Enter recipient's email"
+                                value={recipientEmail}
+                                onChange={handleRecipientChange}
+                                data-testid="recipient-email-input"
+                            /></Div9>
                 </Div7>
             </Div6>
             <Div10>

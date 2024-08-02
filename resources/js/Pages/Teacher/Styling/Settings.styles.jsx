@@ -5,6 +5,7 @@ export const MainContainer = styled.div`
     gap: 20px;
     flex: 1 0 0;
     justify-content: center;
+    
      @media (max-width: 768px) {
         flex-direction: column;
         align-items: center;

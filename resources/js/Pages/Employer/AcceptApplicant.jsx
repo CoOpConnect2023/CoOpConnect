@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import { keyframes, styled } from "styled-components";
 import NavBar from "./Components/NavBar";
 import { usePage } from "@inertiajs/react";
 import Datetime from "react-datetime";
@@ -123,65 +123,127 @@ const AcceptApplicant = () => {
 
 export default AcceptApplicant;
 
+const fadeIn = keyframes`
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+`;
+
+// Styled Components
 const Container = styled.div`
-    padding: 20px;
+    padding: 30px;
+    width: 100%;
+    max-width: 900px;
+    margin: 20px auto;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    animation: ${fadeIn} 0.8s ease-in-out;
+
+    @media (max-width: 991px) {
+        padding: 20px;
+        max-width: 100%;
+    }
+`;
+
+const Section = styled.section`
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+`;
+
+const Details = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+`;
+
+const DetailItem = styled.p`
+    margin: 0;
+    font-size: 16px;
+    color: #333;
 `;
 
 const Form = styled.form`
     display: flex;
     flex-direction: column;
-    align-items: center;
+    gap: 20px;
 `;
 
 const FormGroup = styled.div`
-    margin-bottom: 15px;
-    width: 100%;
     display: flex;
-    align-items: center;
+    flex-direction: row;
+    gap: 10px;
 `;
 
 const Label = styled.label`
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
+    font-weight: 600;
+    font-size: 16px;
+    color: #334155;
 `;
 
 const TextArea = styled.textarea`
     width: 100%;
-    padding: 10px;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
     resize: none;
+    font-size: 15px;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+
+    &:hover {
+        border-color: #6b538c;
+        background-color: #f3e8ff;
+    }
 `;
 
-const Input = styled(Datetime)`
+const StyledDatetime = styled(Datetime)`
     width: 100%;
-    padding: 10px;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    font-size: 15px;
+`;
+
+const ButtonGroup = styled.div`
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
 `;
 
 const Button = styled.button`
-    margin: 5px;
-    padding: 10px 15px;
-    font-size: 1em;
+    padding: 12px 24px;
+    font-size: 16px;
     cursor: pointer;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     color: white;
     background-color: ${(props) => props.color};
+    transition: background-color 0.3s, transform 0.2s;
+
+    &:hover {
+        background-color: ${(props) => props.color};
+        transform: scale(1.05);
+    }
 `;
 
-const RemoveButton = styled.button`
-    margin-left: 10px;
-    padding: 10px;
-    font-size: 0.8em;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    background-color: red;
+const RemoveButton = styled(Button)`
+    background-color: #e53e3e;
+
+    &:hover {
+        background-color: #c53030;
+    }
 `;
 
 const ResumeLink = styled.a`
     color: #007bff;
     text-decoration: none;
+    font-weight: 600;
 
     &:hover {
         text-decoration: underline;

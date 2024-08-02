@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import { keyframes, styled } from "styled-components";
 import NavBar from "./Components/NavBar";
 import {
     selectJob,
@@ -96,20 +96,18 @@ function ViewPost() {
             {isModalOpen && (
                 <ModalBackdrop>
                     <ModalContent>
-                        <ModalHeader>Apply for Job</ModalHeader>
+                        <ModalHeader>Apply for Job </ModalHeader>
                         <ModalBody>
-                            <label data-test-id="resume-link-label">
-                                Resume Link:
-                                <input
-                                    type="text"
-                                    value={resumeLink}
-                                    onChange={(e) =>
-                                        setResumeLink(e.target.value)
-                                    }
-                                    data-test-id="resume-link-input"
-                                />
-                            </label>
-                        </ModalBody>
+    <LabelWithSpace data-test-id="resume-link-label">
+        Resume Link:
+        <SpacedInput
+            type="text"
+            value={resumeLink}
+            onChange={(e) => setResumeLink(e.target.value)}
+            data-test-id="resume-link-input"
+        />
+    </LabelWithSpace>
+</ModalBody>
                         <ModalFooter>
                             <ModalButton onClick={() => setIsModalOpen(false)}>
                                 Cancel
@@ -304,60 +302,120 @@ const ActionButton = styled.button`
     }
 `;
 
+const fadeIn = keyframes`
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+`;
+const slideUp = keyframes`
+    from {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+`;
+
 const ModalBackdrop = styled.div`
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.6); /* Darker backdrop for better focus */
     display: flex;
     justify-content: center;
     align-items: center;
+    animation: ${fadeIn} 0.3s ease-in-out;
+
 `;
 
 const ModalContent = styled.div`
     background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    width: 400px;
-    max-width: 100%;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); /* Stronger shadow for better elevation */
+    width: 500px;
+    max-width: 90%;
+    animation: ${slideUp} 0.4s ease-in-out;
+    position: relative; /* For positioning the close button */
 `;
 
 const ModalHeader = styled.h3`
     margin: 0;
-    margin-bottom: 10px;
-    font-size: 24px;
+    margin-bottom: 20px; /* Increased spacing for better visual separation */
+    font-size: 26px;
     text-align: center;
+    font-weight: 600; /* Slightly bolder font for emphasis */
 `;
 
 const ModalBody = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
+    max-height: 60vh; /* Limit height to prevent overflow */
+    overflow-y: auto; /* Scroll if content overflows */
 `;
 
 const ModalFooter = styled.div`
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
+    margin-top: 30px; /* Increased margin for better separation */
 `;
 
 const ModalButton = styled.button`
     font-family: Poppins, sans-serif;
-    background-color: var(--Palettes-Primary-40, #773dc3);
+    background-color: #773dc3;
     color: white;
-    padding: 10px 20px;
+    padding: 12px 24px; /* Larger padding for bigger buttons */
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
     text-align: center;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.2s;
 
     &:hover {
-        background-color: var(--Palettes-Primary-30, #542a93);
+        background-color: #542a93;
+        transform: translateY(-2px); /* Slight lift effect */
     }
+
+    &:active {
+        background-color: #3b2071; /* Darker shade for active state */
+    }
+`;
+
+const CloseButton = styled.button`
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #333;
+    transition: color 0.2s;
+
+    &:hover {
+        color: #000;
+    }
+`;
+
+const LabelWithSpace = styled.label`
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between text and input */
+`;
+
+const SpacedInput = styled.input`
+    margin-top: 8px; /* Space between label text and input field */
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
 `;
 
 export default ViewPost;

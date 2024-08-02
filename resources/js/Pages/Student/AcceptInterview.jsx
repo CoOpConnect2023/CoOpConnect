@@ -66,7 +66,7 @@ console.log(job, user)
 
                 await dispatch(
                     postInterview({
-                        title: job.title,
+                        title: `Interview with ${user.name} for ${job.title}`,
                         startDate: formattedStart,
                         endDate: formattedEnd,
                         status: "scheduled",
@@ -89,7 +89,7 @@ console.log(job, user)
                 window.location.href = `/student/viewapplications`;
 
             } catch (error) {
-                
+
                 console.error('Error during submission:', error);
                 alert('An error occurred while scheduling the interview. Please try again.');
             }

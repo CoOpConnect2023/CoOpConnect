@@ -19,9 +19,10 @@ export const Main = styled.main`
     padding: 20px;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
     animation: ${fadeIn} 0.8s ease-in-out;
+    flex: 1 0 auto; /* Can grow to fill available space */
+
     &:hover {
         box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-
     }
 
     @media (max-width: 768px) {
@@ -30,7 +31,7 @@ export const Main = styled.main`
         gap: 10px;
         padding: 10px;
     }
-`
+`;
 
 export const Section = styled.section`
     display: flex;

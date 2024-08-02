@@ -50,14 +50,14 @@ export const Div8 = styled.div`
 `;
 
 export const Div9 = styled.div`
-width: 100%;
+    width: 100%;
     color: var(--Schemes-On-Primary-Container, #260e44);
     letter-spacing: 0.25px;
     margin: auto 0;
     font: 400 14px/143% Poppins, sans-serif;
     display: flex;
-  flex-direction: column;
-  align-items: stretch;
+    flex-direction: column;
+    align-items: stretch; /* Ensures child elements stretch */
 `;
 
 export const StyledSelect = styled.select`
@@ -111,7 +111,10 @@ export const Div13 = styled.div`
     font-family: Poppins, sans-serif;
     margin: auto 0;
     max-width: 100%;
+    width: 100%;
     white-space: wrap;
+    display: flex;
+    flex-direction: column; /* If you have multiple children you want in a column */
 `;
 
 export const Div14 = styled.div`
@@ -132,8 +135,8 @@ export const Input = styled.input`
     background-color: #fff;
     border: 1px solid #ccc;
     white-space: wrap;
+    flex: 1; /* Flex property ensures it stretches in the flex container */
 `;
-
 export const SendButton = styled.button`
     padding: 10px 15px;
     background-color: #007bff;
