@@ -1,87 +1,125 @@
+import React from 'react';
 import { Link } from "@inertiajs/react";
+import styled, { css } from 'styled-components';
 import logo from "@/Pages/Images/COOPCONNECTLOGO.png";
+import { useSelector } from "react-redux";
+
+const Header = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+`;
+
+const Logo = styled.img`
+  width: auto;
+  height: 50px;
+`;
+
+const NavLinks = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6B538C")};
+`;
+
+const AuthLinks = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  padding: 6px;
+  text-align: end;
+`;
+
+const LinkButton = styled(Link)`
+  font-weight: 600;
+  color: ${({ darkMode }) => (darkMode ? "white" : "#6B538C")};
+  padding: 8px 12px;
+  border: 2px solid white;
+  border-radius: 8px;
+  background-color: ${({ darkMode, bgColor }) => bgColor || (darkMode ? "#6B538C" : "#D3BDF2")};
+  text-align: center;
+  text-decoration: none;
+  font-size: 1rem;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:focus {
+    outline: 2px solid red;
+    border-radius: 4px;
+  }
+`;
 
 export default function LandingLayout({ auth }) {
+  const darkMode = useSelector(state => state.accessibility.darkMode);
 
-    function getUserLinks(userType) {
-        switch (userType) {
-          case 'student':
-            return {
-
-              dashboard: '/student/home',
-
-            };
-          case 'employee':
-            return {
-
-              dashboard: '/employer/home',
-
-            };
-          case 'teacher':
-            return {
-
-              dashboard: '/teacher/home',
-
-            };
-            case 'admin':
-            return {
-
-              dashboard: '/admin/home',
-
-            };
-          default:
-            return {};
-        }
-      }
-
-      
-
-      const userLinks = getUserLinks(auth.userType);
-
-
-        return (
-            <>
-                <div className="flex flex-row items-center justify-between text-center">
-                    <div>
-                        <Link href="/">
-                            <img className="" src={logo} alt="Logo" />
-                        </Link>
-                    </div>
-                    <div>
-                        <div className="flex flex-row gap-10 text-purple-700">
-                            <Link href="./contactus">Contact Us</Link>
-                            <Link href="./about">About Us</Link>
-                            <Link>Guide</Link>
-                        </div>
-                    </div>
-                    <div className="p-6 text-end">
-                        {auth.user ? (
-                            <Link
-                                href={getUserLinks(auth.user.role).dashboard}
-                                className="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
-                            >
-                                Dashboard
-                            </Link>
-                        ) : (
-                            <>
-                                <div className="flex flex-row gap-3">
-                                    <Link
-                                        href={route("register")}
-                                        className="font-semibold text-white px-2 hover:opacity-80 focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500 text-xl border-2 border-white rounded-lg px px-1.5 py-1 bg-purple-700"
-                                    >
-                                        Sign Up
-                                    </Link>
-                                    <Link
-                                        href={route("login")}
-                                        className="font-semibold text-purple-900 hover:opacity-80 px-2 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500 text-xl border-2 border-white rounded-lg px px-1.5 py-1 bg-purple-300"
-                                    >
-                                        Sign In
-                                    </Link>
-                                </div>
-                            </>
-                        )}
-                    </div>
-                </div>
-            </>
-        );
+  function getUserLinks(userType) {
+    switch (userType) {
+      case 'student':
+        return {
+          dashboard: '/student/home',
+        };
+      case 'employee':
+        return {
+          dashboard: '/employer/home',
+        };
+      case 'teacher':
+        return {
+          dashboard: '/teacher/home',
+        };
+      case 'admin':
+        return {
+          dashboard: '/admin/home',
+        };
+      default:
+        return {};
     }
+  }
+
+  const userLinks = getUserLinks(auth.userType);
+
+  return (
+    <Header>
+      <Link href="/">
+        <Logo src={logo} alt="Logo" />
+      </Link>
+      <NavLinks darkMode={darkMode}>
+        <Link href="./contactus">Contact Us</Link>
+        <Link href="./about">About Us</Link>
+        <Link href="./guide">Guide</Link>
+      </NavLinks>
+      <AuthLinks>
+        {auth.user ? (
+          <LinkButton
+            href={getUserLinks(auth.user.role).dashboard}
+            darkMode={darkMode}
+            bgColor={darkMode ? "#1c1c1c" : "#fff"}
+          >
+            Dashboard
+          </LinkButton>
+        ) : (
+          <>
+            <LinkButton
+              href={route("register")}
+              darkMode={darkMode}
+              bgColor={darkMode ? "#6B538C" : "#EDDCFF"}
+            >
+              Sign Up
+            </LinkButton>
+            <LinkButton
+              href={route("login")}
+              darkMode={darkMode}
+              bgColor={darkMode ? "#6B538C" : "#9C85D8"}
+            >
+              Sign In
+            </LinkButton>
+          </>
+        )}
+      </AuthLinks>
+    </Header>
+  );
+}

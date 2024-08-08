@@ -118,17 +118,27 @@ const ViewApplications = () => {
     );
 };
 
+
 const Container = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px;
+
+    @media (max-width: 768px) {
+        padding: 10px;
+    }
 `;
 
 const Tabs = styled.div`
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
+    flex-wrap: wrap;
+
+    @media (max-width: 768px) {
+        margin-bottom: 10px;
+    }
 `;
 
 const Tab = styled.div`
@@ -143,6 +153,11 @@ const Tab = styled.div`
     &:hover {
         background: ${({ $active }) => ($active ? "#0056b3" : "#c7c7c7")};
     }
+
+    @media (max-width: 768px) {
+        padding: 5px 10px;
+        margin: 5px;
+    }
 `;
 
 const ApplicationsContainer = styled.div`
@@ -151,6 +166,11 @@ const ApplicationsContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    @media (max-width: 768px) {
+        width: 100%;
+        padding: 0 10px;
+    }
 `;
 
 const ApplicationCard = styled.div`
@@ -160,12 +180,22 @@ const ApplicationCard = styled.div`
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     width: 100%;
+
+    @media (max-width: 768px) {
+        padding: 10px;
+        margin-bottom: 10px;
+    }
 `;
 
 const ButtonGroup = styled.div`
     display: flex;
     justify-content: flex-end;
     margin-top: 10px;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 `;
 
 const ActionButton = styled.button`
@@ -180,6 +210,12 @@ const ActionButton = styled.button`
 
     &:hover {
         background: #0056b3;
+    }
+
+    @media (max-width: 768px) {
+        padding: 5px 10px;
+        margin: 5px 0;
+        width: 100%;
     }
 `;
 

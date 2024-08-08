@@ -72,11 +72,7 @@ const Home = () => {
                         Hire amazing students through CO-OP Connect!
                     </JobSubtitle>
                     <JobDescription>
-                        Lorem Ipsum is simply dummy text of the printing and
-                        typesetting industry. Lorem Ipsum has been the
-                        industry's standard dummy text ever since the 1500s,
-                        when an unknown printer took a galley of type and
-                        scrambled it t
+                        Post a job on our platform using the below button. You can view and edit previously posted jobs below by clicking the respective links. Applicants are listed within the view section.
                     </JobDescription>
                     <Link href="/employer/post1">
                         <PostJobButton>Post a Job</PostJobButton>

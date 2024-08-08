@@ -40,38 +40,38 @@ function AdminPanel() {
         },
     ];
 
-    const extraPanels = [
-        {
-            title: "Dummy Data",
-            color: "#1d4ed8",
-            borderColor: "rgba(29, 78, 216, 1)",
-            img1: "https://cdn.builder.io/api/v1/image/assets/TEMP/62229b1ae0ae1dd15db7bca85f8e72568a14455230ec99bf71f86e2712aa9623?apiKey=d66532d056b14640a799069157705b77&",
-            img2: "https://cdn.builder.io/api/v1/image/assets/TEMP/4cbeccd9b119147a28e707f7c47954844c0962f854035e21fedfee89c4e8d105?apiKey=d66532d056b14640a799069157705b77&",
-            desc: "Personally message students and potentially their employers.",
-            alt1: "Dummy Data Icon",
-            alt2: "Message Icon",
-        },
-        {
-            title: "Dummy Data",
-            color: "#1d4ed8",
-            borderColor: "rgba(29, 78, 216, 1)",
-            img1: "https://cdn.builder.io/api/v1/image/assets/TEMP/62229b1ae0ae1dd15db7bca85f8e72568a14455230ec99bf71f86e2712aa9623?apiKey=d66532d056b14640a799069157705b77&",
-            img2: "https://cdn.builder.io/api/v1/image/assets/TEMP/4cbeccd9b119147a28e707f7c47954844c0962f854035e21fedfee89c4e8d105?apiKey=d66532d056b14640a799069157705b77&",
-            desc: "Personally message students and potentially their employers.",
-            alt1: "Dummy Data Icon",
-            alt2: "Message Icon",
-        },
-        {
-            title: "Dummy Data",
-            color: "#1d4ed8",
-            borderColor: "rgba(29, 78, 216, 1)",
-            img1: "https://cdn.builder.io/api/v1/image/assets/TEMP/62229b1ae0ae1dd15db7bca85f8e72568a14455230ec99bf71f86e2712aa9623?apiKey=d66532d056b14640a799069157705b77&",
-            img2: "https://cdn.builder.io/api/v1/image/assets/TEMP/4cbeccd9b119147a28e707f7c47954844c0962f854035e21fedfee89c4e8d105?apiKey=d66532d056b14640a799069157705b77&",
-            desc: "Personally message students and potentially their employers.",
-            alt1: "Dummy Data Icon",
-            alt2: "Message Icon",
-        },
-    ];
+    // const extraPanels = [
+    //     {
+    //         title: "Dummy Data",
+    //         color: "#1d4ed8",
+    //         borderColor: "rgba(29, 78, 216, 1)",
+    //         img1: "https://cdn.builder.io/api/v1/image/assets/TEMP/62229b1ae0ae1dd15db7bca85f8e72568a14455230ec99bf71f86e2712aa9623?apiKey=d66532d056b14640a799069157705b77&",
+    //         img2: "https://cdn.builder.io/api/v1/image/assets/TEMP/4cbeccd9b119147a28e707f7c47954844c0962f854035e21fedfee89c4e8d105?apiKey=d66532d056b14640a799069157705b77&",
+    //         desc: "Personally message students and potentially their employers.",
+    //         alt1: "Dummy Data Icon",
+    //         alt2: "Message Icon",
+    //     },
+    //     {
+    //         title: "Dummy Data",
+    //         color: "#1d4ed8",
+    //         borderColor: "rgba(29, 78, 216, 1)",
+    //         img1: "https://cdn.builder.io/api/v1/image/assets/TEMP/62229b1ae0ae1dd15db7bca85f8e72568a14455230ec99bf71f86e2712aa9623?apiKey=d66532d056b14640a799069157705b77&",
+    //         img2: "https://cdn.builder.io/api/v1/image/assets/TEMP/4cbeccd9b119147a28e707f7c47954844c0962f854035e21fedfee89c4e8d105?apiKey=d66532d056b14640a799069157705b77&",
+    //         desc: "Personally message students and potentially their employers.",
+    //         alt1: "Dummy Data Icon",
+    //         alt2: "Message Icon",
+    //     },
+    //     {
+    //         title: "Dummy Data",
+    //         color: "#1d4ed8",
+    //         borderColor: "rgba(29, 78, 216, 1)",
+    //         img1: "https://cdn.builder.io/api/v1/image/assets/TEMP/62229b1ae0ae1dd15db7bca85f8e72568a14455230ec99bf71f86e2712aa9623?apiKey=d66532d056b14640a799069157705b77&",
+    //         img2: "https://cdn.builder.io/api/v1/image/assets/TEMP/4cbeccd9b119147a28e707f7c47954844c0962f854035e21fedfee89c4e8d105?apiKey=d66532d056b14640a799069157705b77&",
+    //         desc: "Personally message students and potentially their employers.",
+    //         alt1: "Dummy Data Icon",
+    //         alt2: "Message Icon",
+    //     },
+   // ];
 
     return (
         <MainContainer>
@@ -95,7 +95,7 @@ function AdminPanel() {
                         ))}
                     </PanelsContainer>
                 </Section>
-                <PanelsContainer>
+                {/* <PanelsContainer>
                     {extraPanels.map((panel, index) => (
                         <PanelSection
                             key={index}
@@ -111,7 +111,7 @@ function AdminPanel() {
                             </PanelBody>
                         </PanelSection>
                     ))}
-                </PanelsContainer>
+                </PanelsContainer> */}
             </Content>
         </MainContainer>
     );

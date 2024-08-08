@@ -5,7 +5,9 @@ export const Div15 = styled.div`
     border-color: rgba(123, 117, 127, 1);
     border-style: solid;
     border-width: 1px;
-    background-color: var(--Schemes-Background, #fff7ff);
+    
+
+    transition: background-color 0.5s ease;
     display: flex;
     flex-direction: column;
     margin-top: 20px;
@@ -22,7 +24,7 @@ export const Div15 = styled.div`
 `;
 
 export const Div16 = styled.div`
-    color: var(--Palettes-Primary-40, #773dc3);
+    color: var(--Palettes-Primary-40, #773dc3);color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#773dc3")};
     font: 600 24px/133% Poppins, sans-serif;
 
     @media (max-width: 991px) {
@@ -62,7 +64,7 @@ export const Div19 = styled.div`
     transition: background-color 0.3s ease;
 
     &:hover {
-        background-color: rgba(0, 0, 0, 0.05);
+        background-color: ${({ darkMode }) => (darkMode ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.05)")};
     }
 `;
 
@@ -97,12 +99,12 @@ export const Div21 = styled.div`
 `;
 
 export const Div22 = styled.div`
-    color: var(--Schemes-On-Background, #1d1a20);
+    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#1d1a20")};
     font-family: Poppins, sans-serif;
 `;
 
 export const Div23 = styled.div`
-    color: var(--Schemes-Outline, #7b757f);
+    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#7b757f")};
     font-family: Poppins, sans-serif;
 `;
 
@@ -110,7 +112,7 @@ export const Div24 = styled.div`
     max-width: 300px;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
-    color: var(--Schemes-Outline, #7b757f);
+    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#7b757f")};
     text-overflow: ellipsis;
     font-family: Poppins, sans-serif;
     font-weight: 400;

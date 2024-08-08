@@ -28,7 +28,7 @@ export const Message = styled.div`
 `;
 
 export const Timestamp = styled.div`
-    color: #000000; /* Lighter color for timestamp */
+    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#773dc3")};
 
     margin-top: 5px;
     font: 12px/133% Poppins, sans-serif;

@@ -17,27 +17,27 @@ function QuickLinks() {
             imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/4a571ec3948ab72ab87b17a1fce671e5d4b256b22cec1d30cce879432a5e0880?apiKey=d66532d056b14640a799069157705b77&",
             imgAlt: "Privacy settings icon",
         },
-        {
-            title: "Dummy Data",
-            description:
-                "Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.",
-            imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/4a571ec3948ab72ab87b17a1fce671e5d4b256b22cec1d30cce879432a5e0880?apiKey=d66532d056b14640a799069157705b77&",
-            imgAlt: "Dummy data icon",
-        },
-        {
-            title: "Dummy Data",
-            description:
-                "Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.",
-            imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/4a571ec3948ab72ab87b17a1fce671e5d4b256b22cec1d30cce879432a5e0880?apiKey=d66532d056b14640a799069157705b77&",
-            imgAlt: "Dummy data icon",
-        },
-        {
-            title: "Dummy Data",
-            description:
-                "Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.",
-            imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/4a571ec3948ab72ab87b17a1fce671e5d4b256b22cec1d30cce879432a5e0880?apiKey=d66532d056b14640a799069157705b77&",
-            imgAlt: "Dummy data icon",
-        },
+        // {
+        //     title: "Dummy Data",
+        //     description:
+        //         "Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.",
+        //     imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/4a571ec3948ab72ab87b17a1fce671e5d4b256b22cec1d30cce879432a5e0880?apiKey=d66532d056b14640a799069157705b77&",
+        //     imgAlt: "Dummy data icon",
+        // },
+        // {
+        //     title: "Dummy Data",
+        //     description:
+        //         "Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.",
+        //     imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/4a571ec3948ab72ab87b17a1fce671e5d4b256b22cec1d30cce879432a5e0880?apiKey=d66532d056b14640a799069157705b77&",
+        //     imgAlt: "Dummy data icon",
+        // },
+        // {
+        //     title: "Dummy Data",
+        //     description:
+        //         "Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.",
+        //     imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/4a571ec3948ab72ab87b17a1fce671e5d4b256b22cec1d30cce879432a5e0880?apiKey=d66532d056b14640a799069157705b77&",
+        //     imgAlt: "Dummy data icon",
+        // },
     ];
 
     return (

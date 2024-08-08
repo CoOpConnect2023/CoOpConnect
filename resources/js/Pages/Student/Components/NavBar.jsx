@@ -146,7 +146,7 @@ function Sidebar() {
                     <Logo src={logo} alt="Logo" loading="lazy" active={activeTab === "/"} />
                 </Link>
                 <Divider />
-                <Link href="/student/home" onClick={() => handleTabClick("/student/home")}>
+                <Link data-test-id="home-link" href="/student/home" onClick={() => handleTabClick("/student/home")}>
                     <IconButton active={activeTab === "/student/home"}>
                         <Icon src={briefcase} alt="Home Icon" loading="lazy" />
                     </IconButton>
@@ -156,12 +156,12 @@ function Sidebar() {
                     <FontAwesomeIcon icon={faList} style={{ fontSize: '1.5rem' }} className="fa-icon" />
                     </IconButton>
                 </Link>
-                <Link href="/student/messages" onClick={() => handleTabClick("/student/messages")}>
+                <Link data-test-id="messages-link" href="/student/messages" onClick={() => handleTabClick("/student/messages")}>
                     <IconButton active={activeTab === "/student/messages"}>
                         <Icon src={message} alt="Messages Icon" loading="lazy" />
                     </IconButton>
                 </Link>
-                <Link href="/student/interviews" onClick={() => handleTabClick("/student/interviews")}>
+                <Link data-test-id="interviews-link" href="/student/interviews" onClick={() => handleTabClick("/student/interviews")}>
                     <IconButton active={activeTab === "/student/interviews"}>
                         <Icon src={calendar} alt="Interviews Icon" loading="lazy" />
                     </IconButton>
@@ -171,13 +171,13 @@ function Sidebar() {
                         <Icon src={user} alt="Profile Icon" loading="lazy" />
                     </IconButton>
                 </Link>
-                <Link href="/student/settings" onClick={() => handleTabClick("/student/settings")}>
+                <Link data-test-id="settings-link" href="/student/settings" onClick={() => handleTabClick("/student/settings")}>
                     <IconButton active={activeTab === "/student/settings"}>
                         <Icon src={settings} alt="Settings Icon" loading="lazy" />
                     </IconButton>
                 </Link>
 
-                <IconContainer onClick={toggleFooterVisibility}>
+                <IconContainer data-test-id="map-link" onClick={toggleFooterVisibility}>
                     <FontAwesomeIcon icon={faMap} className="fa-icon"  />
                 </IconContainer>
             </NavContainer>

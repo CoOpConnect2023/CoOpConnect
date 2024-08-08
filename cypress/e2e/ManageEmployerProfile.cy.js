@@ -3,12 +3,18 @@ import 'cypress-file-upload';
 
 
 describe('Manages Student profile', () => {
+
+    const studentemail = "moses31@example.com"
+    const employeremail = "zetta69@example.net"
+    const teacheremail = "tmiller@example.com"
+    const school = "Schinner and Sons"
+
     it('manages student profile', () => {
         cy.visit('http://127.0.0.1:8000/');
 
 
         cy.contains('Sign In').click();
-        cy.get('input[name="email"]').type('monica.lindgren@example.com');
+        cy.get('input[name="email"]').type(employeremail);
         cy.get('input[name="password"]').type('password');
         cy.get('.flex.flex-col.items-center.mt-4').contains('Sign In').click();
 
@@ -32,7 +38,7 @@ describe('Manages Student profile', () => {
 
 
 
-        cy.get('a[href="/employer/profile"]').click();
+        cy.get('[data-test-id="profile-link"]').click();
 
         cy.contains('Bio').next('input')
             .clear()
@@ -65,7 +71,7 @@ describe('Manages Student profile', () => {
 
             cy.contains('Email').next('input')
             .clear()
-            .type('monica.lindgren@example.com');
+            .type(employeremail);
 
             cy.contains('Company').next('input')
             .clear()
@@ -79,7 +85,7 @@ describe('Manages Student profile', () => {
 
             cy.wait(2000);
 
-            cy.get('img[src="https://cdn.builder.io/api/v1/image/assets/TEMP/c7749e10a4cb727e5ce0c7fd48d44fb683bf93b2fa7c59643148748496b286b0?apiKey=d66532d056b14640a799069157705b77&"]')
+            cy.get('img[src="https://cdn.builder.io/api/v1/image/assets/TEMP/c7749e10a4cb727e5ce0c7fd48d44fb683bf93b2fa7c59643148748496b286b0?apiKey=d66532d056b14640a799069157705b77&"]').scrollIntoView()
             .should('be.visible')
             .click();
         cy.contains('Logout').click();

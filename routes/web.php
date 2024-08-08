@@ -34,6 +34,7 @@ use App\Http\Controllers\AdminController;
 // Landing and About pages
 Route::get('/', [HomeController::class, 'showLanding'])->name('landing');
 Route::get('/about', [HomeController::class, 'showAbout'])->name('about');
+Route::get('/guide', [HomeController::class, 'showGuide'])->name('guide');
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/home', [AdminController::class, 'home'])->name('admin.home');

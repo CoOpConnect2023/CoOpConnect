@@ -29,6 +29,7 @@ function ClassesPage() {
 
     const handleCreateClass = () => {
         dispatch(createClass({ newClass, user }));
+        dispatch(getCourses(user.id));
         setNewClass({ name: "", startDate: "", endDate: "" });
     };
 
@@ -72,7 +73,7 @@ function ClassesPage() {
                                 <th>End Date</th>
                                 <th>Actions</th>
                             </tr>
-                        </thead>
+                        </thead>{classes &&
                         <tbody>
                             {classes.map((classItem, index) => (
                                 <tr key={index}>
@@ -86,7 +87,7 @@ function ClassesPage() {
                                     </td>
                                 </tr>
                             ))}
-                        </tbody>
+                        </tbody>}
                     </StyledTable>
                 </Section>
                 <FormContainer>

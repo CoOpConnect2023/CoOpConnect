@@ -17,7 +17,8 @@ export const MainContainer = styled.div`
     align-self: stretch;
     border-radius: 10px;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-    background-color: #fff;
+    background-color: ${({ darkMode }) => (darkMode ? "#2c2c2c" : "#fff")}; /*
+    transition: background-color 0.5s ease;
     padding: 20px;
     height: 100%; /* Make sure it stretches to the bottom */
     flex-grow: 1; /* Allow it to grow */
@@ -49,6 +50,8 @@ export const Column = styled.div`
 export const LeftColumn = styled.div`
     display: flex;
     flex-direction: column;
+    background-color: ${({ darkMode }) => (darkMode ? "#2c2c2c" : "#fff7ff")};
+    transition: background-color 0.5s ease;
     flex-grow: 1; /* Allow it to grow */
     @media (max-width: 991px) {
         max-width: 100%;
@@ -72,7 +75,8 @@ export const Column2 = styled.div`
 export const RightColumn = styled.div`
     border-radius: 10px;
     border: 1px solid rgba(123, 117, 127, 1);
-    background-color: #fff7ff;
+    background-color: ${({ darkMode }) => (darkMode ? "#2c2c2c" : "#fff7ff")};
+    transition: background-color 0.5s ease;
     display: flex;
     flex-direction: column;
     flex-grow: 1; /* Allow it to grow */

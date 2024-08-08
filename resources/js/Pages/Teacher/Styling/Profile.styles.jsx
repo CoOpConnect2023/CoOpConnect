@@ -18,7 +18,8 @@ export const Main = styled.main`
 align-items: center;
 border-radius: 10px;
 box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-background-color: #fff;
+transition: background-color 0.5s ease;
+background-color: ${({ darkMode }) => (darkMode ? "#1f1f1f" : "#fff")};
 display: flex;
 justify-content: center;
 padding: 20px;
@@ -38,10 +39,11 @@ flex-direction: column;
 `;
 
 export const Title = styled.h1`
-color: #6b538c;
+color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6B538C")};
 text-decoration: underline;
 align-self: center;
 font: 600 32px Poppins, sans-serif;
+
 `;
 
 export const ProfileWrapper = styled.div`
@@ -129,7 +131,7 @@ margin-left: 20px;
 `;
 
 export const BioTitle = styled.h2`
-color: #2d3648;
+color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#2d3648")};
 letter-spacing: 0.1px;
 font: 500 14px Poppins, sans-serif;
 @media (max-width: 991px) {
@@ -173,10 +175,11 @@ flex: 1;
 `;
 
 export const FieldTitle = styled.h2`
-color: #6b538c;
+color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
 letter-spacing: 0.1px;
 margin-top: 20px;
 font: 500 14px Poppins, sans-serif;
+font-size: ${({ fontSize }) => fontSize};
 @media (max-width: 991px) {
     max-width: 100%;
 }
@@ -193,6 +196,7 @@ letter-spacing: 0.25px;
 justify-content: center;
 padding: 19px 12px;
 font: 400 14px Poppins, sans-serif;
+font-size: ${({ fontSize }) => fontSize};
 transition: border-color 0.3s ease, background-color 0.3s ease;
 
     &:hover {
@@ -235,7 +239,7 @@ border: 2px dashed #6b538c;
 border-radius: 10px;
 padding: 20px;
 text-align: center;
-color: #6b538c;
+color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6B538C")};
 font-family: Poppins, sans-serif;
 font-size: 14px;
 font-weight: 500;
@@ -246,6 +250,12 @@ transition: background-color 0.2s ease-in-out;
 &:hover {
     background-color: #f3e8ff;
 }
+`;
+export const StyledParagraph = styled.p`
+  color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6B538C")};
+  font-size: ${({ fontSize }) => fontSize};
+  font-size: 16px;
+  margin: 0;
 `;
 
 export const SuggestionsList = styled.ul`

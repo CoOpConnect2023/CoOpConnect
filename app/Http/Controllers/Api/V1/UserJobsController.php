@@ -71,6 +71,7 @@ class UserJobsController extends Controller
                 'resume' => $userJob->resume,
                 'status' => $userJob->status,
                 'timeSlots' => $userJob->time_slots,
+                'userId' => $userJob->user_id,
             ];
         });
 

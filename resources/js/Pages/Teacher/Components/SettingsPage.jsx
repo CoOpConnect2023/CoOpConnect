@@ -3,6 +3,9 @@ import styled from "styled-components";
 import { useForm } from '@inertiajs/react';
 import { useDispatch, useSelector } from "react-redux";
 import { updateUserPassword, deleteUser, getUser, selectUser } from "@/Features/users/userSlice";
+import { toggleDarkMode, setTextSize } from "@/Features/accessibility/accessibilitySlice";
+import { faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from "./ConfirmationModal";
 import {
     Main,
@@ -34,7 +37,8 @@ import {
     Label,
     Input,
     SubmitButton,
-    Message
+    Message,
+    OtherOptionButton
 } from "../Styling/SettingsPage.styles";
 
 const appUrl = import.meta.env.VITE_APP_URL;
@@ -50,7 +54,8 @@ function SettingsPanel() {
     const [message, setMessage] = useState("");
     const [privacySetting, setPrivacySetting] = useState("Private");
     const [showDeleteModal, setShowDeleteModal] = useState(false);
-
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
     useEffect(() => {
         dispatch(getUser());
     }, [dispatch]);
@@ -110,55 +115,63 @@ function SettingsPanel() {
                 setMessage(error.message || "An error occurred");
             });
     };
+    const handleDarkModeToggle = () => {
+        dispatch(toggleDarkMode());
+        console.log(darkMode)
+    };
+    const handleTextSizeChange = (size) => {
+        dispatch(setTextSize(size));
+        console.log(fontSize)
+    };
 
 
     return (
-        <Main>
-            <Section className="account-section">
-                <AccountHeader>
-                    <AccountTitle>Account</AccountTitle>
-                    <AccountDetail onClick={() => handleTabClick('password')} active={activeTab === 'password'}>Password</AccountDetail>
-                    <AccountDetail onClick={() => handleTabClick('notifications')} active={activeTab === 'notifications'}>Notifications</AccountDetail>
-                    <AccountDetail onClick={() => handleTabClick('preferences')} active={activeTab === 'preferences'}>Preferences</AccountDetail>
-                </AccountHeader>
+        <Main darkMode={darkMode} fontSize={fontSize}>
+            <Section fontSize={fontSize} darkMode={darkMode}  className="account-section">
+                <AccountHeader fontSize={fontSize} darkMode={darkMode}>
+                    <AccountTitle fontSize={fontSize} darkMode={darkMode}>Account</AccountTitle>
+                    <AccountDetail fontSize={fontSize} darkMode={darkMode} onClick={() => handleTabClick('password')} active={activeTab === 'password'}>Password</AccountDetail>
+                    <AccountDetail fontSize={fontSize} darkMode={darkMode} onClick={() => handleTabClick('notifications')} active={activeTab === 'notifications'}>Notifications</AccountDetail>
+                    <AccountDetail fontSize={fontSize} darkMode={darkMode} onClick={() => handleTabClick('preferences')} active={activeTab === 'preferences'}>Preferences</AccountDetail>
+                </AccountHeader >
                 {activeTab === 'password' && (
-                    <PasswordChangeForm onSubmit={handlePasswordChange}>
-                        <FormField>
-                            <Label>Current Password</Label>
-                            <Input
+                    <PasswordChangeForm fontSize={fontSize} darkMode={darkMode} onSubmit={handlePasswordChange}>
+                        <FormField fontSize={fontSize} darkMode={darkMode}>
+                            <Label fontSize={fontSize} darkMode={darkMode}>Current Password</Label>
+                            <Input fontSize={fontSize} darkMode={darkMode}
                                 type="password"
                                 placeholder="Current Password"
                                 value={currentPassword}
                                 onChange={(e) => setCurrentPassword(e.target.value)}
                             />
                         </FormField>
-                        <FormField>
-                            <Label>New Password</Label>
-                            <Input
+                        <FormField fontSize={fontSize} darkMode={darkMode}>
+                            <Label fontSize={fontSize} darkMode={darkMode}>New Password</Label>
+                            <Input fontSize={fontSize} darkMode={darkMode}
                                 type="password"
                                 placeholder="New Password"
                                 value={newPassword}
                                 onChange={(e) => setNewPassword(e.target.value)}
                             />
                         </FormField>
-                        <FormField>
-                            <Label>Confirm New Password</Label>
-                            <Input
+                        <FormField fontSize={fontSize} darkMode={darkMode}>
+                            <Label fontSize={fontSize} darkMode={darkMode}>Confirm New Password</Label>
+                            <Input fontSize={fontSize} darkMode={darkMode}
                                 type="password"
                                 placeholder="Confirm New Password"
                                 value={confirmNewPassword}
                                 onChange={(e) => setConfirmNewPassword(e.target.value)}
                             />
                         </FormField>
-                        {message && <Message>{message}</Message>}
-                        <SubmitButton>Change Password</SubmitButton>
+                        {message && <Message fontSize={fontSize} darkMode={darkMode}>{message}</Message>}
+                        <SubmitButton fontSize={fontSize} darkMode={darkMode}>Change Password</SubmitButton>
                     </PasswordChangeForm>
                 )}
-                <FormSection>
-                    <FormColumn>
-                        <FormContent>
-                            <FormTitle>Delete Account</FormTitle>
-                            <FormDetail>
+                <FormSection fontSize={fontSize} darkMode={darkMode}>
+                    <FormColumn fontSize={fontSize} darkMode={darkMode}>
+                        <FormContent fontSize={fontSize} darkMode={darkMode}>
+                            <FormTitle fontSize={fontSize} darkMode={darkMode}>Delete Account</FormTitle>
+                            <FormDetail fontSize={fontSize} darkMode={darkMode}>
                                 Delete your account from the CO-OP Connect
                                 platform permanently. This will remove access to
                                 the account. Your account information will also
@@ -166,35 +179,35 @@ function SettingsPanel() {
                             </FormDetail>
                         </FormContent>
                     </FormColumn>
-                    <FormButtonColumn>
-                        <DeleteButton onClick={handleDeleteAccount}>Delete Account</DeleteButton>
+                    <FormButtonColumn fontSize={fontSize}>
+                        <DeleteButton fontSize={fontSize} onClick={handleDeleteAccount}>Delete Account</DeleteButton>
                     </FormButtonColumn>
                 </FormSection>
-            </Section>
-            <SettingsSection>
-                <SettingsHeader>
-                    <SettingsColumn>
-                        <SettingsContent>
-                            <SettingsTitle>Profile Privacy</SettingsTitle>
-                            <SettingsDetail>
+            </Section >
+            <SettingsSection fontSize={fontSize} darkMode={darkMode}>
+                <SettingsHeader fontSize={fontSize} darkMode={darkMode}>
+                    <SettingsColumn fontSize={fontSize} darkMode={darkMode}>
+                        <SettingsContent fontSize={fontSize} darkMode={darkMode}>
+                            <SettingsTitle darkMode={darkMode} fontSize={fontSize}>Profile Privacy</SettingsTitle>
+                            <SettingsDetail fontSize={fontSize} darkMode={darkMode}>
                                 Anyone can find and view the contents of your
                                 profile. Your profile will be viewable from job
                                 postings and search functions.
                             </SettingsDetail>
                         </SettingsContent>
                     </SettingsColumn>
-                    <SettingsControls>
+                    <SettingsControls fontSize={fontSize} darkMode={darkMode}>
                         <CurrentSelection>
                             Currently Selected: {privacySetting}
                         </CurrentSelection>
-                        <SettingsOptions>
-                            <OptionButton
+                        <SettingsOptions fontSize={fontSize} darkMode={darkMode}>
+                            <OptionButton fontSize={fontSize} darkMode={darkMode}
                                 className={privacySetting === "Private" ? "private" : ""}
                                 onClick={() => handlePrivacyChange("Private")}
                             >
                                 Private
                             </OptionButton>
-                            <OptionButton
+                            <OptionButton fontSize={fontSize} darkMode={darkMode}
                                 className={privacySetting === "Public" ? "public" : ""}
                                 onClick={() => handlePrivacyChange("Public")}
                             >
@@ -204,38 +217,45 @@ function SettingsPanel() {
                     </SettingsControls>
                 </SettingsHeader>
             </SettingsSection>
-            <DummySection>
-                <FormColumn>
-                    <FormContent>
-                        <FormTitle>Dummy Container</FormTitle>
-                        <FormDetail>
-                            Lorem ipsum is a placeholder text commonly used to
-                            demonstrate the visual form of a document or a
-                            typeface without relying on meaningful content.
-                        </FormDetail>
-                    </FormContent>
-                </FormColumn>
-                <FormButtonColumn>
-                    <SettingsButton>Settings Button</SettingsButton>
-                </FormButtonColumn>
-            </DummySection>
-            <DummySection>
-                <FormColumn>
-                    <FormContent>
-                        <FormTitle>Dummy Container</FormTitle>
-                        <FormDetail>
-                            Lorem ipsum is a placeholder text commonly used to
-                            demonstrate the visual form of a document or a
-                            typeface without relying on meaningful content.
-                        </FormDetail>
-                    </FormContent>
-                </FormColumn>
-                <FormButtonColumn>
-                    <SettingsButton>Settings Button</SettingsButton>
-                </FormButtonColumn>
-            </DummySection>
+            <SettingsSection fontSize={fontSize} darkMode={darkMode}>
+                <SettingsHeader fontSize={fontSize} darkMode={darkMode}>
+                    <SettingsColumn fontSize={fontSize} darkMode={darkMode}>
+                        <SettingsContent fontSize={fontSize} darkMode={darkMode}>
+                            <SettingsTitle fontSize={fontSize} darkMode={darkMode}>Accessibility Settings</SettingsTitle>
+                            <SettingsDetail fontSize={fontSize} darkMode={darkMode}>Adjust your viewing preferences</SettingsDetail>
+                        </SettingsContent>
+                    </SettingsColumn>
+                    <SettingsControls fontSize={fontSize} darkMode={darkMode}>
+                        <CurrentSelection fontSize={fontSize} darkMode={darkMode}>Text Size: {fontSize}</CurrentSelection>
+                        <SettingsOptions fontSize={fontSize} darkMode={darkMode}>
+                            <OtherOptionButton fontSize={fontSize} darkMode={darkMode}
+                                onClick={() => handleTextSizeChange('small')}
+                                active={fontSize === 'small'}
+                            >
+                                Small
+                            </OtherOptionButton>
+                            <OtherOptionButton fontSize={fontSize} darkMode={darkMode}
+                                onClick={() => handleTextSizeChange('medium')}
+                                active={fontSize === 'medium'}
+                            >
+                                Medium
+                            </OtherOptionButton>
+                            <OtherOptionButton fontSize={fontSize} darkMode={darkMode}
+                                onClick={() => handleTextSizeChange('large')}
+                                active={fontSize === 'large'}
+                            >
+                                Large
+                            </OtherOptionButton>
+                        </SettingsOptions >
+                        <OtherOptionButton fontSize={fontSize} darkMode={darkMode} onClick={handleDarkModeToggle}>
+                        {darkMode ? <FontAwesomeIcon icon={faSun} /> : <FontAwesomeIcon icon={faMoon} />}
+                        {darkMode ? " Light Mode" : " Dark Mode"}
+                        </OtherOptionButton>
+                    </SettingsControls>
+                </SettingsHeader >
+            </SettingsSection>
             {showDeleteModal && (
-                <Modal
+                <Modal fontSize={fontSize} darkMode={darkMode}
                     title="Confirm Account Deletion"
                     onConfirm={confirmDeleteAccount}
                     onCancel={() => setShowDeleteModal(false)}

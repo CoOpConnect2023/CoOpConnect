@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import JobModal from "../../Profile/Partials/ViewJobModal";
+import { Link } from "@inertiajs/react";
 
 const appUrl = import.meta.env.VITE_APP_URL;
 import { useSelector, useDispatch } from "react-redux";
@@ -29,6 +30,7 @@ const JobContainer = styled.section`
     flex-direction: column;
     font-weight: 500;
     padding: 40px 30px;
+
 
     @media (max-width: 991px) {
         padding: 20px;
@@ -194,7 +196,8 @@ function Matches() {
                             </CompanyInfo>
                         </JobDetails>
                         <Divider />
-                        <ViewButton onClick={() => handleViewJob(job)}>VIEW JOB</ViewButton>
+
+                        <ViewButton><Link href={`/student/viewpost/${job.id}`}>VIEW JOB</Link></ViewButton>
                     </JobCard>
                 ))}
             </JobList>

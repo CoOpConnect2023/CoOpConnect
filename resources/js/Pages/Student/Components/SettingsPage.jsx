@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { useForm } from '@inertiajs/react';
 import { useDispatch, useSelector } from "react-redux";
 import { updateUserPassword, deleteUser, getUser, selectUser } from "@/Features/users/userSlice";
+import { faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from "./ConfirmationModal";
 import {
     Main,
@@ -34,8 +36,10 @@ import {
     Label,
     Input,
     SubmitButton,
-    Message
+    Message,
+    OtherOptionButton
 } from "../Styling/SettingsPage.styles";
+import { toggleDarkMode, setTextSize } from "@/Features/accessibility/accessibilitySlice";
 
 const appUrl = import.meta.env.VITE_APP_URL;
 
@@ -50,6 +54,8 @@ function SettingsPanel() {
     const [message, setMessage] = useState("");
     const [privacySetting, setPrivacySetting] = useState("Private");
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const textSize = useSelector(state => state.accessibility.textSize);
 
     useEffect(() => {
         dispatch(getUser());
@@ -109,6 +115,13 @@ function SettingsPanel() {
             .catch((error) => {
                 setMessage(error.message || "An error occurred");
             });
+    };
+
+    const handleDarkModeToggle = () => {
+        dispatch(toggleDarkMode());
+    };
+    const handleTextSizeChange = (size) => {
+        dispatch(setTextSize(size));
     };
 
 
@@ -204,36 +217,44 @@ function SettingsPanel() {
                     </SettingsControls>
                 </SettingsHeader>
             </SettingsSection>
-            <DummySection>
-                <FormColumn>
-                    <FormContent>
-                        <FormTitle>Dummy Container</FormTitle>
-                        <FormDetail>
-                            Lorem ipsum is a placeholder text commonly used to
-                            demonstrate the visual form of a document or a
-                            typeface without relying on meaningful content.
-                        </FormDetail>
-                    </FormContent>
-                </FormColumn>
-                <FormButtonColumn>
-                    <SettingsButton>Settings Button</SettingsButton>
-                </FormButtonColumn>
-            </DummySection>
-            <DummySection>
-                <FormColumn>
-                    <FormContent>
-                        <FormTitle>Dummy Container</FormTitle>
-                        <FormDetail>
-                            Lorem ipsum is a placeholder text commonly used to
-                            demonstrate the visual form of a document or a
-                            typeface without relying on meaningful content.
-                        </FormDetail>
-                    </FormContent>
-                </FormColumn>
-                <FormButtonColumn>
-                    <SettingsButton>Settings Button</SettingsButton>
-                </FormButtonColumn>
-            </DummySection>
+            <SettingsSection>
+                <SettingsHeader>
+                    <SettingsColumn>
+                        <SettingsContent>
+                            <SettingsTitle>Accessibility Settings</SettingsTitle>
+                            <SettingsDetail>Adjust your viewing preferences</SettingsDetail>
+                        </SettingsContent>
+                    </SettingsColumn>
+                    <SettingsControls>
+                        <CurrentSelection>Text Size: {textSize}</CurrentSelection>
+                        <SettingsOptions>
+                            <OtherOptionButton
+                                onClick={() => handleTextSizeChange('small')}
+                                active={textSize === 'small'}
+                            >
+                                Small
+                            </OtherOptionButton>
+                            <OtherOptionButton
+                                onClick={() => handleTextSizeChange('medium')}
+                                active={textSize === 'medium'}
+                            >
+                                Medium
+                            </OtherOptionButton>
+                            <OtherOptionButton
+                                onClick={() => handleTextSizeChange('large')}
+                                active={textSize === 'large'}
+                            >
+                                Large
+                            </OtherOptionButton>
+                        </SettingsOptions>
+                        <OtherOptionButton onClick={handleDarkModeToggle}>
+                        {darkMode ? <FontAwesomeIcon icon={faSun} /> : <FontAwesomeIcon icon={faMoon} />}
+                        {darkMode ? " Light Mode" : " Dark Mode"}
+                        </OtherOptionButton>
+                    </SettingsControls>
+                </SettingsHeader>
+            </SettingsSection>
+
             {showDeleteModal && (
                 <Modal
                     title="Confirm Account Deletion"
@@ -246,5 +267,36 @@ function SettingsPanel() {
         </Main>
     );
 }
+
+{/* <DummySection>
+<FormColumn>
+    <FormContent>
+        <FormTitle>Dummy Container</FormTitle>
+        <FormDetail>
+            Lorem ipsum is a placeholder text commonly used to
+            demonstrate the visual form of a document or a
+            typeface without relying on meaningful content.
+        </FormDetail>
+    </FormContent>
+</FormColumn>
+<FormButtonColumn>
+    <SettingsButton>Settings Button</SettingsButton>
+</FormButtonColumn>
+</DummySection>
+<DummySection>
+<FormColumn>
+    <FormContent>
+        <FormTitle>Dummy Container</FormTitle>
+        <FormDetail>
+            Lorem ipsum is a placeholder text commonly used to
+            demonstrate the visual form of a document or a
+            typeface without relying on meaningful content.
+        </FormDetail>
+    </FormContent>
+</FormColumn>
+<FormButtonColumn>
+    <SettingsButton>Settings Button</SettingsButton>
+</FormButtonColumn>
+</DummySection> */}
 
 export default SettingsPanel;

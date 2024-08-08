@@ -4,6 +4,9 @@ import { useForm } from '@inertiajs/react';
 import { useDispatch, useSelector } from "react-redux";
 import { updateUserPassword, deleteUser, getUser, selectUser } from "@/Features/users/userSlice";
 import Modal from "./ConfirmationModal";
+import { toggleDarkMode, setTextSize } from "@/Features/accessibility/accessibilitySlice";
+import { faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     Main,
     Section,
@@ -27,14 +30,13 @@ import {
     CurrentSelection,
     SettingsOptions,
     OptionButton,
-    DummySection,
-    SettingsButton,
     PasswordChangeForm,
     FormField,
     Label,
     Input,
     SubmitButton,
-    Message
+    Message,
+    OtherOptionButton,
 } from "../Styling/SettingsPage.styles";
 
 const appUrl = import.meta.env.VITE_APP_URL;
@@ -42,6 +44,8 @@ const appUrl = import.meta.env.VITE_APP_URL;
 function SettingsPanel() {
     const dispatch = useDispatch();
     const user = useSelector(selectUser);
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const textSize = useSelector(state => state.accessibility.textSize);
     const { post } = useForm();
     const [activeTab, setActiveTab] = useState(null);
     const [currentPassword, setCurrentPassword] = useState("");
@@ -50,6 +54,8 @@ function SettingsPanel() {
     const [message, setMessage] = useState("");
     const [privacySetting, setPrivacySetting] = useState("Private");
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+
 
     useEffect(() => {
         dispatch(getUser());
@@ -68,7 +74,6 @@ function SettingsPanel() {
             new_password: newPassword,
             new_password_confirmation: confirmNewPassword,
         };
-        console.log('Dispatching updateUserPassword with:', passwordData);
         dispatch(updateUserPassword(passwordData))
             .unwrap()
             .then(() => {
@@ -86,7 +91,6 @@ function SettingsPanel() {
         }, 3000);
     };
 
-
     const handlePrivacyChange = (setting) => {
         setPrivacySetting(setting);
     };
@@ -101,7 +105,6 @@ function SettingsPanel() {
             .then(() => {
                 setMessage("Account deleted successfully");
                 setShowDeleteModal(false);
-                // Assuming `post` is a function to log out the user
                 post(route('logout')).then(() => {
                     window.location.reload();
                 });
@@ -111,10 +114,17 @@ function SettingsPanel() {
             });
     };
 
+    const handleTextSizeChange = (size) => {
+        dispatch(setTextSize(size));
+    };
+
+    const handleDarkModeToggle = () => {
+        dispatch(toggleDarkMode());
+    };
 
     return (
         <Main>
-            <Section className="account-section">
+            <Section darkMode={darkMode} className="account-section">
                 <AccountHeader>
                     <AccountTitle>Account</AccountTitle>
                     <AccountDetail onClick={() => handleTabClick('password')} active={activeTab === 'password'}>Password</AccountDetail>
@@ -204,36 +214,43 @@ function SettingsPanel() {
                     </SettingsControls>
                 </SettingsHeader>
             </SettingsSection>
-            <DummySection>
-                <FormColumn>
-                    <FormContent>
-                        <FormTitle>Dummy Container</FormTitle>
-                        <FormDetail>
-                            Lorem ipsum is a placeholder text commonly used to
-                            demonstrate the visual form of a document or a
-                            typeface without relying on meaningful content.
-                        </FormDetail>
-                    </FormContent>
-                </FormColumn>
-                <FormButtonColumn>
-                    <SettingsButton>Settings Button</SettingsButton>
-                </FormButtonColumn>
-            </DummySection>
-            <DummySection>
-                <FormColumn>
-                    <FormContent>
-                        <FormTitle>Dummy Container</FormTitle>
-                        <FormDetail>
-                            Lorem ipsum is a placeholder text commonly used to
-                            demonstrate the visual form of a document or a
-                            typeface without relying on meaningful content.
-                        </FormDetail>
-                    </FormContent>
-                </FormColumn>
-                <FormButtonColumn>
-                    <SettingsButton>Settings Button</SettingsButton>
-                </FormButtonColumn>
-            </DummySection>
+            <SettingsSection>
+                <SettingsHeader>
+                    <SettingsColumn>
+                        <SettingsContent>
+                            <SettingsTitle>Accessibility Settings</SettingsTitle>
+                            <SettingsDetail>Adjust your viewing preferences</SettingsDetail>
+                        </SettingsContent>
+                    </SettingsColumn>
+                    <SettingsControls>
+                        <CurrentSelection>Text Size: {textSize}</CurrentSelection>
+                        <SettingsOptions>
+                            <OtherOptionButton
+                                onClick={() => handleTextSizeChange('small')}
+                                active={textSize === 'small'}
+                            >
+                                Small
+                            </OtherOptionButton>
+                            <OtherOptionButton
+                                onClick={() => handleTextSizeChange('medium')}
+                                active={textSize === 'medium'}
+                            >
+                                Medium
+                            </OtherOptionButton>
+                            <OtherOptionButton
+                                onClick={() => handleTextSizeChange('large')}
+                                active={textSize === 'large'}
+                            >
+                                Large
+                            </OtherOptionButton>
+                        </SettingsOptions>
+                        <OtherOptionButton onClick={handleDarkModeToggle}>
+                        {darkMode ? <FontAwesomeIcon icon={faSun} /> : <FontAwesomeIcon icon={faMoon} />}
+                        {darkMode ? " Light Mode" : " Dark Mode"}
+                        </OtherOptionButton>
+                    </SettingsControls>
+                </SettingsHeader>
+            </SettingsSection>
             {showDeleteModal && (
                 <Modal
                     title="Confirm Account Deletion"
@@ -248,3 +265,5 @@ function SettingsPanel() {
 }
 
 export default SettingsPanel;
+
+

@@ -76,11 +76,7 @@ function Home() {
                         Get amazing through jobs at CO-OP Connect!
                     </Tagline>
                     <Description>
-                        Lorem Ipsum is simply dummy text of the printing and
-                        typesetting industry. Lorem Ipsum has been the
-                        industry's standard dummy text ever since the 1500s,
-                        when an unknown printer took a galley of type and
-                        scrambled it t
+                        To search for new opportunities, access View Jobs below. To view and apply to recommended jobs based on your profile skills, click view posting on any corresponding job below.
                     </Description>
                     <Link href="/student/jobs">
                         <Button>View Jobs</Button>

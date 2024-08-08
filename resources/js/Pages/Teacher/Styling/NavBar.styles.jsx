@@ -31,12 +31,26 @@ const slideInFromBottom = keyframes`
   }
 `;
 
+const getFontSize = (size) => {
+    switch (size) {
+        case 'small':
+            return '1em';
+        case 'medium':
+            return '1.07em';
+        case 'large':
+            return '1.12em';
+        default:
+            return '1em';
+    }
+};
+
 export const AppContainer = styled.div`
-  background-color: var(--Schemes-Background, #fff7ff);
   display: flex;
+  background-color: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "var(--Schemes-Background, #fff7ff)")};
   gap: 0px;
   height: 100vh;
   flex-direction: row;
+
 
   @media (max-width: 991px) {
     flex-direction: column;
@@ -46,7 +60,8 @@ export const AppContainer = styled.div`
 export const NavContainer = styled.nav`
   align-items: center;
   border: 1px solid rgba(123, 117, 127, 1);
-  background-color: var(--White, #fff);
+
+  background-color: ${({ darkMode }) => (darkMode ? "#B7A1E5" : "#FFF")};
   display: flex;
   flex-direction: column;
   width: 90px;
@@ -85,12 +100,13 @@ export const IconButton = styled.button`
   align-items: center;
   width: 100%;
   height: 50px;
+
   padding: 0 10px;
   border-radius: 10px;
-  border: none;
+  border: 1px solid;
   margin-top: 30px;
   cursor: pointer;
-  background-color: ${({ active }) => (active ? "rgba(0, 0, 0, 0.1)" : "transparent")};
+  background-color: ${({ active }) => (active ? "rgba(0, 0, 0, 0.15)" : "transparent")};
   box-shadow: ${({ active }) => (active ? "0px 4px 8px rgba(0, 0, 0, 0.1)" : "none")};
   transform: ${({ active }) => (active ? "translateX(5px)" : "none")};
 
@@ -140,14 +156,13 @@ export const UserProfile = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
   cursor: pointer;
   position: relative;
   transition: transform 0.3s ease, opacity 0.3s ease;
 
   // Apply slide-in animation when isOpen prop is true
   ${(props) =>
-
     css`
       animation: ${slideInFromRight} 0.5s ease-out;
     `}
@@ -156,6 +171,7 @@ export const UserProfile = styled.div`
     justify-content: flex-end;
     width: 100%;
     align-items: center;
+    gap: 10px;
   }
 `;
 
@@ -174,18 +190,21 @@ export const ContentContainer = styled.section`
   flex-direction: column;
   flex: 1;
   padding: 20px;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
 export const Title = styled.h1`
-  color: #000;
+  color: ${({ darkMode }) => (darkMode ? "#FFF" : "#000")};
   font: 600 36px/122% Poppins, sans-serif;
+
 `;
 
 export const NotificationIcon = styled.div`
   width: 40px;
   height: 40px;
-  background-color: #EDDCFF;
-  border: 2px solid black;
+
+  background-color: ${({ darkMode }) => (darkMode ? "#B7A1E5" : "#EDDCFF")};
+  border: 2px solid ${({ darkMode }) => (darkMode ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 1)')};
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -235,10 +254,10 @@ export const UserDetails = styled.div`
   align-items: center;
   gap: 10px;
   border-radius: 50px;
-  border: 2px solid rgba(0, 0, 0, 1);
-  background-color: var(--Schemes-Primary-Container, #eddcff);
+  border: 2px solid ${({ darkMode }) => (darkMode ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 1)')};
+  background-color: ${({ darkMode }) => (darkMode ? "#B7A1E5" : "#EDDCFF")};
   padding: 5px 10px;
-  margin-top: 7px;
+
 `;
 
 export const Avatar = styled.img`
@@ -271,7 +290,7 @@ export const Modal = styled.div`
   position: absolute;
   top: 60px;
   right: 20px;
-  background-color: white;
+  background-color: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "#fff")};
   border: 1px solid #ccc;
   border-radius: 5px;
   box-shadow: 02px 10px rgba(0, 0, 0, 0.1);
@@ -280,6 +299,7 @@ export const Modal = styled.div`
   opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
   transform: ${({ isOpen }) => (isOpen ? "translateY(0)" : "translateY(-10px)")};
   pointer-events: ${({ isOpen }) => (isOpen ? "auto" : "none")};
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
 export const NotificationModalContainer = styled.div`
@@ -287,7 +307,7 @@ export const NotificationModalContainer = styled.div`
   position: absolute;
   top: 60px;
   right: 0;
-  background: white;
+  background: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "#fff")};
   border: 1px solid #ccc;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   border-radius: 8px;
@@ -295,12 +315,14 @@ export const NotificationModalContainer = styled.div`
   z-index: 10;
   max-height: 80vh;
   overflow-y: auto;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
 export const NotificationModalContent = styled.ul`
   list-style: none;
   margin: 0;
   padding: 20px;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
 export const Conversation = styled.div`
@@ -309,17 +331,20 @@ export const Conversation = styled.div`
   border: 1px solid #f0f0f0;
   border-radius: 8px;
   background-color: #fafafa;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
 export const ConversationInfo = styled.div`
   margin-bottom: 15px;
   font-size: 14px;
   color: #555;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
 export const MessagesList = styled.div`
   display: flex;
   flex-direction: column;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
 export const Message = styled.div`
@@ -328,6 +353,7 @@ export const Message = styled.div`
   border-radius: 5px;
   padding: 10px;
   margin-bottom: 10px;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
 export const Button = styled.button`
@@ -340,12 +366,13 @@ export const Button = styled.button`
   font-size: 14px;
   cursor: pointer;
   transition: background-color 0.3s;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 
   &:hover {
     background-color: #0056b3;
   }
 
-   &:not(:last-child) {
+  &:not(:last-child) {
     margin-right: 1vw;
   }
 `;
@@ -355,11 +382,13 @@ export const ModalContent = styled.div`
   flex-direction: column;
   padding: 10px;
   max-height: 80vh;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
 export const ModalItem = styled.div`
   padding: 10px;
   cursor: pointer;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
   &:hover {
     background-color: rgb(237, 220, 255);
   }
@@ -370,11 +399,12 @@ export const NoNotificationsMessage = styled.div`
   text-align: center;
   font-size: 16px;
   color: #666;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
 export const pulse = keyframes`
   0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.5); opacity: 0.5; }
+  50% { transform: scale(1.5); opacity: 0.5); }
   100% { transform: scale(1); opacity: 1; }
 `;
 
@@ -384,6 +414,7 @@ export const Dot = styled.div`
   background-color: #3498db;
   border-radius: 50%;
   animation: ${pulse} 1s infinite;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
 export const DotContainer = styled.div`
@@ -412,12 +443,14 @@ const BouncingDot = styled.div`
   border-radius: 50%;
   animation: ${bounce} 0.6s infinite alternate;
   margin: 0 5px;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
 const BouncingLoader = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
 export const LoadingDot = () => (
@@ -439,6 +472,7 @@ export const Footer = styled.footer`
   transition: transform 0.3s ease;
   transform: translateY(${({ isVisible }) => (isVisible ? "0%" : "100%")});
   z-index: 999;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
 export const CloseButton = styled.button`
@@ -450,6 +484,7 @@ export const CloseButton = styled.button`
   font-size: 30px;
   cursor: pointer;
   color: #000;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 
   &:hover {
     color: #ff0000; // Optional: Change color on hover
@@ -468,6 +503,7 @@ export const ScrollToTopButton = styled.button`
   display: ${({ isVisible }) => (isVisible ? 'block' : 'none')};
   z-index: 1000;
   transition: opacity 0.3s ease;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 
   &:hover {
     background-color: #0056b3;
@@ -480,6 +516,7 @@ export const IconContainer = styled.div`
   width: 40px; // Adjust the size as needed
   height: 40px;
   margin-top: auto; // Push to the bottom
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 
   @media (min-width: 992px) {
     display: block; // Show on desktop
@@ -488,11 +525,8 @@ export const IconContainer = styled.div`
   .fa-icon {
     width: 100%;
     height: 100%;
-    color: #6B538C; // Icon color
-    background-color: white; // White center
 
-
+    color: ${({ darkMode }) => (darkMode ? "#000" : "#6B538C")};
 
   }
 `;
-

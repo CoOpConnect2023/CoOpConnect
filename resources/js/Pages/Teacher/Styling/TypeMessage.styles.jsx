@@ -13,6 +13,7 @@ export const Container = styled.div`
     flex-direction: column;
     justify-content: flex-end;
 
+
 `;
 
 export const Div98 = styled.div`
@@ -21,7 +22,7 @@ export const Div98 = styled.div`
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    background-color: #f9f9f9;
+    background-color: ${({ darkMode }) => (darkMode ? "#1f1f1f" : "#f9f9f9")};
     border: 1px solid #ddd;
     border-radius: 10px;
     border-color: rgba(123, 117, 127, 1);

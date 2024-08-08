@@ -1,47 +1,98 @@
-import { Link, Head } from "@inertiajs/react";
+import React from 'react';
+
+import styled, { css } from 'styled-components';
 import background from "@/Pages/Images/Landing.png";
+import darkbackground from "../Images/DarkBackground.png";
 import LandingLayout from "@/Layouts/LandingLayout";
+import { useDispatch, useSelector } from "react-redux";
+
+const Container = styled.div`
+  ${({ darkMode }) => css`
+    background-image: url(${darkMode ? darkbackground : background});
+    height: 100vh;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: bottom;
+  `}
+`;
+
+const ContentWrapper = styled.div`
+  min-height: 70vh;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 5px;
+`;
+
+const TextContainer = styled.div`
+  font-weight: bold;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+`;
+
+const Title = styled.h1`
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 3.25rem;
+  color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6B538C")};
+`;
+
+const Subtitle = styled.h2`
+  margin-top: 1rem;
+  font-size: 2.25rem;
+  font-weight: 400;
+  color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6B538C")};
+  span {
+    color: ${({ darkMode }) => (darkMode ? "#D3BDF2" : "#9C85D8")};
+  }
+`;
+
+const Button = styled.button`
+  background-color: #6B538C;
+  border-radius: 8px;
+  color: white;
+  padding: 8px 16px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  opacity: 1;
+  &:hover {
+    opacity: 0.8;
+  }
+`;
 
 export default function Landing({ auth, laravelVersion, phpVersion }) {
-    const backgroundStyle = {
-        backgroundImage: `url(${background})`,
-        height: "100vh",
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "bottom",
-    };
+  const darkMode = useSelector(state => state.accessibility.darkMode);
+  const fontSize = useSelector(state => state.accessibility.textSize);
 
-    return (
-        <div style={backgroundStyle}>
-            <Head title="Welcome" />
-            <div className="">
-                <LandingLayout auth={auth} />
-                <div className="min-h-[70vh] text-center flex justify-center items-center flex-col gap-5">
-                    <div className="font-bold text-center flex flex-col justify-center items-center w-[50%]">
-                        <div className="font-poppins font-extrabold text-3xl text-purple-700">
-                            <h1>CO-OP CONNECT</h1>
-                        </div>
-                        <div className="mt-3 text-5xl">
-                            <h2 className="text-center font-extrabold">
-                                Where Students, Educators and Employers{" "}
-                                <span className="text-purple-400">
-                                    Thrive Together
-                                </span>
-                            </h2>
-                        </div>
-                        <div className="mt-4">
-                            <Link
-                                href={route("register")}
-                                className="ms-4 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
-                            >
-                                <button className="bg-purple-600 rounded-lg text-white px-2 py-2 text-lg hover:opacity-80 opacity-100">
-                                    Get Started
-                                </button>
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
+  return (
+    <Container darkMode={darkMode}>
+      <Head title="Welcome" />
+      <div>
+        <LandingLayout auth={auth} />
+        <ContentWrapper>
+          <TextContainer>
+            <Title darkMode={darkMode}>CO-OP CONNECT</Title>
+            <Subtitle darkMode={darkMode}>
+              Where Students, Educators and Employers{" "}
+              <span>Thrive Together</span>
+            </Subtitle>
+            <Link
+              href={route("register")}
+              className="ms-4 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
+            >
+              <Button>Get Started</Button>
+            </Link>
+          </TextContainer>
+        </ContentWrapper>
+      </div>
+    </Container>
+  );
 }
+

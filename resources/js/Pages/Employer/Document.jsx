@@ -92,21 +92,21 @@ function DocumentDropZone({
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             isDragging={isDragging}
-            data-testid="document-item-employer"
+            data-testid="drop-zone-container-employer"
         >
-            <DropZone>
+            <DropZone data-testid="drop-zone-employer">
                 {filesPreview.length > 0 ? (
                     filesPreview.map((fileObj, index) => {
                         const icon = getIconForFileType(fileObj.type);
                         return (
-                            <PreviewImage
+                            <PreviewImage data-testid="drop-zone-employer"
                                 key={index}
                                 src={icon ? icon : fileObj.preview}
                             />
                         );
                     })
                 ) : (
-                    <img
+                    <img data-testid="drop-zone-employer"
                         src={imgSrc}
                         alt={altText}
                         style={{
@@ -425,7 +425,7 @@ return(
                             <Title>Add Documents</Title>
                             <Label htmlFor="fileUpload">Attach Documents</Label>
                             <DropZoneWrapper>
-                                <DocumentDropZone
+                                <DocumentDropZone data-testid="drop-zone-employer"
                                     onFileDrop={handleFileDrop}
                                     clearPreviewsTrigger={clearPreviewsTrigger}
                                 />

@@ -21,7 +21,7 @@ class JobsFactory extends Factory
     {
         return [
             'title' => $this->faker->jobTitle,
-            'description' => $this->faker->paragraph,
+            'description' => $this->faker->realText($maxNbChars = 200),
             'skills' => $this->faker->randomElements(['JavaScript', 'PHP', 'HTML', 'CSS', 'Python'], $this->faker->numberBetween(1, 4)),
             'location' => $this->faker->city,
             'posting_status' => $this->faker->randomElement(['Open', 'Closed']),

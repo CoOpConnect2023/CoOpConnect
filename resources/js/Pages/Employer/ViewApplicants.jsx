@@ -82,9 +82,6 @@ const ViewApplicants = () => {
                 timeSlots: [""],
             })
         );
-        console.log(
-            `Declined ${selectedApplicant.name} with message: ${message}`
-        );
     };
 
     const handleAccept = (applicant) => {
@@ -110,7 +107,8 @@ const ViewApplicants = () => {
             .filter((applicant) => applicant.status === activeTab)
             .map((applicant) => (
                 <TableRow key={applicant.id}>
-                    <TableData>{applicant.name} & {applicant.id} </TableData>
+                    <TableData>{applicant.name}</TableData>
+                    <TableData>{applicant.userId} </TableData>
                     <TableData>{applicant.email}</TableData>
                     <TableData>
                         <ResumeLink
@@ -151,18 +149,20 @@ const ViewApplicants = () => {
         <NavBar header={"View Applicants"}>
             {job && (
                 <>
-                    <p>
-                        <b>Position:</b> {job.title}
-                    </p>
-                    <p>
-                        <b>Company:</b> {job.company}
-                    </p>
-                    <p>
-                        <b>Location:</b> {job.location}
-                    </p>
-                    <p>
-                        <b>Description:</b> {job.description}
-                    </p>
+                    <JobDetails>
+                        <p>
+                            <b>Position:</b> {job.title}
+                        </p>
+                        <p>
+                            <b>Company:</b> {job.company}
+                        </p>
+                        <p>
+                            <b>Location:</b> {job.location}
+                        </p>
+                        <p>
+                            <b>Description:</b> {job.description}
+                        </p>
+                    </JobDetails>
                     <Container>
                         <Tabs>
                             {tabs.map((tab) => (
@@ -175,33 +175,36 @@ const ViewApplicants = () => {
                                 </Tab>
                             ))}
                         </Tabs>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableHeader>Name and ID</TableHeader>
-                                    <TableHeader>Email</TableHeader>
-                                    <TableHeader>Resume</TableHeader>
-
-                                    {activeTab === "Pending" && (
-                                        <TableHeader>Actions</TableHeader>
-                                    )}
-                                    {activeTab === "Scheduled" && (
-                                        <TableHeader>Date</TableHeader>
-                                    )}
-                                </TableRow>
-                            </TableHead>
-                            <tbody>
-                                {applicants.length > 0 ? (
-                                    renderApplicants()
-                                ) : (
+                        <TableContainer>
+                            <Table>
+                                <TableHead>
                                     <TableRow>
-                                        <TableData colSpan="5">
-                                            No applicants found.
-                                        </TableData>
+                                        <TableHeader>Name</TableHeader>
+                                        <TableHeader>Student ID</TableHeader>
+                                        <TableHeader>Email</TableHeader>
+                                        <TableHeader>Resume</TableHeader>
+
+                                        {activeTab === "Pending" && (
+                                            <TableHeader>Actions</TableHeader>
+                                        )}
+                                        {activeTab === "Scheduled" && (
+                                            <TableHeader>Date</TableHeader>
+                                        )}
                                     </TableRow>
-                                )}
-                            </tbody>
-                        </Table>
+                                </TableHead>
+                                <tbody>
+                                    {applicants.length > 0 ? (
+                                        renderApplicants()
+                                    ) : (
+                                        <TableRow>
+                                            <TableData colSpan="5">
+                                                No applicants found.
+                                            </TableData>
+                                        </TableRow>
+                                    )}
+                                </tbody>
+                            </Table>
+                        </TableContainer>
                     </Container>
 
                     {isDeclineModalOpen && (
@@ -222,12 +225,20 @@ export default ViewApplicants;
 // Styled Components
 const Container = styled.div`
     padding: 20px;
+    @media (max-width: 768px) {
+        padding: 10px;
+    }
 `;
 
 const Tabs = styled.div`
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
+    flex-wrap: wrap;
+
+    @media (max-width: 768px) {
+        margin-bottom: 10px;
+    }
 `;
 
 const Tab = styled.div`
@@ -242,12 +253,35 @@ const Tab = styled.div`
     &:hover {
         background: ${({ $active }) => ($active ? "#0056b3" : "#c7c7c7")};
     }
+
+    @media (max-width: 768px) {
+        padding: 5px 10px;
+        margin: 5px;
+    }
+`;
+
+const JobDetails = styled.div`
+    margin-bottom: 20px;
+
+    @media (max-width: 768px) {
+        margin-bottom: 10px;
+        font-size: 14px;
+    }
+`;
+
+const TableContainer = styled.div`
+    overflow-x: auto;
 `;
 
 const Table = styled.table`
     width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
+
+    @media (max-width: 768px) {
+        width: 100%;
+        font-size: 14px;
+    }
 `;
 
 const TableHead = styled.thead`
@@ -264,12 +298,20 @@ const TableHeader = styled.th`
     padding: 12px;
     border: 1px solid #ddd;
     text-align: left;
+
+    @media (max-width: 768px) {
+        padding: 8px;
+    }
 `;
 
 const TableData = styled.td`
     padding: 12px;
     border: 1px solid #ddd;
     text-align: left;
+
+    @media (max-width: 768px) {
+        padding: 8px;
+    }
 `;
 
 const ResumeLink = styled.a`
@@ -290,49 +332,11 @@ const Button = styled.button`
     border-radius: 5px;
     color: white;
     background-color: ${(props) => props.color};
+
+    @media (max-width: 768px) {
+        padding: 8px 12px;
+        margin: 5px 2px;
+        font-size: 0.9em;
+    }
 `;
 
-const Modal = styled.div`
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-`;
-
-const ModalContent = styled.div`
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    width: 500px;
-    max-width: 90%;
-`;
-
-const FormGroup = styled.div`
-    margin-bottom: 15px;
-`;
-
-const Label = styled.label`
-    display: block;
-    margin-bottom: 5px;
-`;
-
-const TextArea = styled.textarea`
-    width: 100%;
-    padding: 10px;
-    resize: none;
-`;
-
-const Input = styled.input`
-    width: 100%;
-    padding: 10px;
-`;
-
-const Actions = styled.div`
-    display: flex;
-    justify-content: flex-end;
-`;

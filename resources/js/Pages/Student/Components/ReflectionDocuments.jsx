@@ -13,10 +13,11 @@ const Container = styled.section`
     background-color: #fff;
     font-weight: 600;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
+    flex: 1 0 auto; /* Can grow to fill available space */
 
     &:hover {
         box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-        
+
     }
 `;
 

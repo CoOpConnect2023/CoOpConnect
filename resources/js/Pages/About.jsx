@@ -1,4 +1,4 @@
-import { Link, Head } from "@inertiajs/react";
+import {  Head } from "@inertiajs/react";
 import LandingLayout from "@/Layouts/LandingLayout";
 
 export default function About({ auth }) {

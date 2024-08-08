@@ -48,7 +48,7 @@ console.log(job, user)
         if (selectedSlot) {
             const formatDateTime = (date) => {
                 const pad = (n) => (n < 10 ? '0' + n : n);
-                const year = date.getFullYear(); // Correct method name
+                const year = date.getFullYear();
                 const month = pad(date.getMonth() + 1);
                 const day = pad(date.getDate());
                 const hours = pad(date.getHours());

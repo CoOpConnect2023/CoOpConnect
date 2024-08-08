@@ -130,28 +130,28 @@ function Sidebar() {
             </Link>
             <Divider />
 
-              <Link href="/employer/home" onClick={() => handleTabClick("/employer/home")}>
+              <Link data-test-id="home-link" href="/employer/home" onClick={() => handleTabClick("/employer/home")}>
                 <IconButton active={activeTab === "/employer/home"}>
                   <Icon src={briefcase} alt="Icon 1" loading="lazy" />
                 </IconButton>
               </Link>
-              
-              <Link href="/employer/messages" onClick={() => handleTabClick("/employer/messages")}>
+
+              <Link data-test-id="messages-link" href="/employer/messages" onClick={() => handleTabClick("/employer/messages")}>
                 <IconButton active={activeTab === "/employer/messages"}>
                   <Icon src={message} alt="" loading="lazy" />
                 </IconButton>
               </Link>
-              <Link href="/employer/interviews" onClick={() => handleTabClick("/employer/interviews")} >
+              <Link data-test-id="interviews-link"  href="/employer/interviews" onClick={() => handleTabClick("/employer/interviews")} >
                 <IconButton active={activeTab === "/employer/interviews"}>
                   <Icon src={calendar} alt="" loading="lazy" />
                 </IconButton>
               </Link>
-              <Link href="/employer/profile" onClick={() => handleTabClick("/employer/profile")} data-test-id="profile-link">
+              <Link  href="/employer/profile" onClick={() => handleTabClick("/employer/profile")} data-test-id="profile-link">
                 <IconButton active={activeTab === "/employer/profile"}>
                   <Icon src={user} alt="" loading="lazy" />
                 </IconButton>
               </Link>
-              <Link href="/employer/settings" onClick={() => handleTabClick("/employer/settings")}>
+              <Link data-test-id="settings-link" href="/employer/settings" onClick={() => handleTabClick("/employer/settings")}>
                 <IconButton active={activeTab === "/employer/settings"}>
                   <Icon src={settings} alt="" loading="lazy" />
                 </IconButton>

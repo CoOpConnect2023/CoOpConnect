@@ -81,8 +81,9 @@ function DocumentDropZone({ onFileDrop, imgSrc, altText, description, clearPrevi
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             isDragging={isDragging}
+            data-testid="drop-zone-container-employer"
         >
-            <DropZone>
+            <DropZone data-testid="drop-zone-employer">
                 {filesPreview.length > 0 ? (
                     filesPreview.map((fileObj, index) => {
                         const icon = getIconForFileType(fileObj.type);
@@ -212,7 +213,7 @@ const Document = () => {
             if (response.data.status === 1) {
                 const documents = response.data.data.length > 0 ? response.data.data : [];
                 setUserDocuments(documents);
-                
+
             } else {
                 console.error("Error fetching documents:", response.data.message);
                 setUserDocuments([]);

@@ -15,5 +15,9 @@ class HomeController extends Controller
     {
         return Inertia::render('Home/About');
     }
+    public function showGuide()
+    {
+        return Inertia::render('Home/Guide');
+    }
 }
 
