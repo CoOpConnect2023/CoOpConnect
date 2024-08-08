@@ -15,6 +15,8 @@ function StudentsPage() {
     const user = useSelector(selectUser);
     const students = useSelector(selectStudents);
     const courses = useSelector(selectCourses);
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
 
     const [newStudent, setNewStudent] = useState({ name: "", email: "", courses: [] });
     const [editingStudent, setEditingStudent] = useState(null);
@@ -98,10 +100,10 @@ function StudentsPage() {
 
     return (
         <NavBar header={"Manage Students"}>
-            <MainContainer>
-                <Section>
-                    <SectionTitle>Students Enrolled</SectionTitle>
-                    <StyledTable>
+            <MainContainer fontSize={fontSize} darkMode={darkMode}>
+                <Section fontSize={fontSize} darkMode={darkMode}>
+                    <SectionTitle fontSize={fontSize} darkMode={darkMode}>Students Enrolled</SectionTitle>
+                    <StyledTable fontSize={fontSize} darkMode={darkMode}>
                         <thead>
                             <tr>
                                 <th>Student ID</th>
@@ -134,17 +136,17 @@ function StudentsPage() {
                     </StyledTable>
                 </Section>
 
-                <FixedBottom>
+                <FixedBottom fontSize={fontSize} darkMode={darkMode}>
                     {editingStudent ? (
-                        <Form>
-                            <Input
+                        <Form fontSize={fontSize} darkMode={darkMode}>
+                            <Input fontSize={fontSize} darkMode={darkMode}
                                 type="text"
                                 name="name"
                                 value={editingStudent.name}
                                 onChange={(e) => handleInputChange(e, true)}
                                 placeholder="Student Name"
                             />
-                            <Input
+                            <Input fontSize={fontSize} darkMode={darkMode}
                                 type="email"
                                 name="email"
                                 value={editingStudent.email}
@@ -152,7 +154,7 @@ function StudentsPage() {
                                 placeholder="Student Email"
                             />
                             <label htmlFor="courses">Courses:</label>
-                            <Select
+                            <Select fontSize={fontSize} darkMode={darkMode}
                                 id="courses"
                                 name="courses"
                                 multiple
@@ -163,11 +165,11 @@ function StudentsPage() {
                                     <option key={course.id} value={course.id}>{course.name}</option>
                                 ))}
                             </Select>
-                            <Button onClick={() => handleEditStudent(editingStudent.id)}>Save Changes</Button>
+                            <Button fontSize={fontSize} darkMode={darkMode} onClick={() => handleEditStudent(editingStudent.id)}>Save Changes</Button>
                         </Form>
                     ) : (
-                        <Form>
-                            <Input
+                        <Form fontSize={fontSize} darkMode={darkMode}>
+                            <Input fontSize={fontSize} darkMode={darkMode}
                                 type="text"
                                 name="id"
                                 value={newStudent.id}
@@ -175,8 +177,8 @@ function StudentsPage() {
                                 placeholder="Student ID"
                             />
 
-                            <label htmlFor="courses">Courses:</label>
-                            <Select
+                            <label  htmlFor="courses">Courses:</label>
+                            <Select fontSize={fontSize} darkMode={darkMode}
                                 id="courses"
                                 name="courses"
                                 multiple
@@ -187,7 +189,7 @@ function StudentsPage() {
                                     <option key={course.id} value={course.id}>{course.name}</option>
                                 ))}
                             </Select>
-                            <Button type="button" onClick={handleCreateStudent}>Add Student</Button>
+                            <Button fontSize={fontSize} darkMode={darkMode} type="button" onClick={handleCreateStudent}>Add Student</Button>
                         </Form>
                     )}
                 </FixedBottom>

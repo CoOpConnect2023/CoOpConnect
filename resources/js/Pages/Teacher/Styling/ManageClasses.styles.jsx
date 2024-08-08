@@ -17,7 +17,10 @@ export const MainContainer = styled.div`
     display: flex;
     flex-direction: column;
     height: 100vh; /* Full height of viewport */
-     animation: ${slideInFromSide} 0.5s ease-out;
+border-radius: 10px;
+     border-color: rgba(123, 117, 127, 1);
+    border-style: solid;
+    border-width: 1px;
 `;
 
 export const Section = styled.section`

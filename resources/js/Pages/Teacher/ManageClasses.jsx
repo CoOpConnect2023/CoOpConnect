@@ -15,6 +15,8 @@ function ClassesPage() {
     const classes = useSelector(selectCourses);
     const [newClass, setNewClass] = useState({ name: "", startDate: "", endDate: "" });
     const [editingClass, setEditingClass] = useState(null);
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
 
     useEffect(() => {
         dispatch(getUser());
@@ -61,10 +63,10 @@ function ClassesPage() {
 
     return (
         <NavBar header={"Manage Classes"}>
-            <MainContainer>
-                <Section>
-                    <SectionTitle>Classes Taught</SectionTitle>
-                    <StyledTable>
+            <MainContainer fontSize={fontSize} darkMode={darkMode}>
+                <Section fontSize={fontSize} darkMode={darkMode}>
+                    <SectionTitle fontSize={fontSize} darkMode={darkMode}>Classes Taught</SectionTitle>
+                    <StyledTable fontSize={fontSize} darkMode={darkMode}>
                         <thead>
                             <tr>
                                 <th>Class ID</th>
@@ -89,57 +91,57 @@ function ClassesPage() {
                             ))}
                         </tbody>}
                     </StyledTable>
-                </Section>
+                </Section >
                 <FormContainer>
                     {editingClass ? (
-                        <Form>
-                            <Input
+                        <Form fontSize={fontSize} darkMode={darkMode}>
+                            <Input fontSize={fontSize} darkMode={darkMode}
                                 type="text"
                                 name="name"
                                 value={editingClass.name}
                                 onChange={(e) => handleInputChange(e, true)}
                                 placeholder="Class Name"
                             />
-                            <Input
+                            <Input fontSize={fontSize} darkMode={darkMode}
                                 type="date"
                                 name="startDate"
                                 value={editingClass.startDate}
                                 onChange={(e) => handleInputChange(e, true)}
                                 placeholder="Start Date"
                             />
-                            <Input
+                            <Input fontSize={fontSize} darkMode={darkMode}
                                 type="date"
                                 name="endDate"
                                 value={editingClass.endDate}
                                 onChange={(e) => handleInputChange(e, true)}
                                 placeholder="End Date"
                             />
-                            <Button onClick={() => handleEditClass(editingClass.id)}>Save Changes</Button>
+                            <Button fontSize={fontSize} darkMode={darkMode} onClick={() => handleEditClass(editingClass.id)}>Save Changes</Button>
                         </Form>
                     ) : (
-                        <Form>
-                            <Input
+                        <Form fontSize={fontSize} darkMode={darkMode}>
+                            <Input fontSize={fontSize} darkMode={darkMode}
                                 type="text"
                                 name="name"
                                 value={newClass.name}
                                 onChange={(e) => handleInputChange(e)}
                                 placeholder="Class Name"
                             />
-                            <Input
+                            <Input fontSize={fontSize} darkMode={darkMode}
                                 type="date"
                                 name="startDate"
                                 value={newClass.startDate}
                                 onChange={(e) => handleInputChange(e)}
                                 placeholder="Start Date"
                             />
-                            <Input
+                            <Input fontSize={fontSize} darkMode={darkMode}
                                 type="date"
                                 name="endDate"
                                 value={newClass.endDate}
                                 onChange={(e) => handleInputChange(e)}
                                 placeholder="End Date"
                             />
-                            <Button onClick={handleCreateClass}>Create Class</Button>
+                            <Button fontSize={fontSize} darkMode={darkMode} onClick={handleCreateClass}>Create Class</Button>
                         </Form>
                     )}
                 </FormContainer>

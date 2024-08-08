@@ -5,7 +5,7 @@ export const Div15 = styled.div`
     border-color: rgba(123, 117, 127, 1);
     border-style: solid;
     border-width: 1px;
-    
+
 
     transition: background-color 0.5s ease;
     display: flex;
@@ -24,7 +24,7 @@ export const Div15 = styled.div`
 `;
 
 export const Div16 = styled.div`
-    color: var(--Palettes-Primary-40, #773dc3);color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#773dc3")};
+    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#773dc3")};
     font: 600 24px/133% Poppins, sans-serif;
 
     @media (max-width: 991px) {

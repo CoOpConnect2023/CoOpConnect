@@ -63,6 +63,8 @@ const Interviews = () => {
     const data = useSelector(selectInterviews);
     const interviews = data.interviews;
     const interviewsStatus = useSelector(selectInterviewsStatus);
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
 
     useEffect(() => {
         dispatch(getUser());
@@ -293,13 +295,13 @@ const Interviews = () => {
 
     return (
         <NavBar header={"Interviews"}>
-            <MainContainer>
-                <Container>
-                    <Wrapper>
-                        <Header>Schedule your Interviews</Header>
-                        <CalendarDiv>
-                            <DndProvider backend={HTML5Backend}>
-                                <DnDCalendar
+            <MainContainer fontSize={fontSize} darkMode={darkMode}>
+                <Container fontSize={fontSize} darkMode={darkMode}>
+                    <Wrapper fontSize={fontSize} darkMode={darkMode}>
+                        <Header fontSize={fontSize} darkMode={darkMode}>Schedule your Interviews</Header>
+                        <CalendarDiv fontSize={fontSize} darkMode={darkMode}>
+                            <DndProvider fontSize={fontSize} darkMode={darkMode} backend={HTML5Backend}>
+                                <DnDCalendar fontSize={fontSize} darkMode={darkMode}
                                     defaultDate={new Date(getTodayDate())}
                                     defaultView="month"
                                     events={events}
@@ -317,12 +319,12 @@ const Interviews = () => {
                         </CalendarDiv>
                     </Wrapper>
 
-                    <EventsContainer>
-                        <EventsHeader>All Events</EventsHeader>
+                    <EventsContainer fontSize={fontSize} darkMode={darkMode}>
+                        <EventsHeader fontSize={fontSize} darkMode={darkMode}>All Events</EventsHeader>
                         {events && events.length > 0 ? (
                             events.map((event) => (
-                                <Event key={event.id}>
-                                    <DeleteButton onClick={() => handleDeleteClick(event)}>X</DeleteButton>
+                                <Event fontSize={fontSize} darkMode={darkMode} key={event.id}>
+                                    <DeleteButton fontSize={fontSize} darkMode={darkMode} onClick={() => handleDeleteClick(event)}>X</DeleteButton>
                                     <div>Title: {event.title}</div>
                                     <div>Description: {event.description}</div>
                                     <div>
@@ -334,7 +336,7 @@ const Interviews = () => {
                                 </Event>
                             ))
                         ) : (
-                            <NoEventsMessage>No events found</NoEventsMessage>
+                            <NoEventsMessage fontSize={fontSize} darkMode={darkMode}>No events found</NoEventsMessage>
                         )}
                     </EventsContainer>
                 </Container>

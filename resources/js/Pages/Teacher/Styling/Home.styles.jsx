@@ -39,7 +39,7 @@ export const TopContainer = styled.div`
   gap: 20px;
   align-self: stretch;
   width: 100%;
-  animation: ${slideInFromTop} 0.5s ease-out;
+
 
   @media (max-width: 991px) {
     flex-direction: column;
@@ -53,7 +53,7 @@ export const BottomContainer = styled.div`
   gap: 20px;
   align-self: stretch;
   width: 100%;
-  animation: ${slideInFromBottom} 0.5s ease-out;
+
 
   @media (max-width: 991px) {
     flex-direction: column;
@@ -63,7 +63,7 @@ export const BottomContainer = styled.div`
 
 export const StudentsSectionContainer = styled.div`
   flex: 1;
-  animation: ${slideInFromTop} 0.5s ease-out;
+  
 
   @media (max-width: 991px) {
     flex-direction: column;

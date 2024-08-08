@@ -1,8 +1,5 @@
 import styled, { keyframes } from "styled-components";
 
-
-
-
 const fadeIn = keyframes`
     from {
         opacity: 0;
@@ -20,8 +17,10 @@ export const MainContainer = styled.div`
     gap: 40px;
     flex: 1 0 0;
     align-self: stretch;
-    background-color: var(--Schemes-Background, #fff7ff);
+    background-color: ${({ darkMode }) => (darkMode ? "#1C1C1C" : "#fff7ff")};
+    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
     animation: ${fadeIn} 0.8s ease-in-out;
+    transition: background-color 0.3s;
 `;
 
 export const Container = styled.div`
@@ -33,8 +32,9 @@ export const Container = styled.div`
     width: 100%;
     margin: 0 auto;
     padding: 20px;
-    background-color: #fff;
+    background-color: ${({ darkMode }) => (darkMode ? "#2D2D2D" : "#fff")};
     height: 110vh;
+    transition: background-color 0.3s;
 
     @media (max-width: 991px) {
         padding: 10px;
@@ -47,28 +47,33 @@ export const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
     justify-content: center;
 `;
 
 export const Header = styled.div`
-    color: var(--Schemes-Primary, #6b538c);
+    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
     text-decoration-line: underline;
     align-self: center;
     font: 600 32px Poppins, sans-serif;
+    transition: color 0.3s;
 `;
 
 export const CalendarWrapper = styled.div`
     border-radius: 16px;
     box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1),
         0px 2px 4px -1px rgba(0, 0, 0, 0.06);
-    border-color: rgba(123, 117, 127, 1);
+    border-color: ${({ darkMode }) => (darkMode ? "#444444" : "rgba(123, 117, 127, 1)")};
     border-style: solid;
     border-width: 1px;
-    background-color: #fff;
+    background-color: ${({ darkMode }) => (darkMode ? "#3C3C3C" : "#fff")};
+    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
     display: flex;
     margin-top: 40px;
     flex-direction: column;
     padding: 30px;
+    transition: background-color 0.3s, border-color 0.3s;
+
     @media (max-width: 991px) {
         max-width: 100%;
         padding: 0 20px;
@@ -80,6 +85,8 @@ export const CalendarHeader = styled.div`
     display: flex;
     width: 100%;
     gap: 20px;
+    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
+
     @media (max-width: 991px) {
         max-width: 100%;
         flex-wrap: wrap;
@@ -87,9 +94,10 @@ export const CalendarHeader = styled.div`
 `;
 
 export const Month = styled.div`
-    color: var(--Schemes-Primary, #6b538c);
+    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
     margin: auto 0;
     font: 900 24px Inter, sans-serif;
+    transition: color 0.3s;
 `;
 
 export const NavIcons = styled.div`
@@ -115,12 +123,14 @@ export const DaysOfWeek = styled.div`
     margin-top: 12px;
     gap: -1px;
     font-size: 14px;
-    color: #000;
+    color: ${({ darkMode }) => (darkMode ? "#E0E0E0" : "#000")};
     font-weight: 600;
     white-space: nowrap;
     text-align: center;
     justify-content: space-between;
     padding: 40px 80px 40px 0;
+    transition: color 0.3s;
+
     @media (max-width: 991px) {
         max-width: 100%;
         flex-wrap: wrap;
@@ -133,6 +143,8 @@ export const Day = styled.div`
     display: flex;
     font-variant-numeric: lining-nums tabular-nums;
     font-family: Inter, sans-serif;
+    color: ${({ darkMode }) => (darkMode ? "#E0E0E0" : "#000")};
+    transition: color 0.3s;
 `;
 
 export const DatesGrid = styled.div`
@@ -140,11 +152,13 @@ export const DatesGrid = styled.div`
     grid-template-columns: repeat(7, 1fr);
     gap: -1px;
     font-size: 14px;
-    color: #000;
+    color: ${({ darkMode }) => (darkMode ? "#E0E0E0" : "#000")};
     font-weight: 400;
     white-space: nowrap;
     text-align: center;
     justify-content: space-between;
+    transition: color 0.3s;
+
     @media (max-width: 991px) {
         flex-wrap: wrap;
         white-space: initial;
@@ -155,10 +169,14 @@ export const DateCell = styled.div`
     font-variant-numeric: lining-nums tabular-nums;
     font-family: Inter, sans-serif;
     justify-content: center;
-    border-color: rgba(213, 212, 223, 1);
+    border-color: ${({ darkMode }) => (darkMode ? "#555555" : "rgba(213, 212, 223, 1)")};
     border-style: solid;
     border-width: 1px;
     padding: 40px;
+    color: ${({ darkMode }) => (darkMode ? "#E0E0E0" : "#000")};
+    background-color: ${({ darkMode }) => (darkMode ? "#2D2D2D" : "#fff")};
+    transition: color 0.3s, background-color 0.3s, border-color 0.3s;
+
     @media (max-width: 991px) {
         white-space: initial;
         padding: 0 20px;
@@ -166,59 +184,66 @@ export const DateCell = styled.div`
 `;
 
 export const TodayDateCell = styled(DateCell)`
-    border: 1px solid var(--Stroke, #d5d4df);
-    background: var(--Schemes-Primary, #6b538c);
-    color: #fff; // Ensures the text is readable
+    border: 1px solid ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#d5d4df")};
+    background: ${({ darkMode }) => (darkMode ? "#6b538c" : "#6b538c")};
+
+    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
 `;
 
 export const InactiveDateCell = styled(DateCell)`
-    background-color: var(--Inactive, #f2f3f7);
+    background-color: ${({ darkMode }) => (darkMode ? "#444444" : "#f2f3f7")};
+    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
 `;
 
 export const CalendarDiv = styled.div`
-width: 100%;
+    width: 100%;
     min-height: 500px; /* Ensure minimum height for the calendar */
     height: 80vh; /* Adjust height as needed */
     overflow: auto; /* Enable vertical scrolling if needed */
+    background-color: ${({ darkMode }) => (darkMode ? "#2D2D2D" : "#fff")};
+    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
+    transition: background-color 0.3s;
 
     @media (max-width: 991px) {
         min-height: 60vh; /* Adjust height for smaller screens */
     }
-
 `;
 
 export const EventsContainer = styled.div`
     width: 100%;
     margin-top: 20px;
     padding: 20px;
-    border: 1px solid #ccc;
+    border: 1px solid ${({ darkMode }) => (darkMode ? "#555555" : "#ccc")};
     border-radius: 8px;
     overflow-y: auto; /* Enable vertical scrolling */
     max-height: 400px; /* Limit height for smaller screens */
     min-height: 20vh;
+    background-color: ${({ darkMode }) => (darkMode ? "#2D2D2D" : "#fff")};
+    transition: background-color 0.3s, border-color 0.3s;
 
     @media (max-width: 991px) {
-
         overflow-y: auto; /* Enable vertical scrolling */
-    max-height: 400px; /* Limit height for smaller screens */
-    min-height: 20vh;
+        max-height: 400px; /* Limit height for smaller screens */
+        min-height: 20vh;
     }
 `;
 
 export const EventsHeader = styled.h2`
-  font-size: 24px;
-  color: #6b538c;
-  margin-bottom: 20px;
+    font-size: 24px;
+    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
+    margin-bottom: 20px;
+    transition: color 0.3s;
 `;
 
 export const Event = styled.div`
-  background-color: #ffffff;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 16px;
-  position: relative; /* Ensure relative positioning for absolute children */
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
+    background-color: ${({ darkMode }) => (darkMode ? "#3C3C3C" : "#ffffff")};
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
+    padding: 16px;
+    margin-bottom: 16px;
+    position: relative; /* Ensure relative positioning for absolute children */
+    transition: box-shadow 0.3s ease, transform 0.3s ease, background-color 0.3s;
 
     &:hover {
         box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
@@ -227,25 +252,26 @@ export const Event = styled.div`
 `;
 
 export const NoEventsMessage = styled.p`
-  font-size: 18px;
-  color: #6b538c;
-  margin-top: 20px;
+    font-size: 18px;
+    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
+    margin-top: 20px;
+    transition: color 0.3s;
 `;
 
 export const DeleteButton = styled.button`
-background-color: red;
-color: white;
-border: none;
-padding: 4px 8px;
-border-radius: 4px;
-cursor: pointer;
-font-size: 14px;
-position: absolute;
-top: 10px;
-right: 10px;
-transition: background-color 0.3s ease;
+    background-color: ${({ darkMode }) => (darkMode ? "darkred" : "red")};
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    transition: background-color 0.3s ease;
 
     &:hover {
-        background-color: darkred;
+        background-color: ${({ darkMode }) => (darkMode ? "#FF4C4C" : "darkred")};
     }
 `;
