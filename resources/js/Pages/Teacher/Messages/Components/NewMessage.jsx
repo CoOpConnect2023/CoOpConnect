@@ -41,6 +41,12 @@ export default function NewMessage({ newMessage, setNewMessage, brandNewMessage,
         return <div>Loading...</div>;
     }
 
+    useEffect(() => {
+        if (uniqueEmails.size > 0 && recipientEmail === '') {
+            setRecipientEmail([...uniqueEmails][0]);
+        }
+    }, [uniqueEmails]);
+
     return (
         <Div4 data-testid="new-message-component-teacher">
             <Div5>New Message</Div5>

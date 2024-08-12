@@ -34,6 +34,11 @@ export default function NewMessage({ newMessage, setNewMessage,  onSendNewMessag
     // Check if there are any applicants across all shortlists
     const hasApplicants = shortlists && shortlists.some(shortlist => shortlist.email.length > 0);
 
+    useEffect(() => {
+        if (uniqueEmails.size > 0 && recipientEmail === '') {
+            setRecipientEmail([...uniqueEmails][0]);
+        }
+    }, [uniqueEmails]);
 
 
 

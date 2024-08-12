@@ -79,7 +79,7 @@ export default function Messages() {
         if (brandNewMessage.trim() === '') return;
 
         dispatch(sendNewMessage({ brandNewMessage, userInfo, recipientEmail }));
-        window.location.reload()
+        dispatch(getConversations({ userId: currentUser }));
         setBrandNewMessage('')
     };
 
