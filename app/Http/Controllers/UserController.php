@@ -280,6 +280,33 @@ public function deleteUser(Request $request, $id)
 
         return response()->json(['message' => 'Password updated successfully']);
     }
+
+    public function updatePreferences(Request $request)
+{
+    $user = Auth::user();
+
+    
+    $request->validate([
+        'dark_mode' => 'sometimes|boolean', 
+        'font_size' => 'sometimes|integer|min:10|max:24',
+    ]);
+
+   
+    if ($request->has('dark_mode')) {
+        $user->dark_mode = $request->dark_mode;
+    }
+
+    
+    if ($request->has('font_size')) {
+        $user->font_size = $request->font_size;
+    }
+
+    
+    $user->save();
+
+    return response()->json(['message' => 'Preferences updated successfully']);
+}
+
 }
 
 

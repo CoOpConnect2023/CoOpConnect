@@ -59,7 +59,7 @@ const Section = styled.section`
   background-color: ${({ darkMode }) => (darkMode ? "#2D2D2D" : "#fff")};
   color: ${({ darkMode }) => (darkMode ? "#f1f1f1" : "#1a1919")};
   display: flex;
-  height: 367px;
+  min-height: 40%;
   overflow-y: auto;
   flex-direction: column;
   padding: 20px;
@@ -81,6 +81,7 @@ const SectionTitle = styled.h1`
 
 const StyledTable = styled.table`
   width: 100%;
+  height: 100%;
   border-collapse: collapse;
   text-align: left;
   border-radius: 10px;

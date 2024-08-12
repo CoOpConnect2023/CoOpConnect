@@ -18,6 +18,8 @@ return new class extends Migration
             $table->boolean('searching')->default(false);
             $table->json('skills')->nullable();
             $table->string('positiontitle')->nullable();
+            $table->boolean('darkMode')->default(false);
+            $table->string('fontSize')->default('small');;
 
             // Add more columns as needed
         });

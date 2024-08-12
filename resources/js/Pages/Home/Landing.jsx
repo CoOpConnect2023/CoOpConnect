@@ -1,10 +1,21 @@
-import React from 'react';
-
+import React, { useEffect } from 'react';
 import styled, { css } from 'styled-components';
+import { Link } from '@inertiajs/inertia-react';  // Import Link from Inertia.js
 import background from "@/Pages/Images/Landing.png";
 import darkbackground from "../Images/DarkBackground.png";
 import LandingLayout from "@/Layouts/LandingLayout";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+
+// Your styled components...
+
+
+const PageTitle = ({ title }) => {
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
+
+  return null;
+};
 
 const Container = styled.div`
   ${({ darkMode }) => css`
@@ -69,11 +80,10 @@ const Button = styled.button`
 
 export default function Landing({ auth, laravelVersion, phpVersion }) {
   const darkMode = useSelector(state => state.accessibility.darkMode);
-  const fontSize = useSelector(state => state.accessibility.textSize);
 
   return (
     <Container darkMode={darkMode}>
-      <Head title="Welcome" />
+      <PageTitle title="Welcome" />
       <div>
         <LandingLayout auth={auth} />
         <ContentWrapper>
@@ -95,4 +105,3 @@ export default function Landing({ auth, laravelVersion, phpVersion }) {
     </Container>
   );
 }
-

@@ -1,6 +1,6 @@
 import React from "react";
 import styled, { keyframes, css } from "styled-components";
-import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { useSelector } from "react-redux";
 
 // Define the keyframes for the slide-in animations
@@ -26,8 +26,8 @@ const Container = styled.section`
   font-size: 16px;
   font-weight: 400;
   line-height: 150%;
-  height: 367px;
-  width: 400px;
+  
+  width: 30%;
   border: 1px solid rgba(123, 117, 127, 1);
   
   transition: background-color 0.3s, color 0.3s;
@@ -59,7 +59,8 @@ function StudentStatus({ percentages }) {
   return (
     <Container darkMode={darkMode}>
       <Title darkMode={darkMode}>Student Status</Title>
-      <PieChart width={315} height={315}>
+      
+      <PieChart width={300} height={300}>
         <Pie
           data={data}
           cx="50%"  // Center the chart horizontally
@@ -80,6 +81,7 @@ function StudentStatus({ percentages }) {
         <Tooltip />
         <Legend />
       </PieChart>
+      
     </Container>
   );
 }

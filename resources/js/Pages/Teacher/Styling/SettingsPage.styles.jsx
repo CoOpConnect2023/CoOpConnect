@@ -358,6 +358,23 @@ export const OtherOptionButton = styled.button`
     }
 `;
 
+export const SaveOptionButton = styled.button`
+    padding: 0.5em;
+    margin: 5px;
+    cursor: pointer;
+    background: ${({ active, darkMode }) => (active ? "#6B538C" : darkMode ? "#006400" : "#66CC66")};
+    color: ${({ active, darkMode }) => (active ? "#FFF" : darkMode ? "#ddd" : "#FFF")};
+    border: none;
+    border-radius: 5px;
+    user-select: none;
+    font-size: ${({ fontSize }) => fontSize};
+    transition: background-color 0.5s ease, color 0.5s ease;
+
+    &:hover {
+        background: ${({ active, darkMode }) => (active ? "#0056b3" : darkMode ? "#66CC66" : "#006400")};
+    }
+`;
+
 export const DummySection = styled.section`
     border-color: ${({ darkMode }) => (darkMode ? "rgba(200, 200, 200, 1)" : "rgba(123, 117, 127, 1)")};
     border-style: solid;

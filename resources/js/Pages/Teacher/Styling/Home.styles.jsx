@@ -27,10 +27,12 @@ export const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 20px;
-  flex: 1 0 0;
-  align-self: stretch;
+  gap: 10px;
+  flex: 1 1 auto; /* Allow the container to grow */
   width: 100%;
+  /* Ensure it stretches to the full height of the viewport */
+  padding: 5px; /* Optional: Add padding for spacing */
+  box-sizing: border-box; /* Ensure padding doesn't affect width */
 `;
 
 export const TopContainer = styled.div`

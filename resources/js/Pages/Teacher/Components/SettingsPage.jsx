@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useForm } from '@inertiajs/react';
 import { useDispatch, useSelector } from "react-redux";
-import { updateUserPassword, deleteUser, getUser, selectUser } from "@/Features/users/userSlice";
+import { updateUserPassword, updateUserPreferences, deleteUser, getUser, selectUser } from "@/Features/users/userSlice";
 import { toggleDarkMode, setTextSize } from "@/Features/accessibility/accessibilitySlice";
 import { faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -38,7 +38,8 @@ import {
     Input,
     SubmitButton,
     Message,
-    OtherOptionButton
+    OtherOptionButton,
+    SaveOptionButton
 } from "../Styling/SettingsPage.styles";
 
 const appUrl = import.meta.env.VITE_APP_URL;
@@ -123,6 +124,15 @@ function SettingsPanel() {
         dispatch(setTextSize(size));
         console.log(fontSize)
     };
+
+    const handlePreferencesUpdate = () => {
+        dispatch(updateUserPreferences({
+          id: userID,        
+          darkMode: darkMode,   
+          fontSize: fontSize,     
+        }));
+      };
+
 
 
     return (
@@ -251,6 +261,8 @@ function SettingsPanel() {
                         {darkMode ? <FontAwesomeIcon icon={faSun} /> : <FontAwesomeIcon icon={faMoon} />}
                         {darkMode ? " Light Mode" : " Dark Mode"}
                         </OtherOptionButton>
+                        <SaveOptionButton fontSize={fontSize} darkMode={darkMode} onClick={handlePreferencesUpdate}>Save my preferences
+                        </SaveOptionButton>
                     </SettingsControls>
                 </SettingsHeader >
             </SettingsSection>

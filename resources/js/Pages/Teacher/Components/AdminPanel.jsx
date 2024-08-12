@@ -83,12 +83,19 @@ const MainContainer = styled.div`
   color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 10px;
   transition: background-color 0.3s;
   border-color: rgba(123, 117, 127, 1);
-    border-style: solid;
-    border-width: 1px;
+  border-style: solid;
+  border-width: 1px;
+
+  /* Flex and height settings */
+  min-height: 20%; /* Minimum height as needed */
+  max-height: 40vh; /* Maximum height is 40% of the viewport height */
+  height: auto; /* Allow the container to stretch as needed */
+  width: 100%; /* Full width */
 `;
+
 
 const Header = styled.header`
   
@@ -105,7 +112,7 @@ const Content = styled.main`
   display: flex;
   margin-top: 40px;
   flex-direction: column;
-  padding: 0 29px;
+  padding: 0 20px;
   @media (max-width: 991px) {
     max-width: 100%;
     padding: 0 20px;
@@ -119,7 +126,7 @@ const Section = styled.section`
 `;
 
 const PanelsContainer = styled.div`
-  gap: 20px;
+  gap: 10px;
   display: flex;
   @media (max-width: 991px) {
     flex-direction: column;
