@@ -34,9 +34,6 @@ class User extends Authenticatable
         'interviewing',
         'searching',
         'skills',
-        'name',
-        'email',
-        'password',
         'role'
     ];
 

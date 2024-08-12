@@ -10,6 +10,7 @@ const initialState = {
     job: "",
     applicant: "",
     userJobExist: false,
+    interviews: [],
     status: {
         userJobs: "idle",
         postUserJob: "idle",
@@ -19,6 +20,7 @@ const initialState = {
         checkUserJob: "idle",
         getUserDetails: "idle",
         getSingleUserDetails: "idle",
+        getInterviews: "idle",
     },
 };
 
@@ -171,6 +173,16 @@ export const userJobsSlice = createSlice({
             })
             .addCase(getSingleJobDetails.rejected, (state) => {
                 state.status.getSingleJobDetails = "failed";
+            })
+            .addCase(getInterviews.pending, (state) => {
+                state.status.getInterviews = "loading";
+            })
+            .addCase(getInterviews.fulfilled, (state, action) => {
+                state.interviews = action.payload;
+                state.status.getInterviews = "succeeded";
+            })
+            .addCase(getInterviews.rejected, (state) => {
+                state.status.getInterviews = "failed";
             });
     },
 });
@@ -327,12 +339,25 @@ export const getSingleJobDetails = createAsyncThunk(
     }
 );
 
+export const getInterviews = createAsyncThunk(
+    "userJobs/getInterviews",
+    async () => {
+        const response = await axios({
+            url: `/userjobs/interviews`,
+            method: "GET",
+        });
+        console.log(response.data);
+        return response.data;
+    }
+);
+
 export const selectUserJobs = (state) => state.userJobs.userJobs;
 export const selectUserJob = (state) => state.userJobs.userJob;
 export const selectApplicants = (state) => state.userJobs.applicants;
 export const selectApplicant = (state) => state.userJobs.applicant;
 export const selectJobs = (state) => state.userJobs.jobs;
 export const selectJob = (state) => state.userJobs.job;
+export const selectInterviews = (state) => state.userJobs.interviews;
 export const selectCheckUserJobs = (state) => state.userJobs.checkUserJob;
 export const selectUserJobsStatus = (state) => state.userJobs.status;
 

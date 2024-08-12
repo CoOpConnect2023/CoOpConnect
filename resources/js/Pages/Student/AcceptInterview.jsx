@@ -41,10 +41,10 @@ const AcceptInterview = () => {
                     status: "Scheduled",
                 })
             );
+            window.location.href = `/student/viewapplications`;
         } else {
             alert("Please select a time slot.");
         }
-        window.location.href = `/student/viewapplications`;
     };
 
     const handleDecline = () => {

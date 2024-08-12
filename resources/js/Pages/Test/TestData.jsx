@@ -1,25 +1,22 @@
 import { React, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-    getJobs,
-    selectJobsStatus,
-    selectJobs,
-} from "@/Features/jobs/jobsSlice";
+    getInterviews,
+    selectInterviews,
+} from "@/Features/userJobs/userJobsSlice";
 
 export default function TestData() {
     const dispatch = useDispatch();
 
-    const jobs = useSelector(selectJobs);
-    const jobsStatus = useSelector(selectJobsStatus);
+    const interviews = useSelector(selectInterviews);
 
     useEffect(() => {
-        if (jobsStatus === "idle") {
-            dispatch(getJobs());
-        }
-    }, [jobsStatus, dispatch]);
+            dispatch(getInterviews());
+
+    }, [dispatch]);
 
 
-    console.log(jobs);
+    console.log(interviews);
 
     return <div></div>;
 }
