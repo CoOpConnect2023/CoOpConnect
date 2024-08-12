@@ -67,7 +67,7 @@ border: 2px solid ${({ darkMode }) => (darkMode ? "#444" : "#e2e8f0")};
 const Header = styled.header`
     color: ${({ darkMode }) => (darkMode ? "#f5f5f5" : "var(--Schemes-On-Primary-Container, #260e44)")};
     align-self: center;
-    font: 400 28px/129% Poppins, sans-serif;
+    font: 400 32px Poppins, sans-serif;
     transition: color 0.5s ease;
 
 `;
@@ -97,6 +97,7 @@ const ArticleHeader = styled.header`
     display: flex;
     justify-content: space-between;
     font-size: ${({ fontSize }) => fontSize};
+    font: 400 32px Poppins, sans-serif;
 `;
 
 const ArticleTitle = styled.h2`

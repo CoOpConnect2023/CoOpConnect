@@ -153,7 +153,7 @@ export const FormDetail = styled.p`
     letter-spacing: 0.25px;
     margin-top: 10px;
     font-size: ${({ fontSize }) => fontSize};
-    font: 600 14px/20px Poppins, sans-serif;
+
     transition: color 0.5s ease;
 
     @media (max-width: 991px) {
@@ -310,7 +310,9 @@ export const SettingsOptions = styled.div`
     transition: border-color 0.5s ease, background-color 0.5s ease;
 
     @media (max-width: 991px) {
-        white-space: normal;
+        white-space: nowrap; /* Prevent content from wrapping */
+        overflow-x: auto; /* Enable horizontal scrolling */
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
     }
 `;
 

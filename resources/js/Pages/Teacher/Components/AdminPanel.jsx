@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 import { Link } from "@inertiajs/react";
 import { useSelector } from "react-redux";
 
-function AdminPanel() {
+function AdminPanel({fontSize}) {
   const darkMode = useSelector((state) => state.accessibility.darkMode);
 
   const panels = [
@@ -49,21 +49,21 @@ function AdminPanel() {
   ];
 
   return (
-    <MainContainer darkMode={darkMode}>
-      <Header>Management</Header>
-      <Content>
-        <Section>
-          <PanelsContainer>
+    <MainContainer fontSize={fontSize} darkMode={darkMode}>
+      <Header fontSize={fontSize}>Management</Header>
+      <Content fontSize={fontSize}>
+        <Section fontSize={fontSize}>
+          <PanelsContainer fontSize={fontSize}>
             {panels.map((panel, index) => (
-              <Link key={index} href={panel.link}>
-                <PanelSection darkMode={darkMode} borderColor={panel.borderColor}>
-                  <PanelHeader darkMode={darkMode} backgroundColor={panel.color}>
-                    <Title>{panel.title}</Title>
+              <Link fontSize={fontSize} key={index} href={panel.link}>
+                <PanelSection fontSize={fontSize} darkMode={darkMode} borderColor={panel.borderColor}>
+                  <PanelHeader fontSize={fontSize} darkMode={darkMode} backgroundColor={panel.color}>
+                    <Title fontSize={fontSize}>{panel.title}</Title>
                     <Img src={panel.img1} alt={panel.alt1} />
                   </PanelHeader>
-                  <PanelBody darkMode={darkMode}>
-                    <Icon src={panel.img2} alt={panel.alt2} />
-                    <Description>{panel.desc}</Description>
+                  <PanelBody fontSize={fontSize} darkMode={darkMode}>
+                    <Icon fontSize={fontSize} src={panel.img2} alt={panel.alt2} />
+                    <Description fontSize={fontSize}>{panel.desc}</Description>
                   </PanelBody>
                 </PanelSection>
               </Link>
@@ -75,8 +75,27 @@ function AdminPanel() {
   );
 }
 
+const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
+    const em = parseFloat(emValue); // Convert emValue to a number
+
+    if (emValue === '1em') {
+        return `${basePixelSize * em}px`;
+    }
+
+    if (emValue === '1.07em') {
+        return `${basePixelSize * em * 1.3}px`;
+    }
+
+    if (emValue === '1.12em') {
+        return `${basePixelSize * em * 1.7}px`;
+    }
+    // Otherwise, apply the amplification factor
+    return `${basePixelSize * em * factor}px`;
+};
+
 const MainContainer = styled.div`
   align-self: stretch;
+  flex-grow: 1;
   border-radius: 10px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   background-color: ${({ darkMode }) => (darkMode ? "#2D2D2D" : "#fff")};
@@ -84,22 +103,17 @@ const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 10px;
+  font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+
   transition: background-color 0.3s;
   border-color: rgba(123, 117, 127, 1);
   border-style: solid;
   border-width: 1px;
-
-  /* Flex and height settings */
-  min-height: 20%; /* Minimum height as needed */
-  max-height: 40vh; /* Maximum height is 40% of the viewport height */
-  height: auto; /* Allow the container to stretch as needed */
   width: 100%; /* Full width */
 `;
 
-
 const Header = styled.header`
-  
-  font: 500 24px/133% Poppins, sans-serif;
+  font: 500 ${({ fontSize }) => calculateFontSize(24, fontSize)} Poppins, sans-serif;
   @media (max-width: 991px) {
     max-width: 100%;
   }
@@ -122,6 +136,7 @@ const Content = styled.main`
 const Section = styled.section`
   @media (max-width: 991px) {
     max-width: 100%;
+    height: 100%;
   }
 `;
 
@@ -145,6 +160,7 @@ const PanelSection = styled.article`
   flex-direction: column;
   margin: 20px 0;
   transition: background-color 0.3s;
+  font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
   @media (max-width: 991px) {
     margin-top: 21px;
   }
@@ -156,7 +172,7 @@ const PanelHeader = styled.header`
   background-color: ${(props) => props.backgroundColor};
   display: flex;
   gap: 8px;
-  font-size: 18px;
+  font-size: ${({ fontSize }) => calculateFontSize(18, fontSize)};
   color: #fff;
   font-weight: 600;
   line-height: 156%;
@@ -169,6 +185,7 @@ const PanelHeader = styled.header`
 
 const Title = styled.h2`
   font-family: Inter, sans-serif;
+  font-size: ${({ fontSize }) => calculateFontSize(18, fontSize)};
 `;
 
 const Img = styled.img`
@@ -181,7 +198,7 @@ const Img = styled.img`
 const PanelBody = styled.div`
   display: flex;
   gap: 10px;
-  font-size: 14px;
+  font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
   color: ${({ darkMode }) => (darkMode ? "#CCCCCC" : "var(--Schemes-Outline, #7b757f)")};
   font-weight: 500;
   letter-spacing: 0.25px;
@@ -200,6 +217,7 @@ const Icon = styled.img`
 const Description = styled.p`
   font-family: Poppins, sans-serif;
   flex: 1;
+  font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
 `;
 
 export default AdminPanel;

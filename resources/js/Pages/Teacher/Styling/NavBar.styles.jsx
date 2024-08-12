@@ -1,4 +1,5 @@
 import styled, { keyframes, css } from 'styled-components';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 // Keyframes for vibration animation
 const vibration = keyframes`
@@ -7,6 +8,27 @@ const vibration = keyframes`
   50% { transform: translateX(1px); }
   75% { transform: translateX(-1px); }
   100% { transform: translateX(0); }
+`;
+const slideIn = keyframes`
+  0% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+`;
+
+const slideOut = keyframes`
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
 `;
 
 const slideInFromRight = keyframes`
@@ -31,6 +53,10 @@ const slideInFromBottom = keyframes`
   }
 `;
 
+const getAnimation = (isOpen) => css`
+  animation: ${isOpen ? slideIn : slideOut} 0.3s ease-out forwards;
+`;
+
 const getFontSize = (size) => {
     switch (size) {
         case 'small':
@@ -48,7 +74,7 @@ export const AppContainer = styled.div`
   display: flex;
   background-color: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "var(--Schemes-Background, #fff7ff)")};
   gap: 0px;
-  height: 100vh;
+
   flex-direction: row;
 
 
@@ -202,7 +228,7 @@ export const Title = styled.h1`
 export const NotificationIcon = styled.div`
   width: 40px;
   height: 40px;
-
+ color: ${({ darkMode }) => (darkMode ? "#FFF" : "#000")};
   background-color: ${({ darkMode }) => (darkMode ? "#B7A1E5" : "#EDDCFF")};
   border: 2px solid ${({ darkMode }) => (darkMode ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 1)')};
   border-radius: 50%;
@@ -212,6 +238,7 @@ export const NotificationIcon = styled.div`
   cursor: pointer;
   position: relative;
   transition: transform 0.5s ease;
+
   ${(props) =>
     props.hasUnreadMessages &&
     css`
@@ -223,7 +250,7 @@ export const NotificationIcon = styled.div`
   }
 
   svg {
-    color: white;
+    color: ${({ darkMode }) => (darkMode ? "#FFF" : "#6B538C")};
     font-size: 20px;
   }
 
@@ -237,6 +264,42 @@ export const NotificationIcon = styled.div`
     background-color: red;
     border-radius: 50%;
     display: ${(props) => (props.hasUnreadMessages ? "block" : "none")};
+  }
+
+  @media (max-width: 768px) {
+    width: 35px;
+    height: 35px;
+    svg {
+      font-size: 18px;
+    }
+    &::after {
+      width: 8px;
+      height: 8px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    width: 30px;
+    height: 30px;
+    svg {
+      font-size: 16px;
+    }
+    &::after {
+      width: 6px;
+      height: 6px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    width: 45px;
+    height: 45px;
+    svg {
+      font-size: 22px;
+    }
+    &::after {
+      width: 12px;
+      height: 12px;
+    }
   }
 `;
 
@@ -258,26 +321,104 @@ export const UserDetails = styled.div`
   background-color: ${({ darkMode }) => (darkMode ? "#B7A1E5" : "#EDDCFF")};
   padding: 5px 10px;
 
+  @media (max-width: 768px) {
+    gap: 8px;
+    padding: 4px 8px;
+  }
+
+  @media (max-width: 480px) {
+    gap: 6px;
+    padding: 3px 6px;
+  }
+
+  @media (min-width: 1024px) {
+    gap: 12px;
+    padding: 6px 12px;
+  }
 `;
+
 
 export const Avatar = styled.img`
   aspect-ratio: 1;
-  object-fit: auto;
+  object-fit: cover;
   width: 30px;
   border: 1px solid rgba(0, 0, 0, 1);
   border-radius: 50%;
+
+  @media (max-width: 768px) {
+    width: 26px; /* Adjust width for smaller screens */
+  }
+
+  @media (max-width: 480px) {
+    width: 22px; /* Further adjust width for very small screens */
+  }
+
+  @media (min-width: 1024px) {
+    width: 34px; /* Increase width for larger screens */
+  }
 `;
 
-export const ExpandIcon = styled.img`
-  aspect-ratio: 1;
-  object-fit: auto;
-  width: 24px;
+
+export const ExpandIcon = styled(FontAwesomeIcon)`
+  font-size: ${({ fontSize }) => fontSize || "24px"};
   margin: auto 0;
+  color: ${({ darkMode }) => (darkMode ? "#fff" : "#000")};
   cursor: pointer;
   transition: transform 0.3s ease;
+
+  /* Start with the icon rotated -90deg to face left, rotate to 0deg to face down */
   transform: ${({ isOpen }) =>
-        isOpen ? "rotate(-360deg)" : "rotate(-270deg)"};
+    isOpen ? "rotate(0deg)" : "rotate(+90deg)"};
+
+  @media (max-width: 768px) {
+    font-size: ${({ fontSize }) => fontSize || "20px"};
+  }
+
+  @media (max-width: 480px) {
+    font-size: ${({ fontSize }) => fontSize || "18px"};
+  }
+
+  @media (min-width: 1024px) {
+    font-size: ${({ fontSize }) => fontSize || "28px"};
+  }
 `;
+
+
+export const FontSizer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  color: ${({ darkMode }) => (darkMode ? "#fff" : "#6B538C")};
+  border-radius: 50px;
+  border: 2px solid ${({ darkMode }) => (darkMode ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 1)')};
+  background-color: ${({ darkMode }) => (darkMode ? "#B7A1E5" : "#EDDCFF")};
+  height: 40px;
+  padding: 0 20px; /* Added padding to give some horizontal spacing */
+
+  @media (max-width: 768px) {
+    gap: 8px; /* Reduce gap on smaller screens */
+    height: 35px; /* Adjust height for smaller screens */
+    padding: 0 15px; /* Adjust padding for smaller screens */
+    font-size: 0.9rem; /* Adjust font size for smaller screens */
+  }
+
+  @media (max-width: 480px) {
+    gap: 6px; /* Further reduce gap on very small screens */
+    height: 30px; /* Further adjust height for very small screens */
+    padding: 0 10px; /* Further adjust padding for very small screens */
+    font-size: 0.8rem; /* Further adjust font size for very small screens */
+  }
+
+  @media (min-width: 1024px) {
+    gap: 12px; /* Increase gap on larger screens */
+    height: 45px; /* Increase height on larger screens */
+    padding: 0 25px; /* Increase padding on larger screens */
+    font-size: 1rem; /* Adjust font size for larger screens */
+  }
+`;
+
 
 export const Main = styled.main`
   display: flex;
@@ -288,7 +429,7 @@ export const Main = styled.main`
 
 export const Modal = styled.div`
   position: absolute;
-  top: 60px;
+  top: 80px;
   right: 20px;
   background-color: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "#fff")};
   border: 1px solid #ccc;
@@ -297,7 +438,7 @@ export const Modal = styled.div`
   z-index: 1000;
   transition: opacity 0.3s ease, transform 0.3s ease;
   opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
-  transform: ${({ isOpen }) => (isOpen ? "translateY(0)" : "translateY(-10px)")};
+ transform: ${({ isOpen }) => (isOpen ? "translateY(0)" : "translateY(-100%)")};
   pointer-events: ${({ isOpen }) => (isOpen ? "auto" : "none")};
   font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
@@ -305,7 +446,7 @@ export const Modal = styled.div`
 export const NotificationModalContainer = styled.div`
   display: ${(props) => (props.isOpen ? "block" : "none")};
   position: absolute;
-  top: 60px;
+  top: 80px; /* Adjusted to move the modal slightly lower */
   right: 0;
   background: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "#fff")};
   border: 1px solid #ccc;
@@ -316,13 +457,16 @@ export const NotificationModalContainer = styled.div`
   max-height: 80vh;
   overflow-y: auto;
   font-size: ${({ fontSize }) => getFontSize(fontSize)};
+  animation: ${slideIn} 0.3s ease-out; /* Apply the slide-in animation */
 `;
 
 export const NotificationModalContent = styled.ul`
   list-style: none;
   margin: 0;
+  background-color: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "#fff")};
   padding: 20px;
   font-size: ${({ fontSize }) => getFontSize(fontSize)};
+  color: ${({ darkMode }) => (darkMode ? "#fff" : "#2C2C2C")};
 `;
 
 export const Conversation = styled.div`
@@ -330,14 +474,14 @@ export const Conversation = styled.div`
   padding: 15px;
   border: 1px solid #f0f0f0;
   border-radius: 8px;
-  background-color: #fafafa;
+  background-color: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "#fafafa")};
   font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
 export const ConversationInfo = styled.div`
   margin-bottom: 15px;
   font-size: 14px;
-  color: #555;
+  color: ${({ darkMode }) => (darkMode ? "#fff" : "#2C2C2C")};
   font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
@@ -359,7 +503,7 @@ export const Message = styled.div`
 export const Button = styled.button`
   margin-top: 10px;
   padding: 8px 12px;
-  background-color: #007bff;
+  background-color: #B7A1E5;
   color: white;
   border: none;
   border-radius: 5px;
@@ -383,6 +527,7 @@ export const ModalContent = styled.div`
   padding: 10px;
   max-height: 80vh;
   font-size: ${({ fontSize }) => getFontSize(fontSize)};
+  color: ${({ darkMode }) => (darkMode ? "#fff" : "#2C2C2C")};
 `;
 
 export const ModalItem = styled.div`

@@ -3,7 +3,7 @@ import styled, { keyframes } from "styled-components";
 import { useSelector, useDispatch } from 'react-redux';
 import NavBar from "../Components/NavBar";
 import Chat from "./Components/Chat";
-
+import LogoLoadingComponent from '@/Pages/Common/LogoSpinnerAnimation';
 import {
     getUser, selectUser, selectUserStatus
 } from "@/Features/users/userSlice";
@@ -100,7 +100,7 @@ export default function Messages() {
 
 
     if (userStatus === 'loading' || !conversations) {
-        return <LoadingScreen><Spinner /></LoadingScreen>;
+        return <LogoLoadingComponent  darkMode={darkMode}/>;
     }
     // if (messageStatus === 'loading') {
     //     return <LoadingScreen><Spinner /></LoadingScreen>;
@@ -175,6 +175,7 @@ const ChatContainer = styled.div`
     flex: 1;
     display: flex;
     flex-direction: column;
+
     overflow: hidden;
 `;
 

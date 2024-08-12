@@ -1,5 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
+import { Head } from "@inertiajs/react";
+import LandingLayout from '@/Layouts/LandingLayout';
 import { useSelector } from 'react-redux';
 import adminDashboard from '../Images/admin-dashboard.png';
 import studentuserprofile from '../Images/studentprofile.png';
@@ -162,6 +164,9 @@ const Guide = ({ auth }) => {
   if (!userSteps) return <p>No guide available for this user type.</p>;
 
   return (
+    <>
+            <Head darkMode={darkMode} title="About" />
+            <LandingLayout darkMode={darkMode} auth={auth} />
     <ParentContainer>
       <GuideContainer darkMode={darkMode}>
         <h1>{`${capitalizeFirstLetter(userType)} Guide`}</h1>
@@ -175,6 +180,8 @@ const Guide = ({ auth }) => {
         ))}
       </GuideContainer>
     </ParentContainer>
+
+    </>
   );
 };
 

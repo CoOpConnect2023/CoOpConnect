@@ -30,6 +30,7 @@ import {
     SuggestionItem,
     StyledParagraph
 } from "./Styling/Profile.styles";
+import LogoLoadingComponent from "../Common/LogoSpinnerAnimation";
 
 const appUrl = import.meta.env.VITE_APP_URL;
 
@@ -185,7 +186,7 @@ function Profile() {
     };
 
     if (!user || !schools) {
-        return <LoadingScreen><Spinner /></LoadingScreen>;;
+        return <LogoLoadingComponent darkMode={darkMode}/>;;
     }
 
     return (

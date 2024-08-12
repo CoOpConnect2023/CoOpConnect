@@ -15,6 +15,7 @@ import {
 import styled, { keyframes } from "styled-components";
 import { getUser, selectUser, selectUserStatus } from "@/Features/users/userSlice";
 import { getStudents, getPercentages, selectPercentages, selectStudents, selectStudentsStatus } from "@/Features/schools/schoolsSlice";
+import LogoLoadingComponent from "../Common/LogoSpinnerAnimation";
 
 
 
@@ -42,8 +43,8 @@ export default function Home() {
     }, [user, dispatch]);
 
 
-    if (!user) {
-        return <LoadingScreen><Spinner /></LoadingScreen>;;
+    if (!user  ) {
+        return <LogoLoadingComponent fontSize={fontSize} darkMode={darkMode}/>;;
     }
 
 

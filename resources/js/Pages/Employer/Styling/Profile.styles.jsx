@@ -17,9 +17,10 @@ export const Main = styled.main`
     display: flex;
     justify-content: center;
     padding: 20px;
+    flex-grow: 1;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
     animation: ${fadeIn} 0.8s ease-in-out;
-    flex: 1 0 auto; /* Can grow to fill available space */
+     /* Can grow to fill available space */
 
     &:hover {
         box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
@@ -39,6 +40,7 @@ export const Section = styled.section`
     max-width: 100%;
     flex-direction: column;
     margin-right: 10vw;
+    flex-grow: 1;
 
     @media (max-width: 768px) {
         margin-right: 0;
@@ -230,7 +232,7 @@ export const Input = styled.input`
     color: #7b757f;
     letter-spacing: 0.25px;
     justify-content: center;
-    padding: 19px 12px;
+    padding: 15px 12px;
     font: 400 14px Poppins, sans-serif;
     transition: border-color 0.3s ease, background-color 0.3s ease;
 

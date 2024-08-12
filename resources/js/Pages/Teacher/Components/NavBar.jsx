@@ -32,9 +32,11 @@ import {
     LoadingDot,
     IconContainer,
     Footer,
-    CloseButton
+    CloseButton,
+    FontSizer
 } from "../Styling/NavBar.styles";
 import logo from "@/Pages/Images/puzzle.svg";
+import { NavBarModal } from "./NavBarModal";
 import briefcase from "@/Pages/Images/briefcase.svg";
 import message from "@/Pages/Images/message-square.svg";
 import calendar from "@/Pages/Images/calendar-days.svg";
@@ -42,8 +44,8 @@ import user from "@/Pages/Images/user.svg";
 import settings from "@/Pages/Images/settings.svg";
 import { Link } from "@inertiajs/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBell, faMap, faTimes, faSun, faMoon } from "@fortawesome/free-solid-svg-icons";
-import { toggleDarkMode, setTextSize } from "@/Features/accessibility/accessibilitySlice";
+import { faBell, faMap, faTimes, faSun, faMoon, faPlus, faMinus, faTextHeight, faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { toggleDarkMode, setTextSize, increaseFontSize, decreaseFontSize } from "@/Features/accessibility/accessibilitySlice";
 
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -184,6 +186,7 @@ function Header({ header }) {
     const altAvatarSrc = "https://cdn.builder.io/api/v1/image/assets/TEMP/c449c761188f38db922c89455e070256b822a267e33f51baa6901c76b73a4e78?apiKey=d66532d056b14640a799069157705b77&";
     const darkMode = useSelector(state => state.accessibility.darkMode);
     const fontSize = useSelector(state => state.accessibility.textSize);
+    console.log(fontSize)
 
 
 
@@ -259,7 +262,7 @@ function Header({ header }) {
                 <UserProfile fontSize={fontSize} darkMode={darkMode}>
 
                     <NotificationIcon fontSize={fontSize} darkMode={darkMode} onClick={handleDarkModeToggle}
-                        hasUnreadMessages={hasUnreadMessages}>{darkMode ? <FontAwesomeIcon icon={faMoon} /> : <FontAwesomeIcon icon={faSun} />}
+                        >{darkMode ? <FontAwesomeIcon icon={faMoon} /> : <FontAwesomeIcon icon={faSun} />}
 
 
                     </NotificationIcon>
@@ -268,6 +271,7 @@ function Header({ header }) {
 
 
                     </NotificationIcon>
+                    <FontToggler/>
                     <UserDetails fontSize={fontSize} darkMode={darkMode} onClick={toggleProfileModal}>
                         {user && user.profile_image ? (
                             <Avatar fontSize={fontSize} darkMode={darkMode}
@@ -282,12 +286,12 @@ function Header({ header }) {
                                 loading="lazy"
                             />
                         )}
-                        <ExpandIcon fontSize={fontSize} darkMode={darkMode}
-                            src="https://cdn.builder.io/api/v1/image/assets/TEMP/c7749e10a4cb727e5ce0c7fd48d44fb683bf93b2fa7c59643148748496b286b0?apiKey=d66532d056b14640a799069157705b77&"
-                            alt="Expand"
-                            loading="lazy"
-                            isOpen={isExpanded}
-                        />
+                         <ExpandIcon
+    icon={faChevronDown}
+    isOpen={isExpanded}
+    fontSize={fontSize}
+    darkMode={darkMode}
+  />
                     </UserDetails>
                 </UserProfile>
                 <Modal fontSize={fontSize} darkMode={darkMode} isOpen={isProfileModalOpen}>
@@ -295,7 +299,7 @@ function Header({ header }) {
                         <Link fontSize={fontSize} darkMode={darkMode} href="/teacher/profile">
                         <ModalItem fontSize={fontSize} darkMode={darkMode}>Profile</ModalItem>
                         </Link>
-                        <Link fontSize={fontSize} darkMode={darkMode} href="/teacher/profile">
+                        <Link fontSize={fontSize} darkMode={darkMode} href="/teacher/settings">
                         <ModalItem fontSize={fontSize} darkMode={darkMode}>Settings</ModalItem>
                         </Link>
                         <ModalItem fontSize={fontSize} darkMode={darkMode} as="button" onClick={handleLogout}>Logout</ModalItem>
@@ -346,6 +350,42 @@ function NavBar({ header, children }) {
 export default NavBar;
 
 
+const FontToggler = () => {
+    const dispatch = useDispatch();
+    const fontSize = useSelector((state) => state.accessibility.textSize);
+    const darkMode = useSelector((state) => state.accessibility.darkMode);
+
+    const increaseFont = () => {
+      if (fontSize !== '1.12em') { // Compare against 'large' instead of "1.12em"
+        dispatch(increaseFontSize());
+      }
+    };
+
+    const decreaseFont = () => {
+      if (fontSize !== '1em') { // Compare against 'small' instead of "1em"
+        dispatch(decreaseFontSize());
+      }
+    };
+
+    return (
+      <FontSizer fontSize={fontSize} darkMode={darkMode}>
+        <FontAwesomeIcon
+          onClick={() => { decreaseFont(); }}
+          icon={faMinus}
+        />
+        <FontAwesomeIcon
+          icon={faTextHeight}
+        />
+        <FontAwesomeIcon
+          onClick={() => { increaseFont(); }}
+          icon={faPlus}
+        />
+      </FontSizer>
+    );
+  };
+
+
+
 
 function NotificationModal({ isOpen, conversations, handleMarkAsRead, handleRedirect, currentUser, notificationsStatus, markMessageStatus }) {
     const darkMode = useSelector(state => state.accessibility.darkMode);
@@ -390,6 +430,12 @@ function NotificationModal({ isOpen, conversations, handleMarkAsRead, handleRedi
             )}
         </NotificationModalContainer>
     );
+
+
+
+
+
+
 }
 
 

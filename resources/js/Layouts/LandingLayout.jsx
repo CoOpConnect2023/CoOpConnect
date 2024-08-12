@@ -10,6 +10,7 @@ const Header = styled.div`
   align-items: center;
   justify-content: space-between;
   text-align: center;
+  background-color: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "var(--Schemes-Background, #fff7ff)")};
 `;
 
 const Logo = styled.img`
@@ -55,7 +56,8 @@ const LinkButton = styled(Link)`
 `;
 
 export default function LandingLayout({ auth }) {
-  const darkMode = useSelector(state => state.accessibility.darkMode);
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
 
   function getUserLinks(userType) {
     switch (userType) {
@@ -83,7 +85,7 @@ export default function LandingLayout({ auth }) {
   const userLinks = getUserLinks(auth.userType);
 
   return (
-    <Header>
+    <Header darkMode={darkMode}>
       <Link href="/">
         <Logo src={logo} alt="Logo" />
       </Link>

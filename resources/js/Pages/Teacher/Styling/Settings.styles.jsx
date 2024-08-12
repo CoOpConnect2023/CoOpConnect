@@ -7,7 +7,7 @@ export const MainContainer = styled.div`
     border-radius: 20px;
 
     justify-content: center;
-    background-color: ${({ darkMode }) => (darkMode ? "#2c2c2c" : "#fff")}; /* Lighter background for dark mode */
+    background-color: ${({ darkMode }) => (darkMode ? "#2c2c2c" : "##FEF7FF")}; /* Lighter background for dark mode */
     transition: background-color 0.5s ease;
 
     @media (max-width: 768px) {

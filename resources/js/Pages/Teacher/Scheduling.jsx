@@ -25,6 +25,7 @@ import {
     Event,
     NoEventsMessage,
     DeleteButton,
+    GlobalStyles
 
 
 } from "./Styling/Scheduling.styles.jsx";
@@ -293,9 +294,44 @@ const Interviews = () => {
 
     };
 
+    const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
+        const em = parseFloat(emValue);
+        if (emValue === '1em') {
+            return `${basePixelSize * em}px`;
+        }
+
+        if (emValue === '1.07em') {
+            return `${basePixelSize * em * 1.3}px`;
+        }
+
+        if (emValue === '1.12em') {
+            return `${basePixelSize * em * 1.7}px`;
+        }
+        // Otherwise, apply the amplification factor
+        return `${basePixelSize * em * factor}px`;
+    };
+
+    const eventStyleGetter = (event, start, end, isSelected) => {
+
+        const calculatedFontSize = calculateFontSize(14, fontSize);
+        let backgroundColor = '#6B538C'; // Desired color for the event markers
+        let style = {
+            backgroundColor: backgroundColor,
+            borderRadius: '5px',
+            opacity: 0.8,
+            color: 'white', // Text color for better contrast
+            border: '0px',
+            display: 'block',
+            fontSize: calculatedFontSize
+        };
+        return {
+            style: style
+        };
+    };
+
     return (
         <NavBar header={"Interviews"}>
-            <MainContainer fontSize={fontSize} darkMode={darkMode}>
+           <GlobalStyles darkMode={darkMode} fontSize={fontSize} /> <MainContainer fontSize={fontSize} darkMode={darkMode}>
                 <Container fontSize={fontSize} darkMode={darkMode}>
                     <Wrapper fontSize={fontSize} darkMode={darkMode}>
                         <Header fontSize={fontSize} darkMode={darkMode}>Schedule your Interviews</Header>
@@ -314,6 +350,7 @@ const Interviews = () => {
                                     onSelectSlot={openModal}
                                     startAccessor={"start"}
                                     endAccessor="end"
+                                    eventPropGetter={eventStyleGetter}
                                 />
                             </DndProvider>
                         </CalendarDiv>

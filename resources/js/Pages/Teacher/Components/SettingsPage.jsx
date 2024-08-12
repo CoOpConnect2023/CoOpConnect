@@ -125,13 +125,27 @@ function SettingsPanel() {
         console.log(fontSize)
     };
 
+    const convertFontSizeToString = (fontSize) => {
+        if (fontSize === "1em") {
+            return "small";
+        } else if (fontSize === "1.07em") {
+            return "medium";
+        } else if (fontSize === "1.12em") {
+            return "large";
+        } else {
+            return "unknown"; // Optional: Handle unexpected font sizes
+        }
+    };
+
     const handlePreferencesUpdate = () => {
+        const fontSizeString = convertFontSizeToString(fontSize);
+
         dispatch(updateUserPreferences({
-          id: userID,        
-          darkMode: darkMode,   
-          fontSize: fontSize,     
+            darkMode: darkMode,
+            fontSize: fontSizeString,
         }));
-      };
+    };
+
 
 
 
@@ -139,7 +153,7 @@ function SettingsPanel() {
         <Main darkMode={darkMode} fontSize={fontSize}>
             <Section fontSize={fontSize} darkMode={darkMode}  className="account-section">
                 <AccountHeader fontSize={fontSize} darkMode={darkMode}>
-                    <AccountTitle fontSize={fontSize} darkMode={darkMode}>Account</AccountTitle>
+                <AccountDetail fontSize={fontSize} darkMode={darkMode} onClick={() => handleTabClick('account')} active={activeTab === 'account'}>Account</AccountDetail>
                     <AccountDetail fontSize={fontSize} darkMode={darkMode} onClick={() => handleTabClick('password')} active={activeTab === 'password'}>Password</AccountDetail>
                     <AccountDetail fontSize={fontSize} darkMode={darkMode} onClick={() => handleTabClick('notifications')} active={activeTab === 'notifications'}>Notifications</AccountDetail>
                     <AccountDetail fontSize={fontSize} darkMode={darkMode} onClick={() => handleTabClick('preferences')} active={activeTab === 'preferences'}>Preferences</AccountDetail>
@@ -176,6 +190,48 @@ function SettingsPanel() {
                         {message && <Message fontSize={fontSize} darkMode={darkMode}>{message}</Message>}
                         <SubmitButton fontSize={fontSize} darkMode={darkMode}>Change Password</SubmitButton>
                     </PasswordChangeForm>
+                )}
+
+{activeTab === 'preferences' && (
+                   <SettingsSection fontSize={fontSize} darkMode={darkMode}>
+                   <SettingsHeader fontSize={fontSize} darkMode={darkMode}>
+                       <SettingsColumn fontSize={fontSize} darkMode={darkMode}>
+                           <SettingsContent fontSize={fontSize} darkMode={darkMode}>
+                               <SettingsTitle fontSize={fontSize} darkMode={darkMode}>Accessibility Settings</SettingsTitle>
+                               <SettingsDetail fontSize={fontSize} darkMode={darkMode}>Adjust your viewing preferences</SettingsDetail>
+                           </SettingsContent>
+                       </SettingsColumn>
+                       <SettingsControls fontSize={fontSize} darkMode={darkMode}>
+                           <CurrentSelection fontSize={fontSize} darkMode={darkMode}>Text Size: {fontSize}</CurrentSelection>
+                           <SettingsOptions fontSize={fontSize} darkMode={darkMode}>
+                               <OtherOptionButton fontSize={fontSize} darkMode={darkMode}
+                                   onClick={() => handleTextSizeChange('small')}
+                                   active={fontSize === 'small'}
+                               >
+                                   Small
+                               </OtherOptionButton>
+                               <OtherOptionButton fontSize={fontSize} darkMode={darkMode}
+                                   onClick={() => handleTextSizeChange('medium')}
+                                   active={fontSize === 'medium'}
+                               >
+                                   Medium
+                               </OtherOptionButton>
+                               <OtherOptionButton fontSize={fontSize} darkMode={darkMode}
+                                   onClick={() => handleTextSizeChange('large')}
+                                   active={fontSize === 'large'}
+                               >
+                                   Large
+                               </OtherOptionButton>
+                           </SettingsOptions >
+                           <OtherOptionButton fontSize={fontSize} darkMode={darkMode} onClick={handleDarkModeToggle}>
+                           {darkMode ? <FontAwesomeIcon icon={faSun} /> : <FontAwesomeIcon icon={faMoon} />}
+                           {darkMode ? " Light Mode" : " Dark Mode"}
+                           </OtherOptionButton>
+                           <SaveOptionButton fontSize={fontSize} darkMode={darkMode} onClick={handlePreferencesUpdate}>Save my preferences
+                           </SaveOptionButton>
+                       </SettingsControls>
+                   </SettingsHeader >
+               </SettingsSection>
                 )}
                 <FormSection fontSize={fontSize} darkMode={darkMode}>
                     <FormColumn fontSize={fontSize} darkMode={darkMode}>
@@ -227,45 +283,7 @@ function SettingsPanel() {
                     </SettingsControls>
                 </SettingsHeader>
             </SettingsSection>
-            <SettingsSection fontSize={fontSize} darkMode={darkMode}>
-                <SettingsHeader fontSize={fontSize} darkMode={darkMode}>
-                    <SettingsColumn fontSize={fontSize} darkMode={darkMode}>
-                        <SettingsContent fontSize={fontSize} darkMode={darkMode}>
-                            <SettingsTitle fontSize={fontSize} darkMode={darkMode}>Accessibility Settings</SettingsTitle>
-                            <SettingsDetail fontSize={fontSize} darkMode={darkMode}>Adjust your viewing preferences</SettingsDetail>
-                        </SettingsContent>
-                    </SettingsColumn>
-                    <SettingsControls fontSize={fontSize} darkMode={darkMode}>
-                        <CurrentSelection fontSize={fontSize} darkMode={darkMode}>Text Size: {fontSize}</CurrentSelection>
-                        <SettingsOptions fontSize={fontSize} darkMode={darkMode}>
-                            <OtherOptionButton fontSize={fontSize} darkMode={darkMode}
-                                onClick={() => handleTextSizeChange('small')}
-                                active={fontSize === 'small'}
-                            >
-                                Small
-                            </OtherOptionButton>
-                            <OtherOptionButton fontSize={fontSize} darkMode={darkMode}
-                                onClick={() => handleTextSizeChange('medium')}
-                                active={fontSize === 'medium'}
-                            >
-                                Medium
-                            </OtherOptionButton>
-                            <OtherOptionButton fontSize={fontSize} darkMode={darkMode}
-                                onClick={() => handleTextSizeChange('large')}
-                                active={fontSize === 'large'}
-                            >
-                                Large
-                            </OtherOptionButton>
-                        </SettingsOptions >
-                        <OtherOptionButton fontSize={fontSize} darkMode={darkMode} onClick={handleDarkModeToggle}>
-                        {darkMode ? <FontAwesomeIcon icon={faSun} /> : <FontAwesomeIcon icon={faMoon} />}
-                        {darkMode ? " Light Mode" : " Dark Mode"}
-                        </OtherOptionButton>
-                        <SaveOptionButton fontSize={fontSize} darkMode={darkMode} onClick={handlePreferencesUpdate}>Save my preferences
-                        </SaveOptionButton>
-                    </SettingsControls>
-                </SettingsHeader >
-            </SettingsSection>
+
             {showDeleteModal && (
                 <Modal fontSize={fontSize} darkMode={darkMode}
                     title="Confirm Account Deletion"

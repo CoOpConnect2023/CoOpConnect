@@ -15,7 +15,7 @@ const slideInFromSide = keyframes`
 export const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100vh; /* Full height of viewport */
+  flex-grow: 1;
   border-radius: 10px;
   background-color: ${({ darkMode }) => (darkMode ? "#1C1C1C" : "#fff")};
   transition: background-color 0.3s;
@@ -76,7 +76,7 @@ export const Form = styled.form`
 `;
 
 export const Input = styled.input`
-  padding: 10px;
+  padding: 8px;
   border: 1px solid ${({ darkMode }) => (darkMode ? "#666666" : "#cbd5e0")};
   border-radius: 6px;
   background-color: ${({ darkMode }) => (darkMode ? "#2D2D2D" : "#fff")};
@@ -87,7 +87,7 @@ export const Input = styled.input`
 `;
 
 export const Select = styled.select`
-  padding: 10px;
+  padding: 8px;
   border: 1px solid ${({ darkMode }) => (darkMode ? "#666666" : "#cbd5e0")};
   border-radius: 6px;
   background-color: ${({ darkMode }) => (darkMode ? "#2D2D2D" : "#fff")};
