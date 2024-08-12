@@ -150,4 +150,31 @@ class UserJobsController extends Controller
         // Return the user details as JSON
         return response()->json($jobDetails);
     }
+
+    public function getInterviews()
+    {
+        $userId = auth()->user()->id;
+
+        Log::info('User ID retrieved', ['userId' => $userId]);
+
+        $userJobs = UserJobs::where('user_id', $userId)->where('status', 'Scheduled')->get();
+
+        Log::info('User jobs retrieved', ['userJobs' => $userJobs]);
+
+        $jobs = $userJobs->map(function ($userJob) {
+            return [
+                'id' => $userJob->id,
+                'title' => $userJob->job->title,
+                'description' => $userJob->job->description,
+                'location' => $userJob->job->location,
+                'company' => $userJob->job->company,
+                'status' => $userJob->status,
+                'timeSlots' => $userJob->time_slots,
+            ];
+        });
+
+        Log::info('Final jobs array', ['jobs' => $jobs]);
+
+        return response()->json($jobs);
+    }
 }
