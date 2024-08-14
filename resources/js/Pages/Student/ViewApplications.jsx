@@ -146,6 +146,8 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+flex: 1;
+
     padding: 20px;
     background-color: ${({ darkMode }) => (darkMode ? '#2C2C2C' : '#FFF7FF')};
     color: ${({ darkMode }) => (darkMode ? '#2C2C2C' : '#2C2C2C')};

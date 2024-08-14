@@ -1,12 +1,26 @@
 import styled, { keyframes } from "styled-components";
 
+const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
+    const em = parseFloat(emValue);
+
+    if (emValue === '1em') {
+        return `${basePixelSize * em}px`;
+    }
+
+    if (emValue === '1.07em') {
+        return `${basePixelSize * em * 1.3}px`;
+    }
+
+    if (emValue === '1.12em') {
+        return `${basePixelSize * em * 1.7}px`;
+    }
+
+    return `${basePixelSize * em * factor}px`;
+};
+
 const fadeIn = keyframes`
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
 `;
 
 // Main Container
@@ -16,17 +30,24 @@ export const MainContainer = styled.main`
     padding: 20px;
     padding-top: 0;
     animation: ${fadeIn} 0.8s ease-in-out;
+    background-color: ${({ darkMode }) => (darkMode ? '#2C2C2C' : '#fff')};
+    transition: background-color 0.5s ease, color 0.5s ease;
+    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#333')};
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
 `;
 
 // Section
 export const Section = styled.section`
     justify-content: center;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-    background-color: #fff;
+    background-color: ${({ darkMode }) => (darkMode ? '#333' : '#fff')};
+    transition: background-color 0.5s ease, color 0.5s ease;
+    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#333')};
     display: flex;
     margin-top: 40px;
     flex-direction: column;
     padding: 80px 35px;
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
 
     @media (max-width: 991px) {
         padding: 20px;
@@ -67,16 +88,17 @@ export const DropZone = styled.div`
     justify-content: center;
     align-items: center;
     border-radius: 10px;
-    border: 2px dashed rgba(107, 83, 140, 1);
-    background-color: #eddcff;
-    font-size: 23px;
-    color: #000;
+    border: 2px dashed ${({ darkMode }) => (darkMode ? '#555' : '#6b538c')};
+    background-color: ${({ darkMode }) => (darkMode ? '#444' : '#eddcff')};
+    transition: background-color 0.5s ease, color 0.5s ease;
+    font-size: ${({ fontSize }) => calculateFontSize(23, fontSize)};
+    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#000')};
     line-height: 40px;
     padding: 40px;
 
     @media (max-width: 991px) {
         padding: 20px;
-        font-size: 18px;
+        font-size: ${({ fontSize }) => calculateFontSize(18, fontSize)};
     }
 `;
 
@@ -84,22 +106,23 @@ export const DropZone = styled.div`
 export const DropZoneText = styled.div`
     font-family: Poppins, sans-serif;
     margin-top: 10px;
+    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#333')};
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
 
     @media (max-width: 991px) {
         margin: 0 8px;
-        font-size: 16px;
     }
 `;
 
 // DropZoneDescription
 export const DropZoneDescription = styled.p`
-    color: #6b538c;
+    color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#6b538c')};
     align-self: center;
     margin-top: 10px;
-    font: bold 28px Poppins, sans-serif;
+    font: bold ${({ fontSize }) => calculateFontSize(28, fontSize)} Poppins, sans-serif;
 
     @media (max-width: 991px) {
-        font-size: 20px;
+        font-size: ${({ fontSize }) => calculateFontSize(20, fontSize)};
     }
 `;
 
@@ -121,11 +144,13 @@ export const PreviewImage = styled.img`
 export const UploadButton = styled.button`
     margin-top: 20px;
     padding: 10px 20px;
-    background-color: #007bff;
+    background-color: ${({ darkMode }) => (darkMode ? '#B7A1E5' : '#6C4BCF')};
+    transition: background-color 0.5s ease, color 0.5s ease;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
 
     @media (max-width: 991px) {
         padding: 8px 16px;
@@ -151,15 +176,17 @@ export const DocumentItem = styled.div`
     justify-content: space-between;
     border: 1px solid #ccc;
     padding: 10px;
-    background-color: #f9f9f9;
+    background-color: ${({ darkMode }) => (darkMode ? '#333' : '#f9f9f9')};
+    transition: background-color 0.5s ease, color 0.5s ease;
+    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#333')};
     text-align: center;
-    font-size: 14px;
+    font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
     max-width: 100%;
     min-width: 100%;
 
     @media (max-width: 991px) {
         flex-direction: column;
-        font-size: 12px;
+        font-size: ${({ fontSize }) => calculateFontSize(12, fontSize)};
     }
 `;
 
@@ -185,43 +212,46 @@ export const PreviewImageDownload = styled.img`
 
 // DownloadButton
 export const DownloadButton = styled.button`
-    background-color: #EDDCFF;
+    background-color: ${({ darkMode }) => (darkMode ? '#6b538c' : '#EDDCFF')};
+    transition: background-color 0.5s ease, color 0.5s ease;
     color: #fff;
     border: none;
     padding: 5px 10px;
     cursor: pointer;
     height: 3vh;
     margin-left: 0.5vh;
-    font-size: 14px;
+    font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
 
     @media (max-width: 991px) {
         padding: 4px 8px;
-        font-size: 12px;
+        font-size: ${({ fontSize }) => calculateFontSize(12, fontSize)};
     }
 `;
 
 // DeleteButton
 export const DeleteButton = styled.button`
     background-color: #ff0000;
+    transition: background-color 0.5s ease, color 0.5s ease;
     color: #fff;
     border: none;
     padding: 5px 10px;
     cursor: pointer;
     height: 3vh;
     margin-left: 0.5vh;
-    font-size: 14px;
+    font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
     margin-top: 0.5vh;
 
     @media (max-width: 991px) {
         padding: 4px 8px;
-        font-size: 12px;
+        font-size: ${({ fontSize }) => calculateFontSize(12, fontSize)};
     }
 `;
 
 // MessageContainer
 export const MessageContainer = styled.div`
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
+    background-color: ${({ darkMode }) => (darkMode ? '#444' : '#f0f0f0')};
+    transition: background-color 0.5s ease, color 0.5s ease;
+    border: 1px solid ${({ darkMode }) => (darkMode ? '#555' : '#ccc')};
     padding: 20px;
     margin-top: 20px;
 
@@ -232,12 +262,12 @@ export const MessageContainer = styled.div`
 
 // Message
 export const Message = styled.p`
-    font-size: 1rem;
-    color: #333;
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#333')};
     text-align: center;
 
     @media (max-width: 991px) {
-        font-size: 0.9rem;
+        font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
     }
 `;
 
@@ -246,12 +276,13 @@ export const FileContainer = styled.article`
     display: flex;
     gap: 10px;
     padding: 20px 10px;
-    border: 1px solid #7b757f;
+    border: 1px solid ${({ darkMode }) => (darkMode ? '#555' : '#7b757f')};
     border-radius: 10px;
     transition: transform 0.5s ease;
+    background-color: ${({ darkMode }) => (darkMode ? '#333' : '#f9f9f9')};
+    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#333')};
 
     &:hover {
-
         transform: scale(1.01);
     }
 
@@ -265,7 +296,7 @@ export const FileContainer = styled.article`
 export const FileIcons = styled.div`
     display: flex;
     gap: 20px;
-    border-right: 1px solid #7b757f;
+    border-right: 1px solid ${({ darkMode }) => (darkMode ? '#555' : '#7b757f')};
     padding-right: 10px;
 
     @media (max-width: 991px) {
@@ -291,22 +322,22 @@ export const FileDetails = styled.div`
 // FileTitle
 export const FileTitle = styled.h2`
     font-weight: 500;
-    font-size: 14px;
-    color: #000;
+    font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
+    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#000')};
 
     @media (max-width: 991px) {
-        font-size: 12px;
+        font-size: ${({ fontSize }) => calculateFontSize(12, fontSize)};
     }
 `;
 
 // FileSize
 export const FileSize = styled.p`
-    font-size: 12px;
+    font-size: ${({ fontSize }) => calculateFontSize(12, fontSize)};
     font-weight: 400;
-    color: #7b757f;
+    color: ${({ darkMode }) => (darkMode ? '#CCC' : '#7b757f')};
 
     @media (max-width: 991px) {
-        font-size: 10px;
+        font-size: ${({ fontSize }) => calculateFontSize(10, fontSize)};
     }
 `;
 
@@ -328,17 +359,16 @@ export const ActionButton = styled.button`
     align-items: center;
     gap: 8px;
     padding: 6px 12px;
-    font-size: 14px;
+    font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
     font-weight: 600;
     border-radius: 10px;
     cursor: pointer;
-    background-color: ${({ outline }) => (outline ? "transparent" : "#6b538c")};
+    background-color: ${({ darkMode, outline }) => (outline ? "transparent" : darkMode ? "#6b538c" : "#6b538c")};
     color: ${({ outline }) => (outline ? "#6b538c" : "#fff")};
     border: ${({ outline }) => (outline ? "1px solid #6b538c" : "none")};
-    transition:  transform 0.5s ease;
+    transition: transform 0.5s ease;
 
     &:hover {
-
         transform: scale(1.05);
     }
 
@@ -347,7 +377,7 @@ export const ActionButton = styled.button`
     }
 
     @media (max-width: 991px) {
-        font-size: 12px;
+        font-size: ${({ fontSize }) => calculateFontSize(12, fontSize)};
         padding: 4px 8px;
     }
-`
+`;
