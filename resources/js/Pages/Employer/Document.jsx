@@ -5,6 +5,7 @@ import downarrow from "@/Pages/Images/Icon.svg";
 import wordlogo from "../Images/worddocicon.png";
 import pdflogo from "../Images/pdf-icon.png";
 const appUrl = import.meta.env.VITE_APP_URL;
+import { useSelector, useDispatch } from "react-redux";
 import {
     Wrapper,
     Content,
@@ -46,6 +47,8 @@ function DocumentDropZone({
 }) {
     const [isDragging, setIsDragging] = useState(false);
     const [filesPreview, setFilesPreview] = useState([]);
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
 
     const handleDragOver = (e) => {
         e.preventDefault();
@@ -87,19 +90,19 @@ function DocumentDropZone({
     };
 
     return (
-        <DropZoneContainer
+        <DropZoneContainer darkMode={darkMode} fontSize={fontSize}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             isDragging={isDragging}
             data-testid="drop-zone-container-employer"
         >
-            <DropZone data-testid="drop-zone-employer">
+            <DropZone darkMode={darkMode} fontSize={fontSize} data-testid="drop-zone-employer">
                 {filesPreview.length > 0 ? (
                     filesPreview.map((fileObj, index) => {
                         const icon = getIconForFileType(fileObj.type);
                         return (
-                            <PreviewImage data-testid="drop-zone-employer"
+                            <PreviewImage darkMode={darkMode} fontSize={fontSize} data-testid="drop-zone-employer"
                                 key={index}
                                 src={icon ? icon : fileObj.preview}
                             />
@@ -115,7 +118,7 @@ function DocumentDropZone({
                         }}
                     />
                 )}
-                <DropZoneText>Drag your files here</DropZoneText>
+                <DropZoneText darkMode={darkMode} fontSize={fontSize}>Drag your files here</DropZoneText>
             </DropZone>
             <DropZoneDescription>{description}</DropZoneDescription>
         </DropZoneContainer>
@@ -123,15 +126,15 @@ function DocumentDropZone({
 }
 
 
-const TabMenu = ({ activeTab, handleTabChange }) => (
-    <TabList>
-      <TabItem onClick={() => handleTabChange("Employer Documents")} className={activeTab === "Employer Documents" ? "active" : ""}>
+const TabMenu = ({ activeTab, handleTabChange, darkMode, fontSize }) => (
+    <TabList darkMode={darkMode} fontSize={fontSize} >
+      <TabItem darkMode={darkMode} fontSize={fontSize} onClick={() => handleTabChange("Employer Documents")} className={activeTab === "Employer Documents" ? "active" : ""}>
         Employer Documents
       </TabItem>
-      <TabItem onClick={() => handleTabChange("Shortlist Documents")} className={activeTab === "Shortlist Documents" ? "active" : ""}>
+      <TabItem darkMode={darkMode} fontSize={fontSize} onClick={() => handleTabChange("Shortlist Documents")} className={activeTab === "Shortlist Documents" ? "active" : ""}>
         Shortlist Documents
       </TabItem>
-      <TabItem onClick={() => handleTabChange("Applicant Documents")} className={activeTab === "Applicant Documents" ? "active" : ""}>
+      <TabItem darkMode={darkMode} fontSize={fontSize} onClick={() => handleTabChange("Applicant Documents")} className={activeTab === "Applicant Documents" ? "active" : ""}>
         Applicant Documents
       </TabItem>
     </TabList>
@@ -139,9 +142,9 @@ const TabMenu = ({ activeTab, handleTabChange }) => (
 
 
 
-const FileItem = ({ title, type, downloadDocument, doc, handleDelete }) => (
-    <FileContainer>
-        <FileIcons>
+const FileItem = ({ title, type, downloadDocument, doc, handleDelete, darkMode, fontSize }) => (
+    <FileContainer darkMode={darkMode} fontSize={fontSize}>
+        <FileIcons darkMode={darkMode} fontSize={fontSize}>
             <img
                 onClick={() => handleDelete(type)}
                 loading="lazy"
@@ -156,13 +159,13 @@ const FileItem = ({ title, type, downloadDocument, doc, handleDelete }) => (
                 style={{ width: "24px", height: "24px" }}
             />
         </FileIcons>
-        <FileDetails>
+        <FileDetails darkMode={darkMode} fontSize={fontSize}>
             <div>
-                <FileTitle>{title}</FileTitle>
-                <FileSize>{type}</FileSize>
+                <FileTitle darkMode={darkMode} fontSize={fontSize}   >{title}</FileTitle>
+                <FileSize darkMode={darkMode} fontSize={fontSize}>{type}</FileSize>
             </div>
-            <FileActions>
-                <ActionButton onClick={() => downloadDocument(type, title)}>
+            <FileActions darkMode={darkMode} fontSize={fontSize}>
+                <ActionButton darkMode={darkMode} fontSize={fontSize} onClick={() => downloadDocument(type, title)}>
                     Download{" "}
                     <img
                         loading="lazy"
@@ -170,7 +173,7 @@ const FileItem = ({ title, type, downloadDocument, doc, handleDelete }) => (
                         alt="Download icon"
                     />
                 </ActionButton>
-                <ActionButton outline>
+                <ActionButton darkMode={darkMode} fontSize={fontSize} outline>
                     Share{" "}
                     <img
                         loading="lazy"
@@ -190,7 +193,8 @@ function Document() {
     const [userDocuments, setUserDocuments] = useState([]);
     const [activeTab, setActiveTab] = useState("Progress Reports");
     const [shortlistDocuments, setShortlistDocuments] = useState([]);
-
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
 
 
 
@@ -379,11 +383,11 @@ const handleTabChange = (tab) => {
 return(
 
     <NavBar header={"Documents"}>
-            <Wrapper>
-                <Content>
-                    <FileSection>
-                        <SectionHeader>
-                            <TabMenu
+            <Wrapper darkMode={darkMode} fontSize={fontSize}>
+                <Content darkMode={darkMode} fontSize={fontSize}>
+                    <FileSection darkMode={darkMode} fontSize={fontSize}>
+                        <SectionHeader darkMode={darkMode} fontSize={fontSize}>
+                            <TabMenu darkMode={darkMode} fontSize={fontSize}
                                 tabs={[
                                     "Employer Documents",
                                     "Shortlist Documents",
@@ -395,10 +399,10 @@ return(
                                 handleTabChange={handleTabChange}
                             />
                         </SectionHeader>
-                        <FileList>
+                        <FileList darkMode={darkMode} fontSize={fontSize}>
                             {(activeTab === 'Employer Documents' && userDocuments.length > 0) &&
                                 userDocuments.map((doc, index) => (
-                                    <FileItem
+                                    <FileItem darkMode={darkMode} fontSize={fontSize}
                                         key={index}
                                         title={doc.title}
                                         type={doc.id}
@@ -409,7 +413,7 @@ return(
                                 ))}
                             {(activeTab === 'Shortlist Documents' && shortlistDocuments.length > 0) &&
                                 shortlistDocuments.map((doc, index) => (
-                                    <FileItem
+                                    <FileItem darkMode={darkMode} fontSize={fontSize}
                                         key={index}
                                         title={doc.title}
                                         type={doc.applicantName}
@@ -420,24 +424,24 @@ return(
                                 ))}
                         </FileList>
                     </FileSection>
-                    <FormSection>
-                        <Form>
-                            <Title>Add Documents</Title>
-                            <Label htmlFor="fileUpload">Attach Documents</Label>
-                            <DropZoneWrapper>
-                                <DocumentDropZone data-testid="drop-zone-employer"
+                    <FormSection darkMode={darkMode} fontSize={fontSize}>
+                        <Form darkMode={darkMode} fontSize={fontSize}>
+                            <Title darkMode={darkMode} fontSize={fontSize}>Add Documents</Title>
+                            <Label darkMode={darkMode} fontSize={fontSize} htmlFor="fileUpload">Attach Documents</Label>
+                            <DropZoneWrapper darkMode={darkMode} fontSize={fontSize}>
+                                <DocumentDropZone darkMode={darkMode} fontSize={fontSize} data-testid="drop-zone-employer"
                                     onFileDrop={handleFileDrop}
                                     clearPreviewsTrigger={clearPreviewsTrigger}
                                 />
                             </DropZoneWrapper>
                             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <FileTypes>Accepted File Types: .doc, .docx, .pdf only</FileTypes>
-                                <SecurityNote>
+                                <FileTypes darkMode={darkMode} fontSize={fontSize}>Accepted File Types: .doc, .docx, .pdf only</FileTypes>
+                                <SecurityNote darkMode={darkMode} fontSize={fontSize}>
                                     {/* Security icon */}
                                     Secure
                                 </SecurityNote>
                             </div>
-                            <SubmitButton onClick={handleUpload}>Upload</SubmitButton>
+                            <SubmitButton darkMode={darkMode} fontSize={fontSize} onClick={handleUpload}>Upload</SubmitButton>
                         </Form>
                     </FormSection>
                 </Content>

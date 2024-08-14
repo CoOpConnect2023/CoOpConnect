@@ -19,6 +19,8 @@ import { Inertia } from "@inertiajs/inertia";
 const AcceptApplicant = () => {
     const [message, setMessage] = useState("");
     const [timeSlots, setTimeSlots] = useState([""]);
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
 
     const dispatch = useDispatch();
 
@@ -68,10 +70,10 @@ const AcceptApplicant = () => {
 
     return (
         <NavBar header={"Accept Applicant"}>
-            <Container>
+            <Container darkMode={darkMode} fontSize={fontSize}>
                 <p>Name: {applicant.name}</p>
                 <p>Email: {applicant.email}</p>
-                <ResumeLink
+                <ResumeLink darkMode={darkMode} fontSize={fontSize}
                     href={applicant.resume}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -79,10 +81,10 @@ const AcceptApplicant = () => {
                     View Resume
                 </ResumeLink>
                 <h2>Send Interview Details</h2>
-                <Form onSubmit={handleSubmit}>
-                    <FormGroup>
-                        <Label>Message</Label>
-                        <TextArea
+                <Form darkMode={darkMode} fontSize={fontSize} onSubmit={handleSubmit}>
+                    <FormGroup darkMode={darkMode} fontSize={fontSize}>
+                        <Label darkMode={darkMode} fontSize={fontSize}>Message</Label>
+                        <TextArea darkMode={darkMode} fontSize={fontSize}
                             rows="4"
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
@@ -90,9 +92,9 @@ const AcceptApplicant = () => {
                         />
                     </FormGroup>
                     {timeSlots.map((slot, index) => (
-                        <FormGroup key={index}>
-                            <Label>Time Slot {index + 1}</Label>
-                            <Datetime
+                        <FormGroup darkMode={darkMode} fontSize={fontSize} key={index}>
+                            <Label darkMode={darkMode} fontSize={fontSize}>Time Slot {index + 1}</Label>
+                            <StyledDatetime darkMode={darkMode} fontSize={fontSize}
                                 value={slot}
                                 onChange={(value) =>
                                     handleTimeSlotChange(index, value)
@@ -101,7 +103,7 @@ const AcceptApplicant = () => {
                                     placeholder: "Select a time slot",
                                 }}
                             />
-                            <RemoveButton
+                            <RemoveButton darkMode={darkMode} fontSize={fontSize}
                                 type="button"
                                 onClick={() => removeTimeSlot(index)}
                             >
@@ -109,10 +111,10 @@ const AcceptApplicant = () => {
                             </RemoveButton>
                         </FormGroup>
                     ))}
-                    <Button type="button" color="blue" onClick={addTimeSlot}>
+                    <Button darkMode={darkMode} fontSize={fontSize} type="button" color="blue" onClick={addTimeSlot}>
                         Add Time Slot
                     </Button>
-                    <Button type="submit" color="green">
+                    <Button darkMode={darkMode} fontSize={fontSize} type="submit" color="green">
                         Send Details
                     </Button>
                 </Form>
@@ -133,92 +135,155 @@ const fadeIn = keyframes`
 `;
 
 // Styled Components
-const Container = styled.div`
+
+
+const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
+    const em = parseFloat(emValue);
+    if (emValue === '1em') return `${basePixelSize * em}px`;
+    if (emValue === '1.07em') return `${basePixelSize * em * 1.3}px`;
+    if (emValue === '1.12em') return `${basePixelSize * em * 1.7}px`;
+    return `${basePixelSize * em * factor}px`;
+};
+
+
+
+export const Container = styled.div`
     padding: 30px;
-    width: 100%;
-    max-width: 900px;
+    width: 70%;
+
+    flex:1 1;
     margin: 20px auto;
-    background-color: #ffffff;
+    background-color: ${({ darkMode }) => (darkMode ? "#333" : "#ffffff")};
+    color: ${({ darkMode }) => (darkMode ? "#f1f1f1" : "#333")};
     border-radius: 12px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
     display: flex;
     flex-direction: column;
     animation: ${fadeIn} 0.8s ease-in-out;
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
 
     @media (max-width: 991px) {
         padding: 20px;
-        max-width: 100%;
+       width: 100%;
     }
 `;
 
-const Section = styled.section`
+export const Section = styled.section`
     display: flex;
     flex-direction: column;
     gap: 20px;
 `;
 
-const Details = styled.div`
+export const Details = styled.div`
     display: flex;
     flex-direction: column;
     gap: 10px;
 `;
 
-const DetailItem = styled.p`
+export const DetailItem = styled.p`
     margin: 0;
-    font-size: 16px;
-    color: #333;
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+    color: ${({ darkMode }) => (darkMode ? "#f1f1f1" : "#333")};
 `;
 
-const Form = styled.form`
+export const Form = styled.form`
     display: flex;
     flex-direction: column;
     gap: 20px;
+    margin-top: 0.5vh;
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
 `;
 
-const FormGroup = styled.div`
+export const FormGroup = styled.div`
     display: flex;
     flex-direction: row;
     gap: 10px;
+    @media (max-width: 768px) {
+
+            max-width: 100%;
+        }
 `;
 
-const Label = styled.label`
+export const Label = styled.label`
     font-weight: 600;
-    font-size: 16px;
-    color: #334155;
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+    color: ${({ darkMode }) => (darkMode ? "#f1f1f1" : "#334155")};
 `;
 
-const TextArea = styled.textarea`
+export const TextArea = styled.textarea`
     width: 100%;
     padding: 12px;
     border-radius: 6px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid ${({ darkMode }) => (darkMode ? "#666" : "#e2e8f0")};
+    background-color: ${({ darkMode }) => (darkMode ? "#444" : "#ffffff")};
+    color: ${({ darkMode }) => (darkMode ? "#f1f1f1" : "#333")};
     resize: none;
-    font-size: 15px;
+    font-size: ${({ fontSize }) => calculateFontSize(15, fontSize)};
     transition: border-color 0.3s ease, background-color 0.3s ease;
 
     &:hover {
-        border-color: #6b538c;
-        background-color: #f3e8ff;
+        border-color: ${({ darkMode }) => (darkMode ? "#9f7aea" : "#6b538c")};
+        background-color: ${({ darkMode }) => (darkMode ? "#3a3a3a" : "#f3e8ff")};
     }
 `;
 
-const StyledDatetime = styled(Datetime)`
+export const StyledDatetime = styled(Datetime)`
     width: 100%;
     padding: 12px;
     border-radius: 6px;
-    border: 1px solid #e2e8f0;
-    font-size: 15px;
+    border: 1px solid ${({ darkMode }) => (darkMode ? "#666" : "#e2e8f0")};
+    background-color: ${({ darkMode }) => (darkMode ? "#444" : "#ffffff")};
+    color: ${({ darkMode }) => (darkMode ? "#f1f1f1" : "#333")};
+    font-size: ${({ fontSize }) => calculateFontSize(15, fontSize)};
+
+    .rdtPicker {
+        background-color: ${({ darkMode }) => (darkMode ? "#333" : "#fff")};
+        color: ${({ darkMode }) => (darkMode ? "#f1f1f1" : "#333")};
+        width: 100%;
+        max-width: 320px;
+        margin: 0 auto;
+
+        @media (max-width: 768px) {
+            width: 100%;
+            max-width: 100%;
+        }
+    }
+
+    .rdtPicker td.rdtToday,
+    .rdtPicker td.rdtActive {
+        background-color: ${({ darkMode }) => (darkMode ? "#9f7aea" : "#007bff")};
+        color: #fff;
+    }
+
+    .rdtPicker .rdtTimeToggle,
+    .rdtPicker .rdtCounters {
+        background-color: ${({ darkMode }) => (darkMode ? "#444" : "#fff")};
+        color: ${({ darkMode }) => (darkMode ? "#f1f1f1" : "#333")};
+    }
+
+    .rdtPicker .rdtTime .rdtCount,
+    .rdtPicker .rdtTime .rdtBtn {
+        background-color: ${({ darkMode }) => (darkMode ? "#555" : "#f9f9f9")};
+        color: ${({ darkMode }) => (darkMode ? "#f1f1f1" : "#333")};
+    }
+
+    @media (max-width: 768px) {
+        padding: 10px;
+        font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
+        width: 80%;
+    }
 `;
 
-const ButtonGroup = styled.div`
+
+export const ButtonGroup = styled.div`
     display: flex;
     gap: 10px;
     justify-content: flex-end;
 `;
 
-const Button = styled.button`
+export const Button = styled.button`
     padding: 12px 24px;
-    font-size: 16px;
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
     cursor: pointer;
     border: none;
     border-radius: 6px;
@@ -229,10 +294,17 @@ const Button = styled.button`
     &:hover {
         background-color: ${(props) => props.color};
         transform: scale(1.05);
+
+    }
+
+    @media (max-width: 768px) {
+        padding: 10px;
+        font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
+        
     }
 `;
 
-const RemoveButton = styled(Button)`
+export const RemoveButton = styled(Button)`
     background-color: #e53e3e;
 
     &:hover {
@@ -240,12 +312,14 @@ const RemoveButton = styled(Button)`
     }
 `;
 
-const ResumeLink = styled.a`
-    color: #007bff;
+export const ResumeLink = styled.a`
+    color: ${({ darkMode }) => (darkMode ? "#7ca1f2" : "#007bff")};
     text-decoration: none;
     font-weight: 600;
+    margin-bottom: 0.5vh;
 
     &:hover {
         text-decoration: underline;
     }
 `;
+

@@ -16,6 +16,7 @@ export const HomePageContainer = styled.div`
   padding: 20px;
   animation: ${fadeIn} 0.8s ease-in-out;
  background-color: ${({ darkMode }) => (darkMode ? 'black' : '#fff')};
+ transition: background-color 0.3s ease, transform 0.3s ease;
   @media (max-width: 768px) {
     padding: 15px;
   }

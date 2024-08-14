@@ -30,6 +30,8 @@ import {
 function Post1() {
     const dispatch = useDispatch();
     const jobFormData = useSelector(selectJobFormData);
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -38,23 +40,23 @@ function Post1() {
 
     return (
         <NavBar header={"Posting Jobs"}>
-            <Container>
-                <Card>
-                    <FormWrapper>
-                        <Title>Create a New Posting</Title>
-                        <Subtitle>
+            <Container darkMode={darkMode} fontSize={fontSize}>
+                <Card darkMode={darkMode} fontSize={fontSize}>
+                    <FormWrapper darkMode={darkMode} fontSize={fontSize}>
+                        <Title darkMode={darkMode} fontSize={fontSize}>Create a New Posting</Title>
+                        <Subtitle darkMode={darkMode} fontSize={fontSize}>
                             Hire amazing students through CO-OP Connect!
                         </Subtitle>
-                        <Form>
-                            <SectionTitle>
+                        <Form darkMode={darkMode} fontSize={fontSize}>
+                            <SectionTitle darkMode={darkMode} fontSize={fontSize}>
                                 Part 1 of 2: Basic Posting Information
                             </SectionTitle>
-                            <FormRow>
-                                <FormField>
-                                    <Label htmlFor="jobTitle">
+                            <FormRow darkMode={darkMode} fontSize={fontSize}>
+                                <FormField darkMode={darkMode} fontSize={fontSize}>
+                                    <Label darkMode={darkMode} fontSize={fontSize} htmlFor="jobTitle">
                                         Job Title *
                                     </Label>
-                                    <Input
+                                    <Input darkMode={darkMode} fontSize={fontSize}
                                         type="text"
                                         id="title"
                                         name="title"
@@ -63,11 +65,11 @@ function Post1() {
                                         onChange={handleInputChange}
                                     />
                                 </FormField>
-                                <FormField>
-                                    <Label htmlFor="companyName">
+                                <FormField darkMode={darkMode} fontSize={fontSize}>
+                                    <Label darkMode={darkMode} fontSize={fontSize} htmlFor="companyName">
                                         Company *
                                     </Label>
-                                    <Input
+                                    <Input darkMode={darkMode} fontSize={fontSize}
                                         type="text"
                                         id="company"
                                         name="company"
@@ -77,12 +79,12 @@ function Post1() {
                                     />
                                 </FormField>
                             </FormRow>
-                            <FormRow>
-                                <FormField>
-                                    <Label htmlFor="workplaceType">
+                            <FormRow darkMode={darkMode} fontSize={fontSize}>
+                                <FormField darkMode={darkMode} fontSize={fontSize}>
+                                    <Label  darkMode={darkMode} fontSize={fontSize} htmlFor="workplaceType">
                                         Workplace Type *
                                     </Label>
-                                    <Select
+                                    <Select darkMode={darkMode} fontSize={fontSize}
                                         id="jobType"
                                         name="jobType"
                                         aria-label="Workplace Type"
@@ -94,11 +96,11 @@ function Post1() {
                                         <option value="Hybrid">Hybrid</option>
                                     </Select>
                                 </FormField>
-                                <FormField>
-                                    <Label htmlFor="jobLocation">
+                                <FormField darkMode={darkMode} fontSize={fontSize}>
+                                    <Label darkMode={darkMode} fontSize={fontSize} htmlFor="jobLocation">
                                         Job Location *
                                     </Label>
-                                    <Input
+                                    <Input darkMode={darkMode} fontSize={fontSize}
                                         type="text"
                                         id="location"
                                         name="location"
@@ -108,15 +110,15 @@ function Post1() {
                                     />
                                 </FormField>
                             </FormRow>
-                            <HorizontalRule />
-                            <ButtonContainerPost>
-                                <Link href="/employer/home">
-                                    <BackButton tabIndex="0">
+                            <HorizontalRule darkMode={darkMode} fontSize={fontSize} />
+                            <ButtonContainerPost darkMode={darkMode} fontSize={fontSize}>
+                                <Link darkMode={darkMode} fontSize={fontSize} href="/employer/home">
+                                    <BackButton darkMode={darkMode} fontSize={fontSize} tabIndex="0">
                                         Go Back
                                     </BackButton>
                                 </Link>
-                                <Link href="/employer/post2">
-                                    <SubmitButton tabIndex="0">
+                                <Link darkMode={darkMode} fontSize={fontSize} href="/employer/post2">
+                                    <SubmitButton darkMode={darkMode} fontSize={fontSize} tabIndex="0">
                                         Continue
                                     </SubmitButton>
                                 </Link>

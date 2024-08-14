@@ -9,21 +9,25 @@ const fadeIn = keyframes`
     }
 `;
 
+
 export const Main = styled.main`
-    align-self: stretch;
+
     border-radius: 10px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     background-color: ${({ darkMode }) => (darkMode ? "#1f1f1f" : "#fff")};
     color: ${({ darkMode }) => (darkMode ? "#f5f5f5" : "#000")};
     display: flex;
+    border: 2px solid ${({ darkMode }) => (darkMode ? "#444" : "#e2e8f0")};
     flex-direction: column;
     padding: 20px;
-    max-width: 885px;
+    width: 70%;
     animation: ${fadeIn} 0.8s ease-in-out;
+    transition: background-color 0.5s ease, color 0.5s ease;
+    font-size: ${({ fontSize }) => fontSize};
 
     @media (max-width: 991px) {
         padding: 10px;
-        max-width: 100%;
+        width: 100%;
         flex-direction: column;
     }
 `;
@@ -32,6 +36,8 @@ export const Section = styled.section`
     display: flex;
     flex-direction: column;
     border-color: ${({ darkMode }) => (darkMode ? "rgba(200, 200, 200, 1)" : "rgba(123, 117, 127, 1)")};
+    transition: border-color 0.5s ease;
+    font-size: ${({ fontSize }) => fontSize};
 
     @media (max-width: 991px) {
         max-width: 100%;
@@ -46,6 +52,8 @@ export const FormSection = styled.section`
     padding: 20px;
     display: flex;
     gap: 20px;
+    transition: border-color 0.5s ease;
+    font-size: ${({ fontSize }) => fontSize};
 
     @media (max-width: 991px) {
         flex-direction: column;
@@ -60,14 +68,15 @@ export const AccountHeader = styled.header`
     align-self: center;
     display: flex;
     width: 100%;
-    max-width: 494px;
+
     gap: 20px;
-    font-size: 14px;
+    font-size: ${({ fontSize }) => fontSize};
     color: ${({ darkMode }) => (darkMode ? "#f5f5f5" : "#334155")};
     font-weight: 500;
     line-height: 143%;
     justify-content: space-between;
     padding: 5px 10px;
+    transition: border-color 0.5s ease, color 0.5s ease;
 
     @media (max-width: 991px) {
         flex-wrap: wrap;
@@ -82,6 +91,8 @@ export const AccountTitle = styled.div`
     color: ${({ darkMode }) => (darkMode ? "#ddd" : "#0f172a")};
     justify-content: center;
     padding: 6px 20px;
+    font-size: ${({ fontSize }) => fontSize};
+    transition: background-color 0.5s ease, color 0.5s ease;
 
     @media (max-width: 991px) {
         white-space: normal;
@@ -96,6 +107,12 @@ export const AccountDetail = styled.div`
     color: ${({ darkMode }) => (darkMode ? "#ddd" : "#334155")};
     border-bottom: ${(props) =>
         props.active ? "2px solid rgba(107, 83, 140, 1)" : "none"};
+    font-size: ${({ fontSize }) => fontSize};
+    transition: color 0.5s ease;
+
+    @media (max-width: 991px) {
+        white-space: normal;
+    }
 `;
 
 export const FormColumn = styled.div`
@@ -103,6 +120,7 @@ export const FormColumn = styled.div`
     flex-direction: column;
     width: 77%;
     margin-left: 0;
+    font-size: ${({ fontSize }) => fontSize};
 
     @media (max-width: 991px) {
         width: 100%;
@@ -112,6 +130,7 @@ export const FormColumn = styled.div`
 export const FormContent = styled.article`
     display: flex;
     flex-direction: column;
+    font-size: ${({ fontSize }) => fontSize};
 
     @media (max-width: 991px) {
         margin-top: 20px;
@@ -120,7 +139,9 @@ export const FormContent = styled.article`
 
 export const FormTitle = styled.h2`
     color: ${({ darkMode }) => (darkMode ? "#ddd" : "#000")};
+    font-size: ${({ fontSize }) => fontSize};
     font: 400 32px Poppins, sans-serif;
+    transition: color 0.5s ease;
 
     @media (max-width: 991px) {
         max-width: 100%;
@@ -131,7 +152,9 @@ export const FormDetail = styled.p`
     color: ${({ darkMode }) => (darkMode ? "#bbb" : "#7b757f")};
     letter-spacing: 0.25px;
     margin-top: 10px;
-    font: 600 14px/20px Poppins, sans-serif;
+    font-size: ${({ fontSize }) => fontSize};
+
+    transition: color 0.5s ease;
 
     @media (max-width: 991px) {
         max-width: 100%;
@@ -143,6 +166,7 @@ export const FormButtonColumn = styled.div`
     flex-direction: column;
     width: 23%;
     margin-left: 20px;
+    font-size: ${({ fontSize }) => fontSize};
 
     @media (max-width: 991px) {
         width: 100%;
@@ -160,6 +184,7 @@ export const DeleteButton = styled.button`
     width: 100%;
     margin: auto 0;
     padding: 8px 16px;
+    font-size: ${({ fontSize }) => fontSize};
     font: 600 16px/150% Inter, sans-serif;
     cursor: pointer;
     transition: background-color 0.5s ease, transform 0.5s ease;
@@ -181,6 +206,8 @@ export const SettingsSection = styled.section`
     margin-top: 20px;
     padding: 20px;
     background-color: ${({ darkMode }) => (darkMode ? "#2c2c2c" : "#fff")};
+    transition: border-color 0.5s ease, background-color 0.5s ease;
+    font-size: ${({ fontSize }) => fontSize};
 
     @media (max-width: 991px) {
         max-width: 100%;
@@ -190,6 +217,7 @@ export const SettingsSection = styled.section`
 export const SettingsHeader = styled.header`
     gap: 20px;
     display: flex;
+    font-size: ${({ fontSize }) => fontSize};
 
     @media (max-width: 991px) {
         flex-direction: column;
@@ -201,6 +229,7 @@ export const SettingsColumn = styled.div`
     display: flex;
     flex-direction: column;
     width: 75%;
+    font-size: ${({ fontSize }) => fontSize};
     margin-left: 0;
 
     @media (max-width: 991px) {
@@ -211,6 +240,7 @@ export const SettingsColumn = styled.div`
 export const SettingsContent = styled.article`
     display: flex;
     flex-direction: column;
+    font-size: ${({ fontSize }) => fontSize};
 
     @media (max-width: 991px) {
         margin-top: 20px;
@@ -219,7 +249,9 @@ export const SettingsContent = styled.article`
 
 export const SettingsTitle = styled.h2`
     color: ${({ darkMode }) => (darkMode ? "#ddd" : "#000")};
+    font-size: ${({ fontSize }) => fontSize};
     font: 400 32px Poppins, sans-serif;
+    transition: color 0.5s ease;
 
     @media (max-width: 991px) {
         max-width: 100%;
@@ -230,7 +262,9 @@ export const SettingsDetail = styled.p`
     color: ${({ darkMode }) => (darkMode ? "#bbb" : "#7b757f")};
     letter-spacing: 0.25px;
     margin-top: 10px;
-    font: 600 14px/20px Poppins, sans-serif;
+    font-size: ${({ fontSize }) => fontSize};
+    font: 600  Poppins, sans-serif;
+    transition: color 0.5s ease;
 
     @media (max-width: 991px) {
         max-width: 100%;
@@ -240,7 +274,8 @@ export const SettingsDetail = styled.p`
 export const SettingsControls = styled.div`
     display: flex;
     flex-direction: column;
-    width: 40%;
+    width: 100%;
+    font-size: ${({ fontSize }) => fontSize};
     margin-left: 20px;
 
     @media (max-width: 991px) {
@@ -254,7 +289,9 @@ export const CurrentSelection = styled.div`
     text-align: center;
     color: ${({ darkMode }) => (darkMode ? "#bbb" : "#7b757f")};
     letter-spacing: 0.4px;
+    font-size: ${({ fontSize }) => fontSize};
     font: 600 12px/133% Poppins, sans-serif;
+    transition: color 0.5s ease;
 `;
 
 export const SettingsOptions = styled.div`
@@ -264,15 +301,19 @@ export const SettingsOptions = styled.div`
     display: flex;
     margin-top: 10px;
     gap: 10px;
-    font-size: 14px;
+    font-size: ${({ fontSize }) => fontSize};
     font-weight: 500;
+    width: 100%;
     line-height: 143%;
     justify-content: space-between;
     padding: 5px 10px;
+    transition: border-color 0.5s ease, background-color 0.5s ease;
 
-    @media (max-width: 991px)Here's the continuation and completion of the dark mode integration for the remaining styled components:
-
-
+    @media (max-width: 991px) {
+        white-space: nowrap; /* Prevent content from wrapping */
+        overflow-x: auto; /* Enable horizontal scrolling */
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    }
 `;
 
 export const OptionButton = styled.button`
@@ -286,7 +327,8 @@ export const OptionButton = styled.button`
     justify-content: center;
     padding: 6px 12px;
     cursor: pointer;
-    transition: background-color 0.5s ease, transform 0.5s ease;
+    font-size: ${({ fontSize }) => fontSize};
+    transition: background-color 0.5s ease, transform 0.5s ease, color 0.5s ease;
 
     &:hover {
         background-color: ${({ className, darkMode }) =>
@@ -310,9 +352,28 @@ export const OtherOptionButton = styled.button`
     border: none;
     border-radius: 5px;
     user-select: none;
+    font-size: ${({ fontSize }) => fontSize};
+    transition: background-color 0.5s ease, color 0.5s ease;
 
     &:hover {
         background: ${({ active, darkMode }) => (active ? "#0056b3" : darkMode ? "#666" : "#c7c7c7")};
+    }
+`;
+
+export const SaveOptionButton = styled.button`
+    padding: 0.5em;
+    margin: 5px;
+    cursor: pointer;
+    background: ${({ active, darkMode }) => (active ? "#6B538C" : darkMode ? "#006400" : "#66CC66")};
+    color: ${({ active, darkMode }) => (active ? "#FFF" : darkMode ? "#ddd" : "#FFF")};
+    border: none;
+    border-radius: 5px;
+    user-select: none;
+    font-size: ${({ fontSize }) => fontSize};
+    transition: background-color 0.5s ease, color 0.5s ease;
+
+    &:hover {
+        background: ${({ active, darkMode }) => (active ? "#0056b3" : darkMode ? "#66CC66" : "#006400")};
     }
 `;
 
@@ -325,6 +386,8 @@ export const DummySection = styled.section`
     margin-top: 20px;
     gap: 20px;
     background-color: ${({ darkMode }) => (darkMode ? "#2c2c2c" : "#fff")};
+    font-size: ${({ fontSize }) => fontSize};
+    transition: border-color 0.5s ease, background-color 0.5s ease;
 
     @media (max-width: 991px) {
         flex-direction: column;
@@ -341,6 +404,7 @@ export const SettingsButton = styled.button`
     width: 100%;
     margin: auto 0;
     padding: 8px 16px;
+    font-size: ${({ fontSize }) => fontSize};
     font: 600 16px/150% Inter, sans-serif;
     cursor: pointer;
     transition: background-color 0.5s ease, transform 0.5s ease;
@@ -360,24 +424,28 @@ export const PasswordChangeForm = styled.form`
     flex-direction: column;
     gap: 20px;
     margin-top: 20px;
+    font-size: ${({ fontSize }) => fontSize};
 `;
 
 export const FormField = styled.div`
     display: flex;
     flex-direction: column;
+    font-size: ${({ fontSize }) => fontSize};
 `;
 
 export const Label = styled.label`
-    font-size: 14px;
+    font-size: ${({ fontSize }) => fontSize};
     color: ${({ darkMode }) => (darkMode ? "#ddd" : "#334155")};
     margin-bottom: 5px;
+    transition: color 0.5s ease;
 `;
 
 export const Input = styled.input`
     padding: 10px;
     border: 1px solid ${({ darkMode }) => (darkMode ? "#444" : "#e2e8f0")};
     border-radius: 5px;
-    transition: border-color 0.3s ease, background-color 0.3s ease;
+    font-size: ${({ fontSize }) => fontSize};
+    transition: border-color 0.5s ease, background-color 0.5s ease, color 0.5s ease;
     background-color: ${({ darkMode }) => (darkMode ? "#333" : "#fff")};
     color: ${({ darkMode }) => (darkMode ? "#ddd" : "#000")};
 
@@ -393,7 +461,7 @@ export const SubmitButton = styled.button`
     border-radius: 5px;
     background-color: ${({ darkMode }) => (darkMode ? "rgb(83, 63, 100)" : "rgb(107,83,140)")};
     color: #fff;
-    font-size: 16px;
+    font-size: ${({ fontSize }) => fontSize};
     cursor: pointer;
     align-self: flex-end;
     margin-right: 1vw;
@@ -407,5 +475,6 @@ export const SubmitButton = styled.button`
 
 export const Message = styled.p`
     color: ${({ error, darkMode }) => (error ? 'red' : darkMode ? 'lightgreen' : 'green')};
-    font-size: 14px;
+    font-size: ${({ fontSize }) => fontSize};
+    transition: color 0.5s ease;
 `;

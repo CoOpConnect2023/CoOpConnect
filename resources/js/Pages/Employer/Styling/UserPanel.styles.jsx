@@ -1,10 +1,26 @@
-
 import styled from "styled-components";
 
+// Function to calculate font size dynamically
+const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
+    const em = parseFloat(emValue); // Convert emValue to a number
+    // If the emValue is exactly "1em", return the base size without modification
+    if (emValue === '1em') {
+        return `${basePixelSize * em * 1.2}px`;
+    }
 
+    if (emValue === '1.07em') {
+        return `${basePixelSize * em * 1.3}px`;
+    }
+
+    if (emValue === '1.12em') {
+        return `${basePixelSize * em * 1.7}px`;
+    }
+    // Otherwise, apply the amplification factor
+    return `${basePixelSize * em * factor}px`;
+};
 
 export const Div70 = styled.div`
-     justify-content: space-between;
+    justify-content: space-between;
     border-color: rgba(123, 117, 127, 1);
     border-style: solid;
     border-bottom-width: 1px;
@@ -12,6 +28,7 @@ export const Div70 = styled.div`
     width: 100%;
     gap: 10px;
     padding: 10px;
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)}; /* Apply font size */
     @media (max-width: 991px) {
         max-width: 100%;
         flex-wrap: wrap;
@@ -25,6 +42,7 @@ export const Div71 = styled.div`
     white-space: nowrap;
     line-height: 133%;
     padding: 5px 0;
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)}; /* Apply font size */
     @media (max-width: 991px) {
         white-space: initial;
     }
@@ -35,15 +53,14 @@ export const Img12 = styled.img`
     object-fit: auto;
     object-position: center;
     width: 70px;
-    border-color: rgba(123, 117, 127, 1);
-    border-style: solid;
-    border-width: 2px;
+
 `;
 
 export const Div72 = styled.div`
     display: flex;
     flex-direction: column;
     margin: auto 0;
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)}; /* Apply font size */
     @media (max-width: 991px) {
         white-space: initial;
     }
@@ -51,7 +68,9 @@ export const Div72 = styled.div`
 
 export const Div73 = styled.div`
     color: var(--Palettes-Primary-40, #773dc3);
-    font: 600 24px Poppins, sans-serif;
+    font-size: ${({ fontSize }) => calculateFontSize(24, fontSize)}; /* Apply font size */
+    font-weight: 600;
+    font-family: Poppins, sans-serif;
 `;
 
 export const Div74 = styled.div`
@@ -59,7 +78,7 @@ export const Div74 = styled.div`
     display: flex;
     margin-top: 10px;
     gap: 5px;
-    font-size: 12px;
+    font-size: ${({ fontSize }) => calculateFontSize(12, fontSize)}; /* Apply font size */
     color: var(--Schemes-Outline, #7b757f);
     font-weight: 400;
     letter-spacing: 0.4px;
@@ -78,6 +97,7 @@ export const Div75 = styled.div`
 
 export const Div76 = styled.div`
     font-family: Poppins, sans-serif;
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)}; /* Apply font size */
 `;
 
 export const Div77 = styled.div`
@@ -86,6 +106,7 @@ export const Div77 = styled.div`
     display: flex;
     gap: 20px;
     margin: auto 0;
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)}; /* Apply font size */
 `;
 
 export const Img13 = styled.img`

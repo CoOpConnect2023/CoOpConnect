@@ -40,6 +40,8 @@ import {
 function Post2() {
     const [userId, setUserId] = useState(null);
     const [currentSkill, setCurrentSkill] = useState("");
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
 
     useEffect(() => {
         const fetchUserId = async () => {
@@ -93,51 +95,51 @@ function Post2() {
 
     return (
         <NavBar header={"Posting Jobs"}>
-            <Container>
-                <Card>
-                    <FormWrapper>
-                        <Title>Create a New Posting</Title>
-                        <Subtitle>
+            <Container darkMode={darkMode} fontSize={fontSize}>
+                <Card darkMode={darkMode} fontSize={fontSize}>
+                    <FormWrapper darkMode={darkMode} fontSize={fontSize}>
+                        <Title darkMode={darkMode} fontSize={fontSize}>Create a New Posting</Title>
+                        <Subtitle darkMode={darkMode} fontSize={fontSize}>
                             Hire amazing students through CO-OP Connect!
                         </Subtitle>
-                        <FormContainer>
-                            <SectionTitle>
+                        <FormContainer darkMode={darkMode} fontSize={fontSize}>
+                            <SectionTitle darkMode={darkMode} fontSize={fontSize}>
                                 Part 2 of 2: Job Details
                             </SectionTitle>
-                            <SectionHeading>
+                            <SectionHeading darkMode={darkMode} fontSize={fontSize}>
                                 Add a Job Description
                             </SectionHeading>
-                            <SectionDescription>
+                            <SectionDescription darkMode={darkMode} fontSize={fontSize}>
                                 Describe the contents of the job. Include
                                 details about the daily tasks, requirements, and
                                 expectations.
                             </SectionDescription>
-                            <Form>
-                                <InputField
+                            <Form darkMode={darkMode} fontSize={fontSize}>
+                                <InputField darkMode={darkMode} fontSize={fontSize}
                                     name="description"
                                     value={jobFormData.description}
                                     onChange={handleInputChange}
                                     data-test-id="description-input"
                                 />
                             </Form>
-                            <HorizontalRule />
-                            <SectionHeading>Add Skills</SectionHeading>
-                            <SectionDescription>
+                            <HorizontalRule darkMode={darkMode} fontSize={fontSize} />
+                            <SectionHeading darkMode={darkMode} fontSize={fontSize}>Add Skills</SectionHeading>
+                            <SectionDescription darkMode={darkMode} fontSize={fontSize}>
                                 Add some skill keywords to the job.
                             </SectionDescription>
-                            <Label htmlFor="skillInput">Press Enter to add a skill.</Label>
-                            <StyledInput
+                            <Label darkMode={darkMode} fontSize={fontSize} htmlFor="skillInput">Press Enter to add a skill.</Label>
+                            <StyledInput darkMode={darkMode} fontSize={fontSize}
                                 id="skillInput"
                                 name="skills"
                                 value={currentSkill}
                                 onChange={handleSkillChange}
                                 onKeyDown={handleSkillKeyDown}
                             />
-                            <TagContainer>
+                            <TagContainer darkMode={darkMode} fontSize={fontSize}>
                                 {jobFormData.skills.map((skill, index) => (
-                                    <Tag key={index}>
-                                        <TagName>{skill}</TagName>
-                                        <TagIcon
+                                    <Tag darkMode={darkMode} fontSize={fontSize} key={index}>
+                                        <TagName darkMode={darkMode} fontSize={fontSize}>{skill}</TagName>
+                                        <TagIcon darkMode={darkMode} fontSize={fontSize}
                                             loading="lazy"
                                             src="https://cdn.builder.io/api/v1/image/assets/TEMP/f4297c66e6d9622e462ebb187a46dd67cf9ee2c5dfcfd5088583249a1e3bfc3e?apiKey=d66532d056b14640a799069157705b77&"
                                             alt={`${skill} Icon`}
@@ -146,13 +148,13 @@ function Post2() {
                                     </Tag>
                                 ))}
                             </TagContainer>
-                            <HorizontalRule />
-                            <ButtonGroup>
-                                <Link href="/employer/post1">
-                                    <ActionButton>Go Back</ActionButton>
+                            <HorizontalRule darkMode={darkMode} fontSize={fontSize} />
+                            <ButtonGroup darkMode={darkMode} fontSize={fontSize}>
+                                <Link darkMode={darkMode} fontSize={fontSize} href="/employer/post1">
+                                    <ActionButton darkMode={darkMode} fontSize={fontSize}>Go Back</ActionButton>
                                 </Link>
-                                <Link href="/employer/home">
-                                    <SubmitButton onClick={handleSubmit}>
+                                <Link darkMode={darkMode} fontSize={fontSize} href="/employer/home">
+                                    <SubmitButton darkMode={darkMode} fontSize={fontSize} onClick={handleSubmit}>
                                         Finished
                                     </SubmitButton>
                                 </Link>

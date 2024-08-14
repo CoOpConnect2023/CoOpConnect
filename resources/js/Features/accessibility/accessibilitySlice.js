@@ -35,7 +35,7 @@ export const getUser = createAsyncThunk(
   "user/getUser",
   async () => {
       const response = await axios({
-          url: `${appUrl}/api/user-id`,
+          url: `/api/user-id`,
           method: "GET",
       });
 
@@ -56,7 +56,7 @@ const accessibilitySlice = createSlice({
       console.log('Text size set to:', state.textSize);
     },
     increaseFontSize(state) {
-        
+
         const currentSizeKey = ['small', 'medium', 'large'].find(key => getFontSize(key) === state.textSize);
         const newSizeKey = getNextFontSize(currentSizeKey, 'increase');
         console.log('Current size key:', currentSizeKey);

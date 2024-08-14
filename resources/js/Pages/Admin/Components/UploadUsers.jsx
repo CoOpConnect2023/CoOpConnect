@@ -22,6 +22,7 @@ const SectionContainer = styled.div`
   flex-direction: column;
   align-items: center;
   background-color: ${({ darkMode }) => (darkMode ? '#2C2C2C' : 'white')};
+  transition: background-color 0.5s ease, transform 0.3s ease;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -30,6 +31,7 @@ const SectionContainer = styled.div`
 
 const SectionTitle = styled.h2`
   color: ${({ darkMode }) => (darkMode ? '#b6a1e5' : '#6e3aa7')};
+  transition: color 0.3s ease, transform 0.3s ease;
   font-size: ${({ fontSize }) => calculateFontSize(20, fontSize)};
   margin-bottom: 10px;
 `;
