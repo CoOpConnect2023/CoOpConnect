@@ -187,7 +187,7 @@ function Profile() {
                                 )}
                             </ProfileImageWrapper>
                             <BioSection>
-                                <BioTitle>Bio:</BioTitle>
+                                
                                 <DetailValue
                                     name="description"
                                     value={description}

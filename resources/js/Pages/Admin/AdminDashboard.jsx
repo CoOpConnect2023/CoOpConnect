@@ -60,7 +60,7 @@ const AdminDashboard = () => {
 
     const handleDeleteUser = (userId) => {
         dispatch(deleteUser(userId));
-        console.log(`Deleting user with ID: ${userId}`);
+        
     };
 
 

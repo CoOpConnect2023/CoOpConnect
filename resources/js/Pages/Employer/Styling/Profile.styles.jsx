@@ -72,7 +72,7 @@ export const Title = styled.h1`
 `
 
 export const ProfileWrapper = styled.div`
-    margin-top: 40px;
+    margin-top: 20px;
 
     @media (max-width: 768px) {
         max-width: 100%;
@@ -95,8 +95,8 @@ export const ProfileImageWrapper = styled.figure`
     display: flex;
     flex-direction: column;
     line-height: normal;
-    width: 26%;
-    margin: 0 auto;
+    width: 10%;
+
 
     @media (max-width: 768px) {
         width: 100%;
@@ -129,6 +129,7 @@ export const ClearProfileButton = styled.button`
     background: linear-gradient(135deg, #6b538c, #a97bbf);
     align-self: start;
     margin-top: 20px;
+    width: 100%;
     color: #fff;
     letter-spacing: 0.5px;
     padding: 8px 16px;
@@ -179,7 +180,7 @@ export const BioDescription = styled.div`
     border: 2px solid rgba(123, 117, 127, 1);
     background-color: #eedcff;
     display: flex;
-    margin-top: 8px;
+
     flex-direction: column;
     padding: 12px;
 
@@ -197,7 +198,7 @@ export const BioLine = styled.div`
 
 export const BioLineGroup = styled.div`
     display: flex;
-    margin-top: 8px;
+
     padding-right: 80px;
 
     @media (max-width: 768px) {

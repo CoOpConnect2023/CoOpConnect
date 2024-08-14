@@ -15,7 +15,7 @@ const fadeIn = keyframes`
 export const HomePageContainer = styled.div`
   padding: 20px;
   animation: ${fadeIn} 0.8s ease-in-out;
-
+ background-color: ${({ darkMode }) => (darkMode ? 'black' : '#fff')};
   @media (max-width: 768px) {
     padding: 15px;
   }
