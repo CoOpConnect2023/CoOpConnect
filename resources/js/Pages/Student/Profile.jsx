@@ -9,17 +9,21 @@ import {
     ProfileContainer,
     RightContainer,
 } from "./Styling/Profile.styles";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Profile() {
+
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
     return (
         <NavBar header="My Profile">
-            <MainContainer>
-                <ProfileContainer>
-                    <ProfileForm />
+            <MainContainer fontSize={fontSize} darkMode={darkMode}>
+                <ProfileContainer fontSize={fontSize} darkMode={darkMode}>
+                    <ProfileForm fontSize={fontSize} darkMode={darkMode} />
                 </ProfileContainer>
-                <RightContainer>
-                    <Matches />
-                    <ReflectionDocuments />
+                <RightContainer fontSize={fontSize} darkMode={darkMode}>
+                    <Matches fontSize={fontSize} darkMode={darkMode} />
+                    <ReflectionDocuments fontSize={fontSize} darkMode={darkMode} />
                 </RightContainer>
             </MainContainer>
         </NavBar>

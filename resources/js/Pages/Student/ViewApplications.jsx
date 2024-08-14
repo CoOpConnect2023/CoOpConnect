@@ -10,6 +10,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 const ViewApplications = () => {
     const [activeTab, setActiveTab] = useState("Pending");
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
 
     const dispatch = useDispatch();
     const jobs = useSelector(selectJobs);
@@ -57,7 +59,7 @@ const ViewApplications = () => {
         return jobs
             .filter((app) => app.status === activeTab)
             .map((app) => (
-                <ApplicationCard key={app.id}>
+                <ApplicationCard fontSize={fontSize} darkMode={darkMode} key={app.id}>
                     <h3>
                         <b>Position:</b> {app.title}
                     </h3>
@@ -71,11 +73,11 @@ const ViewApplications = () => {
                         <b>Description:</b> {app.description}
                     </p>
                     {app.status === "Interview" && (
-                        <ButtonGroup>
-                            <ActionButton onClick={() => handleAccept(app.id)}>
+                        <ButtonGroup fontSize={fontSize} darkMode={darkMode}>
+                            <ActionButton fontSize={fontSize} darkMode={darkMode}onClick={() => handleAccept(app.id)}>
                                 Accept
                             </ActionButton>
-                            <ActionButton onClick={() => handleDecline(app.id)}>
+                            <ActionButton fontSize={fontSize} darkMode={darkMode} onClick={() => handleDecline(app.id)}>
                                 Decline
                             </ActionButton>
                         </ButtonGroup>
@@ -91,10 +93,10 @@ const ViewApplications = () => {
 
     return (
         <NavBar header={"View Applications"}>
-            <Container>
-                <Tabs>
+            <Container fontSize={fontSize} darkMode={darkMode}>
+                <Tabs fontSize={fontSize} darkMode={darkMode}>
                     {tabs.map((tab) => (
-                        <Tab
+                        <Tab fontSize={fontSize} darkMode={darkMode}
                             key={tab}
                             $active={activeTab === tab}
                             onClick={() => setActiveTab(tab)}
@@ -104,12 +106,12 @@ const ViewApplications = () => {
                     ))}
                 </Tabs>
                 {jobs.length > 0 ? (
-                    <ApplicationsContainer>
+                    <ApplicationsContainer fontSize={fontSize} darkMode={darkMode}>
                         {console.log(jobs)}
                         {renderApplications()}
                     </ApplicationsContainer>
                 ) : (
-                    <ApplicationsContainer>
+                    <ApplicationsContainer fontSize={fontSize} darkMode={darkMode}>
                         No applications found
                     </ApplicationsContainer>
                 )}
@@ -119,11 +121,35 @@ const ViewApplications = () => {
 };
 
 
+const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
+    const em = parseFloat(emValue); // Convert emValue to a number
+
+    if (emValue === '1em') {
+        return `${basePixelSize * em}px`;
+    }
+
+    if (emValue === '1.07em') {
+        return `${basePixelSize * em * 1.3}px`;
+    }
+
+    if (emValue === '1.12em') {
+        return `${basePixelSize * em * 1.7}px`;
+    }
+
+    return `${basePixelSize * em * factor}px`;
+};
+
+// Base pixel size for font calculations
+const BASE_PIXEL_SIZE = 16;
+
 const Container = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px;
+    background-color: ${({ darkMode }) => (darkMode ? '#2C2C2C' : '#FFF7FF')};
+    color: ${({ darkMode }) => (darkMode ? '#2C2C2C' : '#2C2C2C')};
+    font-size: ${({ fontSize = '1em' }) => calculateFontSize(BASE_PIXEL_SIZE, fontSize)};
 
     @media (max-width: 768px) {
         padding: 10px;
@@ -135,6 +161,8 @@ const Tabs = styled.div`
     justify-content: center;
     margin-bottom: 20px;
     flex-wrap: wrap;
+    background-color: ${({ darkMode }) => (darkMode ? '#2C2C2C' : '#FFF7FF9')};
+    font-size: ${({ fontSize = '1em' }) => calculateFontSize(BASE_PIXEL_SIZE, fontSize)};
 
     @media (max-width: 768px) {
         margin-bottom: 10px;
@@ -145,13 +173,15 @@ const Tab = styled.div`
     padding: 10px 20px;
     margin: 0 10px;
     cursor: pointer;
-    background: ${({ $active }) => ($active ? "#007BFF" : "#E0E0E0")};
-    color: ${({ $active }) => ($active ? "#FFF" : "#000")};
+    background: ${({ $active, darkMode }) => ($active ? (darkMode ? '#6c4bcf' : '#B7A1E5') : (darkMode ? '#333' : '#E0E0E0'))};
+    color: ${({ $active, darkMode }) => ($active ? (darkMode ? '#FFF' : '#FFF') : (darkMode ? '#ccc' : '#000'))};
     border-radius: 5px;
     user-select: none;
+    font-size: ${({ fontSize = '1em' }) => calculateFontSize(BASE_PIXEL_SIZE, fontSize)};
+    border: 2px solid ${({ $active, darkMode }) => ($active ? (darkMode ? '#4a3ba3' : '#0056b3') : (darkMode ? '#555' : '#ccc'))}; /* Added border */
 
     &:hover {
-        background: ${({ $active }) => ($active ? "#0056b3" : "#c7c7c7")};
+        background: ${({ $active, darkMode }) => ($active ? (darkMode ? '#4a3ba3' : '#0056b3') : (darkMode ? '#444' : '#c7c7c7'))};
     }
 
     @media (max-width: 768px) {
@@ -160,12 +190,14 @@ const Tab = styled.div`
     }
 `;
 
+
 const ApplicationsContainer = styled.div`
     width: 100%;
     max-width: 800px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    font-size: ${({ fontSize = '1em' }) => calculateFontSize(BASE_PIXEL_SIZE, fontSize)};
 
     @media (max-width: 768px) {
         width: 100%;
@@ -174,12 +206,14 @@ const ApplicationsContainer = styled.div`
 `;
 
 const ApplicationCard = styled.div`
-    background: #fff;
+    background: ${({ darkMode }) => (darkMode ? '#1f1f1f' : '#fff')};
     padding: 20px;
     margin-bottom: 15px;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     width: 100%;
+    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
+    font-size: ${({ fontSize = '1em' }) => calculateFontSize(BASE_PIXEL_SIZE, fontSize)};
 
     @media (max-width: 768px) {
         padding: 10px;
@@ -191,6 +225,7 @@ const ButtonGroup = styled.div`
     display: flex;
     justify-content: flex-end;
     margin-top: 10px;
+    font-size: ${({ fontSize = '1em' }) => calculateFontSize(BASE_PIXEL_SIZE, fontSize)};
 
     @media (max-width: 768px) {
         flex-direction: column;
@@ -202,14 +237,15 @@ const ActionButton = styled.button`
     padding: 10px 20px;
     margin: 0 10px;
     cursor: pointer;
-    background: #007bff;
+    background: ${({ darkMode }) => (darkMode ? '#6c4bcf' : '#B7A1E5')};
     color: #fff;
     border: none;
     border-radius: 5px;
     user-select: none;
+    font-size: ${({ fontSize = '1em' }) => calculateFontSize(BASE_PIXEL_SIZE, fontSize)};
 
     &:hover {
-        background: #0056b3;
+        background: ${({ darkMode }) => (darkMode ? '#4a3ba3' : '#0056b3')};
     }
 
     @media (max-width: 768px) {

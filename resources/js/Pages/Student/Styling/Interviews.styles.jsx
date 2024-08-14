@@ -1,7 +1,23 @@
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes, createGlobalStyle } from "styled-components";
 
 
+const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
+    const em = parseFloat(emValue); // Convert emValue to a number
 
+    if (emValue === '1em') {
+        return `${basePixelSize * em}px`;
+    }
+
+    if (emValue === '1.07em') {
+        return `${basePixelSize * em * 1.3}px`;
+    }
+
+    if (emValue === '1.12em') {
+        return `${basePixelSize * em * 1.7}px`;
+    }
+
+    return `${basePixelSize * em * factor}px`;
+};
 
 const fadeIn = keyframes`
     from {
@@ -15,6 +31,9 @@ const fadeIn = keyframes`
 export const MainContainer = styled.div`
     display: flex;
     flex-direction: column;
+    border: 2px solid ${({ darkMode }) => (darkMode ? "#444" : "#e2e8f0")};
+    background-color: ${({ darkMode }) => (darkMode ? "#1C1C1C" : "#fff")};
+    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
     align-items: center;
     justify-content: center;
      animation: ${fadeIn} 0.8s ease-in-out;
@@ -22,6 +41,8 @@ export const MainContainer = styled.div`
 
 export const Container = styled.div`
     display: flex;
+    background-color: ${({ darkMode }) => (darkMode ? "#2D2D2D" : "#fff")};
+    border: 2px solid ${({ darkMode }) => (darkMode ? "#444" : "#e2e8f0")};
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -29,8 +50,8 @@ export const Container = styled.div`
     width: 100%;
     margin: 0 auto;
     padding: 20px;
-    background-color: #fff;
-    height: 110vh;
+
+    
     transition: box-shadow 0.3s ease, transform 0.3s ease;
 
 
@@ -48,16 +69,19 @@ export const Container = styled.div`
 export const Wrapper = styled.div`
     width: 100%;
     display: flex;
+    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    background-color: ${({ darkMode }) => (darkMode ? "#3C3C3C" : "#fff")};
+    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
 `;
 
 export const Header = styled.div`
-    color: var(--Schemes-Primary, #6b538c);
+    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
     text-decoration-line: underline;
     align-self: center;
-    font: 600 32px Poppins, sans-serif;
+    font: 600 ${({ fontSize }) => calculateFontSize(32, fontSize)} Poppins, sans-serif;
     margin-bottom: 20px;
 `;
 
@@ -66,6 +90,11 @@ export const CalendarDiv = styled.div`
     min-height: 500px; /* Ensure minimum height for the calendar */
     height: 80vh; /* Adjust height as needed */
     overflow: auto; /* Enable vertical scrolling if needed */
+    box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0px 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border-color: ${({ darkMode }) => (darkMode ? "#444444" : "rgba(123, 117, 127, 1)")};
+    background-color: ${({ darkMode }) => (darkMode ? "#3C3C3C" : "#fff")};
+    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
 
     @media (max-width: 991px) {
         min-height: 60vh; /* Adjust height for smaller screens */
@@ -76,7 +105,7 @@ export const CalendarHeader = styled.div`
     display: flex;
     justify-content: space-between;
     gap: 20px;
-
+color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
     @media (max-width: 991px) {
         flex-direction: column;
         align-items: center;
@@ -84,9 +113,10 @@ export const CalendarHeader = styled.div`
 `;
 
 export const Month = styled.div`
-    color: var(--Schemes-Primary, #6b538c);
+    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
     margin: auto 0;
-    font: 900 24px Inter, sans-serif;
+    font: 900 ${({ fontSize }) => calculateFontSize(24, fontSize)} Inter, sans-serif;
+    transition: color 0.3s;
 `;
 
 export const NavIcons = styled.div`
@@ -110,8 +140,9 @@ export const Icon = styled.img`
 export const DaysOfWeek = styled.div`
     display: flex;
     gap: -1px;
-    font-size: 14px;
-    color: #000;
+   font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
+    color: ${({ darkMode }) => (darkMode ? "#E0E0E0" : "#000")};
+    font-weight: 600;
     font-weight: 600;
     white-space: nowrap;
     text-align: center;
@@ -129,14 +160,16 @@ export const Day = styled.div`
     display: flex;
     font-variant-numeric: lining-nums tabular-nums;
     font-family: Inter, sans-serif;
+    color: ${({ darkMode }) => (darkMode ? "#E0E0E0" : "#000")};
+    transition: color 0.3s;
 `;
 
 export const DatesGrid = styled.div`
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: -1px;
-    font-size: 14px;
-    color: #000;
+    font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
+    color: ${({ darkMode }) => (darkMode ? "#E0E0E0" : "#000")};
     font-weight: 400;
     white-space: nowrap;
     text-align: center;
@@ -154,7 +187,9 @@ export const DateCell = styled.div`
     border-color: rgba(213, 212, 223, 1);
     border-style: solid;
     border-width: 1px;
-    padding: 40px;
+    padding: ${({ fontSize }) => calculateFontSize(40, fontSize)};
+    color: ${({ darkMode }) => (darkMode ? "#E0E0E0" : "#000")};
+    background-color: ${({ darkMode }) => (darkMode ? "#2D2D2D" : "#fff")};
     transition: background-color 0.3s ease;
 
     &:hover {
@@ -170,7 +205,10 @@ export const EventsContainer = styled.div`
     width: 100%;
     margin-top: 20px;
     padding: 20px;
-    border: 1px solid #ccc;
+    border: 1px solid ${({ darkMode }) => (darkMode ? "#555555" : "#ccc")};
+background-color: ${({ darkMode }) => (darkMode ? "#2D2D2D" : "#fff")};
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+font-size: ${({ fontSize }) => fontSize};
     border-radius: 8px;
     overflow-y: auto; /* Enable vertical scrolling */
     max-height: 400px; /* Limit height for smaller screens */
@@ -185,12 +223,17 @@ export const EventsContainer = styled.div`
 
 export const EventsHeader = styled.h2`
     margin-bottom: 10px;
+    font-size: ${({ fontSize }) => calculateFontSize(24, fontSize)};
+    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
 `;
 
 export const Event = styled.div`
-    background-color: #ffffff;
+    background-color: ${({ darkMode }) => (darkMode ? "#3C3C3C" : "#ffffff")};
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     border-radius: 8px;
+    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
     padding: 16px;
     margin-bottom: 16px;
     position: relative; /* Ensure relative positioning for absolute children */
@@ -204,17 +247,19 @@ export const Event = styled.div`
 
 export const NoEventsMessage = styled.div`
     margin-top: 10px;
+    font-size: ${({ fontSize }) => calculateFontSize(18, fontSize)};
+    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
     color: #999;
 `;
 
 export const DeleteButton = styled.button`
-    background-color: red;
+    background-color: ${({ darkMode }) => (darkMode ? "darkred" : "red")};
     color: white;
     border: none;
     padding: 4px 8px;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
     position: absolute;
     top: 10px;
     right: 10px;
@@ -223,4 +268,28 @@ export const DeleteButton = styled.button`
     &:hover {
         background-color: darkred;
     }
+`;
+
+
+export const GlobalStyles = createGlobalStyle`
+  .rbc-btn-group button {
+    font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)}; /* Adjust the font size */
+    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6B538C")}; /* Change the text color */
+    transition: color 0.3s, background-color 0.3s;
+  }
+
+  .rbc-btn-group button:hover {
+    color: ${({ darkMode }) => (darkMode ? "#FFFFFF" : "#543b6f")}; /* Change color on hover */
+  }
+
+  .rbc-btn-group .rbc-active {
+    background-color: ${({ darkMode }) => (darkMode ? "#6B538C" : "#6B538C")}; /* Active background color */
+    color: #FFFFFF; /* Active text color */
+  }
+
+  .rbc-toolbar-label {
+    font-size: ${({ fontSize }) => calculateFontSize(24, fontSize)};
+    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6B538C")};
+    transition: color 0.3s;
+  }
 `;

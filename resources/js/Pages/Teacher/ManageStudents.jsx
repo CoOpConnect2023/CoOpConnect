@@ -5,7 +5,7 @@ import NavBar from "./Components/NavBar";
 import { useDispatch, useSelector } from "react-redux";
 import { getStudents, getSchools, selectSchoolslist, selectStudents, getCourses, deleteStudent, selectCourses, createStudent } from "@/Features/schools/schoolsSlice";
 import { getUser, selectUser } from "@/Features/users/userSlice";
-import { MainContainer, Section, SectionTitle, StyledTable, Form, Input, Select, Button, DeleteButton, FixedBottom } from "./Styling/ManageStudents.styles";
+import { MainContainer, Section, SectionTitle, StyledTable, Form, Input, Select, Button, DeleteButton, FixedBottom, Label } from "./Styling/ManageStudents.styles";
 
 
 const appUrl = import.meta.env.VITE_APP_URL;
@@ -153,7 +153,7 @@ function StudentsPage() {
                                 onChange={(e) => handleInputChange(e, true)}
                                 placeholder="Student Email"
                             />
-                            <label htmlFor="courses">Courses:</label>
+                            <Label darkMode={darkMode} fontSize={fontSize} htmlFor="courses">Courses:</Label>
                             <Select fontSize={fontSize} darkMode={darkMode}
                                 id="courses"
                                 name="courses"
@@ -177,7 +177,7 @@ function StudentsPage() {
                                 placeholder="Student ID"
                             />
 
-                            <label  htmlFor="courses">Courses:</label>
+                            <Label darkMode={darkMode} fontSize={fontSize}  htmlFor="courses">Courses:</Label>
                             <Select fontSize={fontSize} darkMode={darkMode}
                                 id="courses"
                                 name="courses"

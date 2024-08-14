@@ -3,7 +3,7 @@ import styled, { keyframes, createGlobalStyle } from "styled-components";
 // Function to multiply base pixel value by the em value with an amplification factor
 const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
     const em = parseFloat(emValue); // Convert emValue to a number
-    // If the emValue is exactly "1em", return the base size without modification
+
     if (emValue === '1em') {
         return `${basePixelSize * em}px`;
     }
@@ -15,7 +15,7 @@ const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
     if (emValue === '1.12em') {
         return `${basePixelSize * em * 1.7}px`;
     }
-    // Otherwise, apply the amplification factor
+
     return `${basePixelSize * em * factor}px`;
 };
 

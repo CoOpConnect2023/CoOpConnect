@@ -13,6 +13,8 @@ const AdminDashboard = () => {
     const dispatch = useDispatch();
     const user = useSelector(selectUser);
     const users = useSelector(selectAllUsers);
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
 
     const [categorizedUsers, setCategorizedUsers] = useState({});
 
@@ -66,16 +68,16 @@ const AdminDashboard = () => {
 
     return (
         <NavBar>
-            <HomePageContainer>
-                <Header>
+            <HomePageContainer fontSize={fontSize} darkMode={darkMode}>
+                <Header fontSize={fontSize} darkMode={darkMode}>
 
                 </Header>
                 {categorizedUsers && (
-                    <Content>
-                        <UploadUsers />
-                        <Section handleDeleteUser={handleDeleteUser} users={students}  title="Current Students" />
-                        <Section handleDeleteUser={handleDeleteUser} users={employee}  title="Current Employers" />
-                        <Section handleDeleteUser={handleDeleteUser} users={teachers}  title="Current Teachers" />
+                    <Content fontSize={fontSize} darkMode={darkMode}>
+                        <UploadUsers fontSize={fontSize} darkMode={darkMode} />
+                        <Section fontSize={fontSize} darkMode={darkMode} handleDeleteUser={handleDeleteUser} users={students}  title="Current Students" />
+                        <Section fontSize={fontSize} darkMode={darkMode} handleDeleteUser={handleDeleteUser} users={employee}  title="Current Employers" />
+                        <Section fontSize={fontSize} darkMode={darkMode} handleDeleteUser={handleDeleteUser} users={teachers}  title="Current Teachers" />
 
                     </Content>
                 )}

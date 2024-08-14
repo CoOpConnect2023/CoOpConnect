@@ -84,8 +84,8 @@ function ClassesPage() {
                                     <td>{classItem.startDate}</td>
                                     <td>{classItem.endDate}</td>
                                     <td>
-                                        <Button onClick={() => setEditingClass(classItem)}>Edit</Button>
-                                        <DeleteButton onClick={() => handleDeleteClass(classItem.id)}>Delete</DeleteButton>
+                                        <Button fontSize={fontSize} darkMode={darkMode} onClick={() => setEditingClass(classItem)}>Edit</Button>
+                                        <DeleteButton fontSize={fontSize} darkMode={darkMode} onClick={() => handleDeleteClass(classItem.id)}>Delete</DeleteButton>
                                     </td>
                                 </tr>
                             ))}

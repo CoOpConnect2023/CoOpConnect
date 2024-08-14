@@ -74,7 +74,7 @@ export const AppContainer = styled.div`
   display: flex;
   background-color: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "var(--Schemes-Background, #fff7ff)")};
   gap: 0px;
-
+transition: background-color 0.5s ease, color 0.5s ease;
   flex-direction: row;
 
 
@@ -86,7 +86,7 @@ export const AppContainer = styled.div`
 export const NavContainer = styled.nav`
   align-items: center;
   border: 1px solid rgba(123, 117, 127, 1);
-
+transition: background-color 0.5s ease, color 0.5s ease;
   background-color: ${({ darkMode }) => (darkMode ? "#B7A1E5" : "#FFF")};
   display: flex;
   flex-direction: column;

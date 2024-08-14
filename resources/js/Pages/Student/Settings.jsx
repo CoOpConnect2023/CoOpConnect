@@ -6,12 +6,16 @@ import SettingsPanel from "./Components/SettingsPage";
 import QuickLinks from "./Components/QuickLinks";
 import { MainContainer } from "./Styling/Settings.styles";
 
+import { useDispatch, useSelector } from "react-redux";
+
 export default function Settings() {
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
     return (
         <NavBar header={"Settings"}>
-            <MainContainer>
-                <SettingsPanel />
-                <QuickLinks />
+            <MainContainer fontSize={fontSize} darkMode={darkMode}>
+                <SettingsPanel fontSize={fontSize} darkMode={darkMode} />
+                <QuickLinks fontSize={fontSize} darkMode={darkMode} />
             </MainContainer>
         </NavBar>
     );

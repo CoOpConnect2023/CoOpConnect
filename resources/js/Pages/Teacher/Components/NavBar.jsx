@@ -107,65 +107,65 @@ function Sidebar() {
         const segments = path.split('/');
         const specificSegment = segments[segments.length - 1];
         console.log('Specific Segment:', specificSegment);
-        setActiveTab(path)
-      }, []);
+        setActiveTab(path);
+    }, []);
 
     const handleTabClick = (path) => {
-      setActiveTab(path);
+        setActiveTab(path);
     };
 
     const toggleFooterVisibility = () => {
         setFooterVisible(!footerVisible);
-      };
+    };
 
-      const closeFooter = () => {
+    const closeFooter = () => {
         setFooterVisible(false);
-      };
+    };
     return (
         <aside>
-          <NavContainer fontSize={fontSize} darkMode={darkMode}>
-            <Link fontSize={fontSize} darkMode={darkMode} href="/" onClick={() => handleTabClick("/")}>
-              <Logo fontSize={fontSize} darkMode={darkMode} src={logo} alt="Logo" loading="lazy" active={activeTab === "/"} />
-            </Link>
-            <Divider fontSize={fontSize} darkMode={darkMode} />
+            <NavContainer fontSize={fontSize} darkMode={darkMode}>
+                <Link fontSize={fontSize} darkMode={darkMode} href="/" onClick={() => handleTabClick("/")}>
+                    <Logo fontSize={fontSize} darkMode={darkMode} src={logo} alt="Logo" loading="lazy" active={activeTab === "/"} />
+                </Link>
+                <Divider fontSize={fontSize} darkMode={darkMode} />
 
-              <Link fontSize={fontSize} darkMode={darkMode} href="/teacher/home" onClick={() => handleTabClick("/teacher/home")}>
-                <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/teacher/home"}>
-                  <Icon fontSize={fontSize} darkMode={darkMode} src={briefcase} alt="Icon 1" loading="lazy" />
-                </IconButton>
-              </Link>
-              <Link fontSize={fontSize} darkMode={darkMode} data-test-id="messages-link" href="/teacher/messages" onClick={() => handleTabClick("/teacher/messages")}>
-                <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/teacher/messages"}>
-                  <Icon fontSize={fontSize} darkMode={darkMode} src={message} alt="" loading="lazy" />
-                </IconButton>
-              </Link>
-              <Link  fontSize={fontSize} darkMode={darkMode} data-test-id="interviews-link" href="/teacher/scheduling" onClick={() => handleTabClick("/teacher/scheduling")}>
-                <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/teacher/scheduling"}>
-                  <Icon fontSize={fontSize} darkMode={darkMode} src={calendar} alt="" loading="lazy" />
-                </IconButton>
-              </Link>
-              <Link fontSize={fontSize} darkMode={darkMode} data-test-id="profile-link" href="/teacher/profile" onClick={() => handleTabClick("/teacher/profile")}>
-                <IconButton active={activeTab === "/teacher/profile"}>
-                  <Icon src={user} alt="" loading="lazy" />
-                </IconButton>
-              </Link>
-              <Link fontSize={fontSize} darkMode={darkMode} href="/teacher/settings" onClick={() => handleTabClick("/teacher/settings")}>
-                <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/teacher/settings"}>
-                  <Icon fontSize={fontSize} darkMode={darkMode} src={settings} alt="" loading="lazy" />
-                </IconButton>
-              </Link>
-          <IconContainer fontSize={fontSize} darkMode={darkMode} onClick={toggleFooterVisibility}>
+                <Link fontSize={fontSize} darkMode={darkMode} href="/teacher/home" onClick={() => handleTabClick("/teacher/home")}>
+                    <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/teacher/home"}>
+                        <Icon fontSize={fontSize} darkMode={darkMode} src={briefcase} alt="Icon 1" loading="lazy" />
+                    </IconButton>
+                </Link>
+                <Link fontSize={fontSize} darkMode={darkMode} data-test-id="messages-link" href="/teacher/messages" onClick={() => handleTabClick("/teacher/messages")}>
+                    <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/teacher/messages"}>
+                        <Icon fontSize={fontSize} darkMode={darkMode} src={message} alt="" loading="lazy" />
+                    </IconButton>
+                </Link>
+                <Link fontSize={fontSize} darkMode={darkMode} data-test-id="interviews-link" href="/teacher/scheduling" onClick={() => handleTabClick("/teacher/scheduling")}>
+                    <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/teacher/scheduling"}>
+                        <Icon fontSize={fontSize} darkMode={darkMode} src={calendar} alt="" loading="lazy" />
+                    </IconButton>
+                </Link>
+                <Link fontSize={fontSize} darkMode={darkMode} data-test-id="profile-link" href="/teacher/profile" onClick={() => handleTabClick("/teacher/profile")}>
+                    <IconButton active={activeTab === "/teacher/profile"}>
+                        <Icon src={user} alt="" loading="lazy" />
+                    </IconButton>
+                </Link>
+                <Link fontSize={fontSize} darkMode={darkMode} href="/teacher/settings" onClick={() => handleTabClick("/teacher/settings")}>
+                    <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/teacher/settings"}>
+                        <Icon fontSize={fontSize} darkMode={darkMode} src={settings} alt="" loading="lazy" />
+                    </IconButton>
+                </Link>
+                <IconContainer fontSize={fontSize} darkMode={darkMode} onClick={toggleFooterVisibility}>
                     <FontAwesomeIcon fontSize={fontSize} darkMode={darkMode} icon={faMap} className="fa-icon" />
                 </IconContainer>
             </NavContainer>
             <Footer fontSize={fontSize} darkMode={darkMode} isVisible={footerVisible}>
-        <CloseButton fontSize={fontSize} darkMode={darkMode} onClick={closeFooter}>
-          <FontAwesomeIcon fontSize={fontSize} darkMode={darkMode} icon={faTimes} />
-        </CloseButton>
-        <p>HTML Sitemap: <a href="/">Home</a> | <a href="/about">About</a> | <a href="/teacher/home">Teacher Home</a> | <a href="/teacher/students">Teacher Manage Students</a> | <a href="/teacher/classes">Teacher Manage Classes</a> | <a href="/teacher/messages">Teacher Messages</a> | <a href="/teacher/scheduling">Teacher Schedule</a> | <a href="/teacher/profile">Teacher Profile</a> | <a href="/teacher/settings">Teacher Settings</a> | <a href="/teacher/documents">Teacher Documents</a> </p>
-      </Footer>
+                <CloseButton fontSize={fontSize} darkMode={darkMode} onClick={closeFooter}>
+                    <FontAwesomeIcon fontSize={fontSize} darkMode={darkMode} icon={faTimes} />
+                </CloseButton>
+                <p>HTML Sitemap: <a href="/">Home</a> | <a href="/about">About</a> | <a href="/teacher/home">Teacher Home</a> | <a href="/teacher/students">Teacher Manage Students</a> | <a href="/teacher/classes">Teacher Manage Classes</a> | <a href="/teacher/messages">Teacher Messages</a> | <a href="/teacher/scheduling">Teacher Schedule</a> | <a href="/teacher/profile">Teacher Profile</a> | <a href="/teacher/settings">Teacher Settings</a> | <a href="/teacher/documents">Teacher Documents</a> </p>
+            </Footer>
         </aside>
-      );
+    );
 
 }
 
@@ -186,7 +186,7 @@ function Header({ header }) {
     const altAvatarSrc = "https://cdn.builder.io/api/v1/image/assets/TEMP/c449c761188f38db922c89455e070256b822a267e33f51baa6901c76b73a4e78?apiKey=d66532d056b14640a799069157705b77&";
     const darkMode = useSelector(state => state.accessibility.darkMode);
     const fontSize = useSelector(state => state.accessibility.textSize);
-    console.log(fontSize)
+    console.log(fontSize);
 
 
 
@@ -242,11 +242,11 @@ function Header({ header }) {
 
     const handleDarkModeToggle = () => {
         dispatch(toggleDarkMode());
-        console.log(darkMode)
+        console.log(darkMode);
     };
     const handleTextSizeChange = (size) => {
         dispatch(setTextSize(size));
-        console.log(fontSize)
+        console.log(fontSize);
     };
 
 
@@ -262,7 +262,7 @@ function Header({ header }) {
                 <UserProfile fontSize={fontSize} darkMode={darkMode}>
 
                     <NotificationIcon fontSize={fontSize} darkMode={darkMode} onClick={handleDarkModeToggle}
-                        >{darkMode ? <FontAwesomeIcon icon={faMoon} /> : <FontAwesomeIcon icon={faSun} />}
+                    >{darkMode ? <FontAwesomeIcon icon={faMoon} /> : <FontAwesomeIcon icon={faSun} />}
 
 
                     </NotificationIcon>
@@ -271,7 +271,7 @@ function Header({ header }) {
 
 
                     </NotificationIcon>
-                    <FontToggler/>
+                    <FontToggler />
                     <UserDetails fontSize={fontSize} darkMode={darkMode} onClick={toggleProfileModal}>
                         {user && user.profile_image ? (
                             <Avatar fontSize={fontSize} darkMode={darkMode}
@@ -286,21 +286,21 @@ function Header({ header }) {
                                 loading="lazy"
                             />
                         )}
-                         <ExpandIcon
-    icon={faChevronDown}
-    isOpen={isExpanded}
-    fontSize={fontSize}
-    darkMode={darkMode}
-  />
+                        <ExpandIcon
+                            icon={faChevronDown}
+                            isOpen={isExpanded}
+                            fontSize={fontSize}
+                            darkMode={darkMode}
+                        />
                     </UserDetails>
                 </UserProfile>
                 <Modal fontSize={fontSize} darkMode={darkMode} isOpen={isProfileModalOpen}>
                     <ModalContent fontSize={fontSize} darkMode={darkMode}>
                         <Link fontSize={fontSize} darkMode={darkMode} href="/teacher/profile">
-                        <ModalItem fontSize={fontSize} darkMode={darkMode}>Profile</ModalItem>
+                            <ModalItem fontSize={fontSize} darkMode={darkMode}>Profile</ModalItem>
                         </Link>
                         <Link fontSize={fontSize} darkMode={darkMode} href="/teacher/settings">
-                        <ModalItem fontSize={fontSize} darkMode={darkMode}>Settings</ModalItem>
+                            <ModalItem fontSize={fontSize} darkMode={darkMode}>Settings</ModalItem>
                         </Link>
                         <ModalItem fontSize={fontSize} darkMode={darkMode} as="button" onClick={handleLogout}>Logout</ModalItem>
                     </ModalContent>
@@ -356,33 +356,33 @@ const FontToggler = () => {
     const darkMode = useSelector((state) => state.accessibility.darkMode);
 
     const increaseFont = () => {
-      if (fontSize !== '1.12em') { // Compare against 'large' instead of "1.12em"
-        dispatch(increaseFontSize());
-      }
+        if (fontSize !== '1.12em') { // Compare against 'large' instead of "1.12em"
+            dispatch(increaseFontSize());
+        }
     };
 
     const decreaseFont = () => {
-      if (fontSize !== '1em') { // Compare against 'small' instead of "1em"
-        dispatch(decreaseFontSize());
-      }
+        if (fontSize !== '1em') { // Compare against 'small' instead of "1em"
+            dispatch(decreaseFontSize());
+        }
     };
 
     return (
-      <FontSizer fontSize={fontSize} darkMode={darkMode}>
-        <FontAwesomeIcon
-          onClick={() => { decreaseFont(); }}
-          icon={faMinus}
-        />
-        <FontAwesomeIcon
-          icon={faTextHeight}
-        />
-        <FontAwesomeIcon
-          onClick={() => { increaseFont(); }}
-          icon={faPlus}
-        />
-      </FontSizer>
+        <FontSizer fontSize={fontSize} darkMode={darkMode}>
+            <FontAwesomeIcon
+                onClick={() => { decreaseFont(); }}
+                icon={faMinus}
+            />
+            <FontAwesomeIcon
+                icon={faTextHeight}
+            />
+            <FontAwesomeIcon
+                onClick={() => { increaseFont(); }}
+                icon={faPlus}
+            />
+        </FontSizer>
     );
-  };
+};
 
 
 

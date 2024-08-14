@@ -26,8 +26,9 @@ const Container = styled.section`
   font-size: 16px;
   font-weight: 400;
   line-height: 150%;
-width: 36.95%;
+
 height: 100%;
+width: 30%;
 padding: 20px;
 
 

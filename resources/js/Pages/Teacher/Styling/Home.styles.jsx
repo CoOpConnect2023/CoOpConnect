@@ -42,9 +42,9 @@ export const TopContainer = styled.div`
   gap: 20px;
   width: 100%;
   padding: 20px;
-  max-height: 60%; /* Limit the height to 65% of the viewport */
+  max-height: 70%; /* Limit the height to 65% of the viewport */
   flex-grow: 1;
-  overflow-y: auto; /* Allow scrolling if content overflows */
+  /* Allow scrolling if content overflows */
 
   @media (max-width: 991px) {
     flex-direction: column;
@@ -60,7 +60,7 @@ export const BottomContainer = styled.div`
   align-self: stretch;
   width: 100%;
    /* Limit the height to 35% of the viewport */
-  overflow-y: auto; /* Allow scrolling if content overflows */
+  height: 30%;
 
   @media (max-width: 991px) {
     flex-direction: column;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import { useDropzone } from 'react-dropzone';
-import { spin, ProfileWrapper, ProfileHeader, ProfileSection, ProfileContainer, ProfileImageWrapper, ProfileImage, ProfileBio, BioHeader, ProfileDetail, ProfileDetailItem, DetailLabel, DetailValue, EditProfileButton, ClearProfileButton, DropzoneContainer, SkillsContainer, SkillChip, AddSkillButton, LoadingScreen, Spinner, AutocompleteList, AutocompleteItem } from "../Styling/ProfileForm.styles";
+import { spin, ProfileWrapper, ProfileHeader, ProfileSection, ProfileContainer, ProfileImageWrapper, ProfileImage, ProfileBio, BioHeader, ProfileDetail, ProfileDetailItem, DetailLabel, DetailValue, EditProfileButton, ClearProfileButton, DropzoneContainer, SkillsContainer, SkillChip, AddSkillButton, LoadingScreen, Spinner, AutocompleteList, AutocompleteItem, BioValue } from "../Styling/ProfileForm.styles";
 import { useSelector, useDispatch } from "react-redux";
 import {
 
@@ -26,7 +26,7 @@ const Dropzone = ({ onDrop }) => {
     );
 };
 
-const ProfileForm = () => {
+const ProfileForm = ({fontSize, darkMode}) => {
     const [user, setUser] = useState(null);
     const [droppedImage, setDroppedImage] = useState(null);
     const [schools, setSchools] = useState([]);
@@ -234,11 +234,11 @@ const ProfileForm = () => {
     }
 
     return (
-      <ProfileWrapper>
-        <ProfileHeader>Edit Profile</ProfileHeader>
-        <ProfileSection>
-          <ProfileContainer>
-            <ProfileImageWrapper>
+      <ProfileWrapper fontSize={fontSize} darkMode={darkMode}>
+        <ProfileHeader fontSize={fontSize} darkMode={darkMode}> Edit Profile</ProfileHeader>
+        <ProfileSection fontSize={fontSize} darkMode={darkMode}>
+          <ProfileContainer fontSize={fontSize} darkMode={darkMode}>
+            <ProfileImageWrapper fontSize={fontSize} darkMode={darkMode}>
               {droppedImage ? (
                 <ProfileImage
                   loading="lazy"
@@ -247,22 +247,22 @@ const ProfileForm = () => {
                 />
               ) : user.profile_image ? (
                 <div>
-                  <ProfileImage
+                  <ProfileImage fontSize={fontSize} darkMode={darkMode}
                     loading="lazy"
                     src={user.profile_image}
                     alt="Profile Image"
                   />
-                  <ClearProfileButton onClick={handleClear}>
+                  <ClearProfileButton fontSize={fontSize} darkMode={darkMode} onClick={handleClear}>
                     Clear
                   </ClearProfileButton>
                 </div>
               ) : (
-                <Dropzone onDrop={handleDrop} />
+                <Dropzone fontSize={fontSize} darkMode={darkMode} onDrop={handleDrop} />
               )}
             </ProfileImageWrapper>
-            <ProfileBio>
-              <BioHeader>Bio:</BioHeader>
-              <DetailValue
+            <ProfileBio fontSize={fontSize} darkMode={darkMode}>
+              
+              <BioValue fontSize={fontSize} darkMode={darkMode}
                 name="description"
                 value={user.description}
                 onChange={handleChange}
@@ -271,67 +271,67 @@ const ProfileForm = () => {
             </ProfileBio>
           </ProfileContainer>
         </ProfileSection>
-        <ProfileDetail>
-          <ProfileDetailItem>
-            <DetailLabel>Full Name</DetailLabel>
-            <DetailValue
+        <ProfileDetail fontSize={fontSize} darkMode={darkMode}>
+          <ProfileDetailItem fontSize={fontSize} darkMode={darkMode}>
+            <DetailLabel fontSize={fontSize} darkMode={darkMode}>Full Name</DetailLabel>
+            <DetailValue fontSize={fontSize} darkMode={darkMode}
               type="text"
               name="name"
               value={user.name}
               onChange={handleChange}
             />
           </ProfileDetailItem>
-          <ProfileDetailItem>
-            <DetailLabel>Email</DetailLabel>
-            <DetailValue
+          <ProfileDetailItem fontSize={fontSize} darkMode={darkMode}>
+            <DetailLabel fontSize={fontSize} darkMode={darkMode}>Email</DetailLabel>
+            <DetailValue fontSize={fontSize} darkMode={darkMode}
               type="email"
               name="email"
               value={user.email}
               onChange={handleChange}
             />
           </ProfileDetailItem>
-          <ProfileDetailItem>
-            <DetailLabel>Account Type</DetailLabel>
-            <DetailValue
+          <ProfileDetailItem fontSize={fontSize} darkMode={darkMode}>
+            <DetailLabel fontSize={fontSize} darkMode={darkMode}>Account Type</DetailLabel>
+            <DetailValue fontSize={fontSize} darkMode={darkMode}
               type="text"
               name="role"
               value={user.role}
               onChange={handleChange}
             />
           </ProfileDetailItem>
-          <ProfileDetailItem>
-          <DetailLabel>Education Institute</DetailLabel>
-          <DetailValue
+          <ProfileDetailItem fontSize={fontSize} darkMode={darkMode}>
+          <DetailLabel fontSize={fontSize} darkMode={darkMode}>Education Institute</DetailLabel>
+          <DetailValue fontSize={fontSize} darkMode={darkMode}
             type="text"
             name="school"
             value={user.school}
             onChange={handleChange}
           />
           {filteredSchools.length > 0 && (
-            <AutocompleteList>
+            <AutocompleteList fontSize={fontSize} darkMode={darkMode}>
               {filteredSchools.map((school) => (
-                <AutocompleteItem key={school.id} onClick={() => handleSchoolSelect(school)}>
+                <AutocompleteItem fontSize={fontSize} darkMode={darkMode} key={school.id} onClick={() => handleSchoolSelect(school)}>
                   {school.name}
                 </AutocompleteItem>
               ))}
             </AutocompleteList>
           )}
         </ProfileDetailItem>
-        <ProfileDetailItem>
-          <DetailLabel>Preferred Position Title</DetailLabel>
-          <DetailValue
+        <ProfileDetailItem fontSize={fontSize} darkMode={darkMode}>
+          <DetailLabel fontSize={fontSize} darkMode={darkMode}>Preferred Position Title</DetailLabel>
+          <DetailValue fontSize={fontSize} darkMode={darkMode}
             type="text"
             name="positiontitle"
             value={user.positiontitle}
             onChange={handleChange}
           />
         </ProfileDetailItem>
-        <ProfileDetailItem>
-          <DetailLabel>Skills</DetailLabel>
-          <SkillsContainer>
+        <ProfileDetailItem fontSize={fontSize} darkMode={darkMode}>
+          <DetailLabel fontSize={fontSize} darkMode={darkMode}>Skills</DetailLabel>
+          <SkillsContainer fontSize={fontSize} darkMode={darkMode}>
             {Array.isArray(user.skills) && user.skills.length > 0 ? (
               user.skills.map((skill, index) => (
-                <SkillChip key={index} data-testid="skill-chip">
+                <SkillChip fontSize={fontSize} darkMode={darkMode} key={index} data-testid="skill-chip">
                   {skill}
                   <span style={{ cursor: 'pointer', marginLeft: '6px' }} onClick={() => removeSkill(index)} data-testid="remove-skill">
                     &#10005;
@@ -341,7 +341,7 @@ const ProfileForm = () => {
             ) : (
               <p>No skills added yet.</p>
             )}
-            <DetailValue
+            <DetailValue fontSize={fontSize} darkMode={darkMode}
               type="text"
               name="newSkill"
               value={user.newSkill || ''}
@@ -349,17 +349,17 @@ const ProfileForm = () => {
               placeholder="Add a skill..."
               data-testid="skill-input"
             />
-            <AddSkillButton type="button" onClick={addSkill} data-testid="add-skill-button">
+            <AddSkillButton fontSize={fontSize} darkMode={darkMode} type="button" onClick={addSkill} data-testid="add-skill-button">
               Add Skill
             </AddSkillButton>
           </SkillsContainer>
         </ProfileDetailItem>
-        <ProfileDetailItem>
-          <DetailLabel>Courses</DetailLabel>
-          <SkillsContainer>
+        <ProfileDetailItem fontSize={fontSize} darkMode={darkMode}>
+          <DetailLabel fontSize={fontSize} darkMode={darkMode}>Courses</DetailLabel>
+          <SkillsContainer fontSize={fontSize} darkMode={darkMode}>
             {Array.isArray(user.courses) && user.courses.length > 0 ? (
               user.courses.map((course, index) => (
-                <SkillChip key={index} data-testid={`course-${index}`}>
+                <SkillChip fontSize={fontSize} darkMode={darkMode} key={index} data-testid={`course-${index}`}>
                   {course.name}
                   <span style={{ cursor: 'pointer', marginLeft: '6px' }} onClick={() => removeCourse(index)} data-testid={`remove-course-${index}`}>
                     &#10005;
@@ -369,7 +369,7 @@ const ProfileForm = () => {
             ) : (
               <p>No courses added yet.</p>
             )}
-            <DetailValue
+            <DetailValue fontSize={fontSize} darkMode={darkMode}
               type="text"
               name="newCourse"
               value={courseQuery}
@@ -378,9 +378,9 @@ const ProfileForm = () => {
               data-testid="course-input"
             />
             {filteredCourses.length > 0 && (
-              <AutocompleteList data-testid="autocomplete-list">
+              <AutocompleteList fontSize={fontSize} darkMode={darkMode} data-testid="autocomplete-list">
                 {filteredCourses.map((course) => (
-                  <AutocompleteItem key={course.id} onClick={() => handleCourseSelect(course)}>
+                  <AutocompleteItem fontSize={fontSize} darkMode={darkMode} key={course.id} onClick={() => handleCourseSelect(course)}>
                     {course.name}
                   </AutocompleteItem>
                 ))}
@@ -390,7 +390,7 @@ const ProfileForm = () => {
           </SkillsContainer>
         </ProfileDetailItem>
       </ProfileDetail>
-      <EditProfileButton onClick={handleSubmit}>Save Profile Changes</EditProfileButton>
+      <EditProfileButton fontSize={fontSize} darkMode={darkMode} onClick={handleSubmit}>Save Profile Changes</EditProfileButton>
     </ProfileWrapper>
   );
 };
