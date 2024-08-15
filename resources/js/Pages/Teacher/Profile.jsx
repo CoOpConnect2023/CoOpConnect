@@ -27,19 +27,23 @@ import {
     Input,
     EditProfileButton,
     SuggestionsList,
-    SuggestionItem
+    SuggestionItem,
+    StyledParagraph
 } from "./Styling/Profile.styles";
+import LogoLoadingComponent from "../Common/LogoSpinnerAnimation";
 
 const appUrl = import.meta.env.VITE_APP_URL;
 
 
 const Dropzone = ({ onDrop }) => {
     const { getRootProps, getInputProps } = useDropzone({ onDrop });
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
 
     return (
         <DropzoneContainer {...getRootProps()}>
             <input {...getInputProps()} />
-            <p>Drop a profile image here</p>
+            <StyledParagraph darkMode={darkMode} fontSize={fontSize} >Drop a profile image here</StyledParagraph>
         </DropzoneContainer>
     );
 };
@@ -51,7 +55,8 @@ function Profile() {
     const dispatch = useDispatch();
     const user = useSelector(selectUser);
     const schools = useSelector(selectSchoolslist);
-
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
 
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
@@ -181,60 +186,60 @@ function Profile() {
     };
 
     if (!user || !schools) {
-        return <LoadingScreen><Spinner /></LoadingScreen>;;
+        return <LogoLoadingComponent darkMode={darkMode}/>;;
     }
 
     return (
-        <NavBar header={"My Profile"}>
-            <Main>
-                <Section>
-                    <Title>Teacher Profile</Title>
-                    <ProfileWrapper>
-                        <ProfileDetails>
-                            <ProfileImageWrapper>
+        <NavBar darkMode={darkMode} fontSize={fontSize} header={"My Profile"}>
+            <Main darkMode={darkMode} fontSize={fontSize}>
+                <Section darkMode={darkMode} fontSize={fontSize}>
+                    <Title darkMode={darkMode} fontSize={fontSize}>Teacher Profile</Title>
+                    <ProfileWrapper darkMode={darkMode} fontSize={fontSize}>
+                        <ProfileDetails darkMode={darkMode} fontSize={fontSize}>
+                            <ProfileImageWrapper darkMode={darkMode} fontSize={fontSize}>
                                 {droppedImage ? (
-                                    <ProfileImage
+                                    <ProfileImage darkMode={darkMode} fontSize={fontSize}
                                         loading="lazy"
                                         src={droppedImage}
                                         alt="Profile"
                                     />
                                 ) : (
-                                    <Dropzone onDrop={handleDrop} />
+                                    <Dropzone darkMode={darkMode} fontSize={fontSize} onDrop={handleDrop} />
                                 )}
                                 {droppedImage && (
-                                    <ClearProfileButton onClick={handleClear}>
+                                    <ClearProfileButton darkMode={darkMode} fontSize={fontSize} onClick={handleClear}>
                                         Clear
                                     </ClearProfileButton>
                                 )}
                             </ProfileImageWrapper>
                         </ProfileDetails>
                     </ProfileWrapper>
-                    <FieldTitle>Full Name</FieldTitle>
-                    <Input
+                    <FieldTitle darkMode={darkMode} fontSize={fontSize}>Full Name</FieldTitle>
+                    <Input darkMode={darkMode} fontSize={fontSize}
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
                     />
-                    <FieldTitle>Email</FieldTitle>
-                    <Input
+                    <FieldTitle darkMode={darkMode} fontSize={fontSize}>Email</FieldTitle>
+                    <Input darkMode={darkMode} fontSize={fontSize}
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
-                    <FieldTitle>Account Type</FieldTitle>
-                    <Input
+                    <FieldTitle darkMode={darkMode} fontSize={fontSize}>Account Type</FieldTitle>
+                    <Input darkMode={darkMode} fontSize={fontSize}
                         value={accountType}
                         onChange={(e) => setAccountType(e.target.value)}
                     />
-                    <FieldTitle>School</FieldTitle>
-                    <Input
+                    <FieldTitle darkMode={darkMode} fontSize={fontSize}>School</FieldTitle>
+                    <Input darkMode={darkMode} fontSize={fontSize}
                         value={school}
                         onChange={handleSchoolChange}
                         onFocus={() => setShowSuggestions(true)}
                         onBlur={() => setTimeout(() => setShowSuggestions(false), 100)} // Delay to allow click event
                     />
                     {showSuggestions && (
-                        <SuggestionsList>
+                        <SuggestionsList darkMode={darkMode} fontSize={fontSize}>
                             {filteredSchools.map((sch) => (
-                                <SuggestionItem
+                                <SuggestionItem darkMode={darkMode} fontSize={fontSize}
                                     key={sch.id}
                                     onClick={() => handleSchoolSelect(sch.name, sch.id)}
                                 >
@@ -243,15 +248,15 @@ function Profile() {
                             ))}
                         </SuggestionsList>
                     )}
-                    <FieldTitle>Specialty</FieldTitle>
-                    <Input
+                    <FieldTitle darkMode={darkMode} fontSize={fontSize}>Specialty</FieldTitle>
+                    <Input darkMode={darkMode} fontSize={fontSize}
                         value={specialty}
                         onChange={(e) => setSpecialty(e.target.value)}
                     />
-                    <EditProfileButton onClick={handleUpdateProfile}>
+                    <EditProfileButton darkMode={darkMode} fontSize={fontSize} onClick={handleUpdateProfile}>
                         Edit Profile
                     </EditProfileButton>
-                    {showSuccessMessage && <SuccessMessage>Profile updated successfully!</SuccessMessage>}
+                    {showSuccessMessage && <SuccessMessage darkMode={darkMode} fontSize={fontSize}>Profile updated successfully!</SuccessMessage>}
                 </Section>
             </Main>
         </NavBar>

@@ -76,6 +76,7 @@ Route::get('/students/teacher/{teacherId}', [UserController::class, 'getStudents
 Route::get('/download/{id}', [DocumentsController::class, 'download'])->name('file.download');
 
 Route::post('/update-profile/{user}', [UserController::class, 'updateProfile'])->name('profile.update')->middleware('auth');
+Route::post('/update-preferences', [UserController::class, 'updatePreferences']);
 Route::get('/usersindex', [UserController::class, 'index'])->name('users.index');
 Route::get('/studentStatusPercents', [UserController::class, 'getStudentStatusPercentages'])->name('users.getStudentStatusPercentages');
 Route::get('/users', [UserController::class, 'getAllUsers']);

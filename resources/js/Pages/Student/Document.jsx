@@ -36,6 +36,8 @@ import {
 
 
 } from "./Styling/Document.styles";
+import { useSelector, useDispatch } from "react-redux";
+
 
 const appUrl = import.meta.env.VITE_APP_URL;
 
@@ -49,6 +51,8 @@ function DocumentDropZone({
 }) {
     const [isDragging, setIsDragging] = useState(false);
     const [filesPreview, setFilesPreview] = useState([]);
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
 
     const handleDragOver = (e) => {
         e.preventDefault();
@@ -90,14 +94,14 @@ function DocumentDropZone({
     };
 
     return (
-        <DropZoneContainer
+        <DropZoneContainer darkMode={darkMode} fontSize={fontSize}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             isDragging={isDragging}
             data-test-id={dataTestId}
         >
-            <DropZone>
+            <DropZone darkMode={darkMode} fontSize={fontSize}>
                 {filesPreview.length > 0 ? (
                     filesPreview.map((fileObj, index) => {
                         const icon = getIconForFileType(fileObj.type);
@@ -118,16 +122,16 @@ function DocumentDropZone({
                         }}
                     />
                 )}
-                <DropZoneText>Drag your files here</DropZoneText>
+                <DropZoneText darkMode={darkMode} fontSize={fontSize}>Drag your files here</DropZoneText>
             </DropZone>
-            <DropZoneDescription>{description}</DropZoneDescription>
+            <DropZoneDescription darkMode={darkMode} fontSize={fontSize}>{description}</DropZoneDescription>
         </DropZoneContainer>
     );
 }
 
-const FileItem = ({ title, type, downloadDocument, doc, handleDelete }) => (
-    <FileContainer>
-        <FileIcons>
+const FileItem = ({ title, type, downloadDocument, doc, handleDelete, darkMode, fontSize }) => (
+    <FileContainer darkMode={darkMode} fontSize={fontSize}>
+        <FileIcons darkMode={darkMode} fontSize={fontSize}>
             <img
                 onClick={() => handleDelete(type)}
                 loading="lazy"
@@ -142,13 +146,13 @@ const FileItem = ({ title, type, downloadDocument, doc, handleDelete }) => (
                 style={{ width: "24px", height: "24px" }}
             />
         </FileIcons>
-        <FileDetails>
+        <FileDetails darkMode={darkMode} fontSize={fontSize}>
             <div>
-                <FileTitle>{title}</FileTitle>
-                <FileSize>{type}</FileSize>
+                <FileTitle darkMode={darkMode} fontSize={fontSize}>{title}</FileTitle>
+                <FileSize darkMode={darkMode} fontSize={fontSize}>{type}</FileSize>
             </div>
-            <FileActions>
-                <ActionButton onClick={() => downloadDocument(type, title)}>
+            <FileActions darkMode={darkMode} fontSize={fontSize}>
+                <ActionButton darkMode={darkMode} fontSize={fontSize} onClick={() => downloadDocument(type, title)}>
                     Download{" "}
                     <img
                         loading="lazy"
@@ -156,7 +160,7 @@ const FileItem = ({ title, type, downloadDocument, doc, handleDelete }) => (
                         alt="Download icon"
                     />
                 </ActionButton>
-                <ActionButton outline>
+                <ActionButton darkMode={darkMode} fontSize={fontSize} outline>
                     Share{" "}
                     <img
                         loading="lazy"
@@ -192,6 +196,8 @@ function Document() {
     const [clearPreviewsTrigger, setClearPreviewsTrigger] = useState(false);
     const [userId, setUserId] = useState(null);
     const [userDocuments, setUserDocuments] = useState([]);
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
 
     useEffect(() => {
         // Fetch the XSRF token from cookies and set it in Axios headers
@@ -344,11 +350,11 @@ function Document() {
 
     return (
         <NavBar header={"Document Upload"}>
-            <MainContainer>
-                <Section>
-                    <DropZoneWrapper>
+            <MainContainer darkMode={darkMode} fontSize={fontSize}>
+                <Section darkMode={darkMode} fontSize={fontSize} >
+                    <DropZoneWrapper darkMode={darkMode} fontSize={fontSize}>
                         {documentData.slice(0, 3).map((doc, index) => (
-                            <DocumentDropZone
+                            <DocumentDropZone darkMode={darkMode} fontSize={fontSize}
                                 key={index}
                                 {...doc}
                                 onFileDrop={handleFileDrop}
@@ -358,11 +364,11 @@ function Document() {
                         ))}
                     </DropZoneWrapper>
                 </Section>
-                <Section>
+                <Section darkMode={darkMode} fontSize={fontSize}>
                     {userDocuments.length > 0 ? (
-                        <DocumentWrapper>
+                        <DocumentWrapper darkMode={darkMode} fontSize={fontSize}>
                             {userDocuments.map((doc, index) => (
-                               <FileItem
+                               <FileItem darkMode={darkMode} fontSize={fontSize}
                                key={index}
                                title={doc.title}
                                type={doc.id}
@@ -373,8 +379,8 @@ function Document() {
                             ))}
                         </DocumentWrapper>
                     ) : (
-                        <MessageContainer>
-                            <Message>
+                        <MessageContainer darkMode={darkMode} fontSize={fontSize}>
+                            <Message darkMode={darkMode} fontSize={fontSize}>
                                 No documents uploaded. Upload some documents to
                                 view.
                             </Message>

@@ -32,17 +32,27 @@ import {
     LoadingDot,
     IconContainer,
     Footer,
-    CloseButton
+    CloseButton,
+    FontSizer
 } from "../Styling/NavBar.styles";
 import logo from "@/Pages/Images/puzzle.svg";
+import { NavBarModal } from "./NavBarModal";
 import briefcase from "@/Pages/Images/briefcase.svg";
 import message from "@/Pages/Images/message-square.svg";
 import calendar from "@/Pages/Images/calendar-days.svg";
 import user from "@/Pages/Images/user.svg";
 import settings from "@/Pages/Images/settings.svg";
+import whitelogo from "@/Pages/Images/whitepuzzle.svg";
+import whitebriefcase from "@/Pages/Images/whitebriefcase.svg";
+import whitemessage from "@/Pages/Images/whitemessage-square.svg";
+import whitecalendar from "@/Pages/Images/whitecalendar-days.svg";
+import whiteuser from "@/Pages/Images/whiteuser.svg";
+import whitesettings from "@/Pages/Images/whitesettings.svg";
 import { Link } from "@inertiajs/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBell, faMap, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faBell, faMap, faTimes, faSun, faMoon, faPlus, faMinus, faTextHeight, faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { toggleDarkMode, setTextSize, increaseFontSize, decreaseFontSize } from "@/Features/accessibility/accessibilitySlice";
+
 import { useSelector, useDispatch } from "react-redux";
 import {
 
@@ -93,6 +103,8 @@ function useWindowSize() {
 function Sidebar() {
     const [footerVisible, setFooterVisible] = useState(false);
     const [activeTab, setActiveTab] = useState("/");
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
     useEffect(() => {
         const path = window.location.pathname;
         console.log('Full Path:', path);
@@ -101,65 +113,72 @@ function Sidebar() {
         const segments = path.split('/');
         const specificSegment = segments[segments.length - 1];
         console.log('Specific Segment:', specificSegment);
-        setActiveTab(path)
-      }, []);
+        setActiveTab(path);
+    }, []);
 
     const handleTabClick = (path) => {
-      setActiveTab(path);
+        setActiveTab(path);
     };
 
     const toggleFooterVisibility = () => {
         setFooterVisible(!footerVisible);
-      };
+    };
 
-      const closeFooter = () => {
+    const closeFooter = () => {
         setFooterVisible(false);
-      };
+    };
     return (
         <aside>
-          <NavContainer>
-            <Link href="/" onClick={() => handleTabClick("/")}>
-              <Logo src={logo} alt="Logo" loading="lazy" active={activeTab === "/"} />
-            </Link>
-            <Divider />
+            <NavContainer fontSize={fontSize} darkMode={darkMode}>
+            <Link fontSize={fontSize} darkMode={darkMode} href="/" onClick={() => handleTabClick("/")}>
+          <Logo
+    fontSize={fontSize}
+    darkMode={darkMode}
+    src={darkMode ? whitelogo : logo}
+    alt="Logo"
+    loading="lazy"
+    active={activeTab === "/"}
+  />
+</Link>
+                <Divider fontSize={fontSize} darkMode={darkMode} />
 
-              <Link href="/teacher/home" onClick={() => handleTabClick("/teacher/home")}>
-                <IconButton active={activeTab === "/teacher/home"}>
-                  <Icon src={briefcase} alt="Icon 1" loading="lazy" />
-                </IconButton>
-              </Link>
-              <Link href="/teacher/messages" onClick={() => handleTabClick("/teacher/messages")}>
-                <IconButton active={activeTab === "/teacher/messages"}>
-                  <Icon src={message} alt="" loading="lazy" />
-                </IconButton>
-              </Link>
-              <Link href="/teacher/scheduling" onClick={() => handleTabClick("/teacher/scheduling")}>
-                <IconButton active={activeTab === "/teacher/scheduling"}>
-                  <Icon src={calendar} alt="" loading="lazy" />
-                </IconButton>
-              </Link>
-              <Link href="/teacher/profile" onClick={() => handleTabClick("/teacher/profile")}>
-                <IconButton active={activeTab === "/teacher/profile"}>
-                  <Icon src={user} alt="" loading="lazy" />
-                </IconButton>
-              </Link>
-              <Link href="/teacher/settings" onClick={() => handleTabClick("/teacher/settings")}>
-                <IconButton active={activeTab === "/teacher/settings"}>
-                  <Icon src={settings} alt="" loading="lazy" />
-                </IconButton>
-              </Link>
-          <IconContainer onClick={toggleFooterVisibility}>
-                    <FontAwesomeIcon icon={faMap} className="fa-icon" />
+                <Link fontSize={fontSize} darkMode={darkMode} href="/teacher/home" onClick={() => handleTabClick("/teacher/home")}>
+                    <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/teacher/home"}>
+                    <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitebriefcase : briefcase} alt="Icon 1" loading="lazy" />
+                    </IconButton>
+                </Link>
+                <Link fontSize={fontSize} darkMode={darkMode} data-test-id="messages-link" href="/teacher/messages" onClick={() => handleTabClick("/teacher/messages")}>
+                    <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/teacher/messages"}>
+                    <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitemessage : message} alt="" loading="lazy" />
+                    </IconButton>
+                </Link>
+                <Link fontSize={fontSize} darkMode={darkMode} data-test-id="interviews-link" href="/teacher/scheduling" onClick={() => handleTabClick("/teacher/scheduling")}>
+                    <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/teacher/scheduling"}>
+                    <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitecalendar : calendar} alt="" loading="lazy" />
+                    </IconButton>
+                </Link>
+                <Link fontSize={fontSize} darkMode={darkMode} data-test-id="profile-link" href="/teacher/profile" onClick={() => handleTabClick("/teacher/profile")}>
+                    <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/teacher/profile"}>
+                    <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whiteuser : user} alt="" loading="lazy" />
+                    </IconButton>
+                </Link>
+                <Link fontSize={fontSize} darkMode={darkMode} href="/teacher/settings" onClick={() => handleTabClick("/teacher/settings")}>
+                    <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/teacher/settings"}>
+                    <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitesettings : settings} alt="" loading="lazy" />
+                    </IconButton>
+                </Link>
+                <IconContainer fontSize={fontSize} darkMode={darkMode} onClick={toggleFooterVisibility}>
+                    <FontAwesomeIcon fontSize={fontSize} darkMode={darkMode} icon={faMap} className="fa-icon" />
                 </IconContainer>
             </NavContainer>
-            <Footer isVisible={footerVisible}>
-        <CloseButton onClick={closeFooter}>
-          <FontAwesomeIcon icon={faTimes} />
-        </CloseButton>
-        <p>HTML Sitemap: <a href="/">Home</a> | <a href="/about">About</a> | <a href="/teacher/home">Teacher Home</a> | <a href="/teacher/students">Teacher Manage Students</a> | <a href="/teacher/classes">Teacher Manage Classes</a> | <a href="/teacher/messages">Teacher Messages</a> | <a href="/teacher/scheduling">Teacher Schedule</a> | <a href="/teacher/profile">Teacher Profile</a> | <a href="/teacher/settings">Teacher Settings</a> | <a href="/teacher/documents">Teacher Documents</a> </p>
-      </Footer>
+            <Footer fontSize={fontSize} darkMode={darkMode} isVisible={footerVisible}>
+                <CloseButton fontSize={fontSize} darkMode={darkMode} onClick={closeFooter}>
+                    <FontAwesomeIcon fontSize={fontSize} darkMode={darkMode} icon={faTimes} />
+                </CloseButton>
+                <p>HTML Sitemap: <a href="/">Home</a> | <a href="/about">About</a> | <a href="/teacher/home">Teacher Home</a> | <a href="/teacher/students">Teacher Manage Students</a> | <a href="/teacher/classes">Teacher Manage Classes</a> | <a href="/teacher/messages">Teacher Messages</a> | <a href="/teacher/scheduling">Teacher Schedule</a> | <a href="/teacher/profile">Teacher Profile</a> | <a href="/teacher/settings">Teacher Settings</a> | <a href="/teacher/documents">Teacher Documents</a> </p>
+            </Footer>
         </aside>
-      );
+    );
 
 }
 
@@ -178,6 +197,9 @@ function Header({ header }) {
     const { post } = useForm();
 
     const altAvatarSrc = "https://cdn.builder.io/api/v1/image/assets/TEMP/c449c761188f38db922c89455e070256b822a267e33f51baa6901c76b73a4e78?apiKey=d66532d056b14640a799069157705b77&";
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
+    console.log(fontSize);
 
 
 
@@ -231,6 +253,15 @@ function Header({ header }) {
         post(route('logout'));
     };
 
+    const handleDarkModeToggle = () => {
+        dispatch(toggleDarkMode());
+        console.log(darkMode);
+    };
+    const handleTextSizeChange = (size) => {
+        dispatch(setTextSize(size));
+        console.log(fontSize);
+    };
+
 
 
     if (!user || !conversations) {
@@ -239,46 +270,52 @@ function Header({ header }) {
 
     return (
         <header>
-            <HeaderContainer>
-                <Title>{header}</Title>
-                <UserProfile>
+            <HeaderContainer fontSize={fontSize} darkMode={darkMode}>
+                <Title fontSize={fontSize} darkMode={darkMode}>{header}</Title>
+                <UserProfile fontSize={fontSize} darkMode={darkMode}>
 
-                    <NotificationIcon onClick={toggleNotificationModal}
+                    <NotificationIcon fontSize={fontSize} darkMode={darkMode} onClick={handleDarkModeToggle}
+                    >{darkMode ? <FontAwesomeIcon icon={faMoon} /> : <FontAwesomeIcon icon={faSun} />}
+
+
+                    </NotificationIcon>
+                    <NotificationIcon fontSize={fontSize} darkMode={darkMode} onClick={toggleNotificationModal}
                         hasUnreadMessages={hasUnreadMessages}><FontAwesomeIcon icon={faBell} />
 
 
                     </NotificationIcon>
-                    <UserDetails onClick={toggleProfileModal}>
+                    <FontToggler />
+                    <UserDetails fontSize={fontSize} darkMode={darkMode} onClick={toggleProfileModal}>
                         {user && user.profile_image ? (
-                            <Avatar
+                            <Avatar fontSize={fontSize} darkMode={darkMode}
                                 src={user.profile_image}
                                 alt="User Avatar"
                                 loading="lazy"
                             />
                         ) : (
-                            <Avatar
+                            <Avatar fontSize={fontSize} darkMode={darkMode}
                                 src={altAvatarSrc}
                                 alt="Default Avatar"
                                 loading="lazy"
                             />
                         )}
                         <ExpandIcon
-                            src="https://cdn.builder.io/api/v1/image/assets/TEMP/c7749e10a4cb727e5ce0c7fd48d44fb683bf93b2fa7c59643148748496b286b0?apiKey=d66532d056b14640a799069157705b77&"
-                            alt="Expand"
-                            loading="lazy"
+                            icon={faChevronDown}
                             isOpen={isExpanded}
+                            fontSize={fontSize}
+                            darkMode={darkMode}
                         />
                     </UserDetails>
                 </UserProfile>
-                <Modal isOpen={isProfileModalOpen}>
-                    <ModalContent>
-                        <Link href="/teacher/profile">
-                        <ModalItem>Profile</ModalItem>
+                <Modal fontSize={fontSize} darkMode={darkMode} isOpen={isProfileModalOpen}>
+                    <ModalContent fontSize={fontSize} darkMode={darkMode}>
+                        <Link fontSize={fontSize} darkMode={darkMode} href="/teacher/profile">
+                            <ModalItem fontSize={fontSize} darkMode={darkMode}>Profile</ModalItem>
                         </Link>
-                        <Link href="/teacher/profile">
-                        <ModalItem>Settings</ModalItem>
+                        <Link fontSize={fontSize} darkMode={darkMode} href="/teacher/settings">
+                            <ModalItem fontSize={fontSize} darkMode={darkMode}>Settings</ModalItem>
                         </Link>
-                        <ModalItem as="button" onClick={handleLogout}>Logout</ModalItem>
+                        <ModalItem fontSize={fontSize} darkMode={darkMode} as="button" onClick={handleLogout}>Logout</ModalItem>
                     </ModalContent>
                 </Modal>
                 <NotificationModal isOpen={isNotificationModalOpen} conversations={conversations} handleMarkAsRead={handleMarkAsRead} handleRedirect={handleRedirect} currentUser={user} notificationsStatus={notificationsStatus}>
@@ -311,9 +348,11 @@ function MainContent({ header, children }) {
 function NavBar({ header, children }) {
     const windowSize = useWindowSize();
     const isMobile = windowSize.width <= 991;
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
 
     return (
-        <AppContainer>
+        <AppContainer fontSize={fontSize} darkMode={darkMode} >
             {isMobile ? null : <Sidebar />}
             <MainContent header={header}>{children}</MainContent>
 
@@ -324,37 +363,75 @@ function NavBar({ header, children }) {
 export default NavBar;
 
 
+const FontToggler = () => {
+    const dispatch = useDispatch();
+    const fontSize = useSelector((state) => state.accessibility.textSize);
+    const darkMode = useSelector((state) => state.accessibility.darkMode);
+
+    const increaseFont = () => {
+        if (fontSize !== '1.12em') { // Compare against 'large' instead of "1.12em"
+            dispatch(increaseFontSize());
+        }
+    };
+
+    const decreaseFont = () => {
+        if (fontSize !== '1em') { // Compare against 'small' instead of "1em"
+            dispatch(decreaseFontSize());
+        }
+    };
+
+    return (
+        <FontSizer fontSize={fontSize} darkMode={darkMode}>
+            <FontAwesomeIcon
+                onClick={() => { decreaseFont(); }}
+                icon={faMinus}
+            />
+            <FontAwesomeIcon
+                icon={faTextHeight}
+            />
+            <FontAwesomeIcon
+                onClick={() => { increaseFont(); }}
+                icon={faPlus}
+            />
+        </FontSizer>
+    );
+};
+
+
+
 
 function NotificationModal({ isOpen, conversations, handleMarkAsRead, handleRedirect, currentUser, notificationsStatus, markMessageStatus }) {
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
         return new Date(dateString).toLocaleDateString(undefined, options);
     };
 
     return (
-        <NotificationModalContainer isOpen={isOpen}>
+        <NotificationModalContainer fontSize={fontSize} darkMode={darkMode} isOpen={isOpen}>
             {markMessageStatus === 'loading' ? (
-                <LoadingMessage>Loading...</LoadingMessage>
+                <LoadingMessage fontSize={fontSize} darkMode={darkMode}>Loading...</LoadingMessage>
             ) : conversations === null || conversations.length === 0 ? (
-                <NoNotificationsMessage>No new notifications</NoNotificationsMessage>
+                <NoNotificationsMessage fontSize={fontSize} darkMode={darkMode}>No new notifications</NoNotificationsMessage>
             ) : (
                 conversations.map((conversation) => {
                     const otherUser = conversation.users.find(user => user.id !== currentUser?.id);
 
                     return (
-                        <Conversation key={conversation.id}>
-                            <ConversationInfo>
+                        <Conversation fontSize={fontSize} darkMode={darkMode} key={conversation.id}>
+                            <ConversationInfo fontSize={fontSize} darkMode={darkMode}>
                                 <div>From: {otherUser ? otherUser.name : 'Unknown'}</div>
                             </ConversationInfo>
-                            <MessagesList>
+                            <MessagesList fontSize={fontSize} darkMode={darkMode}>
                                 {conversation.messages.map((message) => (
-                                    <Message key={message.id}>
+                                    <Message fontSize={fontSize} darkMode={darkMode} key={message.id}>
                                         <div>Message: {message.content}</div>
                                         <div>Received: {formatDate(message.created_at)}</div>
-                                        <Button onClick={() => handleMarkAsRead(message.id, conversation.id)}>
+                                        <Button fontSize={fontSize} darkMode={darkMode} onClick={() => handleMarkAsRead(message.id, conversation.id)}>
                                             Mark as Read
                                         </Button>
-                                        <Button onClick={handleRedirect}>
+                                        <Button fontSize={fontSize} darkMode={darkMode} onClick={handleRedirect}>
                                             Go to Messages
                                         </Button>
                                     </Message>
@@ -366,6 +443,12 @@ function NotificationModal({ isOpen, conversations, handleMarkAsRead, handleRedi
             )}
         </NotificationModalContainer>
     );
+
+
+
+
+
+
 }
 
 

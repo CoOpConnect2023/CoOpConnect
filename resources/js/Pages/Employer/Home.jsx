@@ -45,6 +45,8 @@ const Home = () => {
     const dispatch = useDispatch();
     const jobs = useSelector(selectJobs);
     const jobsStatus = useSelector(selectJobsStatus);
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
 
     useEffect(() => {
         const fetchUserAndJobs = async () => {
@@ -64,34 +66,30 @@ const Home = () => {
     }, [dispatch]);
 
     return (
-        <NavBar header={"Job Postings"}>
-            <MainContainer>
-                <CreateJobSection>
-                    <JobTitle>Create a New Job Posting</JobTitle>
-                    <JobSubtitle>
+        <NavBar darkMode={darkMode} fontSize={fontSize}  header={"Job Postings"}>
+            <MainContainer darkMode={darkMode} fontSize={fontSize} >
+                <CreateJobSection darkMode={darkMode} fontSize={fontSize} >
+                    <JobTitle darkMode={darkMode} fontSize={fontSize} >Create a New Job Posting</JobTitle>
+                    <JobSubtitle darkMode={darkMode} fontSize={fontSize} >
                         Hire amazing students through CO-OP Connect!
                     </JobSubtitle>
-                    <JobDescription>
-                        Lorem Ipsum is simply dummy text of the printing and
-                        typesetting industry. Lorem Ipsum has been the
-                        industry's standard dummy text ever since the 1500s,
-                        when an unknown printer took a galley of type and
-                        scrambled it t
+                    <JobDescription darkMode={darkMode} fontSize={fontSize} >
+                        Post a job on our platform using the below button. You can view and edit previously posted jobs below by clicking the respective links. Applicants are listed within the view section.
                     </JobDescription>
-                    <Link href="/employer/post1">
-                        <PostJobButton>Post a Job</PostJobButton>
+                    <Link  darkMode={darkMode} fontSize={fontSize} href="/employer/post1">
+                        <PostJobButton darkMode={darkMode} fontSize={fontSize} >Post a Job</PostJobButton>
                     </Link>
                 </CreateJobSection>
-                <CurrentPostingsSection>
-                    <SectionTitle>Current Company Postings</SectionTitle>
-                    <EditingInstructions>
+                <CurrentPostingsSection darkMode={darkMode} fontSize={fontSize} >
+                    <SectionTitle darkMode={darkMode} fontSize={fontSize} >Current Company Postings</SectionTitle>
+                    <EditingInstructions darkMode={darkMode} fontSize={fontSize} >
                         View or edit your company's current job postings.
                     </EditingInstructions>
                     {jobsStatus === "loading" && <p>Loading...</p>}
                     {jobs.length > 0 && (
-                        <PostingsGrid>
+                        <PostingsGrid darkMode={darkMode} fontSize={fontSize} >
                             {jobs.map((post, i) => (
-                                <JobPosting key={i} post={post} />
+                                <JobPosting darkMode={darkMode} fontSize={fontSize} key={i} post={post} />
                             ))}
                         </PostingsGrid>
                     )}
@@ -101,25 +99,25 @@ const Home = () => {
     );
 };
 
-const JobPosting = ({ post }) => {
+const JobPosting = ({ post, darkMode, fontSize }) => {
     return (
-        <JobCard>
-            <JobCardTitle>{post.title}</JobCardTitle>
-            <CompanyName>{post.company}</CompanyName>
-            <Location>{post.location}</Location>
-            <SkillsList>
+        <JobCard darkMode={darkMode} fontSize={fontSize} data-test-id={`job-card-${post.id}`}>
+            <JobCardTitle darkMode={darkMode} fontSize={fontSize}>{post.title}</JobCardTitle>
+            <CompanyName darkMode={darkMode} fontSize={fontSize}>{post.company}</CompanyName>
+            <Location darkMode={darkMode} fontSize={fontSize}>{post.location}</Location>
+            <SkillsList darkMode={darkMode} fontSize={fontSize}>
                 {post.skills.map((tag, index) => (
-                    <SkillBadge key={index}>{tag}</SkillBadge>
+                    <SkillBadge darkMode={darkMode} fontSize={fontSize} key={index}>{tag}</SkillBadge>
                 ))}
             </SkillsList>
-            <JobDescriptionText>{post.description}</JobDescriptionText>
-            <Divider />
-            <CardButtons>
-                <Link href={`/employer/viewpost/${post.id}`}>
-                    <ViewPostingButton>VIEW POSTING</ViewPostingButton>
+            <JobDescriptionText darkMode={darkMode} fontSize={fontSize}>{post.description}</JobDescriptionText>
+            <Divider  darkMode={darkMode} fontSize={fontSize}/>
+            <CardButtons darkMode={darkMode} fontSize={fontSize}>
+                <Link darkMode={darkMode} fontSize={fontSize} href={`/employer/viewpost/${post.id}`}>
+                    <ViewPostingButton darkMode={darkMode} fontSize={fontSize} data-test-id={`view-posting-${post.id}`}>VIEW POSTING</ViewPostingButton>
                 </Link>
-                <Link href={`/employer/editpost1/${post.id}`}>
-                    <EditPostingButton>EDIT POSTING</EditPostingButton>
+                <Link darkMode={darkMode} fontSize={fontSize} href={`/employer/editpost1/${post.id}`}>
+                    <EditPostingButton darkMode={darkMode} fontSize={fontSize}>EDIT POSTING</EditPostingButton>
                 </Link>
             </CardButtons>
         </JobCard>

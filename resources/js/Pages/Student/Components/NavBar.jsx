@@ -35,19 +35,27 @@ import {
     ScrollToTopButton,
     Footer,
     IconContainer,
-    CloseButton
+    CloseButton,
+    FontSizer
 } from "../Styling/NavBar.styles";
 import logo from "@/Pages/Images/puzzle.svg";
 import briefcase from "@/Pages/Images/briefcase.svg";
 import message from "@/Pages/Images/message-square.svg";
 import calendar from "@/Pages/Images/calendar-days.svg";
 import user from "@/Pages/Images/user.svg";
+import whitelogo from "@/Pages/Images/whitepuzzle.svg";
+import whitebriefcase from "@/Pages/Images/whitebriefcase.svg";
+import whitemessage from "@/Pages/Images/whitemessage-square.svg";
+import whitecalendar from "@/Pages/Images/whitecalendar-days.svg";
+import whiteuser from "@/Pages/Images/whiteuser.svg";
+import whitesettings from "@/Pages/Images/whitesettings.svg";
 import { useForm } from '@inertiajs/react';
 import settings from "@/Pages/Images/settings.svg";
 import { Link } from "@inertiajs/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBell, faMap, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faBell, faMap, faTimes, faList, faSun, faMoon, faPlus, faMinus, faTextHeight, faChevronDown} from "@fortawesome/free-solid-svg-icons";
 import { useSelector, useDispatch } from "react-redux";
+import { toggleDarkMode, setTextSize, increaseFontSize, decreaseFontSize } from "@/Features/accessibility/accessibilitySlice";
 import {
 
     selectUserStatus,
@@ -113,7 +121,8 @@ function useWindowSize() {
 
 
 function Sidebar() {
-
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
     const [activeTab, setActiveTab] = useState("/");
     useEffect(() => {
         const path = window.location.pathname;
@@ -141,45 +150,65 @@ function Sidebar() {
   };
     return (
         <aside>
-           <NavContainer>
-                <Link href="/" onClick={() => handleTabClick("/")}>
-                    <Logo src={logo} alt="Logo" loading="lazy" active={activeTab === "/"} />
-                </Link>
-                <Divider />
-                <Link href="/student/home" onClick={() => handleTabClick("/student/home")}>
-                    <IconButton active={activeTab === "/student/home"}>
-                        <Icon src={briefcase} alt="Home Icon" loading="lazy" />
+           <NavContainer fontSize={fontSize} darkMode={darkMode}>
+           <Link fontSize={fontSize} darkMode={darkMode} href="/" onClick={() => handleTabClick("/")}>
+          <Logo
+    fontSize={fontSize}
+    darkMode={darkMode}
+    src={darkMode ? whitelogo : logo}
+    alt="Logo"
+    loading="lazy"
+    active={activeTab === "/"}
+  />
+</Link>
+                <Divider fontSize={fontSize} darkMode={darkMode} />
+                <Link fontSize={fontSize} darkMode={darkMode} data-test-id="home-link" href="/student/home" onClick={() => handleTabClick("/student/home")}>
+                    <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/student/home"}>
+                    <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitebriefcase : briefcase} alt="Icon 1" loading="lazy" />
                     </IconButton>
                 </Link>
-                <Link href="/student/messages" onClick={() => handleTabClick("/student/messages")}>
-                    <IconButton active={activeTab === "/student/messages"}>
-                        <Icon src={message} alt="Messages Icon" loading="lazy" />
+                <Link fontSize={fontSize} darkMode={darkMode} data-test-id="viewapplications-link" href="/student/viewapplications" onClick={() => handleTabClick("/student/viewapplications")}>
+                    <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/student/viewapplications"}>
+                    <FontAwesomeIcon
+  fontSize={fontSize}
+  icon={faList}
+  style={{
+    fontSize: '1.5rem',
+    color: darkMode ? 'white' : 'black'
+  }}
+/>
                     </IconButton>
                 </Link>
-                <Link href="/student/interviews" onClick={() => handleTabClick("/student/interviews")}>
-                    <IconButton active={activeTab === "/student/interviews"}>
-                        <Icon src={calendar} alt="Interviews Icon" loading="lazy" />
+                <Link fontSize={fontSize} darkMode={darkMode} data-test-id="messages-link" href="/student/messages" onClick={() => handleTabClick("/student/messages")}>
+                    <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/student/messages"}>
+                    <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitemessage : message} alt="" loading="lazy" />
                     </IconButton>
                 </Link>
-                <Link href="/student/profile" onClick={() => handleTabClick("/student/profile")} data-test-id="profile-link">
-                    <IconButton active={activeTab === "/student/profile"}>
-                        <Icon src={user} alt="Profile Icon" loading="lazy" />
+                <Link fontSize={fontSize} darkMode={darkMode} data-test-id="interviews-link" href="/student/interviews" onClick={() => handleTabClick("/student/interviews")}>
+                    <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/student/interviews"}>
+                    <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitecalendar : calendar} alt="" loading="lazy" />
                     </IconButton>
                 </Link>
-                <Link href="/student/settings" onClick={() => handleTabClick("/student/settings")}>
-                    <IconButton active={activeTab === "/student/settings"}>
-                        <Icon src={settings} alt="Settings Icon" loading="lazy" />
+                <Link fontSize={fontSize} darkMode={darkMode} href="/student/profile" onClick={() => handleTabClick("/student/profile")} data-test-id="profile-link">
+                    <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/student/profile"}>
+                    <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whiteuser : user} alt="" loading="lazy" />
                     </IconButton>
                 </Link>
-                <IconContainer onClick={toggleFooterVisibility}>
-                    <FontAwesomeIcon icon={faMap} className="fa-icon" />
+                <Link fontSize={fontSize} darkMode={darkMode} data-test-id="settings-link" href="/student/settings" onClick={() => handleTabClick("/student/settings")}>
+                    <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/student/settings"}>
+                    <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitesettings : settings} alt="" loading="lazy" />
+                    </IconButton>
+                </Link>
+
+                <IconContainer fontSize={fontSize} darkMode={darkMode} data-test-id="map-link" onClick={toggleFooterVisibility}>
+                    <FontAwesomeIcon fontSize={fontSize} darkMode={darkMode} icon={faMap} className="fa-icon"  />
                 </IconContainer>
             </NavContainer>
-            <Footer isVisible={footerVisible}>
-        <CloseButton onClick={closeFooter}>
-          <FontAwesomeIcon icon={faTimes} />
+            <Footer fontSize={fontSize} darkMode={darkMode} isVisible={footerVisible}>
+        <CloseButton fontSize={fontSize} darkMode={darkMode} onClick={closeFooter}>
+          <FontAwesomeIcon fontSize={fontSize} darkMode={darkMode} icon={faTimes} />
         </CloseButton>
-        <p>HTML Sitemap: <a href="/">Home</a> | <a href="/about">About</a> | <a href="/student/home">Student Home</a> | <a href="/student/home">Student Home</a> | <a href="/student/messages">Student Messages</a> | <a href="/student/interviews">Student Schedule</a> | <a href="/student/profile">Student Profile</a> | <a href="/student/settings">Student Settings</a> | <a href="/student/documents">Student Documents</a> | <a href="/student/reflections">Student Reflections</a> </p>
+        <p>HTML Sitemap: <a href="/">Home</a> | <a href="/about">About</a> | <a href="/student/home">Student Home</a> | <a href="/student/home">Student Home</a> | <a href="/student/messages">Student Messages</a> | <a href="/student/interviews">Student Schedule</a> | <a href="/student/profile">Student Profile</a> | <a href="/student/settings">Student Settings</a> | <a href="/student/documents">Student Documents</a> | <a href="/student/reflections">Student Reflections</a> | <a href="/student/viewapplications">Student Applications</a> </p>
       </Footer>
         </aside>
     );
@@ -192,6 +221,8 @@ function Header({ header }) {
     const notifications = useSelector(selectNotifications);
     const notificationsStatus = useSelector(selectNotificationsStatus);
     const markMessageStatus = useSelector(selectMarkMessageAsReadStatus);
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
 
     const [isProfileModalOpen, setIsProfileModalOpen] = React.useState(false);
     const [isNotificationModalOpen, setIsNotificationModalOpen] = React.useState(false);
@@ -249,6 +280,10 @@ function Header({ header }) {
         e.preventDefault();
         post(route('logout'));
     };
+    const handleDarkModeToggle = () => {
+        dispatch(toggleDarkMode());
+        console.log(darkMode);
+    };
 
 
     if (!user || !conversations) {
@@ -258,50 +293,55 @@ function Header({ header }) {
     return (
         <header>
             {user &&
-            <HeaderContainer data-testid="nav-student-component">
-                <Title>{header}</Title>
-                <UserProfile>
+            <HeaderContainer fontSize={fontSize} darkMode={darkMode} data-testid="nav-student-component">
+                <Title fontSize={fontSize} darkMode={darkMode}>{header}</Title>
+                <UserProfile fontSize={fontSize} darkMode={darkMode}>
 
-                    <NotificationIcon data-testid="nav-student-notification" onClick={toggleNotificationModal}
+
+                <NotificationIcon fontSize={fontSize} darkMode={darkMode} onClick={handleDarkModeToggle}
+                    >{darkMode ? <FontAwesomeIcon icon={faMoon} /> : <FontAwesomeIcon icon={faSun} />}</NotificationIcon>
+
+                    <NotificationIcon fontSize={fontSize} darkMode={darkMode} data-testid="nav-student-notification" onClick={toggleNotificationModal}
                         hasUnreadMessages={hasUnreadMessages}><FontAwesomeIcon icon={faBell} />
 
 
                     </NotificationIcon>
-                    <UserDetails onClick={toggleProfileModal}>
+                    <FontToggler />
+                    <UserDetails fontSize={fontSize} darkMode={darkMode} onClick={toggleProfileModal}>
                         {user && user.profile_image ? (
-                            <Avatar
+                            <Avatar fontSize={fontSize} darkMode={darkMode}
                                 src={user.profile_image}
                                 alt="User Avatar"
                                 loading="lazy"
                             />
                         ) : (
-                            <Avatar
+                            <Avatar fontSize={fontSize} darkMode={darkMode}
                                 src={altAvatarSrc}
                                 alt="Default Avatar"
                                 loading="lazy"
                             />
                         )}
                         <ExpandIcon
-                            src="https://cdn.builder.io/api/v1/image/assets/TEMP/c7749e10a4cb727e5ce0c7fd48d44fb683bf93b2fa7c59643148748496b286b0?apiKey=d66532d056b14640a799069157705b77&"
-                            alt="Expand"
-                            loading="lazy"
+                            icon={faChevronDown}
                             isOpen={isExpanded}
+                            fontSize={fontSize}
+                            darkMode={darkMode}
                         />
                     </UserDetails>
                 </UserProfile>
-                <Modal isOpen={isProfileModalOpen}>
-                    <ModalContent>
-                        <Link href="/student/profile">
-                        <ModalItem>Profile</ModalItem>
+                <Modal fontSize={fontSize} darkMode={darkMode}  isOpen={isProfileModalOpen}>
+                    <ModalContent fontSize={fontSize} darkMode={darkMode}>
+                        <Link fontSize={fontSize} darkMode={darkMode} href="/student/profile">
+                        <ModalItem fontSize={fontSize} darkMode={darkMode}>Profile</ModalItem>
                         </Link>
-                        <Link href="/student/profile">
-                        <ModalItem>Settings</ModalItem>
+                        <Link fontSize={fontSize} darkMode={darkMode} href="/student/settings">
+                        <ModalItem fontSize={fontSize} darkMode={darkMode}>Settings</ModalItem>
                         </Link>
-                        <ModalItem as="button" onClick={handleLogout}>Logout</ModalItem>
+                        <ModalItem fontSize={fontSize} darkMode={darkMode} as="button" onClick={handleLogout}>Logout</ModalItem>
                     </ModalContent>
                 </Modal>
-                <NotificationModal data-testid="nav-student-notification-modal" isOpen={isNotificationModalOpen} conversations={conversations} handleMarkAsRead={handleMarkAsRead} handleRedirect={handleRedirect} currentUser={user} notificationsStatus={notificationsStatus}>
-                    <ModalContent>
+                <NotificationModal fontSize={fontSize} darkMode={darkMode} data-testid="nav-student-notification-modal" isOpen={isNotificationModalOpen} conversations={conversations} handleMarkAsRead={handleMarkAsRead} handleRedirect={handleRedirect} currentUser={user} notificationsStatus={notificationsStatus}>
+                    <ModalContent fontSize={fontSize} darkMode={darkMode}>
                         <ModalItem>Notification 1</ModalItem>
                         <ModalItem>Notification 2</ModalItem>
                         <ModalItem>Notification 3</ModalItem>
@@ -319,9 +359,9 @@ function MainContent({ header, children }) {
 
 
     return (
-        <Main>
-            <ContentContainer>
-                <Header header={header} />{isMobile && <Sidebar />}
+        <Main >
+            <ContentContainer >
+                <Header  header={header} />{isMobile && <Sidebar />}
                 {children}
 
             </ContentContainer>
@@ -332,11 +372,13 @@ function MainContent({ header, children }) {
 function NavBar({ header, children }) {
     const windowSize = useWindowSize();
     const isMobile = windowSize.width <= 991;
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
 
     return (
-        <AppContainer>
-            {isMobile ? null : <Sidebar />}
-            <MainContent header={header}>{children}</MainContent>
+        <AppContainer fontSize={fontSize} darkMode={darkMode}>
+            {isMobile ? null : <Sidebar fontSize={fontSize} darkMode={darkMode} />}
+            <MainContent fontSize={fontSize} darkMode={darkMode} header={header}>{children}</MainContent>
 
         </AppContainer>
     );
@@ -344,37 +386,72 @@ function NavBar({ header, children }) {
 
 export default NavBar;
 
+const FontToggler = () => {
+    const dispatch = useDispatch();
+    const fontSize = useSelector((state) => state.accessibility.textSize);
+    const darkMode = useSelector((state) => state.accessibility.darkMode);
 
+    const increaseFont = () => {
+        if (fontSize !== '1.12em') { // Compare against 'large' instead of "1.12em"
+            dispatch(increaseFontSize());
+        }
+    };
+
+    const decreaseFont = () => {
+        if (fontSize !== '1em') { // Compare against 'small' instead of "1em"
+            dispatch(decreaseFontSize());
+        }
+    };
+
+    return (
+        <FontSizer fontSize={fontSize} darkMode={darkMode}>
+            <FontAwesomeIcon fontSize={fontSize} darkMode={darkMode}
+                onClick={() => { decreaseFont(); }}
+                icon={faMinus}
+            />
+            <FontAwesomeIcon fontSize={fontSize} darkMode={darkMode}
+                icon={faTextHeight}
+            />
+            <FontAwesomeIcon fontSize={fontSize} darkMode={darkMode}
+                onClick={() => { increaseFont(); }}
+                icon={faPlus}
+            />
+        </FontSizer>
+    );
+};
 
 const NotificationModal = ({ isOpen, conversations, handleMarkAsRead, handleRedirect, currentUser, notificationsStatus, markMessageStatus }) => {
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
     const formatDate = (dateString) => {
+
         const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
         return new Date(dateString).toLocaleDateString(undefined, options);
     };
     return (
-        <NotificationModalContainer isOpen={isOpen} data-testid="notification-modal">
+        <NotificationModalContainer fontSize={fontSize} darkMode={darkMode} isOpen={isOpen} data-testid="notification-modal">
             {markMessageStatus === 'loading' ? (
                 <LoadingMessage>Loading...</LoadingMessage>
             ) : conversations === null || conversations.length === 0 ? (
-                <NoNotificationsMessage>No new notifications</NoNotificationsMessage>
+                <NoNotificationsMessage fontSize={fontSize} darkMode={darkMode}>No new notifications</NoNotificationsMessage>
             ) : (
                 conversations.map((conversation) => {
                     const otherUser = conversation.users.find(user => user.id !== currentUser?.id);
 
                     return (
-                        <Conversation key={conversation.id} data-testid="conversation">
-                            <ConversationInfo>
+                        <Conversation fontSize={fontSize} darkMode={darkMode} key={conversation.id} data-testid="conversation">
+                            <ConversationInfo fontSize={fontSize} darkMode={darkMode}>
                                 <div>From: {otherUser ? otherUser.name : 'Unknown'}</div>
                             </ConversationInfo>
-                            <MessagesList>
+                            <MessagesList fontSize={fontSize} darkMode={darkMode}>
                                 {conversation.messages.map((message) => (
-                                    <Message key={message.id}>
+                                    <Message fontSize={fontSize} darkMode={darkMode} key={message.id}>
                                         <div>Message: {message.content}</div>
                                         <div>Received: {formatDate(message.created_at)}</div>
-                                        <Button onClick={() => handleMarkAsRead(message.id, conversation.id)}>
+                                        <Button fontSize={fontSize} darkMode={darkMode} onClick={() => handleMarkAsRead(message.id, conversation.id)}>
                                             Mark as Read
                                         </Button>
-                                        <Button onClick={handleRedirect}>
+                                        <Button fontSize={fontSize} darkMode={darkMode} onClick={handleRedirect}>
                                             Go to Messages
                                         </Button>
                                     </Message>

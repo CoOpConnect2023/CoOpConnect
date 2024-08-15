@@ -30,6 +30,8 @@ export default function Messages() {
     const shortlistsStatus = useSelector(selectMessagesStatus);
     const convoStatus = useSelector(selectMessagesStatus);
     const conversationsStatus = useSelector(selectConversationsStatus);
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
 
     useEffect(() => {
         dispatch(getUser());
@@ -81,6 +83,7 @@ export default function Messages() {
         dispatch(sendNewMessage({ brandNewMessage, userInfo, recipientEmail }));
         dispatch(getConversations({ userId: currentUser }));
         setBrandNewMessage('')
+        setRecipientEmail('')
     };
 
     useEffect(() => {
@@ -105,10 +108,14 @@ export default function Messages() {
     // }
 
     return (
-        <PageContainer>
-            <NavBar header={"Messages"}>
-                <ChatContainer>
-                    <Chat
+        <PageContainer darkMode={darkMode}
+        fontSize={fontSize}>
+            <NavBar darkMode={darkMode}
+        fontSize={fontSize} header={"Messages"}>
+                <ChatContainer darkMode={darkMode}
+        fontSize={fontSize}>
+                    <Chat darkMode={darkMode}
+        fontSize={fontSize}
                         newMessage={newMessage}
                         setNewMessage={setNewMessage}
                         handleSendNewMessage={handleSendNewMessage}
@@ -159,7 +166,7 @@ const PageContainer = styled.div`
     display: flex;
     flex-direction: column;
     height: 100vh;
-    overflow: hidden;
+    
 `;
 
 const ChatContainer = styled.div`

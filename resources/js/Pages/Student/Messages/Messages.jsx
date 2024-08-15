@@ -30,6 +30,8 @@ export default function Messages() {
     const shortlistsStatus = useSelector(selectMessagesStatus);
     const convoStatus = useSelector(selectMessagesStatus);
     const conversationsStatus = useSelector(selectConversationsStatus);
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
 
     useEffect(() => {
         dispatch(getUser());
@@ -112,9 +114,11 @@ export default function Messages() {
 
 
     return (
-        <PageContainer>
+        <PageContainer darkMode={darkMode}
+        fontSize={fontSize}>
             <NavBar header={"Messages"}>
-                <ChatContainer>
+                <ChatContainer darkMode={darkMode}
+                        fontSize={fontSize}>
                     <Chat
                         newMessage={newMessage}
                         setNewMessage={setNewMessage}
@@ -131,6 +135,8 @@ export default function Messages() {
                         setConversationsID={setConversationsID}
                         currentUser={currentUser}
                         conversationID={conversationID}
+                        darkMode={darkMode}
+                        fontSize={fontSize}
                     />
                 </ChatContainer>
             </NavBar>
@@ -142,6 +148,7 @@ const spin = keyframes`
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 `;
+
 
 const LoadingScreen = styled.div`
     display: flex;
@@ -165,13 +172,13 @@ const Spinner = styled.div`
 const PageContainer = styled.div`
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Ensure it covers the entire viewport height */
-     /* Prevents scrolling unless needed */
+    height: 100vh;
+
 `;
 
 const ChatContainer = styled.div`
     flex: 1;
     display: flex;
     flex-direction: column;
-    overflow: auto; /* Allows scrolling content within the container */
+    overflow: hidden;
 `;

@@ -1,5 +1,13 @@
 import styled, { keyframes } from "styled-components";
 
+const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
+    const em = parseFloat(emValue);
+    if (emValue === '1em') return `${basePixelSize * em}px`;
+    if (emValue === '1.07em') return `${basePixelSize * em * 1.3}px`;
+    if (emValue === '1.12em') return `${basePixelSize * em * 1.7}px`;
+    return `${basePixelSize * em * factor}px`;
+};
+
 const fadeIn = keyframes`
     from {
         opacity: 0;
@@ -19,71 +27,83 @@ const fadeInLeft = keyframes`
         transform: translateX(0);
     }
 `;
-
 export const MainContainer = styled.main`
     display: flex;
     flex-direction: column;
-    background: var(--Schemes-Background, #fff7ff);
+    height: 89vh;
+    background: ${({ darkMode }) => (darkMode ? '#121212' : 'var(--Schemes-Background, #fff7ff)')};
     padding: 20px;
     animation: ${fadeIn} 0.8s ease-in-out;
+    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+    box-sizing: border-box;
+    overflow: hidden;
+
+    @media (max-width: 991px) {
+        padding: 10px;
+        height: 80%;
+    }
 `;
 
 export const SearchSection = styled.section`
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #fff;
-    color: #7b757f;
+    background-color: ${({ darkMode }) => (darkMode ? '#2C2C2C' : '#fff')};
+    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#7b757f')};
     border-radius: 10px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     padding: 20px;
-    margin-top: 40px;
+    margin-top: 20px;
+    height: 35%;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
 
     &:hover {
         box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-        
     }
 
     @media (max-width: 991px) {
         padding: 10px;
+        height: auto;
     }
 `;
 
 export const SearchTitle = styled.h2`
-    font: 600 32px Poppins, sans-serif;
-    color: #6b538c;
+    font-size: ${({ fontSize }) => calculateFontSize(32, fontSize)};
+    color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#6b538c')};
     text-align: center;
 
     @media (max-width: 991px) {
-        font-size: 28px;
+        font-size: ${({ fontSize }) => calculateFontSize(28, fontSize)};
     }
 `;
 
 export const Tagline = styled.h3`
     margin-top: 10px;
-    font: 500 24px/133% Poppins, sans-serif;
+    font-size: ${({ fontSize }) => calculateFontSize(24, fontSize)};
+    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
     text-align: center;
 
     @media (max-width: 991px) {
-        font-size: 20px;
+        font-size: ${({ fontSize }) => calculateFontSize(20, fontSize)};
     }
 `;
 
 export const Description = styled.p`
     text-align: center;
-    font: 400 22px/28px Poppins, sans-serif;
+    font-size: ${({ fontSize }) => calculateFontSize(22, fontSize)};
+    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
     margin-top: 30px;
 
     @media (max-width: 991px) {
-        font-size: 18px;
+        font-size: ${({ fontSize }) => calculateFontSize(18, fontSize)};
     }
 `;
 
 export const Button = styled.button`
-    background-color: #6b538c;
+    background-color: ${({ darkMode }) => (darkMode ? '#6b538c' : '#6b538c')};
     color: #fff;
-    font: 700 16px/150% Roboto, sans-serif;
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
     border-radius: 12px;
     letter-spacing: 0.5px;
     padding: 8px 16px;
@@ -93,12 +113,12 @@ export const Button = styled.button`
     transition: background-color 0.3s ease, transform 0.3s ease;
 
     &:hover {
-        background-color: #5a4175;
+        background-color: ${({ darkMode }) => (darkMode ? '#5a4175' : '#5a4175')};
         transform: scale(1.05);
     }
 
     @media (max-width: 991px) {
-        font-size: 14px;
+        font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
         padding: 6px 12px;
     }
 `;
@@ -107,42 +127,47 @@ export const JobsSection = styled.section`
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #fff;
+    background-color: ${({ darkMode }) => (darkMode ? '#2C2C2C' : '#fff')};
     border-radius: 10px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     padding: 20px;
-    margin-top: 40px;
+    margin-top: 20px;
+    flex-grow: 1;
+    max-height: 65%;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
+    overflow-y: auto;
 
     &:hover {
         box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-
     }
 
     @media (max-width: 991px) {
         padding: 10px;
+        max-height: 100%;
+        overflow-y: visible;
+        flex-grow: 1;
     }
 `;
 
 export const JobsHeader = styled.h2`
-    font: 600 32px Poppins, sans-serif;
-    color: #6b538c;
+    font-size: ${({ fontSize }) => calculateFontSize(32, fontSize)};
+    color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#6b538c')};
     text-align: center;
 
     @media (max-width: 991px) {
-        font-size: 28px;
+        font-size: ${({ fontSize }) => calculateFontSize(28, fontSize)};
     }
 `;
 
 export const JobsSubHeader = styled.p`
-    font: 500 24px/32px Poppins, sans-serif;
-    color: #7b757f;
+    font-size: ${({ fontSize }) => calculateFontSize(24, fontSize)};
+    color: ${({ darkMode }) => (darkMode ? '#ccc' : '#7b757f')};
     text-decoration: underline;
     margin-top: 10px;
     text-align: center;
 
     @media (max-width: 991px) {
-        font-size: 20px;
+        font-size: ${({ fontSize }) => calculateFontSize(20, fontSize)};
     }
 `;
 
@@ -152,13 +177,14 @@ export const JobListings = styled.div`
     flex-wrap: wrap;
     gap: 20px;
     margin-top: 20px;
-    align-self: stretch;
+
+    overflow-y: auto;
 
     @media (max-width: 991px) {
-        flex-direction: column;
+        flex-direction: row;
         align-items: stretch;
-        max-height: 80vh; /* Adjust the max-height as needed for your layout */
-        overflow-y: auto; /* Enable vertical scrolling */
+        max-height: 40vh;
+        overflow-y: auto;
     }
 `;
 
@@ -166,9 +192,10 @@ export const JobCardContainer = styled.article`
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #eddcff;
-    color: #260e44;
+    background-color: ${({ darkMode }) => (darkMode ? '#444444' : '#eddcff')};
+    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#260e44')};
     border-radius: 10px;
+    border: 2px solid ${({ darkMode }) => (darkMode ? '#444' : '#773dc3')};
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     max-width: 400px;
     width: 100%;
@@ -178,7 +205,7 @@ export const JobCardContainer = styled.article`
     transition: box-shadow 0.3s ease, transform 0.3s ease;
     animation: ${fadeInLeft} 0.5s ease forwards;
     animation-delay: ${(props) => props.index * 0.1}s;
-    opacity: 0; /* Start hidden */
+    opacity: 0;
 
     &:hover {
         box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
@@ -186,26 +213,32 @@ export const JobCardContainer = styled.article`
     }
 
     @media (max-width: 991px) {
-        max-width: 100%;
-        height: 400px; /* Set a fixed height for universal height */
+        max-width: 80%;
+        height: 100%; /* Allow the height to be flexible */
+        flex-direction: column;
     }
 `;
 
 export const JobTitle = styled.h3`
-    font: 28px/129% Poppins, sans-serif;
+    font-size: ${({ fontSize }) => calculateFontSize(28, fontSize)};
     align-self: stretch;
     margin-bottom: 10px;
+    color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#2C2C2C')};
 `;
 
 export const CompanyName = styled.p`
     font-family: Poppins, sans-serif;
     letter-spacing: 0.15px;
     margin-top: 18px;
+    color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#2C2C2C')};
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
 `;
 
 export const Location = styled.p`
     font-family: Poppins, sans-serif;
     letter-spacing: 0.15px;
+    color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#2C2C2C')};
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
 `;
 
 export const SkillsList = styled.div`
@@ -213,8 +246,8 @@ export const SkillsList = styled.div`
     flex-wrap: wrap;
     justify-content: center;
     gap: 10px;
-    font-size: 12px;
-    color: #773dc3;
+    font-size: ${({ fontSize }) => calculateFontSize(12, fontSize)};
+    color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#773dc3')};
     letter-spacing: 0.4px;
     line-height: 133%;
     margin-top: 17px;
@@ -223,13 +256,15 @@ export const SkillsList = styled.div`
 
 export const SkillBadge = styled.span`
     font-family: Poppins, sans-serif;
-    border: 1px solid #773dc3;
+    border: 1px solid ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#773dc3')};
     border-radius: 40px;
     padding: 8px 10px;
     text-align: center;
+    background-color: ${({ darkMode }) => (darkMode ? '#444' : '#fff')};
+    color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#2C2C2C')};
 
     &:nth-child(4) {
-        background-color: #773dc3;
+        background-color: ${({ darkMode }) => (darkMode ? '#773dc3' : '#773dc3')};
         color: #fff;
         box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
     }
@@ -239,7 +274,8 @@ export const JobDescription = styled.p`
     text-align: center;
     letter-spacing: 0.25px;
     margin-top: 15px;
-    font: 400 14px/20px Poppins, sans-serif;
+    font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
+    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
     text-overflow: ellipsis;
     overflow: hidden;
     display: -webkit-box;
@@ -251,13 +287,13 @@ export const Divider = styled.hr`
     width: 86px;
     height: 1px;
     margin-top: 14px;
-    background-color: #260e44;
+    background-color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#260e44')};
     border: none;
     align-self: center;
 `;
 
 export const JobButton = styled.button`
-    background-color: #6b538c;
+    background-color: ${({ darkMode }) => (darkMode ? '#6b538c' : '#6b538c')};
     color: #fff;
     font-family: Roboto, sans-serif;
     font-weight: 700;
@@ -268,25 +304,25 @@ export const JobButton = styled.button`
     cursor: pointer;
     align-self: center;
     transition: background-color 0.3s ease, transform 0.3s ease;
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
 
     &:hover {
-        background-color: #5a4175;
+        background-color: ${({ darkMode }) => (darkMode ? '#5a4175' : '#5a4175')};
         transform: scale(1.05);
     }
 
     @media (max-width: 991px) {
-        font-size: 14px;
+        font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
         padding: 6px 12px;
     }
 `;
 
-
 export const EmptyMessage = styled.div`
-    color: #ff6347; /* Tomato color for visibility */
-    font-size: 1.2em;
+    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#ff6347')};
+    font-size: ${({ fontSize }) => calculateFontSize(20, fontSize)};
     padding: 20px;
     text-align: center;
-    background-color: #f0f0f0;
+    background-color: ${({ darkMode }) => (darkMode ? '#333' : '#f0f0f0')};
     border-radius: 8px;
     margin-top: 20px;
 `;

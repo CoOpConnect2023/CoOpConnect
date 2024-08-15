@@ -3,7 +3,7 @@ import styled, { keyframes } from "styled-components";
 import { useSelector, useDispatch } from 'react-redux';
 import NavBar from "../Components/NavBar";
 import Chat from "./Components/Chat";
-
+import LogoLoadingComponent from '@/Pages/Common/LogoSpinnerAnimation';
 import {
     getUser, selectUser, selectUserStatus
 } from "@/Features/users/userSlice";
@@ -30,6 +30,8 @@ export default function Messages() {
     const shortlistsStatus = useSelector(selectMessagesStatus);
     const convoStatus = useSelector(selectMessagesStatus);
     const conversationsStatus = useSelector(selectConversationsStatus);
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
 
     useEffect(() => {
         dispatch(getUser());
@@ -96,9 +98,9 @@ export default function Messages() {
 
 
 
-
-    if (userStatus === 'loading' || !conversations) {
-        return <LoadingScreen><Spinner /></LoadingScreen>;
+    
+    if (userStatus === 'loading') {
+        return <LogoLoadingComponent  darkMode={darkMode}/>;
     }
     // if (messageStatus === 'loading') {
     //     return <LoadingScreen><Spinner /></LoadingScreen>;
@@ -129,6 +131,8 @@ export default function Messages() {
                         setConversationsID={setConversationsID}
                         currentUser={currentUser}
                         conversationID={conversationID}
+                        darkMode={darkMode}
+                        fontSize={fontSize}
                     />
                 </ChatContainer>
             </NavBar>
@@ -140,6 +144,8 @@ const spin = keyframes`
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 `;
+
+
 
 const LoadingScreen = styled.div`
     display: flex;
@@ -164,7 +170,7 @@ const PageContainer = styled.div`
     display: flex;
     flex-direction: column;
     height: 100vh;
-    overflow: hidden;
+
 `;
 
 const ChatContainer = styled.div`
@@ -173,4 +179,3 @@ const ChatContainer = styled.div`
     flex-direction: column;
     overflow: hidden;
 `;
-

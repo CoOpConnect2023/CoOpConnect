@@ -38,6 +38,8 @@ import {
 const appUrl = import.meta.env.VITE_APP_URL;
 
 const Dropzone = ({ onDrop }) => {
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
     const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
     return (
@@ -50,7 +52,8 @@ const Dropzone = ({ onDrop }) => {
 
 function Profile() {
 
-
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
     const dispatch = useDispatch();
     const user = useSelector(selectUser);
 
@@ -165,76 +168,75 @@ function Profile() {
 
     return (
         <NavBar header={"Profile"}>
-            <Main>
-                <Section>
-                    <Title>Employer Profile</Title>
-                    <ProfileWrapper>
-                        <ProfileDetails>
-                        <ProfileImageWrapper>
+            <Main fontSize={fontSize} darkMode={darkMode}>
+                <Section fontSize={fontSize} darkMode={darkMode}>
+                    <Title fontSize={fontSize} darkMode={darkMode}>Employer Profile</Title>
+                    <ProfileWrapper fontSize={fontSize} darkMode={darkMode}>
+                        <ProfileDetails fontSize={fontSize} darkMode={darkMode}>
+                        <ProfileImageWrapper fontSize={fontSize} darkMode={darkMode}>
                                 {droppedImage ? (
-                                    <ProfileImage
+                                    <ProfileImage fontSize={fontSize} darkMode={darkMode}
                                         loading="lazy"
                                         src={droppedImage}
                                         alt="Profile"
                                     />
                                 ) : (
-                                    <Dropzone onDrop={handleDrop} />
+                                    <Dropzone fontSize={fontSize} darkMode={darkMode} onDrop={handleDrop} />
                                 )}
                                 {droppedImage && (
-                                    <ClearProfileButton onClick={handleClear}>
+                                    <ClearProfileButton fontSize={fontSize} darkMode={darkMode} onClick={handleClear}>
                                         Clear
                                     </ClearProfileButton>
                                 )}
                             </ProfileImageWrapper>
-                            <BioSection>
-                                <BioTitle>Bio:</BioTitle>
-                                <DetailValue
+                            <BioSection fontSize={fontSize} darkMode={darkMode}>
+
+                                <DetailValue fontSize={fontSize} darkMode={darkMode}
                                     name="description"
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
                                     placeholder="Add a few words about yourself..."
                                 />
                             </BioSection>
+                            <ReflectionDocuments fontSize={fontSize} darkMode={darkMode} />
                         </ProfileDetails>
                     </ProfileWrapper>
-                    <FieldTitle>Full Name</FieldTitle>
-                    <Input
+                    <FieldTitle fontSize={fontSize} darkMode={darkMode}>Full Name</FieldTitle>
+                    <Input fontSize={fontSize} darkMode={darkMode}
                         type="text"
                         name="name"
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
                     />
-                    <FieldTitle>Email</FieldTitle>
-                    <Input
+                    <FieldTitle fontSize={fontSize} darkMode={darkMode}>Email</FieldTitle>
+                    <Input fontSize={fontSize} darkMode={darkMode}
                         type="email"
                         name="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
-                    <FieldTitle>Account Type</FieldTitle>
-                    <Input value={accountType} onChange={(e) => setAccountType(e.target.value)} />
-                    <FieldTitle>Company</FieldTitle>
-                    <Input
+                    <FieldTitle fontSize={fontSize} darkMode={darkMode}>Account Type</FieldTitle>
+                    <Input fontSize={fontSize} darkMode={darkMode} value={accountType} onChange={(e) => setAccountType(e.target.value)} />
+                    <FieldTitle fontSize={fontSize} darkMode={darkMode}>Company</FieldTitle>
+                    <Input fontSize={fontSize} darkMode={darkMode}
                         type="text"
                         name="company_name"
                         value={company}
                         onChange={(e) => setCompany(e.target.value)}
                     />
-                    <FieldTitle>Position</FieldTitle>
-                    <Input
+                    <FieldTitle fontSize={fontSize} darkMode={darkMode} >Position</FieldTitle>
+                    <Input fontSize={fontSize} darkMode={darkMode}
                         type="text"
                         name="positiontitle"
                         value={specialty}
                         onChange={(e) => setSpecialty(e.target.value)}
                     />
-                    <EditProfileButton onClick={handleUpdateProfile}>
+                    <EditProfileButton fontSize={fontSize} darkMode={darkMode} onClick={handleUpdateProfile}>
                         Edit Profile
                     </EditProfileButton>
-                    {showSuccessMessage && <SuccessMessage>Profile updated successfully!</SuccessMessage>}
+                    {showSuccessMessage && <SuccessMessage v>Profile updated successfully!</SuccessMessage>}
                 </Section>
-                <RightContainer>
-                    <ReflectionDocuments />
-                </RightContainer>
+
             </Main>
         </NavBar>
     );

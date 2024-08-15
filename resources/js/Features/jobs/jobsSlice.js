@@ -251,22 +251,25 @@ export const searchJobsBySkillAndLocation = createAsyncThunk(
     }
 );
 
-export const postJob = createAsyncThunk("jobs/postJob", async (params) => {
-    const {
-        title,
-        description,
-        skills,
-        location,
-        postingStatus,
-        jobType,
-        company,
-        userId,
-    } = params;
+export const postJob = createAsyncThunk(
+    'jobs/postJob',
+    async (params, { rejectWithValue }) => {
+      try {
+        const {
+          title,
+          description,
+          skills,
+          location,
+          postingStatus,
+          jobType,
+          company,
+          userId,
+        } = params;
 
-    const response = await axios({
-        url: "/jobs",
-        method: "POST",
-        data: {
+        const response = await axios({
+          url: '/jobs',
+          method: 'POST',
+          data: {
             title,
             description,
             skills,
@@ -275,10 +278,24 @@ export const postJob = createAsyncThunk("jobs/postJob", async (params) => {
             jobType,
             company,
             userId,
-        },
-    });
-    return response.data.data;
-});
+          },
+        });
+        return response.data.data;
+      } catch (err) {
+        // If there's an error, reject the value with error details
+        if (err.response) {
+          // Server responded with a status other than 2xx
+          return rejectWithValue(err.response.data);
+        } else if (err.request) {
+          // Request was made but no response received
+          return rejectWithValue('No response from server. Please try again.');
+        } else {
+          // Something else happened while setting up the request
+          return rejectWithValue(err.message);
+        }
+      }
+    }
+  );
 
 export const putJob = createAsyncThunk("jobs/putJob", async (params) => {
     const {

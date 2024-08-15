@@ -153,6 +153,7 @@ export const getInterviewsForInterviewer = createAsyncThunk(
 export const postInterview = createAsyncThunk(
     "interviews/postInterview",
     async (params) => {
+        console.log("Params:", params);
         const {
             title,
             startDate,
@@ -175,6 +176,7 @@ export const postInterview = createAsyncThunk(
                 interviewerId,
             },
         });
+        console.log(response.data.data)
         return response.data.data;
     }
 );

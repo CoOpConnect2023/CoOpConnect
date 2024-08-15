@@ -1,4 +1,11 @@
 describe('Schedule Student Interview and send message', () => {
+
+    const studentemail = "moses31@example.com"
+    const employeremail = "zetta69@example.net"
+    const teacheremail = "tmiller@example.com"
+    const school = "Schinner and Sons"
+
+
     const generateRandomString = (length) => {
         let result = '';
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -12,7 +19,7 @@ describe('Schedule Student Interview and send message', () => {
         cy.visit('http://127.0.0.1:8000/');
 
         cy.contains('Sign In').click();
-        cy.get('input[name="email"]').type('monica.lindgren@example.com');
+        cy.get('input[name="email"]').type(employeremail);
         cy.get('input[name="password"]').type('password');
         cy.get('.flex.flex-col.items-center.mt-4').contains('Sign In').click();
 

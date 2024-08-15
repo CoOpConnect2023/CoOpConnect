@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import { keyframes, styled } from "styled-components";
 import NavBar from "./Components/NavBar";
 import {
     selectJob,
@@ -14,6 +14,24 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { usePage, Link } from "@inertiajs/react";
 
+const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
+    const em = parseFloat(emValue); // Convert emValue to a number
+
+    if (emValue === '1em') {
+        return `${basePixelSize * em}px`;
+    }
+
+    if (emValue === '1.07em') {
+        return `${basePixelSize * em * 1.3}px`;
+    }
+
+    if (emValue === '1.12em') {
+        return `${basePixelSize * em * 1.7}px`;
+    }
+
+    return `${basePixelSize * em * factor}px`;
+};
+
 function ViewPost() {
     const { props } = usePage();
     const { jobId, userId } = props;
@@ -21,6 +39,8 @@ function ViewPost() {
     const dispatch = useDispatch();
     const job = useSelector(selectSingleJob);
     const jobStatus = useSelector(selectJobsStatus);
+    const fontSize = useSelector((state) => state.accessibility.textSize);
+    const darkMode = useSelector((state) => state.accessibility.darkMode);
 
     const applied = useSelector(selectCheckUserJobs);
 
@@ -54,35 +74,35 @@ function ViewPost() {
     };
 
     return (
-        <NavBar header={"Job Posting"}>
-            <MainContainer>
-                <Container>
-                    <JobPostingCard>
-                        <JobInfo>
-                            <JobInfoLeft>
+        <NavBar fontSize={fontSize} darkMode={darkMode} header={"Job Posting"}>
+            <MainContainer fontSize={fontSize} darkMode={darkMode}>
+                <Container fontSize={fontSize} darkMode={darkMode}>
+                    <JobPostingCard fontSize={fontSize} darkMode={darkMode}>
+                        <JobInfo fontSize={fontSize} darkMode={darkMode}>
+                            <JobInfoLeft fontSize={fontSize} darkMode={darkMode}>
                                 <CompanyLogo
                                     src="https://cdn.builder.io/api/v1/image/assets/TEMP/c18c37d4baea2f5cbd4d392adacf6fa12686c4c99b1f2a12d132c4a3ef4a5899?apiKey=d66532d056b14640a799069157705b77&"
                                     alt="Company Logo"
                                 />
-                                <JobDetails>
-                                    <JobTitle>{job.title}</JobTitle>
-                                    <CompanyName>{job.company}</CompanyName>
-                                    <JobDescription>
+                                <JobDetails fontSize={fontSize} darkMode={darkMode}>
+                                    <JobTitle fontSize={fontSize} darkMode={darkMode}>{job.title}</JobTitle>
+                                    <CompanyName fontSize={fontSize} darkMode={darkMode}>{job.company}</CompanyName>
+                                    <JobDescription fontSize={fontSize} darkMode={darkMode}>
                                         {job.description}
                                     </JobDescription>
                                 </JobDetails>
                             </JobInfoLeft>
-                            <JobInfoRight>
-                                <StatusTag>
+                            <JobInfoRight fontSize={fontSize} darkMode={darkMode}>
+                                <StatusTag fontSize={fontSize} darkMode={darkMode}>
                                     Posting Status: {job.postingStatus}
                                 </StatusTag>
-                                <JobTypeTag>Job Type: {job.jobType}</JobTypeTag>
-                                <LocationTag>
+                                <JobTypeTag fontSize={fontSize} darkMode={darkMode}>Job Type: {job.jobType}</JobTypeTag>
+                                <LocationTag fontSize={fontSize} darkMode={darkMode}>
                                     Work Location: {job.location}
                                 </LocationTag>
                             </JobInfoRight>
-                            <ActionButtons>
-                                <ActionButton
+                            <ActionButtons fontSize={fontSize} darkMode={darkMode}>
+                                <ActionButton fontSize={fontSize} darkMode={darkMode}
                                     onClick={handleApply}
                                     disabled={applied}
                                 >
@@ -94,26 +114,27 @@ function ViewPost() {
                 </Container>
             </MainContainer>
             {isModalOpen && (
-                <ModalBackdrop>
-                    <ModalContent>
-                        <ModalHeader>Apply for Job</ModalHeader>
-                        <ModalBody>
-                            <label>
+                <ModalBackdrop fontSize={fontSize} darkMode={darkMode}>
+                    <ModalContent fontSize={fontSize} darkMode={darkMode}>
+                        <ModalHeader fontSize={fontSize} darkMode={darkMode}>Apply for Job </ModalHeader>
+                        <ModalBody fontSize={fontSize} darkMode={darkMode}>
+                            <LabelWithSpace fontSize={fontSize} darkMode={darkMode} data-test-id="resume-link-label">
                                 Resume Link:
-                                <input
+                                <SpacedInput
                                     type="text"
                                     value={resumeLink}
-                                    onChange={(e) =>
-                                        setResumeLink(e.target.value)
-                                    }
+                                    onChange={(e) => setResumeLink(e.target.value)}
+                                    data-test-id="resume-link-input"
+                                    fontSize={fontSize}
+                                    darkMode={darkMode}
                                 />
-                            </label>
+                            </LabelWithSpace>
                         </ModalBody>
-                        <ModalFooter>
-                            <ModalButton onClick={() => setIsModalOpen(false)}>
+                        <ModalFooter fontSize={fontSize} darkMode={darkMode}>
+                            <ModalButton fontSize={fontSize} darkMode={darkMode} onClick={() => setIsModalOpen(false)}>
                                 Cancel
                             </ModalButton>
-                            <ModalButton onClick={handleApplyNow}>
+                            <ModalButton fontSize={fontSize} darkMode={darkMode} onClick={handleApplyNow}>
                                 Apply Now
                             </ModalButton>
                         </ModalFooter>
@@ -130,28 +151,40 @@ const MainContainer = styled.div`
     align-items: center;
     gap: 40px;
     flex-shrink: 0;
+    border-radius: 10px;
     width: 100%;
     min-height: 100vh;
+    transition: background-color 0.5s ease, color 0.5s ease;
+    background-color: ${({ darkMode }) => (darkMode ? '#121212' : '#fff')};
+    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
 `;
 
 const Container = styled.section`
     align-self: center;
+    transition: background-color 0.5s ease, color 0.5s ease;
     display: flex;
     width: 788px;
     max-width: 100%;
     flex-direction: column;
     padding: 10px 10px 0;
+    background-color: ${({ darkMode }) => (darkMode ? '#121212' : '#fff')};
+    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
 `;
 
 const JobPostingCard = styled.article`
     display: flex;
     flex-direction: column;
     justify-content: center;
+    transition: background-color 0.5s ease, color 0.5s ease;
     border-radius: 10px;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-    background-color: var(--Schemes-Primary-Container, #eddcff);
+    background-color: ${({ darkMode }) => (darkMode ? '#2C2C2C' : '#eddcff')};
     padding: 20px;
     margin-top: 20px;
+    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#260e44')};
+    font-size: ${({ fontSize }) => calculateFontSize(32, fontSize)};
     @media (max-width: 991px) {
         max-width: 100%;
     }
@@ -159,10 +192,11 @@ const JobPostingCard = styled.article`
 
 const JobInfo = styled.section`
     display: flex;
-    flex-direction: column; /* Changed from row to column */
+    flex-direction: column;
     gap: 20px;
-    color: var(--Schemes-On-Primary-Container, #260e44);
+    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#260e44')};
     font-weight: 400;
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
     @media (max-width: 991px) {
         flex-wrap: wrap;
     }
@@ -171,8 +205,9 @@ const JobInfo = styled.section`
 const JobInfoLeft = styled.div`
     display: flex;
     gap: 20px;
-    color: var(--Schemes-On-Primary-Container, #260e44);
+    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#260e44')};
     font-weight: 400;
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
     @media (max-width: 991px) {
         flex-wrap: wrap;
     }
@@ -183,7 +218,7 @@ const CompanyLogo = styled.img`
     object-fit: auto;
     object-position: center;
     width: 100px;
-    border: 2px solid rgba(45, 54, 72, 1);
+    border: 2px solid ${({ darkMode }) => (darkMode ? '#555' : 'rgba(45, 54, 72, 1)')};
     max-width: 100%;
     margin: auto 0;
 `;
@@ -198,16 +233,17 @@ const JobDetails = styled.div`
 `;
 
 const JobTitle = styled.h3`
-    font: 32px Poppins, sans-serif;
+    font-size: ${({ fontSize }) => calculateFontSize(32, fontSize)};
     @media (max-width: 991px) {
         max-width: 100%;
     }
 `;
 
 const CompanyName = styled.h4`
-    color: var(--Schemes-Secondary, #6c538c);
+    color: ${({ darkMode }) => (darkMode ? '#6c538c' : '#6c538c')};
     margin-top: 10px;
-    font: 500 22px/127% Poppins, sans-serif;
+    font-size: ${({ fontSize }) => calculateFontSize(22, fontSize)};
+    font-weight: 500;
     @media (max-width: 991px) {
         max-width: 100%;
     }
@@ -219,7 +255,8 @@ const JobDescription = styled.p`
     text-overflow: ellipsis;
     letter-spacing: 0.5px;
     margin-top: 10px;
-    font: 16px/24px Poppins, sans-serif;
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+    line-height: 24px;
     @media (max-width: 991px) {
         max-width: 100%;
     }
@@ -229,9 +266,10 @@ const JobInfoRight = styled.div`
     justify-content: center;
     border-bottom: 1px solid black;
     display: flex;
+    margin-bottom: 0.5vh;
     gap: 10px;
-    font-size: 16px;
-    color: var(--Schemes-On-Primary, #fff);
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+    color: ${({ darkMode }) => (darkMode ? '#fff' : '#fff')};
     font-weight: 500;
     letter-spacing: 0.15px;
     line-height: 150%;
@@ -249,6 +287,7 @@ const StatusTag = styled.span`
     background-color: var(--Palettes-Primary-40, #773dc3);
     justify-content: center;
     padding: 10px;
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
 `;
 
 const JobTypeTag = styled.span`
@@ -258,6 +297,7 @@ const JobTypeTag = styled.span`
     background-color: var(--Palettes-Primary-40, #773dc3);
     justify-content: center;
     padding: 10px;
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
 `;
 
 const LocationTag = styled.span`
@@ -267,13 +307,16 @@ const LocationTag = styled.span`
     background-color: var(--Palettes-Primary-40, #773dc3);
     justify-content: center;
     padding: 10px;
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
 `;
 
 const ActionButtons = styled.div`
     display: flex;
     justify-content: center;
     flex-direction: row;
+    margin-top: 0.5vh;
     gap: 10px;
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
 `;
 
 const ActionButton = styled.button`
@@ -289,6 +332,7 @@ const ActionButton = styled.button`
     cursor: ${(props) => (props.applied ? "not-allowed" : "pointer")};
     text-align: center;
     transition: background-color 0.3s;
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
 
     &:hover {
         background-color: ${(props) =>
@@ -303,60 +347,129 @@ const ActionButton = styled.button`
     }
 `;
 
+const fadeIn = keyframes`
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+`;
+const slideUp = keyframes`
+    from {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+`;
+
 const ModalBackdrop = styled.div`
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.6); /* Darker backdrop for better focus */
     display: flex;
     justify-content: center;
     align-items: center;
+    animation: ${fadeIn} 0.3s ease-in-out;
+
 `;
 
 const ModalContent = styled.div`
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    width: 400px;
-    max-width: 100%;
+    background-color: ${({ darkMode }) => (darkMode ? '#2C2C2C' : 'white')};
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); /* Stronger shadow for better elevation */
+    width: 500px;
+    max-width: 90%;
+    animation: ${slideUp} 0.4s ease-in-out;
+    position: relative; /* For positioning the close button */
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
 `;
 
 const ModalHeader = styled.h3`
     margin: 0;
-    margin-bottom: 10px;
-    font-size: 24px;
+    margin-bottom: 20px; /* Increased spacing for better visual separation */
+    font-size: ${({ fontSize }) => calculateFontSize(26, fontSize)};
     text-align: center;
+    font-weight: 600; /* Slightly bolder font for emphasis */
+    color: ${({ darkMode }) => (darkMode ? 'white' : 'black')};
 `;
 
 const ModalBody = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
+    max-height: 60vh; /* Limit height to prevent overflow */
+    overflow-y: auto; /* Scroll if content overflows */
+    color: ${({ darkMode }) => (darkMode ? 'white' : 'black')};
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
 `;
 
 const ModalFooter = styled.div`
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
+    margin-top: 30px; /* Increased margin for better separation */
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
 `;
 
 const ModalButton = styled.button`
     font-family: Poppins, sans-serif;
-    background-color: var(--Palettes-Primary-40, #773dc3);
+    background-color: #773dc3;
     color: white;
-    padding: 10px 20px;
+    padding: 12px 24px; /* Larger padding for bigger buttons */
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
     text-align: center;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.2s;
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
 
     &:hover {
-        background-color: var(--Palettes-Primary-30, #542a93);
+        background-color: #542a93;
+        transform: translateY(-2px); /* Slight lift effect */
     }
+
+    &:active {
+        background-color: #3b2071; /* Darker shade for active state */
+    }
+`;
+
+const CloseButton = styled.button`
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: ${({ darkMode }) => (darkMode ? '#fff' : '#333')};
+    transition: color 0.2s;
+
+    &:hover {
+        color: ${({ darkMode }) => (darkMode ? '#ccc' : '#000')};
+    }
+`;
+
+const LabelWithSpace = styled.label`
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between text and input */
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+`;
+
+const SpacedInput = styled.input`
+    margin-top: 8px; /* Space between label text and input field */
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    color: ${({ darkMode }) => (darkMode ? 'black' : 'white')};
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
 `;
 
 export default ViewPost;

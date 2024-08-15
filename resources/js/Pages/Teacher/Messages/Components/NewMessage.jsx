@@ -1,9 +1,10 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Div4, Div5, Div6, Div7, Div8, Div9, Div10, Div11, Div12, Div13, Div14, Img, Input, SendButton, StyledMessage, StyledSelect  } from "../../Styling/NewMessage.styles";
+import { Div4, Div5, Div6, Div7, Div8, Div9, Div10, Div11, Div12, Div13, Div14, Img, Input, SendButton, StyledMessage, StyledSelect } from "../../Styling/NewMessage.styles";
 
-export default function NewMessage({ newMessage, setNewMessage, brandNewMessage, setBrandNewMessage, onSendNewMessage, recipientEmail, setRecipientEmail, shortlists }) {
+export default function NewMessage({ newMessage, setNewMessage, brandNewMessage, setBrandNewMessage, onSendNewMessage, recipientEmail, setRecipientEmail, shortlists, darkMode,
+    fontSize }) {
     const [defaultRecipientEmail, setDefaultRecipientEmail] = useState('');
 
     const handleInputChange = (e) => {
@@ -48,22 +49,30 @@ export default function NewMessage({ newMessage, setNewMessage, brandNewMessage,
     }, [uniqueEmails]);
 
     return (
-        <Div4 data-testid="new-message-component-teacher">
-            <Div5>New Message</Div5>
-            <Div6>
-                <Div7>
-                    <Div8>To: </Div8>
-                    <Div9>
-    {hasUsers ? (
-      <StyledSelect value={recipientEmail} onChange={handleSelectChange}>
-        {[...uniqueEmails].map(email => (
-          <option key={email} value={email}>
-            {email}
-          </option>
-        ))}
-      </StyledSelect>
-    ) : (
-                            <StyledMessage>
+        <Div4 darkMode={darkMode}
+            fontSize={fontSize} data-testid="new-message-component-teacher">
+            <Div5 darkMode={darkMode}
+                fontSize={fontSize}>New Message</Div5>
+            <Div6 darkMode={darkMode}
+                fontSize={fontSize}>
+                <Div7 darkMode={darkMode}
+                    fontSize={fontSize}>
+                    <Div8 darkMode={darkMode}
+                        fontSize={fontSize}>To: </Div8>
+                    <Div9 darkMode={darkMode}
+                        fontSize={fontSize}>
+                        {hasUsers ? (
+                            <StyledSelect darkMode={darkMode}
+                                fontSize={fontSize} value={recipientEmail} onChange={handleSelectChange}>
+                                {[...uniqueEmails].map(email => (
+                                    <option key={email} value={email}>
+                                        {email}
+                                    </option>
+                                ))}
+                            </StyledSelect>
+                        ) : (
+                            <StyledMessage darkMode={darkMode}
+                                fontSize={fontSize}>
                                 Add some users to your course to message them.
                             </StyledMessage>
                         )}
@@ -71,14 +80,19 @@ export default function NewMessage({ newMessage, setNewMessage, brandNewMessage,
                 </Div7>
             </Div6>
             <Div10>
-                <Div11>
-                    <Div12>
-                        <Img
+                <Div11 darkMode={darkMode}
+                    fontSize={fontSize}>
+                    <Div12 darkMode={darkMode}
+                        fontSize={fontSize}>
+                        <Img darkMode={darkMode}
+                            fontSize={fontSize}
                             loading="lazy"
                             src="https://cdn.builder.io/api/v1/image/assets/TEMP/b1fe555b0ffdbe13c397278b479bee6782aab134a4d597d83c876620c9e724f1?apiKey=d66532d056b14640a799069157705b77&"
                         />
-                        <Div13>
-                            <Input
+                        <Div13 darkMode={darkMode}
+                            fontSize={fontSize}>
+                            <Input darkMode={darkMode}
+                                fontSize={fontSize}
                                 type="text"
                                 placeholder="Type your message"
                                 value={brandNewMessage}
@@ -86,9 +100,11 @@ export default function NewMessage({ newMessage, setNewMessage, brandNewMessage,
                                 data-testid="message-input-teacher"
                             />
                         </Div13>
-                        <SendButton data-testid="send-button-teacher" onClick={onSendNewMessage}>Send</SendButton>
+                        <SendButton darkMode={darkMode}
+                            fontSize={fontSize} data-testid="send-button-teacher" onClick={onSendNewMessage}>Send</SendButton>
                     </Div12>
-                    <Div14>
+                    <Div14 darkMode={darkMode}
+                        fontSize={fontSize}>
                         <img
                             loading="lazy"
                             src="https://cdn.builder.io/api/v1/image/assets/TEMP/429c7b4cb95b7c4e354a15b6ad7cd6acbf0861060a65e20f88c199fd588a121b?apiKey=d66532d056b14640a799069157705b77&"

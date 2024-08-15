@@ -27,19 +27,24 @@ export const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 20px;
-  flex: 1 0 0;
-  align-self: stretch;
-  width: 100%;
+
+  flex-grow: 1;
+
+   /* Optional: Add padding for spacing */
+  box-sizing: border-box; /* Ensure padding doesn't affect width */
+   /* Ensure it stretches to the full height of the viewport */
 `;
 
 export const TopContainer = styled.div`
   display: flex;
+  flex-direction: row;
   align-items: flex-start;
   gap: 20px;
-  align-self: stretch;
   width: 100%;
-  animation: ${slideInFromTop} 0.5s ease-out;
+  padding: 20px;
+  max-height: 70%; /* Limit the height to 65% of the viewport */
+  flex-grow: 1;
+  /* Allow scrolling if content overflows */
 
   @media (max-width: 991px) {
     flex-direction: column;
@@ -51,19 +56,25 @@ export const BottomContainer = styled.div`
   display: flex;
   align-items: flex-start;
   gap: 20px;
+  padding: 20px;
   align-self: stretch;
   width: 100%;
-  animation: ${slideInFromBottom} 0.5s ease-out;
+   /* Limit the height to 35% of the viewport */
+  height: 30%;
 
   @media (max-width: 991px) {
     flex-direction: column;
     width: 100%; /* Ensure it takes the full width */
+    height: 100%;
   }
 `;
 
 export const StudentsSectionContainer = styled.div`
-  flex: 1;
-  animation: ${slideInFromTop} 0.5s ease-out;
+
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow-y: auto; /* Ensure content inside can scroll if it overflows */
 
   @media (max-width: 991px) {
     flex-direction: column;
@@ -72,5 +83,8 @@ export const StudentsSectionContainer = styled.div`
 `;
 
 export const AdminPanelContainer = styled.div`
-  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; /* Ensure content inside can scroll if it overflows */
 `;

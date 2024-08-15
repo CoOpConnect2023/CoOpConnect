@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { Link } from "@inertiajs/react";
 import NavBar from "./Components/NavBar";
 import JobModal from "../Profile/Partials/ViewJobModal";
 import {
@@ -16,6 +17,8 @@ import {
     patchJob,
     deleteJob,
 } from "@/Features/jobs/jobsSlice";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 const appUrl = import.meta.env.VITE_APP_URL;
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -49,7 +52,9 @@ import {
     JobFullDescription,
     SkillsList,
     SkillBadge,
-    FeaturedJobandList
+    FeaturedJobandList,
+    SearchIcon,
+    LocationIcon
 } from "./Styling/Jobs.styles";
 
 function Jobs() {
@@ -82,6 +87,8 @@ function Jobs() {
     const dispatch = useDispatch();
     const jobs = useSelector(selectJobs);
     const jobsStatus = useSelector(selectJobsStatus);
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
 
     useEffect(() => {
         // Fetch the XSRF token from cookies and set it in Axios headers
@@ -144,21 +151,19 @@ function Jobs() {
 
     return (
         <NavBar header={"Job Postings"}>
-            <MainContainer>
-                <SearchContainer>
-                    <SearchInnerContainer>
-                        <SubHeading>Search for Job Postings</SubHeading>
-                        <TextDescription>
+            <MainContainer darkMode={darkMode} fontSize={fontSize}>
+
+                <SearchContainer darkMode={darkMode} fontSize={fontSize}>
+                    <SearchInnerContainer darkMode={darkMode} fontSize={fontSize}>
+                        <SubHeading darkMode={darkMode} fontSize={fontSize}>Search for Job Postings</SubHeading>
+                        <TextDescription darkMode={darkMode} fontSize={fontSize}>
                             Get amazing opportunities through jobs at CO-OP
                             Connect!
                         </TextDescription>
-                        <SearchForm onSubmit={handleSearch}>
-                            <SearchField>
-                                <img
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/7ac6f5e8995015505b63112c3fe0ce83293960aae84ac26f166dcf6eb5607efc?apiKey=d66532d056b14640a799069157705b77&"
-                                    alt="search icon"
-                                />
-                                <SearchInput
+                        <SearchForm darkMode={darkMode} fontSize={fontSize} onSubmit={handleSearch}>
+                            <SearchField darkMode={darkMode} fontSize={fontSize}>
+                            <SearchIcon icon={faSearch} darkMode={darkMode} fontSize={fontSize} />
+                                <SearchInput darkMode={darkMode} fontSize={fontSize}
                                     type="text"
                                     placeholder="Job Titles, Keywords"
                                     value={searchTerm}
@@ -169,12 +174,9 @@ function Jobs() {
                                     data-test-id="search-field-input"
                                 />
                             </SearchField>
-                            <SearchField>
-                                <img
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/e18a12a75f61520eab005b610b7b3ed410f4b0e7ebaa3f2d7c7708f36f9bb18d?apiKey=d66532d056b14640a799069157705b77&"
-                                    alt="location icon"
-                                />
-                                <SearchInput
+                            <SearchField darkMode={darkMode} fontSize={fontSize}>
+                            <LocationIcon icon={faMapMarkerAlt} darkMode={darkMode} fontSize={fontSize} />
+                                <SearchInput darkMode={darkMode} fontSize={fontSize}
                                     type="text"
                                     value={searchLocation}
                                     onChange={(e) =>
@@ -183,21 +185,81 @@ function Jobs() {
                                     aria-label="Location"
                                 />
                             </SearchField>
-                            <SearchButton type="submit">View Jobs</SearchButton>
+                            <SearchButton darkMode={darkMode} fontSize={fontSize} type="submit">View Jobs</SearchButton>
                         </SearchForm>
 
-                        <FeaturedJobandList>
+                        <FeaturedJobandList darkMode={darkMode} fontSize={fontSize}>
                         {jobs && jobs.length > 0 ? (
-                            <JobList>
-                                <JobColumn>
+                            <JobList darkMode={darkMode} fontSize={fontSize}>
+
+{featuredJob && (
+    <FeaturedJob darkMode={darkMode} fontSize={fontSize}>
+        <JobCardFeatured darkMode={darkMode} fontSize={fontSize}>
+            <JobTitle darkMode={darkMode} fontSize={fontSize}>
+                {featuredJob.title}
+            </JobTitle>
+            <CompanyInfo darkMode={darkMode} fontSize={fontSize}>
+                <CompanyImage darkMode={darkMode} fontSize={fontSize}
+                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/b8ae9cd831463a8906ed092974d8aff01723eb0ccd0c5c446d59bc3e96d9c74c?apiKey=d66532d056b14640a799069157705b77&"
+                    alt="company logo"
+                />
+                <CompanyDetails darkMode={darkMode} fontSize={fontSize}>
+                    <CompanyName darkMode={darkMode} fontSize={fontSize}>
+                        {featuredJob.company}
+                    </CompanyName>
+                    <CompanyLocation darkMode={darkMode} fontSize={fontSize}>
+                        {featuredJob.location}
+                    </CompanyLocation>
+                </CompanyDetails>
+            </CompanyInfo>
+
+            {/* Skills Section */}
+            <SkillsList darkMode={darkMode} fontSize={fontSize}>
+                {featuredJob.skills && featuredJob.skills.length > 0 ? (
+                    featuredJob.skills.map((skill, index) => (
+                        <SkillBadge darkMode={darkMode} fontSize={fontSize} key={index}>
+                            {skill}
+                        </SkillBadge>
+                    ))
+                ) : (
+                    <p>No skills listed.</p>
+                )}
+            </SkillsList>
+
+            <Link darkMode={darkMode} fontSize={fontSize} href={`/student/viewpost/${featuredJob.id}`}>
+                <ApplyButton darkMode={darkMode} fontSize={fontSize}>
+                    Apply Here!
+                </ApplyButton>
+            </Link>
+
+            <JobFullDescription darkMode={darkMode} fontSize={fontSize}>
+                <strong>Job Description</strong>
+                <br />
+                {featuredJob.description}
+                <br />
+                <br />
+                <strong>Job Title</strong>
+                <br />
+                {featuredJob.title}
+            </JobFullDescription>
+        </JobCardFeatured>
+    </FeaturedJob>
+)}
+                            </JobList>
+                        ) : (
+                            <p>No jobs found.</p>
+                        )}</FeaturedJobandList>
+                    </SearchInnerContainer>
+                </SearchContainer>
+                <JobColumn darkMode={darkMode} fontSize={fontSize}>
                                     {jobs.map((job) => (
-                                        <JobCard key={job.title}>
-                                            <JobTitle>{job.title}</JobTitle>
-                                            <JobMeta>
+                                        <JobCard darkMode={darkMode} fontSize={fontSize} key={job.title}>
+                                            <JobTitle darkMode={darkMode} fontSize={fontSize}>{job.title}</JobTitle>
+                                            <JobMeta darkMode={darkMode} fontSize={fontSize}>
                                                 <div>{job.company}</div>
                                                 <div>{job.location}</div>
                                             </JobMeta>
-                                            <SkillsList>
+                                            <SkillsList darkMode={darkMode} fontSize={fontSize}>
                                                 {job.skills.map(
                                                     (tag, index) => (
                                                         <SkillBadge key={index}>
@@ -206,70 +268,18 @@ function Jobs() {
                                                     )
                                                 )}
                                             </SkillsList>
-                                            <JobDescription>
+                                            <JobDescription darkMode={darkMode} fontSize={fontSize}>
                                                 {job.description}
                                             </JobDescription>
-                                            <Divider />
-                                            <ViewButton
-                                                onClick={() => openModal(job)}
-                                            >
+                                            <Divider darkMode={darkMode} fontSize={fontSize} />
+                                            <Link darkMode={darkMode} fontSize={fontSize} href={`/student/viewpost/${job.id}`}>   <ViewButton darkMode={darkMode} fontSize={fontSize}>
                                                 VIEW POSTING
-                                            </ViewButton>
+                                            </ViewButton></Link>
                                         </JobCard>
                                     ))}
                                 </JobColumn>
-                                {featuredJob && (
-                                    <FeaturedJob>
-                                        <JobCardFeatured>
-                                            <JobTitle>
-                                                {featuredJob.title}
-                                            </JobTitle>
-                                            <CompanyInfo>
-                                                <CompanyImage
-                                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/b8ae9cd831463a8906ed092974d8aff01723eb0ccd0c5c446d59bc3e96d9c74c?apiKey=d66532d056b14640a799069157705b77&"
-                                                    alt="company logo"
-                                                />
-                                                <CompanyDetails>
-                                                    <CompanyName>
-                                                        {featuredJob.company}
-                                                    </CompanyName>
-                                                    <CompanyLocation>
-                                                        {featuredJob.location}
-                                                    </CompanyLocation>
-                                                </CompanyDetails>
-                                            </CompanyInfo>
-                                            <ApplyButton
-                                                onClick={() =>
-                                                    openModal(featuredJob)
-                                                }
-                                            >
-                                                Apply Here!
-                                            </ApplyButton>
-                                            <JobFullDescription>
-                                                <strong>
-                                                    What is Lorem Ipsum?
-                                                </strong>
-                                                <br />
-                                                {featuredJob.description}
-                                                <br />
-                                                <br />
-                                                <strong>
-                                                    Why do we use it?
-                                                </strong>
-                                                <br />
-                                                {featuredJob.title}
-                                            </JobFullDescription>
-                                        </JobCardFeatured>
-                                    </FeaturedJob>
-                                )}
-                            </JobList>
-                        ) : (
-                            <p>No jobs found.</p>
-                        )}</FeaturedJobandList>
-                    </SearchInnerContainer>
-                </SearchContainer>
             </MainContainer>
-            {showModal && <JobModal job={selectedJob} onClose={closeModal} />}
+            {showModal && <JobModal darkMode={darkMode} fontSize={fontSize} job={selectedJob} onClose={closeModal} />}
         </NavBar>
     );
 }

@@ -40,6 +40,7 @@ import {
     EventsContainer,
     EventsHeader,
     Event,
+    GlobalStyles
 
 
 } from "./Styling/Interviews.styles";
@@ -54,6 +55,8 @@ const Interviews = () => {
     const data = useSelector(selectInterviews);
     const interviews = data.interviews;
     const interviewsStatus = useSelector(selectInterviewsStatus);
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
 
     useEffect(() => {
         dispatch(getUser());
@@ -316,19 +319,57 @@ const Interviews = () => {
         setEvents(updatedEvents);
 
     };
+
+
+
+    const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
+        const em = parseFloat(emValue);
+        if (emValue === '1em') {
+            return `${basePixelSize * em}px`;
+        }
+
+        if (emValue === '1.07em') {
+            return `${basePixelSize * em * 1.3}px`;
+        }
+
+        if (emValue === '1.12em') {
+            return `${basePixelSize * em * 1.7}px`;
+        }
+
+        return `${basePixelSize * em * factor}px`;
+    };
+
+    const eventStyleGetter = (event, start, end, isSelected) => {
+
+        const calculatedFontSize = calculateFontSize(14, fontSize);
+        let backgroundColor = '#6B538C';
+        let style = {
+            backgroundColor: backgroundColor,
+            borderRadius: '5px',
+            opacity: 0.8,
+            color: 'white',
+            border: '0px',
+            display: 'block',
+            fontSize: calculatedFontSize
+        };
+        return {
+            style: style
+        };
+    };
     if (!user || !events) {
         return <LoadingScreen><Spinner /></LoadingScreen>;
     }
 
     return (
         <NavBar header={"Interviews"}>
-            <MainContainer>
-                <Container>
-                    <Wrapper>
-                        <Header>Schedule your Interviews</Header>
-                        <CalendarDiv>
-                            <DndProvider backend={HTML5Backend}>
-                                <DnDCalendar
+            <GlobalStyles darkMode={darkMode} fontSize={fontSize} />
+            <MainContainer darkMode={darkMode} fontSize={fontSize}>
+                <Container darkMode={darkMode} fontSize={fontSize}>
+                    <Wrapper darkMode={darkMode} fontSize={fontSize}>
+                        
+                        <CalendarDiv darkMode={darkMode} fontSize={fontSize}>
+                            <DndProvider darkMode={darkMode} fontSize={fontSize} backend={HTML5Backend}>
+                                <DnDCalendar darkMode={darkMode} fontSize={fontSize}
                                     defaultDate={new Date(getTodayDate())}
                                     defaultView="month"
                                     events={events}
@@ -341,11 +382,12 @@ const Interviews = () => {
                                     onSelectSlot={openModal}
                                     startAccessor={"start"}
                                     endAccessor="end"
+                                    eventPropGetter={eventStyleGetter}
                                 />
                             </DndProvider>
                         </CalendarDiv>
                     </Wrapper>
-                    <ShortlistsContainer>
+                    {/* <ShortlistsContainer darkMode={darkMode} fontSize={fontSize}>
                         <ShortlistsHeader>Applicant Shortlists</ShortlistsHeader>
                         {shortlists && shortlists.length > 0 ? (
                             shortlists.map((shortlist) => (
@@ -364,18 +406,18 @@ const Interviews = () => {
                                     </div>
 
                                     {/* Add more fields as needed */}
-                                </Shortlist>
+                                {/* </Shortlist>
                             ))
                         ) : (
                             <NoShortlistsMessage>No shortlists found</NoShortlistsMessage>
                         )}
-                    </ShortlistsContainer>
-                    <EventsContainer>
-                        <EventsHeader>All Events</EventsHeader>
+                    </ShortlistsContainer> */}
+                    <EventsContainer darkMode={darkMode} fontSize={fontSize}>
+                        <EventsHeader darkMode={darkMode} fontSize={fontSize}>All Events</EventsHeader>
                         {events && events.length > 0 ? (
                             events.map((event) => (
-                                <Event key={event.id}>
-                                    <DeleteButton onClick={() => handleDeleteClick(event)}>X</DeleteButton>
+                                <Event darkMode={darkMode} fontSize={fontSize} key={event.id}>
+                                    <DeleteButton darkMode={darkMode} fontSize={fontSize} onClick={() => handleDeleteClick(event)}>X</DeleteButton>
                                     <div>Title: {event.title}</div>
                                     <div>Description: {event.description}</div>
                                     <div>
@@ -393,7 +435,7 @@ const Interviews = () => {
                 </Container>
             </MainContainer>
             {showModal && (
-                <Modal
+                <Modal darkMode={darkMode} fontSize={fontSize}
                     onClose={closeModal}
                     onSubmit={handleAddEvent}
                     defaultDate={new Date(getTodayDate())}

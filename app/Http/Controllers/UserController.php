@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Courses;
 use App\Imports\UsersImport;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
@@ -280,6 +281,64 @@ public function deleteUser(Request $request, $id)
 
         return response()->json(['message' => 'Password updated successfully']);
     }
+
+    public function updatePreferences(Request $request)
+    {
+        $user = Auth::user();
+
+       
+        Log::info('Updating user preferences', [
+            'user_id' => $user->id,
+            'request_data' => $request->all(),
+        ]);
+
+
+        $validatedData = $request->validate([
+            'darkMode' => 'boolean',
+            'fontSize' => 'sometimes|string|in:small,medium,large',
+        ]);
+
+
+        Log::info('Validated data', [
+            'validated_data' => $validatedData,
+        ]);
+
+
+        if ($request->has('darkMode')) {
+            $user->darkMode = $request->darkMode;
+            Log::info('User dark mode updated', ['user_id' => $user->id, 'darkMode' => $user->darkMode]);
+        }
+
+
+        if ($request->has('fontSize')) {
+            switch ($request->fontSize) {
+                case 'small':
+                    $user->fontSize = 'small';
+                    break;
+                case 'medium':
+                    $user->fontSize = 'medium';
+                    break;
+                case 'large':
+                    $user->fontSize = 'large';
+                    break;
+            }
+            Log::info('User font size updated', ['user_id' => $user->id, 'fontSize' => $user->fontSize]);
+        }
+
+
+        $user->save();
+
+
+        Log::info('User preferences saved', [
+            'user_id' => $user->id,
+            'darkMode' => $user->darkMode,
+            'fontSize' => $user->fontSize,
+        ]);
+
+        return response()->json(['message' => 'Preferences updated successfully']);
+    }
+
+
 }
 
 

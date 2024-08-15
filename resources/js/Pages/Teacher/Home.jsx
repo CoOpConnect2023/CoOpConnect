@@ -15,6 +15,7 @@ import {
 import styled, { keyframes } from "styled-components";
 import { getUser, selectUser, selectUserStatus } from "@/Features/users/userSlice";
 import { getStudents, getPercentages, selectPercentages, selectStudents, selectStudentsStatus } from "@/Features/schools/schoolsSlice";
+import LogoLoadingComponent from "../Common/LogoSpinnerAnimation";
 
 
 
@@ -26,6 +27,8 @@ export default function Home() {
     const user = useSelector(selectUser);
     const students = useSelector(selectStudents);
     const percentages = useSelector(selectPercentages);
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
 
     useEffect(() => {
 
@@ -40,31 +43,31 @@ export default function Home() {
     }, [user, dispatch]);
 
 
-    if (!user) {
-        return <LoadingScreen><Spinner /></LoadingScreen>;;
+    if (!user  ) {
+        return <LogoLoadingComponent fontSize={fontSize} darkMode={darkMode}/>;;
     }
 
 
     return (
         <>
             <NavBar header={"Home"}>
-                <MainContainer>
-                    <TopContainer>
+                <MainContainer fontSize={fontSize} darkMode={darkMode}>
+                    <TopContainer fontSize={fontSize} darkMode={darkMode}>
 
                         {students && (
-                            <StudentsSectionContainer>
-                                <StudentsSection students={students} />
+                            <StudentsSectionContainer fontSize={fontSize} darkMode={darkMode}>
+                                <StudentsSection fontSize={fontSize} darkMode={darkMode} students={students} />
                             </StudentsSectionContainer>
                         )}
                         {percentages && (
-                            <StudentStatus percentages={percentages} />)}
+                            <StudentStatus fontSize={fontSize} darkMode={darkMode} percentages={percentages} />)}
                     </TopContainer>
-                    <BottomContainer>
-                        <ReflectionDocuments />
+                    <BottomContainer fontSize={fontSize} darkMode={darkMode}>
+                        <ReflectionDocuments fontSize={fontSize} darkMode={darkMode} />
 
-                        <AdminPanelContainer>
-                            <AdminPanel />
-                        </AdminPanelContainer>
+                        <AdminPanelContainer fontSize={fontSize} darkMode={darkMode}>
+                            <AdminPanel fontSize={fontSize} darkMode={darkMode} />
+                        </AdminPanelContainer >
                     </BottomContainer>
                 </MainContainer>
             </NavBar>

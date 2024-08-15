@@ -6,13 +6,16 @@ import TypeMessage from "./TypeMessage";
 import UserPanel from "./UserPanel";
 import { MessageContainer, Message, Timestamp } from '../../Styling/MessageContent.styles';
 
-export default function MessageContent({ message, isCurrentUser }) {
+export default function MessageContent({ message, isCurrentUser, darkMode, fontSize }) {
      const timestamp = new Date(message.created_at).toLocaleString();
 
     return (
-        <MessageContainer isCurrentUser={isCurrentUser}>
-            <Message isCurrentUser={isCurrentUser}>{message.content}</Message>
-            <Timestamp>{timestamp}</Timestamp>
+        <MessageContainer darkMode={darkMode}
+        fontSize={fontSize} isCurrentUser={isCurrentUser}>
+            <Message darkMode={darkMode}
+                        fontSize={fontSize} isCurrentUser={isCurrentUser}>{message.content}</Message>
+            <Timestamp darkMode={darkMode}
+                        fontSize={fontSize}>{timestamp}</Timestamp>
         </MessageContainer>
     );
 };

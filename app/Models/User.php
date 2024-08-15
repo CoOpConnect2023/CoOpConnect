@@ -34,7 +34,9 @@ class User extends Authenticatable
         'interviewing',
         'searching',
         'skills',
-        'role'
+        'darkMode',
+        'fontSize',
+
     ];
 
     /**

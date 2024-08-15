@@ -13,6 +13,8 @@ const Reflections = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const dispatch = useDispatch();
     const reflections = useSelector(selectMyReflections);
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
 
     useEffect(() => {
         dispatch(getMyReflections());
@@ -51,41 +53,41 @@ const Reflections = () => {
 
     return (
         <NavBar>
-            <Container>
-                <Title>Reflections</Title>
+            <Container darkMode={darkMode} fontSize={fontSize}>
+                <Title darkMode={darkMode} fontSize={fontSize}>Reflections</Title>
                 {!reflections ? (
                     <p>No reflections available.</p>
                 ) : (
                     reflections.map((reflection) => (
-                        <ReflectionItem key={reflection.id}>
-                            <ReflectionInfo>
-                                <ReflectionTitle>{`Reflection - #${reflection.id}`}</ReflectionTitle>
-                                <ReflectionSize>{formatDate(reflection.createdAt)}</ReflectionSize>
+                        <ReflectionItem darkMode={darkMode} fontSize={fontSize} key={reflection.id}>
+                            <ReflectionInfo darkMode={darkMode} fontSize={fontSize}>
+                                <ReflectionTitle darkMode={darkMode} fontSize={fontSize}>{`Reflection - #${reflection.id}`}</ReflectionTitle>
+                                <ReflectionSize darkMode={darkMode} fontSize={fontSize}>{formatDate(reflection.createdAt)}</ReflectionSize>
                             </ReflectionInfo>
-                            <ButtonGroup>
-                                <ViewButton onClick={() => openModal(reflection)}>View</ViewButton>
-                                <ShareButton>Share</ShareButton>
-                                <DeleteButton onClick={() => handleDelete(reflection.id)}>Delete</DeleteButton>
+                            <ButtonGroup darkMode={darkMode} fontSize={fontSize}>
+                                <ViewButton darkMode={darkMode} fontSize={fontSize} onClick={() => openModal(reflection)}>View</ViewButton>
+                                <ShareButton darkMode={darkMode} fontSize={fontSize}>Share</ShareButton>
+                                <DeleteButton darkMode={darkMode} fontSize={fontSize} onClick={() => handleDelete(reflection.id)}>Delete</DeleteButton>
                             </ButtonGroup>
                         </ReflectionItem>
                     ))
                 )}
                 {isModalOpen && (
-                    <ModalOverlay>
-                        <ModalContent>
-                            <ModalHeader>
+                    <ModalOverlay darkMode={darkMode} fontSize={fontSize}>
+                        <ModalContent darkMode={darkMode} fontSize={fontSize}>
+                            <ModalHeader darkMode={darkMode} fontSize={fontSize}>
                                 <h2>Reflection Details</h2>
-                                <CloseButton onClick={closeModal}>X</CloseButton>
-                            </ModalHeader>
+                                <CloseButton darkMode={darkMode} fontSize={fontSize} onClick={closeModal}>X</CloseButton>
+                            </ModalHeader >
                             {selectedReflection && (
                                 <>
-                                    <ModalBody>
+                                    <ModalBody darkMode={darkMode} fontSize={fontSize}>
                                         <p><strong>Title:</strong> Reflection - #{selectedReflection.id}</p>
                                         <p><strong>Created At:</strong> {formatDate(selectedReflection.createdAt)}</p>
                                         <p><strong>Content:</strong> {selectedReflection.content}</p>
                                     </ModalBody>
-                                    <ModalFooter>
-                                        
+                                    <ModalFooter darkMode={darkMode} fontSize={fontSize}>
+
                                     </ModalFooter>
                                 </>
                             )}

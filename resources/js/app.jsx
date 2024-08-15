@@ -6,6 +6,7 @@ import { createInertiaApp } from "@inertiajs/react";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { Provider } from "react-redux";
 import { store } from "./store";
+import { ThemeProvider } from './ThemeContext.jsx';
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
@@ -21,7 +22,9 @@ createInertiaApp({
 
         root.render(
             <Provider store={store}>
+                 <ThemeProvider>
                 <App {...props} />
+                </ThemeProvider>
             </Provider>
         );
     },

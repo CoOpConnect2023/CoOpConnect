@@ -71,6 +71,7 @@ class UserJobsController extends Controller
                 'resume' => $userJob->resume,
                 'status' => $userJob->status,
                 'timeSlots' => $userJob->time_slots,
+                'userId' => $userJob->user_id,
             ];
         });
 
@@ -143,6 +144,7 @@ class UserJobsController extends Controller
             'company' => $userJob->job->company,
             'timeSlots' => $userJob->time_slots,
             'message' => $userJob->message,
+            'userId' => $userJob->job->user_id,
         ];
 
         Log::info('Final jobs array', ['jobs' => $jobDetails]);

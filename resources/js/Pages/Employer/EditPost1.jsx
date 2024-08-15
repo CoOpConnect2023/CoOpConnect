@@ -41,8 +41,10 @@ function EditPost1() {
     const jobFormData = useSelector(selectJobFormData);
     const job = useSelector(selectJobs);
     const jobStatus = useSelector(selectJobsStatus);
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
 
-    console.log(jobFormData);
+
 
     useEffect(() => {
         dispatch(selectJob({ jobId })).then((response) => {
@@ -71,23 +73,23 @@ function EditPost1() {
 
     return (
         <NavBar header={"Edit Posting"}>
-            <Container>
-                <Card>
-                    <FormWrapper>
-                        <Title>Edit Your Posting</Title>
-                        <Subtitle>
+            <Container darkMode={darkMode} fontSize={fontSize}>
+                <Card darkMode={darkMode} fontSize={fontSize}>
+                    <FormWrapper darkMode={darkMode} fontSize={fontSize}>
+                        <Title darkMode={darkMode} fontSize={fontSize}>Edit Your Posting</Title>
+                        <Subtitle darkMode={darkMode} fontSize={fontSize}>
                             Edit your selected posting's information.
                         </Subtitle>
-                        <Form>
-                            <SectionTitle>
+                        <Form darkMode={darkMode} fontSize={fontSize}>
+                            <SectionTitle darkMode={darkMode} fontSize={fontSize}>
                                 Part 1 of 2: Basic Posting Information
                             </SectionTitle>
-                            <FormRow>
-                                <FormField>
-                                    <Label htmlFor="jobTitle">
+                            <FormRow darkMode={darkMode} fontSize={fontSize}>
+                                <FormField darkMode={darkMode} fontSize={fontSize}>
+                                    <Label darkMode={darkMode} fontSize={fontSize} htmlFor="jobTitle">
                                         Job Title *
                                     </Label>
-                                    <Input
+                                    <Input darkMode={darkMode} fontSize={fontSize}
                                         type="text"
                                         id="title"
                                         name="title"
@@ -96,11 +98,11 @@ function EditPost1() {
                                         onChange={handleInputChange}
                                     />
                                 </FormField>
-                                <FormField>
-                                    <Label htmlFor="companyName">
+                                <FormField darkMode={darkMode} fontSize={fontSize}>
+                                    <Label darkMode={darkMode} fontSize={fontSize} htmlFor="companyName">
                                         Company *
                                     </Label>
-                                    <Input
+                                    <Input darkMode={darkMode} fontSize={fontSize}
                                         type="text"
                                         id="company"
                                         name="company"
@@ -110,12 +112,12 @@ function EditPost1() {
                                     />
                                 </FormField>
                             </FormRow>
-                            <FormRow>
-                                <FormField>
-                                    <Label htmlFor="workplaceType">
+                            <FormRow darkMode={darkMode} fontSize={fontSize}>
+                                <FormField darkMode={darkMode} fontSize={fontSize}>
+                                    <Label darkMode={darkMode} fontSize={fontSize} htmlFor="workplaceType">
                                         Workplace Type *
                                     </Label>
-                                    <Select
+                                    <Select darkMode={darkMode} fontSize={fontSize}
                                         id="jobType"
                                         name="jobType"
                                         aria-label="Workplace Type"
@@ -127,11 +129,11 @@ function EditPost1() {
                                         <option value="Hybrid">Hybrid</option>
                                     </Select>
                                 </FormField>
-                                <FormField>
-                                    <Label htmlFor="jobLocation">
+                                <FormField darkMode={darkMode} fontSize={fontSize}>
+                                    <Label darkMode={darkMode} fontSize={fontSize} htmlFor="jobLocation">
                                         Job Location *
                                     </Label>
-                                    <Input
+                                    <Input darkMode={darkMode} fontSize={fontSize}
                                         type="text"
                                         id="location"
                                         name="location"
@@ -141,13 +143,13 @@ function EditPost1() {
                                     />
                                 </FormField>
                             </FormRow>
-                            <HorizontalRule />
-                            <ButtonGroup>
-                                <Link href="/employer/home">
-                                    <ActionButton>Go Back</ActionButton>
+                            <HorizontalRule  darkMode={darkMode} fontSize={fontSize}/>
+                            <ButtonGroup darkMode={darkMode} fontSize={fontSize}>
+                                <Link darkMode={darkMode} fontSize={fontSize} href="/employer/home">
+                                    <ActionButton darkMode={darkMode} fontSize={fontSize}>Go Back</ActionButton>
                                 </Link>
-                                <Link href={`/employer/editpost2/${jobId}`}>
-                                    <SubmitButton>Continue</SubmitButton>
+                                <Link darkMode={darkMode} fontSize={fontSize} href={`/employer/editpost2/${jobId}`}>
+                                    <SubmitButton darkMode={darkMode} fontSize={fontSize}>Continue</SubmitButton>
                                 </Link>
                             </ButtonGroup>
                         </Form>

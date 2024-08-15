@@ -2,16 +2,20 @@ import 'cypress-file-upload';
 
 
 describe('Schedule Student Interview', () => {
+    const studentemail = "moses31@example.com"
+    const employeremail = "zetta69@example.net"
+    const teacheremail = "tmiller@example.com"
+    const school = "Schinner and Sons"
     it('visits student interview, creates then deletes an interview, then logs out', () => {
         // Visit the login page
         cy.visit('http://127.0.0.1:8000/');
 
         // Sign in
         cy.contains('Sign In').click();
-        cy.get('input[name="email"]').type('rex.leffler@example.com');
+        cy.get('input[name="email"]').type(studentemail);
         cy.get('input[name="password"]').type('password');
         cy.get('.flex.flex-col.items-center.mt-4').contains('Sign In').click();
-        cy.get('a[href="/student/profile"]').click();
+        cy.get('[data-test-id="profile-link"]').click();
         cy.contains('My Documents').click();
 
         const filePath = '../test.docx';

@@ -50,6 +50,30 @@ export const updateUserProfile = createAsyncThunk(
     }
 );
 
+export const updateUserPreferences = createAsyncThunk(
+    "user/updateUserPreferences",
+    async ({ darkMode, fontSize }) => {
+      console.log("Updating user preferences with:", { darkMode, fontSize });
+
+      try {
+        const response = await axios({
+          url: `${appUrl}/api/update-preferences`,
+          method: "POST",
+          data: {
+            darkMode: darkMode,
+            fontSize: fontSize,
+          },
+        });
+
+        console.log("Response from server:", response.data);
+        return response.data.user;
+      } catch (error) {
+        console.error("Error updating user preferences:", error);
+        throw error;
+      }
+    }
+  );
+
 
 export const updateUserPassword = createAsyncThunk(
     "user/updateUserPassword",

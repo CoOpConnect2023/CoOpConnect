@@ -46,6 +46,8 @@ function Reflections() {
     const [reflectionContent, setReflectionContent] = useState("");
     const [error, setError] = React.useState(null);
     const [successMessage, setSuccessMessage] = useState("");
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
 
     useEffect(() => {
         // Fetch the XSRF token from cookies and set it in Axios headers
@@ -118,29 +120,29 @@ function Reflections() {
 
     return (
         <NavBar header={"Reflections Upload"}>
-            <Section className="forum-container">
-                <Container className="form-inner-container">
-                    <FormWrapper className="form-content-wrapper">
-                        <Header className="forum-header">
+            <Section darkMode={darkMode} fontSize={fontSize} className="forum-container">
+                <Container darkMode={darkMode} fontSize={fontSize}  className="form-inner-container">
+                    <FormWrapper darkMode={darkMode} fontSize={fontSize}  className="form-content-wrapper">
+                        <Header darkMode={darkMode} fontSize={fontSize}  className="forum-header">
                             Reflections Forum
                         </Header>
-                        <Description className="forum-description">
+                        <Description darkMode={darkMode} fontSize={fontSize}  className="forum-description">
                             Share your reflections with your teachers and
                             employers!
                         </Description>
-                        <FormContainer>
-                            <Form onSubmit={handleSubmit}>
-                                <Label
+                        <FormContainer darkMode={darkMode} fontSize={fontSize} >
+                            <Form darkMode={darkMode} fontSize={fontSize}  onSubmit={handleSubmit}>
+                                <Label darkMode={darkMode} fontSize={fontSize}
                                     htmlFor="reflectionInput"
                                     className="reflection-label"
                                 >
                                     Type out your reflection here:
                                 </Label>
-                                <TextareaWrapper
+                                <TextareaWrapper darkMode={darkMode} fontSize={fontSize}
                                     className="textarea-wrapper"
                                     tabIndex="0"
                                 >
-                                    <Textarea
+                                    <Textarea darkMode={darkMode} fontSize={fontSize}
                                         id="reflectionInput"
                                         className="reflection-textarea"
                                         value={reflectionContent}
@@ -153,23 +155,23 @@ function Reflections() {
                                         }}
                                     />
 
-                                    <Image
+                                    <Image darkMode={darkMode} fontSize={fontSize}
                                         loading="lazy"
                                         src="https://cdn.builder.io/api/v1/image/assets/TEMP/cdd149d58712b078a844655053653df9d81013ce41c2123353ace40a672efdc3?apiKey=d66532d056b14640a799069157705b77&"
                                         alt=""
                                     />
                                 </TextareaWrapper>
-                                {error && <ErrorMessage>{error}</ErrorMessage>}
+                                {error && <ErrorMessage darkMode={darkMode} fontSize={fontSize} >{error}</ErrorMessage>}
                                 <Button type="submit" className="submit-button">
                                     Post Comment
                                 </Button>
                                 {successMessage && (
-                                    <SuccessMessage>
+                                    <SuccessMessage darkMode={darkMode} fontSize={fontSize} >
                                         {successMessage}
                                     </SuccessMessage>
                                 )}
-                                <Link href={`/student/myreflections`}>
-                                <Button >
+                                <Link darkMode={darkMode} fontSize={fontSize}  href={`/student/myreflections`}>
+                                <Button darkMode={darkMode} fontSize={fontSize}  >
                                     View My Reflections
                                 </Button>
                                 </Link>

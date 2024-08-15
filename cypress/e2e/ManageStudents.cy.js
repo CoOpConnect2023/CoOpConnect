@@ -1,11 +1,19 @@
 describe('Schedule Student Interview', () => {
+
+
+    const studentemail = "moses31@example.com"
+const employeremail = "zetta69@example.net"
+const teacheremail = "tmiller@example.com"
+const coursename = "Nihil saepe ipsam."
+const studentid = 2
+
     it('visits student interview creates then deletes an interview then logs out', () => {
 
         cy.visit('http://127.0.0.1:8000/');
 
 
         cy.contains('Sign In').click();
-        cy.get('input[name="email"]').type('edgardo.borer@example.com');
+        cy.get('input[name="email"]').type(teacheremail);
 
 
         cy.get('input[name="password"]').type('password');
@@ -13,29 +21,27 @@ describe('Schedule Student Interview', () => {
 
         cy.wait(3000);
 
-        cy.contains('bcarter').scrollIntoView();
+        cy.contains(studentemail).scrollIntoView();
 
         cy.contains('View').click();
         cy.wait(3000);
 
-        cy.contains('bgleason').scrollIntoView().should('be.visible')
+        cy.contains(studentemail).scrollIntoView().should('be.visible')
             .parent() // find the parent element that contains both 'bgleason' and the 'Delete' button
             .within(() => {
                 cy.contains('Delete').click(); // find and click the 'Delete' button within this parent element
             });
             cy.wait(1000);
-            cy.get('input[name="id"]').type('62');
+            cy.get('input[name="id"]').type(studentid);
 
             // Select the course "Commodi illum ullam voluptatibus"
-            cy.get('select[name="courses"]').select('Commodi illum ullam voluptatibus.');
+            cy.get('select[name="courses"]').select(coursename);
 
             // Click the 'Add Student' button
             cy.contains('Add Student').click();
             cy.wait(3000);
 
-            cy.get('a[href="/teacher/home"]').click();
-
-            cy.wait(3000);
+            
 
             cy.get('img[src="https://cdn.builder.io/api/v1/image/assets/TEMP/c7749e10a4cb727e5ce0c7fd48d44fb683bf93b2fa7c59643148748496b286b0?apiKey=d66532d056b14640a799069157705b77&"]').scrollIntoView()
             .should('be.visible')

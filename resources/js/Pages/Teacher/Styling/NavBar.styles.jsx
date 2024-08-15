@@ -1,4 +1,6 @@
 import styled, { keyframes, css } from 'styled-components';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { navButtonLightBackground, navDarkBackground, navLightBackground } from '@/Layouts/Global.styles';
 
 // Keyframes for vibration animation
 const vibration = keyframes`
@@ -7,6 +9,27 @@ const vibration = keyframes`
   50% { transform: translateX(1px); }
   75% { transform: translateX(-1px); }
   100% { transform: translateX(0); }
+`;
+const slideIn = keyframes`
+  0% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+`;
+
+const slideOut = keyframes`
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
 `;
 
 const slideInFromRight = keyframes`
@@ -31,12 +54,30 @@ const slideInFromBottom = keyframes`
   }
 `;
 
+const getAnimation = (isOpen) => css`
+  animation: ${isOpen ? slideIn : slideOut} 0.3s ease-out forwards;
+`;
+
+const getFontSize = (size) => {
+    switch (size) {
+        case 'small':
+            return '1em';
+        case 'medium':
+            return '1.07em';
+        case 'large':
+            return '1.12em';
+        default:
+            return '1em';
+    }
+};
+
 export const AppContainer = styled.div`
-  background-color: var(--Schemes-Background, #fff7ff);
   display: flex;
+  background-color: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "var(--Schemes-Background, #fff7ff)")};
   gap: 0px;
-  height: 100vh;
+transition: background-color 0.5s ease, color 0.5s ease;
   flex-direction: row;
+
 
   @media (max-width: 991px) {
     flex-direction: column;
@@ -46,7 +87,8 @@ export const AppContainer = styled.div`
 export const NavContainer = styled.nav`
   align-items: center;
   border: 1px solid rgba(123, 117, 127, 1);
-  background-color: var(--White, #fff);
+transition: background-color 0.5s ease, color 0.5s ease;
+  background-color: ${({ darkMode }) => (darkMode ? navDarkBackground : navLightBackground)};
   display: flex;
   flex-direction: column;
   width: 90px;
@@ -87,20 +129,33 @@ export const IconButton = styled.button`
   height: 50px;
   padding: 0 10px;
   border-radius: 10px;
-  border: none;
-  margin-top: 30px;
-  cursor: pointer;
-  background-color: ${({ active }) => (active ? "rgba(0, 0, 0, 0.1)" : "transparent")};
+  border: 1px solid ${({ darkMode }) => (darkMode ? "#fff" : "rgba(0, 0, 0, 0.1)")}; /* White border for dark mode */
+  background-color: ${({ darkMode, active }) =>
+    darkMode
+      ? active
+        ? "rgba(255, 255, 255, 0.32)"
+        : "transparent"
+      : active
+      ? "rgba(0, 0, 0, 0.15)"
+      : "transparent"}; /* White background for dark mode when active */
   box-shadow: ${({ active }) => (active ? "0px 4px 8px rgba(0, 0, 0, 0.1)" : "none")};
   transform: ${({ active }) => (active ? "translateX(5px)" : "none")};
+  margin-top: 30px;
+  cursor: pointer;
 
   @media (max-width: 991px) {
     width: auto;
     height: auto;
     margin-top: 0;
     padding: 5px;
-    background-color: ${({ active }) => (active ? "rgba(0, 0, 0, 0.2)" : "transparent")};
-  }
+   background-color: ${({ darkMode, active }) =>
+    darkMode
+      ? active
+        ? "rgba(255, 255, 255, 0.32)"
+        : "transparent"
+      : active
+      ? "rgba(0, 0, 0, 0.15)"
+      : "transparent"};
 `;
 
 export const Icon = styled.img`
@@ -140,14 +195,13 @@ export const UserProfile = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
   cursor: pointer;
   position: relative;
   transition: transform 0.3s ease, opacity 0.3s ease;
 
   // Apply slide-in animation when isOpen prop is true
   ${(props) =>
-
     css`
       animation: ${slideInFromRight} 0.5s ease-out;
     `}
@@ -156,6 +210,7 @@ export const UserProfile = styled.div`
     justify-content: flex-end;
     width: 100%;
     align-items: center;
+    gap: 10px;
   }
 `;
 
@@ -174,18 +229,21 @@ export const ContentContainer = styled.section`
   flex-direction: column;
   flex: 1;
   padding: 20px;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
 export const Title = styled.h1`
-  color: #000;
+  color: ${({ darkMode }) => (darkMode ? "#FFF" : "#000")};
   font: 600 36px/122% Poppins, sans-serif;
+
 `;
 
 export const NotificationIcon = styled.div`
   width: 40px;
   height: 40px;
-  background-color: #EDDCFF;
-  border: 2px solid black;
+ color: ${({ darkMode }) => (darkMode ? "#FFF" : "#000")};
+  background-color: ${({ darkMode }) => (darkMode ? navDarkBackground : navButtonLightBackground)};
+  border: 2px solid ${({ darkMode }) => (darkMode ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 1)')};
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -193,6 +251,7 @@ export const NotificationIcon = styled.div`
   cursor: pointer;
   position: relative;
   transition: transform 0.5s ease;
+
   ${(props) =>
     props.hasUnreadMessages &&
     css`
@@ -204,7 +263,7 @@ export const NotificationIcon = styled.div`
   }
 
   svg {
-    color: white;
+    color: ${({ darkMode }) => (darkMode ? "#FFF" : "#6B538C")};
     font-size: 20px;
   }
 
@@ -218,6 +277,42 @@ export const NotificationIcon = styled.div`
     background-color: red;
     border-radius: 50%;
     display: ${(props) => (props.hasUnreadMessages ? "block" : "none")};
+  }
+
+  @media (max-width: 768px) {
+    width: 35px;
+    height: 35px;
+    svg {
+      font-size: 18px;
+    }
+    &::after {
+      width: 8px;
+      height: 8px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    width: 30px;
+    height: 30px;
+    svg {
+      font-size: 16px;
+    }
+    &::after {
+      width: 6px;
+      height: 6px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    width: 45px;
+    height: 45px;
+    svg {
+      font-size: 22px;
+    }
+    &::after {
+      width: 12px;
+      height: 12px;
+    }
   }
 `;
 
@@ -235,30 +330,108 @@ export const UserDetails = styled.div`
   align-items: center;
   gap: 10px;
   border-radius: 50px;
-  border: 2px solid rgba(0, 0, 0, 1);
-  background-color: var(--Schemes-Primary-Container, #eddcff);
+  border: 2px solid ${({ darkMode }) => (darkMode ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 1)')};
+  background-color: ${({ darkMode }) => (darkMode ? navDarkBackground : navButtonLightBackground)};
   padding: 5px 10px;
-  margin-top: 7px;
+
+  @media (max-width: 768px) {
+    gap: 8px;
+    padding: 4px 8px;
+  }
+
+  @media (max-width: 480px) {
+    gap: 6px;
+    padding: 3px 6px;
+  }
+
+  @media (min-width: 1024px) {
+    gap: 12px;
+    padding: 6px 12px;
+  }
 `;
+
 
 export const Avatar = styled.img`
   aspect-ratio: 1;
-  object-fit: auto;
+  object-fit: cover;
   width: 30px;
   border: 1px solid rgba(0, 0, 0, 1);
   border-radius: 50%;
+
+  @media (max-width: 768px) {
+    width: 26px; /* Adjust width for smaller screens */
+  }
+
+  @media (max-width: 480px) {
+    width: 22px; /* Further adjust width for very small screens */
+  }
+
+  @media (min-width: 1024px) {
+    width: 34px; /* Increase width for larger screens */
+  }
 `;
 
-export const ExpandIcon = styled.img`
-  aspect-ratio: 1;
-  object-fit: auto;
-  width: 24px;
+
+export const ExpandIcon = styled(FontAwesomeIcon)`
+  font-size: ${({ fontSize }) => fontSize || "24px"};
   margin: auto 0;
+  color: ${({ darkMode }) => (darkMode ? "#fff" : "#000")};
   cursor: pointer;
   transition: transform 0.3s ease;
+
+  /* Start with the icon rotated -90deg to face left, rotate to 0deg to face down */
   transform: ${({ isOpen }) =>
-        isOpen ? "rotate(-360deg)" : "rotate(-270deg)"};
+    isOpen ? "rotate(0deg)" : "rotate(+90deg)"};
+
+  @media (max-width: 768px) {
+    font-size: ${({ fontSize }) => fontSize || "20px"};
+  }
+
+  @media (max-width: 480px) {
+    font-size: ${({ fontSize }) => fontSize || "18px"};
+  }
+
+  @media (min-width: 1024px) {
+    font-size: ${({ fontSize }) => fontSize || "28px"};
+  }
 `;
+
+
+export const FontSizer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  color: ${({ darkMode }) => (darkMode ? "#fff" : "#6B538C")};
+  border-radius: 50px;
+  border: 2px solid ${({ darkMode }) => (darkMode ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 1)')};
+  background-color: ${({ darkMode }) => (darkMode ? navDarkBackground : navButtonLightBackground)};
+  height: 40px;
+  padding: 0 20px; /* Added padding to give some horizontal spacing */
+
+  @media (max-width: 768px) {
+    gap: 8px; /* Reduce gap on smaller screens */
+    height: 35px; /* Adjust height for smaller screens */
+    padding: 0 15px; /* Adjust padding for smaller screens */
+    font-size: 0.9rem; /* Adjust font size for smaller screens */
+  }
+
+  @media (max-width: 480px) {
+    gap: 6px; /* Further reduce gap on very small screens */
+    height: 30px; /* Further adjust height for very small screens */
+    padding: 0 10px; /* Further adjust padding for very small screens */
+    font-size: 0.8rem; /* Further adjust font size for very small screens */
+  }
+
+  @media (min-width: 1024px) {
+    gap: 12px; /* Increase gap on larger screens */
+    height: 45px; /* Increase height on larger screens */
+    padding: 0 25px; /* Increase padding on larger screens */
+    font-size: 1rem; /* Adjust font size for larger screens */
+  }
+`;
+
 
 export const Main = styled.main`
   display: flex;
@@ -269,25 +442,26 @@ export const Main = styled.main`
 
 export const Modal = styled.div`
   position: absolute;
-  top: 60px;
+  top: 80px;
   right: 20px;
-  background-color: white;
+  background-color: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "#fff")};
   border: 1px solid #ccc;
   border-radius: 5px;
   box-shadow: 02px 10px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   transition: opacity 0.3s ease, transform 0.3s ease;
   opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
-  transform: ${({ isOpen }) => (isOpen ? "translateY(0)" : "translateY(-10px)")};
+ transform: ${({ isOpen }) => (isOpen ? "translateY(0)" : "translateY(-100%)")};
   pointer-events: ${({ isOpen }) => (isOpen ? "auto" : "none")};
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
 export const NotificationModalContainer = styled.div`
   display: ${(props) => (props.isOpen ? "block" : "none")};
   position: absolute;
-  top: 60px;
+  top: 80px; /* Adjusted to move the modal slightly lower */
   right: 0;
-  background: white;
+  background: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "#fff")};
   border: 1px solid #ccc;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   border-radius: 8px;
@@ -295,12 +469,17 @@ export const NotificationModalContainer = styled.div`
   z-index: 10;
   max-height: 80vh;
   overflow-y: auto;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
+  animation: ${slideIn} 0.3s ease-out; /* Apply the slide-in animation */
 `;
 
 export const NotificationModalContent = styled.ul`
   list-style: none;
   margin: 0;
+  background-color: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "#fff")};
   padding: 20px;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
+  color: ${({ darkMode }) => (darkMode ? "#fff" : "#2C2C2C")};
 `;
 
 export const Conversation = styled.div`
@@ -308,18 +487,21 @@ export const Conversation = styled.div`
   padding: 15px;
   border: 1px solid #f0f0f0;
   border-radius: 8px;
-  background-color: #fafafa;
+  background-color: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "#fafafa")};
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
 export const ConversationInfo = styled.div`
   margin-bottom: 15px;
   font-size: 14px;
-  color: #555;
+  color: ${({ darkMode }) => (darkMode ? "#fff" : "#2C2C2C")};
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
 export const MessagesList = styled.div`
   display: flex;
   flex-direction: column;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
 export const Message = styled.div`
@@ -328,24 +510,26 @@ export const Message = styled.div`
   border-radius: 5px;
   padding: 10px;
   margin-bottom: 10px;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
 export const Button = styled.button`
   margin-top: 10px;
   padding: 8px 12px;
-  background-color: #007bff;
+  background-color: ${navDarkBackground};
   color: white;
   border: none;
   border-radius: 5px;
   font-size: 14px;
   cursor: pointer;
   transition: background-color 0.3s;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 
   &:hover {
     background-color: #0056b3;
   }
 
-   &:not(:last-child) {
+  &:not(:last-child) {
     margin-right: 1vw;
   }
 `;
@@ -355,11 +539,14 @@ export const ModalContent = styled.div`
   flex-direction: column;
   padding: 10px;
   max-height: 80vh;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
+  color: ${({ darkMode }) => (darkMode ? "#fff" : "#2C2C2C")};
 `;
 
 export const ModalItem = styled.div`
   padding: 10px;
   cursor: pointer;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
   &:hover {
     background-color: rgb(237, 220, 255);
   }
@@ -370,11 +557,12 @@ export const NoNotificationsMessage = styled.div`
   text-align: center;
   font-size: 16px;
   color: #666;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
 export const pulse = keyframes`
   0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.5); opacity: 0.5; }
+  50% { transform: scale(1.5); opacity: 0.5); }
   100% { transform: scale(1); opacity: 1; }
 `;
 
@@ -384,6 +572,7 @@ export const Dot = styled.div`
   background-color: #3498db;
   border-radius: 50%;
   animation: ${pulse} 1s infinite;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
 export const DotContainer = styled.div`
@@ -412,12 +601,14 @@ const BouncingDot = styled.div`
   border-radius: 50%;
   animation: ${bounce} 0.6s infinite alternate;
   margin: 0 5px;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
 const BouncingLoader = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
 export const LoadingDot = () => (
@@ -439,6 +630,7 @@ export const Footer = styled.footer`
   transition: transform 0.3s ease;
   transform: translateY(${({ isVisible }) => (isVisible ? "0%" : "100%")});
   z-index: 999;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
 export const CloseButton = styled.button`
@@ -450,6 +642,7 @@ export const CloseButton = styled.button`
   font-size: 30px;
   cursor: pointer;
   color: #000;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 
   &:hover {
     color: #ff0000; // Optional: Change color on hover
@@ -468,6 +661,7 @@ export const ScrollToTopButton = styled.button`
   display: ${({ isVisible }) => (isVisible ? 'block' : 'none')};
   z-index: 1000;
   transition: opacity 0.3s ease;
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 
   &:hover {
     background-color: #0056b3;
@@ -480,6 +674,7 @@ export const IconContainer = styled.div`
   width: 40px; // Adjust the size as needed
   height: 40px;
   margin-top: auto; // Push to the bottom
+  font-size: ${({ fontSize }) => getFontSize(fontSize)};
 
   @media (min-width: 992px) {
     display: block; // Show on desktop
@@ -488,11 +683,8 @@ export const IconContainer = styled.div`
   .fa-icon {
     width: 100%;
     height: 100%;
-    color: #6B538C; // Icon color
-    background-color: white; // White center
 
-
+    color: ${({ darkMode }) => (darkMode ? "#fff" : "#6B538C")};
 
   }
 `;
-

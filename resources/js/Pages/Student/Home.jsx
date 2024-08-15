@@ -38,6 +38,8 @@ function Home() {
 
     const jobs = useSelector(selectJobs) || [];
     const jobsStatus = useSelector(selectJobsStatus);
+    const darkMode = useSelector(state => state.accessibility.darkMode);
+    const fontSize = useSelector(state => state.accessibility.textSize);
 
     useEffect(() => {
         dispatch(
@@ -49,19 +51,23 @@ function Home() {
 
     const JobCard = ({ job }) => {
         return (
-            <JobCardContainer>
-                <JobTitle>{job.title}</JobTitle>
-                <CompanyName>{job.company}</CompanyName>
-                <Location>{job.location}</Location>
-                <SkillsList>
+            <JobCardContainer darkMode={darkMode} fontSize={fontSize}>
+                <JobTitle darkMode={darkMode} fontSize={fontSize}>{job.title}</JobTitle>
+
+
+                <CompanyName darkMode={darkMode} fontSize={fontSize}  >{job.company}</CompanyName>
+
+                <Location darkMode={darkMode} fontSize={fontSize} >{job.location}</Location>
+                
+                <SkillsList darkMode={darkMode} fontSize={fontSize} >
                     {job.skills.map((tag, index) => (
-                        <SkillBadge key={index}>{tag}</SkillBadge>
+                        <SkillBadge darkMode={darkMode} fontSize={fontSize}   key={index}>{tag}</SkillBadge>
                     ))}
                 </SkillsList>
-                <JobDescription>{job.description}</JobDescription>
-                <Divider />
-                <Link href={`/student/viewpost/${job.id}`}>
-                    <JobButton>VIEW POSTING</JobButton>
+                <JobDescription darkMode={darkMode} fontSize={fontSize}>{job.description}</JobDescription>
+                <Divider darkMode={darkMode} fontSize={fontSize} />
+                <Link darkMode={darkMode} fontSize={fontSize} href={`/student/viewpost/${job.id}`}>
+                    <JobButton darkMode={darkMode} fontSize={fontSize}>VIEW POSTING</JobButton>
                 </Link>
             </JobCardContainer>
         );
@@ -69,39 +75,35 @@ function Home() {
 
     return (
         <NavBar>
-            <MainContainer>
-                <SearchSection>
-                    <SearchTitle>Search for Job Postings</SearchTitle>
-                    <Tagline>
+            <MainContainer darkMode={darkMode} fontSize={fontSize} >
+                <SearchSection darkMode={darkMode} fontSize={fontSize}>
+                    <SearchTitle darkMode={darkMode} fontSize={fontSize}>Search for Job Postings</SearchTitle>
+                    <Tagline darkMode={darkMode} fontSize={fontSize}>
                         Get amazing through jobs at CO-OP Connect!
                     </Tagline>
-                    <Description>
-                        Lorem Ipsum is simply dummy text of the printing and
-                        typesetting industry. Lorem Ipsum has been the
-                        industry's standard dummy text ever since the 1500s,
-                        when an unknown printer took a galley of type and
-                        scrambled it t
+                    <Description darkMode={darkMode} fontSize={fontSize}>
+                        To search for new opportunities, access View Jobs below. To view and apply to recommended jobs based on your profile skills, click view posting on any corresponding job below.
                     </Description>
-                    <Link href="/student/jobs">
-                        <Button>View Jobs</Button>
+                    <Link darkMode={darkMode} fontSize={fontSize} href="/student/jobs">
+                        <Button darkMode={darkMode} fontSize={fontSize}>View Jobs</Button>
                     </Link>
                 </SearchSection>
-                <JobsSection>
-                    <JobsHeader>Recommended Jobs</JobsHeader>
-                    <JobsSubHeader>
+                <JobsSection darkMode={darkMode} fontSize={fontSize}>
+                    <JobsHeader darkMode={darkMode} fontSize={fontSize}>Recommended Jobs</JobsHeader>
+                    <JobsSubHeader darkMode={darkMode} fontSize={fontSize}>
                         <u>View</u> some of these recommended jobs!
                     </JobsSubHeader>
-                    <JobListings>
+                    <JobListings darkMode={darkMode} fontSize={fontSize}>
                         {jobsStatus === "loading" ? (
-                            <EmptyMessage>Loading...</EmptyMessage>
+                            <EmptyMessage darkMode={darkMode} fontSize={fontSize}>Loading...</EmptyMessage>
                         ) : jobs.length === 0 ? (
-                            <EmptyMessage>
+                            <EmptyMessage darkMode={darkMode} fontSize={fontSize}>
                                 Add some skills to your profile to see some jobs
                                 to apply for
                             </EmptyMessage>
                         ) : (
                             jobs.map((job, index) => (
-                                <JobCard key={index} job={job} />
+                                <JobCard  key={index} job={job} />
                             ))
                         )}
                     </JobListings>
