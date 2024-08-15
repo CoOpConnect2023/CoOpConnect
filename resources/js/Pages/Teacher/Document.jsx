@@ -4,6 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import NavBar from "./Components/NavBar";
 import downarrow from "@/Pages/Images/Icon.svg";
 import {
+    getUser, selectUser, selectUserStatus
+} from "@/Features/users/userSlice";
+import {
     Wrapper,
     Content,
     FileSection,
@@ -370,7 +373,10 @@ const Document = () => {
         }
     };
 
-
+    const userStatus = useSelector(selectUserStatus);
+    if (userStatus === 'loading') {
+        return <LogoLoadingComponent  darkMode={darkMode}/>;
+    }
 
 
 

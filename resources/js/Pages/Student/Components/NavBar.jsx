@@ -43,6 +43,12 @@ import briefcase from "@/Pages/Images/briefcase.svg";
 import message from "@/Pages/Images/message-square.svg";
 import calendar from "@/Pages/Images/calendar-days.svg";
 import user from "@/Pages/Images/user.svg";
+import whitelogo from "@/Pages/Images/whitepuzzle.svg";
+import whitebriefcase from "@/Pages/Images/whitebriefcase.svg";
+import whitemessage from "@/Pages/Images/whitemessage-square.svg";
+import whitecalendar from "@/Pages/Images/whitecalendar-days.svg";
+import whiteuser from "@/Pages/Images/whiteuser.svg";
+import whitesettings from "@/Pages/Images/whitesettings.svg";
 import { useForm } from '@inertiajs/react';
 import settings from "@/Pages/Images/settings.svg";
 import { Link } from "@inertiajs/react";
@@ -145,38 +151,52 @@ function Sidebar() {
     return (
         <aside>
            <NavContainer fontSize={fontSize} darkMode={darkMode}>
-                <Link fontSize={fontSize} darkMode={darkMode} href="/" onClick={() => handleTabClick("/")}>
-                    <Logo fontSize={fontSize} darkMode={darkMode} src={logo} alt="Logo" loading="lazy" active={activeTab === "/"} />
-                </Link>
+           <Link fontSize={fontSize} darkMode={darkMode} href="/" onClick={() => handleTabClick("/")}>
+          <Logo
+    fontSize={fontSize}
+    darkMode={darkMode}
+    src={darkMode ? whitelogo : logo}
+    alt="Logo"
+    loading="lazy"
+    active={activeTab === "/"}
+  />
+</Link>
                 <Divider fontSize={fontSize} darkMode={darkMode} />
                 <Link fontSize={fontSize} darkMode={darkMode} data-test-id="home-link" href="/student/home" onClick={() => handleTabClick("/student/home")}>
                     <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/student/home"}>
-                        <Icon fontSize={fontSize} darkMode={darkMode} src={briefcase} alt="Home Icon" loading="lazy" />
+                    <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitebriefcase : briefcase} alt="Icon 1" loading="lazy" />
                     </IconButton>
                 </Link>
                 <Link fontSize={fontSize} darkMode={darkMode} data-test-id="viewapplications-link" href="/student/viewapplications" onClick={() => handleTabClick("/student/viewapplications")}>
                     <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/student/viewapplications"}>
-                    <FontAwesomeIcon fontSize={fontSize} darkMode={darkMode} icon={faList} style={{ fontSize: '1.5rem' }} className="fa-icon" />
+                    <FontAwesomeIcon
+  fontSize={fontSize}
+  icon={faList}
+  style={{
+    fontSize: '1.5rem',
+    color: darkMode ? 'white' : 'black'
+  }}
+/>
                     </IconButton>
                 </Link>
                 <Link fontSize={fontSize} darkMode={darkMode} data-test-id="messages-link" href="/student/messages" onClick={() => handleTabClick("/student/messages")}>
                     <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/student/messages"}>
-                        <Icon fontSize={fontSize} darkMode={darkMode} src={message} alt="Messages Icon" loading="lazy" />
+                    <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitemessage : message} alt="" loading="lazy" />
                     </IconButton>
                 </Link>
                 <Link fontSize={fontSize} darkMode={darkMode} data-test-id="interviews-link" href="/student/interviews" onClick={() => handleTabClick("/student/interviews")}>
                     <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/student/interviews"}>
-                        <Icon fontSize={fontSize} darkMode={darkMode} src={calendar} alt="Interviews Icon" loading="lazy" />
+                    <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitecalendar : calendar} alt="" loading="lazy" />
                     </IconButton>
                 </Link>
                 <Link fontSize={fontSize} darkMode={darkMode} href="/student/profile" onClick={() => handleTabClick("/student/profile")} data-test-id="profile-link">
                     <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/student/profile"}>
-                        <Icon fontSize={fontSize} darkMode={darkMode} src={user} alt="Profile Icon" loading="lazy" />
+                    <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whiteuser : user} alt="" loading="lazy" />
                     </IconButton>
                 </Link>
                 <Link fontSize={fontSize} darkMode={darkMode} data-test-id="settings-link" href="/student/settings" onClick={() => handleTabClick("/student/settings")}>
                     <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/student/settings"}>
-                        <Icon fontSize={fontSize} darkMode={darkMode} src={settings} alt="Settings Icon" loading="lazy" />
+                    <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitesettings : settings} alt="" loading="lazy" />
                     </IconButton>
                 </Link>
 
@@ -314,7 +334,7 @@ function Header({ header }) {
                         <Link fontSize={fontSize} darkMode={darkMode} href="/student/profile">
                         <ModalItem fontSize={fontSize} darkMode={darkMode}>Profile</ModalItem>
                         </Link>
-                        <Link fontSize={fontSize} darkMode={darkMode} href="/student/profile">
+                        <Link fontSize={fontSize} darkMode={darkMode} href="/student/settings">
                         <ModalItem fontSize={fontSize} darkMode={darkMode}>Settings</ModalItem>
                         </Link>
                         <ModalItem fontSize={fontSize} darkMode={darkMode} as="button" onClick={handleLogout}>Logout</ModalItem>

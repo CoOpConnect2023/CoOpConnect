@@ -1,5 +1,6 @@
 import styled, { keyframes, css } from 'styled-components';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { navButtonLightBackground, navDarkBackground, navLightBackground } from '@/Layouts/Global.styles';
 
 // Keyframes for vibration animation
 const vibration = keyframes`
@@ -87,7 +88,7 @@ export const NavContainer = styled.nav`
   align-items: center;
   border: 1px solid rgba(123, 117, 127, 1);
 transition: background-color 0.5s ease, color 0.5s ease;
-  background-color: ${({ darkMode }) => (darkMode ? "#B7A1E5" : "#FFF")};
+  background-color: ${({ darkMode }) => (darkMode ? navDarkBackground : navLightBackground)};
   display: flex;
   flex-direction: column;
   width: 90px;
@@ -126,22 +127,35 @@ export const IconButton = styled.button`
   align-items: center;
   width: 100%;
   height: 50px;
-
   padding: 0 10px;
   border-radius: 10px;
-  border: 1px solid;
-  margin-top: 30px;
-  cursor: pointer;
-  background-color: ${({ active }) => (active ? "rgba(0, 0, 0, 0.15)" : "transparent")};
+  border: 1px solid ${({ darkMode }) => (darkMode ? "#fff" : "rgba(0, 0, 0, 0.1)")}; /* White border for dark mode */
+  background-color: ${({ darkMode, active }) =>
+    darkMode
+      ? active
+        ? "rgba(255, 255, 255, 0.32)"
+        : "transparent"
+      : active
+      ? "rgba(0, 0, 0, 0.15)"
+      : "transparent"}; /* White background for dark mode when active */
   box-shadow: ${({ active }) => (active ? "0px 4px 8px rgba(0, 0, 0, 0.1)" : "none")};
   transform: ${({ active }) => (active ? "translateX(5px)" : "none")};
+  margin-top: 30px;
+  cursor: pointer;
 
   @media (max-width: 991px) {
     width: auto;
     height: auto;
     margin-top: 0;
     padding: 5px;
-    background-color: ${({ active }) => (active ? "rgba(0, 0, 0, 0.2)" : "transparent")};
+    background-color: ${({ darkMode, active }) =>
+      darkMode
+        ? active
+          ? "#fff"
+          : "transparent"
+        : active
+        ? "rgba(0, 0, 0, 0.2)"
+        : "transparent"}; /* Adjust for smaller screens */
   }
 `;
 
@@ -229,7 +243,7 @@ export const NotificationIcon = styled.div`
   width: 40px;
   height: 40px;
  color: ${({ darkMode }) => (darkMode ? "#FFF" : "#000")};
-  background-color: ${({ darkMode }) => (darkMode ? "#B7A1E5" : "#EDDCFF")};
+  background-color: ${({ darkMode }) => (darkMode ? navDarkBackground : navButtonLightBackground)};
   border: 2px solid ${({ darkMode }) => (darkMode ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 1)')};
   border-radius: 50%;
   display: flex;
@@ -318,7 +332,7 @@ export const UserDetails = styled.div`
   gap: 10px;
   border-radius: 50px;
   border: 2px solid ${({ darkMode }) => (darkMode ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 1)')};
-  background-color: ${({ darkMode }) => (darkMode ? "#B7A1E5" : "#EDDCFF")};
+  background-color: ${({ darkMode }) => (darkMode ? navDarkBackground : navButtonLightBackground)};
   padding: 5px 10px;
 
   @media (max-width: 768px) {
@@ -393,7 +407,7 @@ export const FontSizer = styled.div`
   color: ${({ darkMode }) => (darkMode ? "#fff" : "#6B538C")};
   border-radius: 50px;
   border: 2px solid ${({ darkMode }) => (darkMode ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 1)')};
-  background-color: ${({ darkMode }) => (darkMode ? "#B7A1E5" : "#EDDCFF")};
+  background-color: ${({ darkMode }) => (darkMode ? navDarkBackground : navButtonLightBackground)};
   height: 40px;
   padding: 0 20px; /* Added padding to give some horizontal spacing */
 
@@ -503,7 +517,7 @@ export const Message = styled.div`
 export const Button = styled.button`
   margin-top: 10px;
   padding: 8px 12px;
-  background-color: #B7A1E5;
+  background-color: ${navDarkBackground};
   color: white;
   border: none;
   border-radius: 5px;
@@ -671,7 +685,7 @@ export const IconContainer = styled.div`
     width: 100%;
     height: 100%;
 
-    color: ${({ darkMode }) => (darkMode ? "#000" : "#6B538C")};
+    color: ${({ darkMode }) => (darkMode ? "#fff" : "#6B538C")};
 
   }
 `;

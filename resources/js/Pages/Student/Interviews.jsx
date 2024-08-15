@@ -345,7 +345,7 @@ const Interviews = () => {
                 </Container>
             </MainContainer>
             {showModal && (
-                <Modal
+                <Modal darkMode={darkMode} fontSize={fontSize}
                     onClose={closeModal}
                     onSubmit={handleAddEvent}
                     defaultDate={new Date(getTodayDate())}

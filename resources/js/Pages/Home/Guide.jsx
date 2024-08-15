@@ -158,7 +158,7 @@ const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + strin
 
 const Guide = ({ auth }) => {
   const darkMode = useSelector(state => state.accessibility.darkMode);
-  const userType = auth.user.role;
+  const userType = auth?.user?.role;
   const userSteps = steps.find(step => step.userType === userType);
 
   if (!userSteps) return <p>No guide available for this user type.</p>;

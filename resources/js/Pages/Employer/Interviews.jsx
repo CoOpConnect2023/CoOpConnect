@@ -366,7 +366,7 @@ const Interviews = () => {
             <MainContainer darkMode={darkMode} fontSize={fontSize}>
                 <Container darkMode={darkMode} fontSize={fontSize}>
                     <Wrapper darkMode={darkMode} fontSize={fontSize}>
-                        <Header darkMode={darkMode} fontSize={fontSize}>Schedule your Interviews</Header>
+                        
                         <CalendarDiv darkMode={darkMode} fontSize={fontSize}>
                             <DndProvider darkMode={darkMode} fontSize={fontSize} backend={HTML5Backend}>
                                 <DnDCalendar darkMode={darkMode} fontSize={fontSize}
@@ -411,7 +411,7 @@ const Interviews = () => {
                         ) : (
                             <NoShortlistsMessage>No shortlists found</NoShortlistsMessage>
                         )}
-                    </ShortlistsContainer> */} 
+                    </ShortlistsContainer> */}
                     <EventsContainer darkMode={darkMode} fontSize={fontSize}>
                         <EventsHeader darkMode={darkMode} fontSize={fontSize}>All Events</EventsHeader>
                         {events && events.length > 0 ? (

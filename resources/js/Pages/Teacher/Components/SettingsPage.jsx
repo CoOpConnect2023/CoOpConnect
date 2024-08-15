@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useForm } from '@inertiajs/react';
 import { useDispatch, useSelector } from "react-redux";
-import { updateUserPassword, updateUserPreferences, deleteUser, getUser, selectUser } from "@/Features/users/userSlice";
+import { updateUserPassword, updateUserPreferences, deleteUser, getUser, selectUser, selectUserStatus } from "@/Features/users/userSlice";
 import { toggleDarkMode, setTextSize } from "@/Features/accessibility/accessibilitySlice";
 import { faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from "./ConfirmationModal";
+import LogoLoadingComponent from "@/Pages/Common/LogoSpinnerAnimation";
 import {
     Main,
     Section,
@@ -146,6 +147,9 @@ function SettingsPanel() {
         }));
     };
 
+    if (!user  ) {
+        return <LogoLoadingComponent fontSize={fontSize} darkMode={darkMode}/>;;
+    }
 
 
 

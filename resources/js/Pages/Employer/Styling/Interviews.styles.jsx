@@ -32,50 +32,59 @@ const fadeIn = keyframes`
 export const MainContainer = styled.div`
     display: flex;
     flex-direction: column;
+    flex: 1;
     border: 2px solid ${({ darkMode }) => (darkMode ? "#444" : "#e2e8f0")};
     background-color: ${({ darkMode }) => (darkMode ? "#1C1C1C" : "#fff")};
     color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
-    align-items: center;
-    justify-content: center;
+
      animation: ${fadeIn} 0.8s ease-in-out;
 `;
 
 export const Container = styled.div`
     display: flex;
+    height: 100%;
     background-color: ${({ darkMode }) => (darkMode ? "#2D2D2D" : "#fff")};
     border: 2px solid ${({ darkMode }) => (darkMode ? "#444" : "#e2e8f0")};
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    max-width: 1200px;
+    flex-direction: row;
+    gap: 15px;
     width: 100%;
-    margin: 0 auto;
-    padding: 20px;
-
-
+    padding: 10px;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
 
 
     &:hover {
         box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-        transform: translateY(-5px);
+
     }
 
     @media (max-width: 991px) {
-        padding: 10px;
-        height: auto; /* Adjust height for smaller screens */
+        padding: 0px;
+        height:100%; /* Adjust height for smaller screens */
+        flex-direction: column;
+        min-height: 400px;
+        width: 100%;
     }
 `;
 
 export const Wrapper = styled.div`
-    width: 100%;
+    width: 90%;
     display: flex;
+    flex:1;
+    padding: 10px;
     color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
     flex-direction: column;
     align-items: center;
     justify-content: center;
     background-color: ${({ darkMode }) => (darkMode ? "#3C3C3C" : "#fff")};
     color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
+    min-height: 400px;
+      @media (max-width: 991px) {
+        padding: 0px;
+        height:100%; /* Adjust height for smaller screens */
+        flex-direction: column;
+        min-height: 400px;
+        width: 100%;
+    }
 `;
 
 export const Header = styled.div`
@@ -84,12 +93,15 @@ export const Header = styled.div`
     align-self: center;
     font: 600 ${({ fontSize }) => calculateFontSize(32, fontSize)} Poppins, sans-serif;
     margin-bottom: 20px;
+    width: 100%;
 `;
 
 export const CalendarDiv = styled.div`
-    width: 100%;
-    min-height: 500px; /* Ensure minimum height for the calendar */
-    height: 80vh; /* Adjust height as needed */
+    width: 90%;
+    align-items: center;
+    flex: 1; /* Make sure it grows to fill available space */
+    min-height: 400px; /* Set a minimum height */
+    height: auto; /* Ensure height adjusts automatically */
     overflow: auto; /* Enable vertical scrolling if needed */
     box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1),
         0px 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -98,7 +110,12 @@ export const CalendarDiv = styled.div`
     color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
 
     @media (max-width: 991px) {
-        min-height: 60vh; /* Adjust height for smaller screens */
+    padding: 0px;
+        min-height: 400px;
+        max-height: 80vh; /* Limit maximum height for mobile */
+        height: 60vh;
+        width: 100%;
+        flex: none;
     }
 `;
 
@@ -203,47 +220,53 @@ export const DateCell = styled.div`
 `;
 
 export const EventsContainer = styled.div`
-    width: 100%;
-    margin-top: 20px;
-    padding: 20px;
+display:flex;
+flex-direction: column;
+    width: 35%;
+
+    padding: 10px;
     border: 1px solid ${({ darkMode }) => (darkMode ? "#555555" : "#ccc")};
 background-color: ${({ darkMode }) => (darkMode ? "#2D2D2D" : "#fff")};
     transition: background-color 0.3s, border-color 0.3s, color 0.3s;
 font-size: ${({ fontSize }) => fontSize};
     border-radius: 8px;
     overflow-y: auto; /* Enable vertical scrolling */
-    max-height: 400px; /* Limit height for smaller screens */
-    min-height: 20vh;
+     /* Limit height for smaller screens */
+    max-height: 85vh;
 
     @media (max-width: 991px) {
         overflow-y: auto; /* Enable vertical scrolling */
         max-height: 400px; /* Limit height for smaller screens */
         min-height: 20vh;
+        width:100%;
     }
 `;
 
 export const EventsHeader = styled.h2`
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     font-size: ${({ fontSize }) => calculateFontSize(24, fontSize)};
     color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
 `;
 
 export const Event = styled.div`
-    background-color: ${({ darkMode }) => (darkMode ? "#3C3C3C" : "#ffffff")};
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 8px;
-    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  background-color: ${({ darkMode }) => (darkMode ? "#3C3C3C" : "#ffffff")};
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
+  padding: 16px;
+  margin-bottom: 16px;
+  position: relative; /* Ensure relative positioning for absolute children */
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
 
-    padding: 16px;
-    margin-bottom: 16px;
-    position: relative; /* Ensure relative positioning for absolute children */
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  /* Ensure text wrapping */
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
 
-    &:hover {
-        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-        transform: translateY(-5px);
-    }
+  &:hover {
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+  }
 `;
 
 export const NoEventsMessage = styled.div`

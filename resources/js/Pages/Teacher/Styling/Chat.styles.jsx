@@ -76,6 +76,7 @@ export const LeftColumn = styled.div`
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)}; /* Apply font size */
     @media (max-width: 991px) {
         max-width: 100%;
+        max-height: 80vh;
         margin-top: 40px;
     }
 `;
@@ -89,6 +90,7 @@ export const Column2 = styled.div`
     margin-left: 20px;
     @media (max-width: 991px) {
         width: 100%;
+
         margin-left: 0;
         margin-top: 20px;
     }
@@ -106,7 +108,8 @@ export const RightColumn = styled.div`
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)}; /* Apply font size */
     @media (max-width: 991px) {
         max-width: 100%;
-        margin-top: 40px;
+        max-height: 70vh;
+
     }
 `;
 
@@ -127,4 +130,27 @@ export const ScrollableContainer = styled.div`
         max-height: 60vh;
         overflow-y: auto;
     }
+`;
+
+export const BackButton = styled.button`
+  background-color: ${({ darkMode }) => (darkMode ? "#6B538C" : "#9C85D8")};
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  width: 100%; /* Make the button take up the full width of the container */
+  text-align: center;
+
+  &:hover {
+    background-color: ${({ darkMode }) => (darkMode ? "#8A76BD" : "#B3A1E1")};
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
 `;

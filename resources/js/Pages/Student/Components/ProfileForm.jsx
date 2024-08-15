@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import { useDropzone } from 'react-dropzone';
-import { spin, ProfileWrapper, ProfileHeader, ProfileSection, ProfileContainer, ProfileImageWrapper, ProfileImage, ProfileBio, BioHeader, ProfileDetail, ProfileDetailItem, DetailLabel, DetailValue, EditProfileButton, ClearProfileButton, DropzoneContainer, SkillsContainer, SkillChip, AddSkillButton, LoadingScreen, Spinner, AutocompleteList, AutocompleteItem, BioValue } from "../Styling/ProfileForm.styles";
+import { spin, ProfileWrapper, ProfileHeader, ProfileSection, ProfileContainer, ProfileImageWrapper, ProfileImage, ProfileBio, BioHeader, ProfileDetail, ProfileDetailItem, DetailLabel, DetailValue, EditProfileButton, ClearProfileButton, DropzoneContainer, SkillsContainer, SkillChip, AddSkillButton, LoadingScreen, Spinner, AutocompleteList, AutocompleteItem, BioValue, ProfileDetailOne, ProfileDetailTwo } from "../Styling/ProfileForm.styles";
 import { useSelector, useDispatch } from "react-redux";
 import {
 
@@ -261,7 +261,7 @@ const ProfileForm = ({fontSize, darkMode}) => {
               )}
             </ProfileImageWrapper>
             <ProfileBio fontSize={fontSize} darkMode={darkMode}>
-              
+
               <BioValue fontSize={fontSize} darkMode={darkMode}
                 name="description"
                 value={user.description}
@@ -271,7 +271,8 @@ const ProfileForm = ({fontSize, darkMode}) => {
             </ProfileBio>
           </ProfileContainer>
         </ProfileSection>
-        <ProfileDetail fontSize={fontSize} darkMode={darkMode}>
+
+
           <ProfileDetailItem fontSize={fontSize} darkMode={darkMode}>
             <DetailLabel fontSize={fontSize} darkMode={darkMode}>Full Name</DetailLabel>
             <DetailValue fontSize={fontSize} darkMode={darkMode}
@@ -281,6 +282,8 @@ const ProfileForm = ({fontSize, darkMode}) => {
               onChange={handleChange}
             />
           </ProfileDetailItem>
+          <ProfileDetail fontSize={fontSize} darkMode={darkMode}>
+          <ProfileDetailOne>
           <ProfileDetailItem fontSize={fontSize} darkMode={darkMode}>
             <DetailLabel fontSize={fontSize} darkMode={darkMode}>Email</DetailLabel>
             <DetailValue fontSize={fontSize} darkMode={darkMode}
@@ -325,7 +328,9 @@ const ProfileForm = ({fontSize, darkMode}) => {
             value={user.positiontitle}
             onChange={handleChange}
           />
-        </ProfileDetailItem>
+        </ProfileDetailItem></ProfileDetailOne>
+        <ProfileDetailTwo>
+
         <ProfileDetailItem fontSize={fontSize} darkMode={darkMode}>
           <DetailLabel fontSize={fontSize} darkMode={darkMode}>Skills</DetailLabel>
           <SkillsContainer fontSize={fontSize} darkMode={darkMode}>
@@ -389,6 +394,7 @@ const ProfileForm = ({fontSize, darkMode}) => {
 
           </SkillsContainer>
         </ProfileDetailItem>
+        </ProfileDetailTwo>
       </ProfileDetail>
       <EditProfileButton fontSize={fontSize} darkMode={darkMode} onClick={handleSubmit}>Save Profile Changes</EditProfileButton>
     </ProfileWrapper>

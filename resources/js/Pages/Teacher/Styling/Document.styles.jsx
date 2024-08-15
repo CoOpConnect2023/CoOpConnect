@@ -33,7 +33,8 @@ const fadeIn = keyframes`
 export const Wrapper = styled.main`
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
+    flex: 1;
+
     padding: ${({ fontSize }) => calculateFontSize(20, fontSize)};
     animation: ${fadeIn} 0.8s ease-in-out;
     background-color: ${({ darkMode }) => (darkMode ? "#1C1C1C" : "#fff")};
@@ -46,16 +47,20 @@ export const Wrapper = styled.main`
 
 export const Content = styled.div`
     display: flex;
+    flex: 1;
     justify-content: center;
+    height: 100%;
     @media (max-width: 991px) {
         flex-direction: column;
+         min-height: 100vh;
+
     }
 `;
 
 export const FileSection = styled.section`
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
+    flex: 1;
     align-self: stretch;
     padding: ${({ fontSize }) => calculateFontSize(20, fontSize)} 0px;
     border-radius: 10px;
@@ -67,6 +72,8 @@ export const FileSection = styled.section`
     @media (max-width: 991px) {
         padding: 0;
         width: 100%;
+        
+
     }
 `;
 
@@ -202,6 +209,9 @@ export const FormSection = styled.section`
     @media (max-width: 991px) {
         margin-left: 0;
         width: 100%;
+        flex-grow: 1;
+        height: 100%
+         min-height: 100vh;
     }
 `;
 
@@ -216,6 +226,7 @@ export const Form = styled.form`
     color: ${({ darkMode }) => (darkMode ? "#CCCCCC" : "#7b757f")};
     transition: background-color 0.3s, color 0.3s;
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+    flex-grow: 1;  // Ensures the form takes up available space
 `;
 
 export const Title = styled.h2`

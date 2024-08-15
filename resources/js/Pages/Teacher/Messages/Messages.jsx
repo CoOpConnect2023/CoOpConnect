@@ -98,8 +98,8 @@ export default function Messages() {
 
 
 
-
-    if (userStatus === 'loading' || !conversations) {
+    
+    if (userStatus === 'loading') {
         return <LogoLoadingComponent  darkMode={darkMode}/>;
     }
     // if (messageStatus === 'loading') {
@@ -145,6 +145,8 @@ const spin = keyframes`
     100% { transform: rotate(360deg); }
 `;
 
+
+
 const LoadingScreen = styled.div`
     display: flex;
     justify-content: center;
@@ -168,14 +170,12 @@ const PageContainer = styled.div`
     display: flex;
     flex-direction: column;
     height: 100vh;
-    overflow: hidden;
+
 `;
 
 const ChatContainer = styled.div`
     flex: 1;
     display: flex;
     flex-direction: column;
-
     overflow: hidden;
 `;
-

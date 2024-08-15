@@ -42,6 +42,12 @@ import message from "@/Pages/Images/message-square.svg";
 import calendar from "@/Pages/Images/calendar-days.svg";
 import user from "@/Pages/Images/user.svg";
 import settings from "@/Pages/Images/settings.svg";
+import whitelogo from "@/Pages/Images/whitepuzzle.svg";
+import whitebriefcase from "@/Pages/Images/whitebriefcase.svg";
+import whitemessage from "@/Pages/Images/whitemessage-square.svg";
+import whitecalendar from "@/Pages/Images/whitecalendar-days.svg";
+import whiteuser from "@/Pages/Images/whiteuser.svg";
+import whitesettings from "@/Pages/Images/whitesettings.svg";
 import { Link } from "@inertiajs/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell, faMap, faTimes, faSun, faMoon, faPlus, faMinus, faTextHeight, faChevronDown } from "@fortawesome/free-solid-svg-icons";
@@ -124,34 +130,41 @@ function Sidebar() {
     return (
         <aside>
             <NavContainer fontSize={fontSize} darkMode={darkMode}>
-                <Link fontSize={fontSize} darkMode={darkMode} href="/" onClick={() => handleTabClick("/")}>
-                    <Logo fontSize={fontSize} darkMode={darkMode} src={logo} alt="Logo" loading="lazy" active={activeTab === "/"} />
-                </Link>
+            <Link fontSize={fontSize} darkMode={darkMode} href="/" onClick={() => handleTabClick("/")}>
+          <Logo
+    fontSize={fontSize}
+    darkMode={darkMode}
+    src={darkMode ? whitelogo : logo}
+    alt="Logo"
+    loading="lazy"
+    active={activeTab === "/"}
+  />
+</Link>
                 <Divider fontSize={fontSize} darkMode={darkMode} />
 
                 <Link fontSize={fontSize} darkMode={darkMode} href="/teacher/home" onClick={() => handleTabClick("/teacher/home")}>
                     <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/teacher/home"}>
-                        <Icon fontSize={fontSize} darkMode={darkMode} src={briefcase} alt="Icon 1" loading="lazy" />
+                    <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitebriefcase : briefcase} alt="Icon 1" loading="lazy" />
                     </IconButton>
                 </Link>
                 <Link fontSize={fontSize} darkMode={darkMode} data-test-id="messages-link" href="/teacher/messages" onClick={() => handleTabClick("/teacher/messages")}>
                     <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/teacher/messages"}>
-                        <Icon fontSize={fontSize} darkMode={darkMode} src={message} alt="" loading="lazy" />
+                    <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitemessage : message} alt="" loading="lazy" />
                     </IconButton>
                 </Link>
                 <Link fontSize={fontSize} darkMode={darkMode} data-test-id="interviews-link" href="/teacher/scheduling" onClick={() => handleTabClick("/teacher/scheduling")}>
                     <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/teacher/scheduling"}>
-                        <Icon fontSize={fontSize} darkMode={darkMode} src={calendar} alt="" loading="lazy" />
+                    <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitecalendar : calendar} alt="" loading="lazy" />
                     </IconButton>
                 </Link>
                 <Link fontSize={fontSize} darkMode={darkMode} data-test-id="profile-link" href="/teacher/profile" onClick={() => handleTabClick("/teacher/profile")}>
-                    <IconButton active={activeTab === "/teacher/profile"}>
-                        <Icon src={user} alt="" loading="lazy" />
+                    <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/teacher/profile"}>
+                    <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whiteuser : user} alt="" loading="lazy" />
                     </IconButton>
                 </Link>
                 <Link fontSize={fontSize} darkMode={darkMode} href="/teacher/settings" onClick={() => handleTabClick("/teacher/settings")}>
                     <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/teacher/settings"}>
-                        <Icon fontSize={fontSize} darkMode={darkMode} src={settings} alt="" loading="lazy" />
+                    <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitesettings : settings} alt="" loading="lazy" />
                     </IconButton>
                 </Link>
                 <IconContainer fontSize={fontSize} darkMode={darkMode} onClick={toggleFooterVisibility}>

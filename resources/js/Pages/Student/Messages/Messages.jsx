@@ -149,6 +149,7 @@ const spin = keyframes`
     100% { transform: rotate(360deg); }
 `;
 
+
 const LoadingScreen = styled.div`
     display: flex;
     justify-content: center;
@@ -171,13 +172,13 @@ const Spinner = styled.div`
 const PageContainer = styled.div`
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Ensure it covers the entire viewport height */
-     /* Prevents scrolling unless needed */
+    height: 100vh;
+
 `;
 
 const ChatContainer = styled.div`
     flex: 1;
     display: flex;
     flex-direction: column;
-    overflow: auto; /* Allows scrolling content within the container */
+    overflow: hidden;
 `;

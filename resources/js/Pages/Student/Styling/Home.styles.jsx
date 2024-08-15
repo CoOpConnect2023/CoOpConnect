@@ -192,7 +192,7 @@ export const JobCardContainer = styled.article`
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: ${({ darkMode }) => (darkMode ? '#2C2C2C' : '#eddcff')};
+    background-color: ${({ darkMode }) => (darkMode ? '#444444' : '#eddcff')};
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#260e44')};
     border-radius: 10px;
     border: 2px solid ${({ darkMode }) => (darkMode ? '#444' : '#773dc3')};

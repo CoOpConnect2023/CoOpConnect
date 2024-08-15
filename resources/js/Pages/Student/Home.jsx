@@ -58,7 +58,7 @@ function Home() {
                 <CompanyName darkMode={darkMode} fontSize={fontSize}  >{job.company}</CompanyName>
 
                 <Location darkMode={darkMode} fontSize={fontSize} >{job.location}</Location>
-                <JobTitle  darkMode={darkMode} fontSize={fontSize}>{job.title}</JobTitle>
+                
                 <SkillsList darkMode={darkMode} fontSize={fontSize} >
                     {job.skills.map((tag, index) => (
                         <SkillBadge darkMode={darkMode} fontSize={fontSize}   key={index}>{tag}</SkillBadge>
