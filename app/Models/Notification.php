@@ -14,7 +14,8 @@ class Notification extends Model
         'to_user_id',
         'viewed',
         'content',
-        'type'
+        'type',
+        'interview_date',
     ];
 
     public function fromUser()

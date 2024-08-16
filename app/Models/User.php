@@ -117,6 +117,11 @@ public function conversations()
         return $this->hasMany(Message::class);
     }
 
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
+
     public function shortlists()
 {
     return $this->hasMany(Shortlist::class);

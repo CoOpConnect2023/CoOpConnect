@@ -5,7 +5,8 @@ import { patchUserJob, selectApplicants, getUserDetails } from "@/Features/userJ
 import { useDispatch, useSelector } from "react-redux";
 import { usePage } from "@inertiajs/react";
 import { selectJob, selectSingleJob } from "@/Features/jobs/jobsSlice";
-
+import { postNotification } from "@/Features/notifications/notificationsSlice";
+import { getUser, selectUser } from "@/Features/users/userSlice";
 // Decline Modal Component
 const DeclineModal = ({ applicant, onClose, onSubmit, darkMode, fontSize }) => {
     const [message, setMessage] = useState("");
@@ -54,6 +55,7 @@ const ViewApplicants = () => {
     const [isDeclineModalOpen, setIsDeclineModalOpen] = useState(false);
     const darkMode = useSelector(state => state.accessibility.darkMode);
     const fontSize = useSelector(state => state.accessibility.textSize);
+    const user = useSelector(selectUser);
     const dispatch = useDispatch();
     const applicants = useSelector(selectApplicants);
     const job = useSelector(selectSingleJob);
@@ -69,17 +71,49 @@ const ViewApplicants = () => {
         setSelectedApplicant(applicant);
         setIsDeclineModalOpen(true);
     };
+console.log(selectedApplicant)
+    const handleDeclineSubmit = async (message) => {
+        try {
 
-    const handleDeclineSubmit = (message) => {
-        dispatch(
-            patchUserJob({
-                userJobsId: selectedApplicant.id,
-                status: "Rejected",
-                message: message,
-                timeSlots: [""],
-            })
-        );
+            await dispatch(
+                patchUserJob({
+                    userJobsId: selectedApplicant.id,
+                    status: "Rejected",
+                    message: message,
+                    timeSlots: [""],
+                })
+            ).unwrap();
+
+            console.log("postNotification payload:", {
+                from_user_id: user.id,
+                to_user_id: selectedApplicant.userId,
+                viewed: false,
+                content: `Your job application for ${job.title} has been rejected.`,
+                type: "Application Rejected",
+                interview_date: null,
+            });
+            await dispatch(
+                postNotification({
+                    from_user_id: user.id,
+                    to_user_id: selectedApplicant.userId,
+                    viewed: false,
+                    content: `Your job application for ${job.title} has been rejected.`,
+                    type: "Application Rejected",
+                    interview_date: null
+                })
+            ).unwrap();
+
+
+            alert("Applicant has been successfully rejected and notified.");
+        } catch (error) {
+
+            console.error("Error in processing decline:", error);
+
+
+            alert("An error occurred while rejecting the applicant. Please try again.");
+        }
     };
+
 
     const handleAccept = (applicant) => {
         window.location.href = `/employer/accept-applicant/${applicant.id}`;
@@ -335,4 +369,49 @@ const Button = styled.button`
         margin: 5px 2px;
         font-size: 0.9em;
     }
+`;
+
+const Modal = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`;
+
+const ModalContent = styled.div`
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 500px;
+    max-width: 90%;
+`;
+
+const FormGroup = styled.div`
+    margin-bottom: 15px;
+`;
+
+const Label = styled.label`
+    display: block;
+    margin-bottom: 5px;
+`;
+
+const TextArea = styled.textarea`
+    width: 100%;
+    padding: 10px;
+    resize: none;
+`;
+
+const Input = styled.input`
+    width: 100%;
+    padding: 10px;
+`;
+
+const Actions = styled.div`
+    display: flex;
+    justify-content: flex-end;
 `;

@@ -52,6 +52,7 @@ import { Link } from "@inertiajs/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell, faMap, faTimes, faSun, faMoon, faPlus, faMinus, faTextHeight, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { toggleDarkMode, setTextSize, increaseFontSize, decreaseFontSize } from "@/Features/accessibility/accessibilitySlice";
+import { getMyNotifications, patchNotification } from "@/Features/notifications/notificationsSlice";
 
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -216,12 +217,14 @@ function Header({ header }) {
     }, [user, dispatch]);
 
     const conversations = notifications?.conversations;
+const otherNotifications = useSelector((state) => state.notifications.myNotifications);
 
-    const hasUnreadMessages =
-        conversations &&
-        conversations.some((conversation) =>
-            conversation.messages.some((message) => !message.viewed)
-        );
+const hasUnreadMessages =
+    (conversations && conversations.some((conversation) =>
+        conversation.messages.some((message) => !message.viewed)
+    )) ||
+    (otherNotifications && otherNotifications.some((notification) => !notification.viewed));
+
 
 
     const handleMarkAsRead = (messageId, conversationId) => {
@@ -400,56 +403,126 @@ const FontToggler = () => {
 
 
 
-function NotificationModal({ isOpen, conversations, handleMarkAsRead, handleRedirect, currentUser, notificationsStatus, markMessageStatus }) {
-    const darkMode = useSelector(state => state.accessibility.darkMode);
-    const fontSize = useSelector(state => state.accessibility.textSize);
+function NotificationModal({
+    isOpen,
+    conversations,
+    handleRedirect,
+    handleMarkAsRead,
+    currentUser,
+    notificationsStatus,
+    markMessageStatus
+}) {
+    const dispatch = useDispatch();
+    const darkMode = useSelector((state) => state.accessibility.darkMode);
+    const fontSize = useSelector((state) => state.accessibility.textSize);
+    const notifications = useSelector((state) => state.notifications.myNotifications);
+
+    // Log notifications whenever they change
+    useEffect(() => {
+        if (notifications) {
+            console.log("Notifications:", notifications);
+        }
+    }, [notifications]);
+
+    // Fetch notifications only on component mount
+    useEffect(() => {
+        dispatch(getMyNotifications());
+    }, [dispatch]);
+
     const formatDate = (dateString) => {
-        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+        const options = {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+        };
         return new Date(dateString).toLocaleDateString(undefined, options);
     };
 
+
+    const markAsRead = (notificationId) => {
+        console.log("firing",)
+        dispatch(patchNotification({
+            notificationId,
+            viewed: true,  // Only updating the 'viewed' field
+        }));
+    };
+
+
     return (
         <NotificationModalContainer fontSize={fontSize} darkMode={darkMode} isOpen={isOpen}>
-            {markMessageStatus === 'loading' ? (
-                <LoadingMessage fontSize={fontSize} darkMode={darkMode}>Loading...</LoadingMessage>
-            ) : conversations === null || conversations.length === 0 ? (
-                <NoNotificationsMessage fontSize={fontSize} darkMode={darkMode}>No new notifications</NoNotificationsMessage>
+            {(conversations === null || conversations.length === 0) && (notifications === null || notifications.length === 0) ? (
+                <NoNotificationsMessage fontSize={fontSize} darkMode={darkMode}>
+                    No new notifications
+                </NoNotificationsMessage>
             ) : (
-                conversations.map((conversation) => {
-                    const otherUser = conversation.users.find(user => user.id !== currentUser?.id);
+                <>
+                    {/* Display Conversations */}
+                    {conversations && conversations.length > 0 && conversations.map((conversation) => {
+                        const otherUser = conversation.users.find(user => user.id !== currentUser?.id);
 
-                    return (
-                        <Conversation fontSize={fontSize} darkMode={darkMode} key={conversation.id}>
-                            <ConversationInfo fontSize={fontSize} darkMode={darkMode}>
-                                <div>From: {otherUser ? otherUser.name : 'Unknown'}</div>
-                            </ConversationInfo>
-                            <MessagesList fontSize={fontSize} darkMode={darkMode}>
-                                {conversation.messages.map((message) => (
-                                    <Message fontSize={fontSize} darkMode={darkMode} key={message.id}>
-                                        <div>Message: {message.content}</div>
-                                        <div>Received: {formatDate(message.created_at)}</div>
-                                        <Button fontSize={fontSize} darkMode={darkMode} onClick={() => handleMarkAsRead(message.id, conversation.id)}>
-                                            Mark as Read
-                                        </Button>
-                                        <Button fontSize={fontSize} darkMode={darkMode} onClick={handleRedirect}>
-                                            Go to Messages
-                                        </Button>
-                                    </Message>
-                                ))}
-                            </MessagesList>
-                        </Conversation>
-                    );
-                })
+                        return (
+                            <Conversation fontSize={fontSize} darkMode={darkMode} key={conversation.id}>
+                                <ConversationInfo fontSize={fontSize} darkMode={darkMode}>
+                                    <div>From: {otherUser ? otherUser.name : 'Unknown'}</div>
+                                </ConversationInfo>
+                                <MessagesList fontSize={fontSize} darkMode={darkMode}>
+                                    {conversation.messages.map((message) => (
+                                        <Message fontSize={fontSize} darkMode={darkMode} key={message.id}>
+                                            <div>Message: {message.content}</div>
+                                            <div>Received: {formatDate(message.created_at)}</div>
+                                            <Button fontSize={fontSize} darkMode={darkMode} onClick={() => handleMarkAsRead(message.id, conversation.id)}>
+                                                Mark as Read
+                                            </Button>
+                                            <Button fontSize={fontSize} darkMode={darkMode} onClick={handleRedirect}>
+                                                Go to Messages
+                                            </Button>
+                                        </Message>
+                                    ))}
+                                </MessagesList>
+                            </Conversation>
+                        );
+                    })}
+
+{notifications && notifications.length > 0 && notifications
+    .filter(notification => !notification.viewed)  // Filter for notifications that have been viewed
+    .map((notification) => (
+        <Conversation fontSize={fontSize} darkMode={darkMode} key={notification.id}>
+            <ConversationInfo fontSize={fontSize} darkMode={darkMode}>
+                <MessagesList fontSize={fontSize} darkMode={darkMode}>
+                    <Message fontSize={fontSize} darkMode={darkMode}>
+                        <div>{notification.content}</div>
+                        <div>Received: {formatDate(notification.created_at)}</div>
+                        {notification.interview_date && (
+                            <div>Interview Date: {formatDate(notification.interview_date)}</div>
+                        )}
+                        {!notification.viewed && (
+                            <Button
+                                fontSize={fontSize}
+                                darkMode={darkMode}
+                                onClick={() => markAsRead(notification.id)}
+                            >
+                                Mark as Read
+                            </Button>
+                        )}
+                    </Message>
+                </MessagesList>
+            </ConversationInfo>
+        </Conversation>
+    ))}
+                </>
             )}
         </NotificationModalContainer>
     );
-
-
-
-
-
-
 }
+
+
+
+
+
+
+
 
 
 

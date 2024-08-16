@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\V1\ReflectionsController;
 use App\Http\Controllers\Api\V1\TokenController;
 use App\Http\Controllers\Api\V1\UserCoursesController;
 use App\Http\Controllers\Api\V1\UserJobsController;
+use App\Http\Controllers\Api\V1\NotificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MessagingController;
@@ -138,7 +139,8 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
 
 
 
-
+    Route::apiResource('notifications', NotificationController::class);
+    Route::get('/notifications/unviewed', [NotificationController::class, 'getUnviewedNotifications']);
 
 
 

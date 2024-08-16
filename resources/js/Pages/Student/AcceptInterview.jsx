@@ -7,6 +7,7 @@ import {
     patchUserJob,
 } from "@/Features/userJobs/userJobsSlice";
 import { postInterview } from "@/Features/interviews/interviewsSlice";
+import { postNotification } from "@/Features/notifications/notificationsSlice";
 import { getUser, selectUser } from "@/Features/users/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { usePage } from "@inertiajs/react";
@@ -89,6 +90,17 @@ const AcceptInterview = () => {
                         userJobsId,
                         timeSlots: [selectedSlot],
                         status: "Scheduled",
+                    })
+                ).unwrap();
+
+                await dispatch(
+                    postNotification({
+                        from_user_id: user.id,
+                        to_user_id: job.userId,
+                        viewed: false,
+                        content: `You have a new interview scheduled with ${user.name} at ${user.company_name} .`,
+                        type: "Interview Scheduled",
+                        interview_date: formattedStart
                     })
                 ).unwrap();
 

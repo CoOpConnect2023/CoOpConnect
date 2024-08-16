@@ -28,7 +28,7 @@ const slideOut = keyframes`
   }
   100% {
     opacity: 0;
-    transform: translateX(100%);
+    transform: translateX(-100%);
   }
 `;
 
@@ -252,11 +252,7 @@ export const NotificationIcon = styled.div`
   position: relative;
   transition: transform 0.5s ease;
 
-  ${(props) =>
-    props.hasUnreadMessages &&
-    css`
-      animation: ${vibration} 0.5s ease infinite;
-    `}
+
 
   &:hover {
     transform: scale(1.05);
@@ -447,10 +443,10 @@ export const Modal = styled.div`
 
 
   border-radius: 5px;
-
+opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
   z-index: 1000;
   transition: opacity 0.3s ease, transform 0.3s ease;
-  opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
+
  transform: ${({ isOpen }) => (isOpen ? "translateY(0)" : "translateY(-100%)")};
   pointer-events: ${({ isOpen }) => (isOpen ? "auto" : "none")};
   font-size: ${({ fontSize }) => getFontSize(fontSize)};
@@ -461,9 +457,9 @@ export const NotificationModalContainer = styled.div`
   position: absolute;
   top: 80px; /* Adjusted to move the modal slightly lower */
   right: 0;
-  background: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "#fff")};
-  border: 1px solid #ccc;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+
+
   border-radius: 8px;
   overflow: hidden;
   z-index: 10;
@@ -471,7 +467,8 @@ export const NotificationModalContainer = styled.div`
   max-width: 60%;
   overflow-y: auto;
   font-size: ${({ fontSize }) => getFontSize(fontSize)};
-  animation: ${slideIn} 0.3s ease-out; /* Apply the slide-in animation */
+ animation: ${({ isOpen }) => (isOpen ? slideInFromRight : slideOut)} 0.3s ease-out forwards;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 
   @media (min-width: 700px) {
 
@@ -481,23 +478,24 @@ export const NotificationModalContainer = styled.div`
 export const NotificationModalContent = styled.ul`
   list-style: none;
   margin: 0;
-  background-color: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "#fff")};
+
   padding: 20px;
   font-size: ${({ fontSize }) => getFontSize(fontSize)};
   color: ${({ darkMode }) => (darkMode ? "#fff" : "#2C2C2C")};
 `;
 
 export const Conversation = styled.div`
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   padding: 15px;
   border: 1px solid #f0f0f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   border-radius: 8px;
   background-color: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "#fafafa")};
   font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
 export const ConversationInfo = styled.div`
-  margin-bottom: 15px;
+  margin-bottom: 5px;
   font-size: 14px;
   color: ${({ darkMode }) => (darkMode ? "#fff" : "#2C2C2C")};
   font-size: ${({ fontSize }) => getFontSize(fontSize)};
@@ -515,7 +513,7 @@ export const Message = styled.div`
   color: ${({ darkMode }) => (darkMode ? "#fff" : "black")};
   border-radius: 5px;
   padding: 10px;
-  margin-bottom: 10px;
+
   font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
