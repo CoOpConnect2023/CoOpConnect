@@ -209,13 +209,16 @@ export default ViewApplicants;
 
 // Styled Components
 const Container = styled.div`
+
     padding: 20px;
+
     background-color: ${({ darkMode }) => (darkMode ? "#333" : "#fff")};
     color: ${({ darkMode }) => (darkMode ? "#f1f1f1" : "#000")};
     transition: background-color 0.5s ease, color 0.5s ease;
 
     @media (max-width: 768px) {
         padding: 10px;
+        min-height: 100vh;
     }
 `;
 

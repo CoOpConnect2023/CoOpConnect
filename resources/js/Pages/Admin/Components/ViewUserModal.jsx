@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-
 const ModalContainer = styled.div`
   position: fixed;
   top: 0;
@@ -12,20 +11,17 @@ const ModalContainer = styled.div`
   justify-content: center;
   align-items: center;
 `;
-
 const ModalContent = styled.div`
   background-color: white;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 `;
-
-const UserModal = ({ isOpen, onClose, user }) => {
+const UserModal = ({ isOpen, onClose, user, fontSize, darkMode }) => {
   if (!isOpen) return null;
-
   return (
-    <ModalContainer onClick={onClose}>
-      <ModalContent onClick={(e) => e.stopPropagation()}>
+    <ModalContainer fontSize={fontSize} darkMode={darkMode} onClick={onClose}>
+      <ModalContent fontSize={fontSize} darkMode={darkMode} onClick={(e) => e.stopPropagation()}>
         <h2>{user.name}</h2>
         <p><strong>Email:</strong> {user.email}</p>
         <p><strong>SchoolID:</strong> {user.school_id}</p>
@@ -40,5 +36,4 @@ const UserModal = ({ isOpen, onClose, user }) => {
     </ModalContainer>
   );
 };
-
 export default UserModal;

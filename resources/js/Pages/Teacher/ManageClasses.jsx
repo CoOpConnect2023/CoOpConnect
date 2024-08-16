@@ -9,7 +9,6 @@ import { MainContainer, Section, SectionTitle, StyledTable, FormContainer, Form,
 
 
 function ClassesPage() {
-
     const dispatch = useDispatch();
     const user = useSelector(selectUser);
     const classes = useSelector(selectCourses);
@@ -17,36 +16,60 @@ function ClassesPage() {
     const [editingClass, setEditingClass] = useState(null);
     const darkMode = useSelector(state => state.accessibility.darkMode);
     const fontSize = useSelector(state => state.accessibility.textSize);
-
-    useEffect(() => {
-        dispatch(getUser());
-    }, [dispatch]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (user?.id) {
-
-            dispatch(getCourses(user.id));
+            console.log("Fetching courses for user:", user.id);
+            dispatch(getCourses(user.id))
+                .then(() => setLoading(false))
+                .catch((error) => {
+                    console.error("Error fetching courses:", error);
+                    setLoading(false);
+                });
+        } else {
+            setLoading(false); // Ensure loading state is updated if user is not available
         }
     }, [dispatch, user?.id]);
 
     const handleCreateClass = () => {
-        dispatch(createClass({ newClass, user }));
-        dispatch(getCourses(user.id));
+        setLoading(true);
+        dispatch(createClass({ newClass, user }))
+            .then((action) => {
+                console.log("Class created:", action.payload);
+                if (action.payload) {
+                    dispatch(getCourses(user.id)).finally(() => setLoading(false));
+                } else {
+                    setLoading(false);
+                }
+            })
+            .catch((error) => {
+                console.error("Error creating class:", error);
+                setLoading(false);
+            });
         setNewClass({ name: "", startDate: "", endDate: "" });
     };
 
     const handleEditClass = (classId) => {
-        const editedClassData = { ...editingClass };
-        dispatch(editClass({ classId, editedClassData, user }));
-        setEditingClass(null);
+        dispatch(editClass({ classId, editedClassData: editingClass, user }))
+            .then((action) => {
+                console.log("Class edited:", action.payload);
+                setEditingClass(null);
+            })
+            .catch((error) => {
+                console.error("Error editing class:", error);
+            });
     };
 
     const handleDeleteClass = (classId) => {
-        dispatch(deleteClass(classId));
+        dispatch(deleteClass(classId))
+            .then((action) => {
+                console.log("Class deleted:", action.payload);
+            })
+            .catch((error) => {
+                console.error("Error deleting class:", error);
+            });
     };
-
-    useEffect(() => {
-    }, [classes]);
 
     const handleInputChange = (e, isEditing = false) => {
         const { name, value } = e.target;
@@ -57,95 +80,101 @@ function ClassesPage() {
         }
     };
 
-    if (!user || !classes) {
-        return <LoadingScreen><Spinner /></LoadingScreen>;;
+    if (loading) {
+        return (
+            <LoadingScreen>
+                <Spinner />
+            </LoadingScreen>
+        );
     }
 
     return (
         <NavBar header={"Manage Classes"}>
-            <MainContainer fontSize={fontSize} darkMode={darkMode}>
-                <Section fontSize={fontSize} darkMode={darkMode}>
-                    <SectionTitle fontSize={fontSize} darkMode={darkMode}>Classes Taught</SectionTitle>
-                    <StyledTable fontSize={fontSize} darkMode={darkMode}>
-                        <thead>
-                            <tr>
-                                <th>Class ID</th>
-                                <th>Class Name</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>{classes &&
-                        <tbody>
-                            {classes.map((classItem, index) => (
-                                <tr key={index}>
-                                    <td>{classItem.id}</td>
-                                    <td>{classItem.name}</td>
-                                    <td>{classItem.startDate}</td>
-                                    <td>{classItem.endDate}</td>
-                                    <td>
-                                        <Button fontSize={fontSize} darkMode={darkMode} onClick={() => setEditingClass(classItem)}>Edit</Button>
-                                        <DeleteButton fontSize={fontSize} darkMode={darkMode} onClick={() => handleDeleteClass(classItem.id)}>Delete</DeleteButton>
-                                    </td>
+            {user && classes && (
+                <MainContainer fontSize={fontSize} darkMode={darkMode}>
+                    <Section fontSize={fontSize} darkMode={darkMode}>
+                        <SectionTitle fontSize={fontSize} darkMode={darkMode}>Classes Taught</SectionTitle>
+                        <StyledTable fontSize={fontSize} darkMode={darkMode}>
+                            <thead>
+                                <tr>
+                                    <th>Class ID</th>
+                                    <th>Class Name</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Actions</th>
                                 </tr>
-                            ))}
-                        </tbody>}
-                    </StyledTable>
-                </Section >
-                <FormContainer>
-                    {editingClass ? (
-                        <Form fontSize={fontSize} darkMode={darkMode}>
-                            <Input fontSize={fontSize} darkMode={darkMode}
-                                type="text"
-                                name="name"
-                                value={editingClass.name}
-                                onChange={(e) => handleInputChange(e, true)}
-                                placeholder="Class Name"
-                            />
-                            <Input fontSize={fontSize} darkMode={darkMode}
-                                type="date"
-                                name="startDate"
-                                value={editingClass.startDate}
-                                onChange={(e) => handleInputChange(e, true)}
-                                placeholder="Start Date"
-                            />
-                            <Input fontSize={fontSize} darkMode={darkMode}
-                                type="date"
-                                name="endDate"
-                                value={editingClass.endDate}
-                                onChange={(e) => handleInputChange(e, true)}
-                                placeholder="End Date"
-                            />
-                            <Button fontSize={fontSize} darkMode={darkMode} onClick={() => handleEditClass(editingClass.id)}>Save Changes</Button>
-                        </Form>
-                    ) : (
-                        <Form fontSize={fontSize} darkMode={darkMode}>
-                            <Input fontSize={fontSize} darkMode={darkMode}
-                                type="text"
-                                name="name"
-                                value={newClass.name}
-                                onChange={(e) => handleInputChange(e)}
-                                placeholder="Class Name"
-                            />
-                            <Input fontSize={fontSize} darkMode={darkMode}
-                                type="date"
-                                name="startDate"
-                                value={newClass.startDate}
-                                onChange={(e) => handleInputChange(e)}
-                                placeholder="Start Date"
-                            />
-                            <Input fontSize={fontSize} darkMode={darkMode}
-                                type="date"
-                                name="endDate"
-                                value={newClass.endDate}
-                                onChange={(e) => handleInputChange(e)}
-                                placeholder="End Date"
-                            />
-                            <Button fontSize={fontSize} darkMode={darkMode} onClick={handleCreateClass}>Create Class</Button>
-                        </Form>
-                    )}
-                </FormContainer>
-            </MainContainer>
+                            </thead>
+                            <tbody>
+                                {classes.map((classItem, index) => (
+                                    <tr key={index}>
+                                        <td>{classItem.id}</td>
+                                        <td>{classItem.name}</td>
+                                        <td>{classItem.startDate}</td>
+                                        <td>{classItem.endDate}</td>
+                                        <td>
+                                            <Button fontSize={fontSize} darkMode={darkMode} onClick={() => setEditingClass(classItem)}>Edit</Button>
+                                            <DeleteButton fontSize={fontSize} darkMode={darkMode} onClick={() => handleDeleteClass(classItem.id)}>Delete</DeleteButton>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </StyledTable>
+                    </Section>
+                    <FormContainer>
+                        {editingClass ? (
+                            <Form fontSize={fontSize} darkMode={darkMode}>
+                                <Input fontSize={fontSize} darkMode={darkMode}
+                                    type="text"
+                                    name="name"
+                                    value={editingClass.name}
+                                    onChange={(e) => handleInputChange(e, true)}
+                                    placeholder="Class Name"
+                                />
+                                <Input fontSize={fontSize} darkMode={darkMode}
+                                    type="date"
+                                    name="startDate"
+                                    value={editingClass.startDate}
+                                    onChange={(e) => handleInputChange(e, true)}
+                                    placeholder="Start Date"
+                                />
+                                <Input fontSize={fontSize} darkMode={darkMode}
+                                    type="date"
+                                    name="endDate"
+                                    value={editingClass.endDate}
+                                    onChange={(e) => handleInputChange(e, true)}
+                                    placeholder="End Date"
+                                />
+                                <Button fontSize={fontSize} darkMode={darkMode} onClick={() => handleEditClass(editingClass.id)}>Save Changes</Button>
+                            </Form>
+                        ) : (
+                            <Form fontSize={fontSize} darkMode={darkMode}>
+                                <Input fontSize={fontSize} darkMode={darkMode}
+                                    type="text"
+                                    name="name"
+                                    value={newClass.name}
+                                    onChange={handleInputChange}
+                                    placeholder="Class Name"
+                                />
+                                <Input fontSize={fontSize} darkMode={darkMode}
+                                    type="date"
+                                    name="startDate"
+                                    value={newClass.startDate}
+                                    onChange={handleInputChange}
+                                    placeholder="Start Date"
+                                />
+                                <Input fontSize={fontSize} darkMode={darkMode}
+                                    type="date"
+                                    name="endDate"
+                                    value={newClass.endDate}
+                                    onChange={handleInputChange}
+                                    placeholder="End Date"
+                                />
+                                <Button fontSize={fontSize} darkMode={darkMode} onClick={handleCreateClass}>Create Class</Button>
+                            </Form>
+                        )}
+                    </FormContainer>
+                </MainContainer>
+            )}
         </NavBar>
     );
 }

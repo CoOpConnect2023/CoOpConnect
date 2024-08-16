@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-axios.defaults.baseURL = "http://127.0.0.1:8000/api/v1";
 const appUrl = import.meta.env.VITE_APP_URL;
+axios.defaults.baseURL = `${appUrl}/api/v1`;
 
 const initialState = {
     schools: null,
@@ -21,7 +21,7 @@ export const getStudents = createAsyncThunk(
     "students/getStudents",
     async (userID) => {
         const response = await axios({
-            url: `http://127.0.0.1:8000/api/students/teacher/${userID}`,
+            url: `${appUrl}/api/students/teacher/${userID}`,
             method: "GET",
         });
 
@@ -45,7 +45,7 @@ export const getPercentages = createAsyncThunk(
     "percentages/getPercentages",
     async (userID) => {
         const response = await axios({
-            url: `http://127.0.0.1:8000/api/students/teacher/${userID}`,
+            url: `${appUrl}/api/students/teacher/${userID}`,
             method: "GET",
         });
 
@@ -58,11 +58,11 @@ export const getCourses = createAsyncThunk(
     async (userID) => {
         try {
             const response = await axios.get(`/courses/teacher/${userID}`);
-            console.log(response.data); // Log the response data for debugging
-            return response.data.data; // Assuming response data structure has a 'courses' property
+
+            return response.data.data;
         } catch (error) {
             console.error("Error fetching courses:", error);
-            throw error; // Propagate the error
+            throw error;
         }
     }
 );
@@ -72,11 +72,11 @@ export const getCoursesStudents = createAsyncThunk(
     async (userID) => {
         try {
             const response = await axios.get(`/courses/teacher/${userID}`);
-            console.log(response.data); // Log the response data for debugging
-            return response.data; // Assuming response data structure has a 'courses' property
+            console.log(response.data);
+            return response.data; 
         } catch (error) {
             console.error("Error fetching courses:", error);
-            throw error; // Propagate the error
+            throw error;
         }
     }
 );
@@ -84,7 +84,7 @@ export const getCoursesStudents = createAsyncThunk(
 export const deleteStudent = createAsyncThunk(
     "students/deleteStudent",
     async (studentId) => {
-      await axios.delete(`http://127.0.0.1:8000/api/v1/usercourses/student/${studentId}`);
+      await axios.delete(`/usercourses/student/${studentId}`);
       return studentId; // Return studentId to update state
     }
   );
@@ -97,7 +97,7 @@ export const deleteStudent = createAsyncThunk(
             const courseId = courses.length > 0 ? courses[0].id : null;
 
             // Send the POST request
-            const response = await axios.post(`http://127.0.0.1:8000/api/v1/usercourses`, {
+            const response = await axios.post(`/usercourses`, {
                 userId: id,
                 coursesId: courseId
             });

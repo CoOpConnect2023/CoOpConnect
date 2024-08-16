@@ -72,7 +72,7 @@ export const FileSection = styled.section`
     @media (max-width: 991px) {
         padding: 0;
         width: 100%;
-        
+
 
     }
 `;
@@ -131,7 +131,7 @@ export const FileContainer = styled.article`
     border: 1px solid ${({ darkMode }) => (darkMode ? "#555555" : "#7b757f")};
     border-radius: 10px;
     transition: transform 0.5s ease, border-color 0.3s;
-    flex-grow: 1;
+    
 
     &:hover {
         transform: scale(1.01);
@@ -151,7 +151,7 @@ export const FileIcons = styled.div`
 `;
 
 export const FileDetails = styled.div`
-    flex-grow: 1;
+
     display: flex;
     flex-direction: row;
     justify-content: space-between;

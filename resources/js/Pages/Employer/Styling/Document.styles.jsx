@@ -16,7 +16,6 @@ const fadeIn = keyframes`
         opacity: 1;
     }
 `;
-
 export const Wrapper = styled.main`
     display: flex;
     flex: 1;
@@ -27,6 +26,10 @@ export const Wrapper = styled.main`
     transition: background-color 0.5s;
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+
+    @media (max-width: 480px) {
+        padding: 10px;
+    }
 `;
 
 export const Content = styled.div`
@@ -51,9 +54,14 @@ export const FileSection = styled.section`
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+
     @media (max-width: 991px) {
         padding: 0;
         width: 100%;
+    }
+
+    @media (max-width: 480px) {
+        padding: 10px 5px;
     }
 `;
 
@@ -62,6 +70,10 @@ export const SectionHeader = styled.header`
     justify-content: center;
     margin-bottom: 40px;
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
+
+    @media (max-width: 480px) {
+        margin-bottom: 20px;
+    }
 `;
 
 export const TabList = styled.nav`
@@ -73,17 +85,27 @@ export const TabList = styled.nav`
     font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
     font-weight: 500;
     color: ${({ darkMode }) => (darkMode ? '#cfcfcf' : '#334155')};
+
     @media (max-width: 991px) {
         flex-wrap: wrap;
+    }
+
+    @media (max-width: 480px) {
+        padding: 5px;
     }
 `;
 
 export const TabItem = styled.div`
     padding: 6px 20px;
     position: relative;
+
     &.active {
         border-bottom: 2px solid ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#6b538c')};
         color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#0f172a')};
+    }
+
+    @media (max-width: 480px) {
+        padding: 6px 10px;
     }
 `;
 
@@ -92,13 +114,27 @@ export const FileList = styled.div`
     flex-direction: column;
     gap: 20px;
     padding: 0 80px;
+    max-height: 70vh; /* Set a maximum height */
+    overflow-y: auto; /* Enable vertical scrolling */
+
     @media (max-width: 991px) {
         padding: 0 20px;
+    }
+
+    @media (max-width: 768px) {
+        max-height: 60vh; /* Adjust height for smaller screens */
+    }
+
+    @media (max-width: 480px) {
+        padding: 0 10px;
+        max-height: 50vh; /* Further adjust height for mobile */
     }
 `;
 
 export const FileContainer = styled.article`
     display: flex;
+    justify-content: space-between; /* Ensure space between items */
+    align-items: center; /* Vertically center the items */
     gap: 10px;
     padding: 20px 10px;
     border: 1px solid ${({ darkMode }) => (darkMode ? '#555' : '#7b757f')};
@@ -109,8 +145,22 @@ export const FileContainer = styled.article`
     &:hover {
         transform: scale(1.01);
     }
+
     @media (max-width: 991px) {
         flex-wrap: wrap;
+        max-height: 10vh;
+    }
+
+    @media (max-width: 768px) {
+        padding: 15px 8px;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    @media (max-width: 480px) {
+        padding: 10px 5px;
+        gap: 5px;
+        border-radius: 5px;
     }
 `;
 
@@ -119,32 +169,70 @@ export const FileIcons = styled.div`
     gap: 20px;
     border-right: 1px solid ${({ darkMode }) => (darkMode ? '#555' : '#7b757f')};
     padding-right: 10px;
+
+    @media (max-width: 768px) {
+        gap: 10px;
+        border-right: none;
+        padding-right: 0;
+    }
+
+    @media (max-width: 480px) {
+        gap: 8px;
+    }
 `;
 
 export const FileDetails = styled.div`
-    flex-grow: 1;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    flex-grow: 1; /* Allow it to take available space */
     gap: 10px;
+
+    @media (max-width: 768px) {
+        align-items: center;
+        gap: 5px;
+    }
+
+    @media (max-width: 480px) {
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+    }
 `;
 
 export const FileTitle = styled.h2`
     font-weight: 500;
     font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
     color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#000')};
+
+    @media (max-width: 480px) {
+        font-size: ${({ fontSize }) => calculateFontSize(12, fontSize)};
+    }
 `;
 
 export const FileSize = styled.p`
     font-size: ${({ fontSize }) => calculateFontSize(12, fontSize)};
     font-weight: 400;
     color: ${({ darkMode }) => (darkMode ? '#ccc' : '#7b757f')};
+
+    @media (max-width: 480px) {
+        font-size: ${({ fontSize }) => calculateFontSize(10, fontSize)};
+    }
 `;
 
 export const FileActions = styled.div`
     display: flex;
     gap: 10px;
-    align-self: end;
+    justify-content: flex-end; /* Align actions to the far right */
+    align-self: flex-start; /* Align with the start of the content */
+
+    @media (max-width: 768px) {
+        gap: 5px;
+        align-self: center;
+    }
+
+    @media (max-width: 480px) {
+        justify-content: center;
+    }
 `;
 
 export const ActionButton = styled.button`
@@ -174,6 +262,11 @@ export const ActionButton = styled.button`
         font-size: ${({ fontSize }) => calculateFontSize(12, fontSize)};
         padding: 4px 8px;
     }
+
+    @media (max-width: 480px) {
+        font-size: ${({ fontSize }) => calculateFontSize(10, fontSize)};
+        padding: 3px 6px;
+    }
 `;
 
 export const FormSection = styled.section`
@@ -187,6 +280,10 @@ export const FormSection = styled.section`
         width: 100%;
         padding: 0;
     }
+
+    @media (max-width: 480px) {
+        padding: 0 10px;
+    }
 `;
 
 export const Form = styled.form`
@@ -198,12 +295,20 @@ export const Form = styled.form`
     background: ${({ darkMode }) => (darkMode ? '#2C2C2C' : '#fff')};
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#7b757f')};
+
+    @media (max-width: 480px) {
+        padding: 20px;
+    }
 `;
 
 export const Title = styled.h2`
     font-size: ${({ fontSize }) => calculateFontSize(24, fontSize)};
     font-weight: 500;
     color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#6b538c')};
+
+    @media (max-width: 480px) {
+        font-size: ${({ fontSize }) => calculateFontSize(20, fontSize)};
+    }
 `;
 
 export const Label = styled.label`
@@ -212,6 +317,12 @@ export const Label = styled.label`
     margin-top: 20px;
     margin-bottom: 20px;
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#7b757f')};
+
+    @media (max-width: 480px) {
+        font-size: ${({ fontSize }) => calculateFontSize(12, fontSize)};
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
 `;
 
 export const Input = styled.input`
@@ -229,6 +340,11 @@ export const Input = styled.input`
         border-color: ${({ darkMode }) => (darkMode ? '#773dc3' : '#6b538c')};
         background-color: ${({ darkMode }) => (darkMode ? '#444' : '#f3e8ff')};
     }
+
+    @media (max-width: 480px) {
+        height: 40px;
+        padding: 8px;
+    }
 `;
 
 export const FileDropContainer = styled.div`
@@ -245,14 +361,23 @@ export const FileDropContainer = styled.div`
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
     font-weight: 600;
     color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#6b538c')};
+
     @media (max-width: 991px) {
         padding: 20px;
+    }
+
+    @media (max-width: 480px) {
+        padding: 15px;
     }
 `;
 
 export const DropText = styled.p`
     margin-top: 10px;
     color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#6b538c')};
+
+    @media (max-width: 480px) {
+        margin-top: 5px;
+    }
 `;
 
 export const FileTypes = styled.p`
@@ -260,6 +385,11 @@ export const FileTypes = styled.p`
     font-size: ${({ fontSize }) => calculateFontSize(10, fontSize)};
     font-weight: 400;
     color: ${({ darkMode }) => (darkMode ? '#ccc' : '#7b757f')};
+
+    @media (max-width: 480px) {
+        font-size: ${({ fontSize }) => calculateFontSize(8, fontSize)};
+        margin-top: 5px;
+    }
 `;
 
 export const SecurityNote = styled.div`
@@ -269,6 +399,11 @@ export const SecurityNote = styled.div`
     font-weight: 500;
     margin-top: 10px;
     color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#6b538c')};
+
+    @media (max-width: 480px) {
+        font-size: ${({ fontSize }) => calculateFontSize(10, fontSize)};
+        margin-top: 5px;
+    }
 `;
 
 export const SubmitButton = styled.button`
@@ -292,11 +427,17 @@ export const SubmitButton = styled.button`
     @media (max-width: 991px) {
         padding: 20px;
     }
+
+    @media (max-width: 480px) {
+        padding: 8px 16px;
+        font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
+    }
 `;
 
 export const DropZoneWrapper = styled.div`
     gap: 20px;
     display: flex;
+
     @media (max-width: 991px) {
         flex-direction: column;
         align-items: stretch;
@@ -309,10 +450,15 @@ export const DropZoneContainer = styled.div`
     flex-direction: column;
     width: 100%;
     margin-left: 20px;
+
     @media (max-width: 991px) {
         width: 100%;
         margin-left: 0;
         margin-top: 20px;
+    }
+
+    @media (max-width: 480px) {
+        margin-top: 10px;
     }
 `;
 
@@ -329,8 +475,13 @@ export const DropZone = styled.div`
     color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#000')};
     line-height: 40px;
     padding: 40px;
+
     @media (max-width: 991px) {
         padding: 0 20px;
+    }
+
+    @media (max-width: 480px) {
+        padding: 20px;
     }
 `;
 
@@ -338,6 +489,7 @@ export const DropZoneText = styled.div`
     font-family: Poppins, sans-serif;
     margin-top: 10px;
     color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#6b538c')};
+
     @media (max-width: 991px) {
         margin: 0 8px;
     }
@@ -348,6 +500,10 @@ export const DropZoneDescription = styled.p`
     align-self: center;
     margin-top: 10px;
     font: bold 28px Poppins, sans-serif;
+
+    @media (max-width: 480px) {
+        font-size: ${({ fontSize }) => calculateFontSize(20, fontSize)};
+    }
 `;
 
 export const PreviewImage = styled.img`
@@ -357,4 +513,9 @@ export const PreviewImage = styled.img`
     border-radius: 5px;
     margin-bottom: 10px;
     background-color: ${({ darkMode }) => (darkMode ? '#444' : '#edf0f7')};
+
+    @media (max-width: 480px) {
+        width: 80px;
+        height: 80px;
+    }
 `;

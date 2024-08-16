@@ -1,34 +1,26 @@
 import React from 'react';
-
 import Card from './Card';
 import StatusChart from './StatusChart';
 import { useState, useEffect } from "react";
 import UserModal from './ViewUserModal';
 import { SectionContainer, SectionTitle, SectionContent, CardList, StatusContainer } from '../Styling/Section.styles';
-
-
-
-
-const Section = ({ title, percentages, users, handleDeleteUser }) => {
+const Section = ({ title, percentages, users, handleDeleteUser, fontSize, darkMode }) => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-
     const openModal = (user) => {
         setSelectedUser(user);
         setIsModalOpen(true);
     };
-
     const closeModal = () => {
         setIsModalOpen(false);
     };
-
     return (
-        <SectionContainer>
-            <SectionTitle>{title}</SectionTitle>
-            <SectionContent>
-                <CardList>
+        <SectionContainer fontSize={fontSize} darkMode={darkMode}>
+            <SectionTitle fontSize={fontSize} darkMode={darkMode}>{title}</SectionTitle>
+            <SectionContent fontSize={fontSize} darkMode={darkMode}>
+                <CardList fontSize={fontSize} darkMode={darkMode}>
                     {users && users.map(user => (
-                        <Card
+                        <Card fontSize={fontSize} darkMode={darkMode}
                             key={user.id}
                             name={user.name}
                             classroom={user.class}
@@ -51,15 +43,13 @@ const Section = ({ title, percentages, users, handleDeleteUser }) => {
                     ))}
                 </CardList>
                 {users && (
-                    <StatusContainer>
-                        <StatusChart percentages={percentages} users={users} />
+                    <StatusContainer fontSize={fontSize} darkMode={darkMode}>
+                        <StatusChart fontSize={fontSize} darkMode={darkMode} percentages={percentages} users={users} />
                     </StatusContainer>
                 )}
             </SectionContent>
-            <UserModal isOpen={isModalOpen} onClose={closeModal} user={selectedUser} />
+            <UserModal fontSize={fontSize} darkMode={darkMode} isOpen={isModalOpen} onClose={closeModal} user={selectedUser} />
         </SectionContainer>
     );
 };
-
 export default Section;
-

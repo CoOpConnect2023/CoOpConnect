@@ -1,45 +1,34 @@
 import React, { useState } from 'react';
-
 import { useDispatch } from 'react-redux';
 import { updateUserProfile } from '@/Features/users/userSlice';
 import { Description } from '@/Pages/SignUp/EmployerSignUp';
 import { CardContainer, CardInfo, Avatar, InfoText, CardActions, Button, Input } from '../Styling/Card.styles';
-
-
-
-const Card = ({ name, classroom, email, id, profileImage, schoolId, status, onViewClick, onDeleteClick, onEditSave, role, emailVerified, description, rememberToken, company, positiontitle }) => {
+const Card = ({ name, classroom, email, id, profileImage, schoolId, status, onViewClick, onDeleteClick, onEditSave, role, emailVerified, description, rememberToken, company, positiontitle, fontSize, darkMode }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [editName, setEditName] = useState(name);
     const [editEmail, setEditEmail] = useState(email);
     const [editStatus, setEditStatus] = useState(status);
     const dispatch = useDispatch();
-
     const handleViewClick = () => {
         onViewClick();
     };
-
     const handleDeleteClick = () => {
         onDeleteClick();
     };
-
     const beginDelete = () => {
         setShowDeleteConfirmation(true);
     };
-
     const confirmDelete = () => {
         onDeleteClick(id); // Pass the user id to delete to the parent component
         setShowDeleteConfirmation(false);
     };
-
     const cancelDelete = () => {
         setShowDeleteConfirmation(false);
     };
-
     const handleEditClick = () => {
         setIsEditing(true);
     };
-
     const handleSaveClick = () => {
         dispatch(
             updateUserProfile({
@@ -55,34 +44,29 @@ const Card = ({ name, classroom, email, id, profileImage, schoolId, status, onVi
                 description: description,
                 email_verified_at: emailVerified,
                 remember_token: rememberToken
-
-
             })
         );
         setIsEditing(false);
         dispatch(getAllUsers());
-
     };
-
     const handleCancelEdit = () => {
         setIsEditing(false);
         setEditName(name);
         setEditEmail(email);
         setEditStatus(status);
     };
-
     return (
-        <CardContainer data-testid={`user-card-${email}`}>
-            <CardInfo>
-                <Avatar src={profileImage} alt={`${name}'s avatar`} />
+        <CardContainer fontSize={fontSize} darkMode={darkMode} data-testid={`user-card-${email}`}>
+            <CardInfo fontSize={fontSize} darkMode={darkMode}>
+                <Avatar fontSize={fontSize} darkMode={darkMode} src={profileImage} alt={`${name}'s avatar`} />
                 {isEditing ? (
-                    <InfoText>
-                        <Input type="text" value={editName} onChange={(e) => setEditName(e.target.value)} />
-                        <Input type="text" value={editEmail} onChange={(e) => setEditEmail(e.target.value)} />
-                        <Input type="text" value={editStatus} onChange={(e) => setEditStatus(e.target.value)} />
+                    <InfoText fontSize={fontSize} darkMode={darkMode}>
+                        <Input fontSize={fontSize} darkMode={darkMode} type="text" value={editName} onChange={(e) => setEditName(e.target.value)} />
+                        <Input fontSize={fontSize} darkMode={darkMode} type="text" value={editEmail} onChange={(e) => setEditEmail(e.target.value)} />
+                        <Input fontSize={fontSize} darkMode={darkMode} type="text" value={editStatus} onChange={(e) => setEditStatus(e.target.value)} />
                     </InfoText>
                 ) : (
-                    <InfoText>
+                    <InfoText fontSize={fontSize} darkMode={darkMode}>
                         <p>Name: {name}</p>
                         <p>SchoolID: {schoolId}</p>
                         <p>Current Status: {status}</p>
@@ -91,22 +75,19 @@ const Card = ({ name, classroom, email, id, profileImage, schoolId, status, onVi
                     </InfoText>
                 )}
             </CardInfo>
-            <CardActions>
-                <Button data-testid={`view-button-${email}`} onClick={handleViewClick}>View</Button>
+            <CardActions fontSize={fontSize} darkMode={darkMode}>
+                <Button fontSize={fontSize} darkMode={darkMode} data-testid={`view-button-${email}`} onClick={handleViewClick}>View</Button>
                 {isEditing ? (
                     <>
-                        <Button onClick={handleSaveClick}>Save</Button>
-                        <Button onClick={handleCancelEdit}>Cancel</Button>
+                        <Button fontSize={fontSize} darkMode={darkMode} onClick={handleSaveClick}>Save</Button>
+                        <Button fontSize={fontSize} darkMode={darkMode} onClick={handleCancelEdit}>Cancel</Button>
                     </>
                 ) : (
-                    <Button onClick={handleEditClick}>Edit</Button>
+                    <Button fontSize={fontSize} darkMode={darkMode} onClick={handleEditClick}>Edit</Button>
                 )}
-                <Button data-testid={`delete-button-${email}`} onClick={handleDeleteClick}>Delete</Button>
+                <Button fontSize={fontSize} darkMode={darkMode} data-testid={`delete-button-${email}`} onClick={handleDeleteClick}>Delete</Button>
             </CardActions>
-
-
         </CardContainer>
     );
 };
-
 export default Card;

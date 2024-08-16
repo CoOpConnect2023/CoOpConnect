@@ -28,6 +28,7 @@ export const Div15 = styled.div`
     transition: background-color 0.5s ease, color 0.5s ease, box-shadow 0.3s ease, transform 0.3s ease;
 
     display: flex;
+    
     flex-direction: column;
     margin-top: 20px;
     padding: 10px 10px 0;

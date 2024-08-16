@@ -147,7 +147,7 @@ export const getShortlists = createAsyncThunk(
     "shortlists/getShortlists",
     async (currentUser) => {
         const response = await axios({
-            url: `http://127.0.0.1:8000/api/users/${currentUser}/shortlists`,
+            url: `${appUrl}/api/users/${currentUser}/shortlists`,
             method: "GET",
         });
 

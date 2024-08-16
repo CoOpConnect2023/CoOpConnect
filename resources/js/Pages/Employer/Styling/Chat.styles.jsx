@@ -85,12 +85,13 @@ export const Column2 = styled.div`
     display: flex;
     flex-direction: column;
     line-height: normal;
+    flex-grow: 1;
     width: 64%;
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)}; /* Apply font size */
     margin-left: 20px;
     @media (max-width: 991px) {
         width: 100%;
-
+flex-grow: 1;
         margin-left: 0;
         margin-top: 20px;
     }
@@ -109,6 +110,7 @@ export const RightColumn = styled.div`
     @media (max-width: 991px) {
         max-width: 100%;
         max-height: 70vh;
+        min-height: 70vh;
 
     }
 `;

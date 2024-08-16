@@ -126,7 +126,7 @@ export default function Chat() {
 
             const response = await axios.post(`${appUrl}/api/sendnewmessages`, requestData);
 
-            
+
 
             setMessages([...messages, response.data]);
             setNewMessage('');
@@ -146,7 +146,7 @@ export default function Chat() {
     const fetchShortlists = async (currentUser) => {
         try {
             const response = await axios.get(
-                `http://127.0.0.1:8000/api/users/${currentUser}/shortlists`
+                `${appUrl}}/api/users/${currentUser}/shortlists`
             );
             setShortlists(response.data.shortlists);
 
