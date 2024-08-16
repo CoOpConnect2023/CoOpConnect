@@ -53,20 +53,25 @@ const Title = styled.h2`
 
 const COLORS = ["#006aff", "#52c93f", "#ff2727"];
 
-function StudentStatus({ percentages }) {
+function StudentStatus({ fontSize, percentages }) {
   const darkMode = useSelector((state) => state.accessibility.darkMode);
 
+  // const data = [
+  //   { name: "Working", value: Math.round(percentages.working) },
+  //   { name: "Interviewing", value: Math.round(percentages.interviewing) },
+  //   { name: "Searching", value: Math.round(percentages.searching) },
+  // ];
+
   const data = [
-    { name: "Working", value: Math.round(percentages.working) },
-    { name: "Interviewing", value: Math.round(percentages.interviewing) },
-    { name: "Searching", value: Math.round(percentages.searching) },
+    { name: "Working", value: 10 },
+    { name: "Interviewing", value: 20 },
+    { name: "Searching", value: 50 },
   ];
 
   return (
     <Container darkMode={darkMode}>
       <Title darkMode={darkMode}>Student Status</Title>
-
-      <ResponsiveContainer width="100%" aspect={1}>
+      <ResponsiveContainer width={250} aspect={0.5}>
         <PieChart>
           <Pie
             data={data}
