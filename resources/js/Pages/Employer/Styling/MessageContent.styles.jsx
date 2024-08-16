@@ -21,6 +21,7 @@ const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
 
 export const MessageContainer = styled.div`
     display: flex;
+    
     flex-direction: column;
     margin-top: 5px; /* Reduced margin */
     align-items: ${({ isCurrentUser }) =>

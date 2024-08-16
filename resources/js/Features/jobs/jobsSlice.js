@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-axios.defaults.baseURL = "http://127.0.0.1:8000/api/v1";
+const appUrl = import.meta.env.VITE_APP_URL;
+axios.defaults.baseURL = `${appUrl}/api/v1`;
 
 const initialState = {
     jobs: [],
@@ -11,7 +12,7 @@ const initialState = {
         description: "",
         location: "",
         postingStatus: "Open",
-        jobType: "",
+        jobType: "Onsite",
         company: "",
         skills: [],
         userId: "",

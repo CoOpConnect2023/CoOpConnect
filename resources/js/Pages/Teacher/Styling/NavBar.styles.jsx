@@ -28,7 +28,7 @@ const slideOut = keyframes`
   }
   100% {
     opacity: 0;
-    transform: translateX(100%);
+    transform: translateX(-100%);
   }
 `;
 
@@ -442,15 +442,15 @@ export const Main = styled.main`
 
 export const Modal = styled.div`
   position: absolute;
-  top: 80px;
-  right: 20px;
-  background-color: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "#fff")};
-  border: 1px solid #ccc;
+  top: 60px;
+  right: 5px;
+
+
   border-radius: 5px;
-  box-shadow: 02px 10px rgba(0, 0, 0, 0.1);
+opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
   z-index: 1000;
   transition: opacity 0.3s ease, transform 0.3s ease;
-  opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
+
  transform: ${({ isOpen }) => (isOpen ? "translateY(0)" : "translateY(-100%)")};
   pointer-events: ${({ isOpen }) => (isOpen ? "auto" : "none")};
   font-size: ${({ fontSize }) => getFontSize(fontSize)};
@@ -468,9 +468,15 @@ export const NotificationModalContainer = styled.div`
   overflow: hidden;
   z-index: 10;
   max-height: 80vh;
+  max-width: 60%;
   overflow-y: auto;
   font-size: ${({ fontSize }) => getFontSize(fontSize)};
-  animation: ${slideIn} 0.3s ease-out; /* Apply the slide-in animation */
+ animation: ${({ isOpen }) => (isOpen ? slideInFromRight : slideOut)} 0.3s ease-out forwards;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+
+  @media (min-width: 700px) {
+
+  }
 `;
 
 export const NotificationModalContent = styled.ul`
@@ -505,8 +511,9 @@ export const MessagesList = styled.div`
 `;
 
 export const Message = styled.div`
-  background-color: #fff;
+  background-color: ${({ darkMode }) => (darkMode ? "#4c4c4c" : "#fff")};
   border: 1px solid #e0e0e0;
+  color: ${({ darkMode }) => (darkMode ? "#fff" : "black")};
   border-radius: 5px;
   padding: 10px;
   margin-bottom: 10px;
@@ -544,11 +551,29 @@ export const ModalContent = styled.div`
 `;
 
 export const ModalItem = styled.div`
-  padding: 10px;
-  cursor: pointer;
-  font-size: ${({ fontSize }) => getFontSize(fontSize)};
+  padding: 12px 18px;
+  color: ${({ darkMode }) => (darkMode ? "#fff" : "black")};
+  border: 2px solid ${({ darkMode }) => (darkMode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.3)')};
+  text-decoration: none;
+  margin-top: 5px;
+  text-align: center;
+  display: block;
+  width: 100%;
+  border-radius: 8px;
+  background: ${({ darkMode }) => darkMode ? "linear-gradient(45deg, #6B538C, #9C85D8)" : "linear-gradient(45deg, #D3BDF2, #EDDCFF)"};
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+
   &:hover {
-    background-color: rgb(237, 220, 255);
+    transform: translateY(-3px);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+    opacity: 0.9;
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    opacity: 1;
   }
 `;
 

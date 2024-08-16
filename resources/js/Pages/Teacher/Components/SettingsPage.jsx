@@ -59,7 +59,7 @@ function SettingsPanel() {
     const darkMode = useSelector(state => state.accessibility.darkMode);
     const fontSize = useSelector(state => state.accessibility.textSize);
     useEffect(() => {
-        dispatch(getUser());
+
     }, [dispatch]);
 
     const userID = user?.id;
@@ -90,6 +90,7 @@ function SettingsPanel() {
             setCurrentPassword("");
             setNewPassword("");
             setConfirmNewPassword("");
+            dispatch(getUser());
         }, 3000);
     };
 
@@ -147,9 +148,9 @@ function SettingsPanel() {
         }));
     };
 
-    if (!user  ) {
-        return <LogoLoadingComponent fontSize={fontSize} darkMode={darkMode}/>;;
-    }
+    // if (!user  ) {
+    //     return <LogoLoadingComponent fontSize={fontSize} darkMode={darkMode}/>;;
+    // }
 
 
 

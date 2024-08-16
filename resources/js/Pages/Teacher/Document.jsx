@@ -131,7 +131,7 @@ const TabMenu = ({ activeTab, handleTabChange }) => {
     </TabList>
 )};
 
-const FileItem = ({ title, type, downloadDocument, doc, handleDelete, userName }) => (
+const FileItem = ({ title, type, downloadDocument, doc, handleDelete, userName, darkMode, fontSize }) => (
     <FileContainer fontSize={fontSize} darkMode={darkMode}>
         <FileIcons fontSize={fontSize} darkMode={darkMode}>
             <img onClick={() => handleDelete(type)}
@@ -238,7 +238,7 @@ const Document = () => {
 
     const fetchClassDocuments = async (userId) => {
         try {
-            const response = await axios.get(`http://127.0.0.1:8000/api/v1/courses/documents/teacher/${userId}`);
+            const response = await axios.get(`${appUrl}/api/v1/courses/documents/teacher/${userId}`);
 
             if (response.data && response.data.data && response.data.data.length > 0) {
                 const allDocuments = response.data.data.flatMap(course =>
