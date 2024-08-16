@@ -56,16 +56,10 @@ const COLORS = ["#006aff", "#52c93f", "#ff2727"];
 function StudentStatus({ fontSize, percentages }) {
   const darkMode = useSelector((state) => state.accessibility.darkMode);
 
-  // const data = [
-  //   { name: "Working", value: Math.round(percentages.working) },
-  //   { name: "Interviewing", value: Math.round(percentages.interviewing) },
-  //   { name: "Searching", value: Math.round(percentages.searching) },
-  // ];
-
   const data = [
-    { name: "Working", value: 10 },
-    { name: "Interviewing", value: 20 },
-    { name: "Searching", value: 50 },
+    { name: "Working", value: Math.round(percentages.working) },
+    { name: "Interviewing", value: Math.round(percentages.interviewing) },
+    { name: "Searching", value: Math.round(percentages.searching) },
   ];
 
   return (
