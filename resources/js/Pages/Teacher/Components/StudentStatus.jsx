@@ -53,7 +53,7 @@ const Title = styled.h2`
 
 const COLORS = ["#006aff", "#52c93f", "#ff2727"];
 
-function StudentStatus({ percentages }) {
+function StudentStatus({ fontSize, percentages }) {
   const darkMode = useSelector((state) => state.accessibility.darkMode);
 
   const data = [
@@ -65,8 +65,7 @@ function StudentStatus({ percentages }) {
   return (
     <Container darkMode={darkMode}>
       <Title darkMode={darkMode}>Student Status</Title>
-
-      <ResponsiveContainer width="100%" aspect={1}>
+      <ResponsiveContainer width={250} aspect={0.5}>
         <PieChart>
           <Pie
             data={data}

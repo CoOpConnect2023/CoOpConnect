@@ -286,7 +286,7 @@ public function deleteUser(Request $request, $id)
     {
         $user = Auth::user();
 
-       
+
         Log::info('Updating user preferences', [
             'user_id' => $user->id,
             'request_data' => $request->all(),

@@ -1,66 +1,137 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# CoOp Connect
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Routes
 
-## About Laravel
+/
+/about
+/guide
+/dashboard
+/contactus
+/contact
+/test
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+/jobs/match
+/filterjobs
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+/user
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+/jobs/{job}/shortlist
+/shortlists/{shortlist}/applicants/{applicant}
+/jobs/{job}/shortlist
+/users/{userId}/shortlists
+/shortlists/{id}
+/jobs/{job}/shortlist
+/applications/create
+/applications/{application}
 
-## Learning Laravel
+/apply/{jobId}
+/check-application/{jobId}
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+/uploaddocs
+/fetchdocs
+/deletedoc/{id}
+/user-id
+/user-id/courses/
+/students/teacher/{teacherId}
+/download/{id}
+/update-profile/{user}
+/usersindex
+/studentStatusPercents
+/users
+/users/{id}
+/upload-users
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+/apply/{jobId}
+/check-application/{jobId}
+/applications/create
+/applications/
+/applications/{application}
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+/deletedoc/{doc_id}
+/change-password
 
-## Laravel Sponsors
+/jobs/user/{userId}
+/jobs/search
+/jobs/match
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+/courses/user/{userId}
+/courses/teacher/{userId}
+/courses/school/{userId}
+/courses/document/teacher/{userId}
 
-### Premium Partners
+/school/{schoolId}/courses
+/usercourses/student/{studentId}
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+/jobs/{job}/shortlist
+/shortlists/{shortlist}/applicants/{applicant}
+/jobs/{job}/shortlist
+/users/{userId}/shortlists
+/shortlists/{id}
+/jobs/{job}/shortlist/{applicant}
+/jobs/{job}/shortlist
 
-## Contributing
+/applicants/create
+/applications
+/applications/{application}
+/apply/{jobId}
+/check-application/{jobId}
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+/sendmessages
+/sendnewmessages
 
-## Code of Conduct
+/conservation/{user_id}
+/conservation/{user_id}/messages
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+/messages/{user_id}
+/messages/{message_id}/mark-as-read
+/messages/{message_id}/mark-all-as-read
 
-## Security Vulnerabilities
+/userjobs/list/{jobsId}
+/userjobs/user/{userJobsId}
+/userjobs/jobs
+/userjobs/job/{userJobsId}
+/myreflections
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+/admin/home
+/admin/dashboard
 
-## License
+/auth/google/redirect
+/auth/google/callback
+/auth/linkedin/redirect
+/auth/linkedin/callback
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+/student/home
+/student/jobs
+/student/interviews/
+/student/profile/
+/student/reflections/
+/student/myreflections/
+/students/documents/
+/student/settings/
+/student/messages/
+/student/viewapplications/
+/stuent/accept-interview/
+/student/viewpost/
+
+/teacher/home
+/teacher/documents/
+/teacher/messages/
+/teacher/scheduling/
+/teacher/profile/
+/teacher/settings
+/teacher/classes
+/teacher/students
+
+/emoloyer/home
+/employer/post1/
+/employer/post2/
+/employer/viewpost
+/employer/editpost1/
+/employer/editpost2/
+/employer/documents/
+/employer/messages/
+/employer/interviews/
+/employer/profile/
+/employer/settings/
+/employer/viewapplicants/
+/employer/accept-applicant/

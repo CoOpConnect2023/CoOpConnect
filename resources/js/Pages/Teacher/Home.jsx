@@ -60,7 +60,7 @@ export default function Home() {
                             </StudentsSectionContainer>
                         )}
                         {percentages && (
-                            <StudentStatus fontSize={fontSize} darkMode={darkMode} percentages={percentages} />)}
+                    <StudentStatus fontSize={fontSize} darkMode={darkMode} percentages={percentages} />)}
                     </TopContainer>
                     <BottomContainer fontSize={fontSize} darkMode={darkMode}>
                         <ReflectionDocuments fontSize={fontSize} darkMode={darkMode} />
