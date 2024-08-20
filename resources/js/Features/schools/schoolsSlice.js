@@ -73,7 +73,7 @@ export const getCoursesStudents = createAsyncThunk(
         try {
             const response = await axios.get(`/courses/teacher/${userID}`);
             console.log(response.data);
-            return response.data; 
+            return response.data;
         } catch (error) {
             console.error("Error fetching courses:", error);
             throw error;
@@ -88,6 +88,14 @@ export const deleteStudent = createAsyncThunk(
       return studentId; // Return studentId to update state
     }
   );
+
+  export const deleteSchool = createAsyncThunk(
+    "schools/deleteSchool",
+    async (schoolId) => {
+        await axios.delete(`/schools/${schoolId}`);
+        return schoolId;
+    }
+)
 
   export const createStudent = createAsyncThunk(
     "students/createStudent",
@@ -139,6 +147,22 @@ export const deleteClass = createAsyncThunk(
     async (classId) => {
         await axios.delete(`/courses/${classId}`);
         return classId;
+    }
+);
+
+export const editSchool = createAsyncThunk(
+    "schools/editSchool",
+    async ({ schoolId, editedSchoolData }) => {
+        // Filter out undefined values from editedSchoolData
+        const filteredData = Object.fromEntries(
+            Object.entries(editedSchoolData).filter(([key, value]) => value !== undefined)
+        );
+
+        const response = await axios.put(`/schools/${schoolId}`, {
+            ...filteredData,
+        });
+        console.log("firing", filteredData);
+        return response.data.data;
     }
 );
 
@@ -242,6 +266,30 @@ export const schoolsSlice = createSlice({
             })
             .addCase(deleteClass.rejected, (state, action) => {
                 state.status.courses = "failed";
+            })
+
+            .addCase(deleteSchool.pending, (state, action) => {
+                state.status.schools = "loading";
+            })
+            .addCase(deleteSchool.fulfilled, (state, action) => {
+                state.schoolslist = state.schoolslist.filter((school) => school.id !== action.payload);
+                state.status.schools = "succeeded";
+            })
+            .addCase(deleteSchool.rejected, (state, action) => {
+                state.status.schools = "failed";
+            })
+
+            .addCase(editSchool.pending, (state, action) => {
+                state.status.schools = "loading";
+            })
+            .addCase(editSchool.fulfilled, (state, action) => {
+                state.schoolslist = state.schoolslist.map((school) =>
+                    school.id === action.payload.id ? action.payload : school
+                );
+                state.status.schools = "succeeded";
+            })
+            .addCase(editSchool.rejected, (state, action) => {
+                state.status.schools = "failed";
             });
         }
     });

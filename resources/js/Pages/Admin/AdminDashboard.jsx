@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled, { keyframes } from "styled-components";
 import Section from './Components/Section';
+import SchoolSectionComponent from "./Components/SchoolSection";
 import NavBar from './Components/NavBar';
-import { getPercentages, selectPercentages, selectPercentagesStatus } from '@/Features/schools/schoolsSlice';
+import { getPercentages, getSchools, selectPercentages, selectPercentagesStatus, deleteSchool } from '@/Features/schools/schoolsSlice';
 import { getUser, getAllUsers, selectAllUsers, selectUser, deleteUser } from '@/Features/users/userSlice';
+
 import UploadUsers from "./Components/UploadUsers";
 import { HomePageContainer, Header, Content } from "./Styling/AdminDashboard.styles";
 
@@ -15,6 +17,7 @@ const AdminDashboard = () => {
     const users = useSelector(selectAllUsers);
     const darkMode = useSelector(state => state.accessibility.darkMode);
     const fontSize = useSelector(state => state.accessibility.textSize);
+    const schoolsList = useSelector(state => state.schools.schoolslist);
 
     const [categorizedUsers, setCategorizedUsers] = useState({});
 
@@ -22,9 +25,10 @@ const AdminDashboard = () => {
 
         dispatch(getUser());
         dispatch(getAllUsers());
+        dispatch(getSchools())
     }, [dispatch]);
 
-
+console.log(schoolsList)
 
     const categorizeUsersByRole = (users) => {
         return users.reduce((acc, user) => {
@@ -60,9 +64,13 @@ const AdminDashboard = () => {
 
     const handleDeleteUser = (userId) => {
         dispatch(deleteUser(userId));
-        
+
     };
 
+    const handleDeleteSchool = (userId) => {
+        dispatch(deleteSchool(userId));
+
+    };
 
 
 
@@ -78,6 +86,7 @@ const AdminDashboard = () => {
                         <Section fontSize={fontSize} darkMode={darkMode} handleDeleteUser={handleDeleteUser} users={students}  title="Current Students" />
                         <Section fontSize={fontSize} darkMode={darkMode} handleDeleteUser={handleDeleteUser} users={employee}  title="Current Employers" />
                         <Section fontSize={fontSize} darkMode={darkMode} handleDeleteUser={handleDeleteUser} users={teachers}  title="Current Teachers" />
+                        <SchoolSectionComponent fontSize={fontSize} darkMode={darkMode} handleDeleteUser={handleDeleteSchool} users={schoolsList}  title="Current Schools" />
 
                     </Content>
                 )}

@@ -15,9 +15,13 @@ export const MainContainer = styled.div`
     gap: 40px;
     flex-shrink: 0;
     width: 100%;
-    min-height: 100vh;
+    flex:1;
     background-color: ${({ darkMode }) => (darkMode ? '#121212' : '#ffffff')};
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
+
+    @media (max-width: 991px) {
+        min-height: 100vh;
+    }
 `;
 
 export const Container = styled.section`

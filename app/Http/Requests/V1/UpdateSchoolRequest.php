@@ -18,6 +18,8 @@ class UpdateSchoolRequest extends FormRequest
             'location' => 'sometimes|required|string|max:255',
             'description' => 'nullable|string',
             'principal_name' => 'nullable|string|max:255',
+            'contact_email' => 'nullable|string|max:255',
+            'contact_phone' => 'nullable|string|max:255',
         ];
     }
 }

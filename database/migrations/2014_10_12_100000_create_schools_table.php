@@ -12,8 +12,10 @@ class CreateSchoolsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('location');
-            $table->text('description')->nullable(); // Additional attribute
-            $table->string('principal_name')->nullable(); // Additional attribute
+            $table->text('description')->nullable();
+            $table->string('principal_name')->nullable();
+            $table->string('contact_email')->nullable();
+            $table->string('contact_phone')->nullable();
             $table->timestamps();
         });
     }

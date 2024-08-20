@@ -76,7 +76,8 @@ export const LeftColumn = styled.div`
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)}; /* Apply font size */
     @media (max-width: 991px) {
         max-width: 100%;
-        max-height: 80vh;
+        max-height: 100vh;
+        min-height: 100vh;
         margin-top: 40px;
     }
 `;
@@ -90,7 +91,8 @@ export const Column2 = styled.div`
     margin-left: 20px;
     @media (max-width: 991px) {
         width: 100%;
-
+max-height: 80vh;
+        min-height: 80vh;
         margin-left: 0;
         margin-top: 20px;
     }

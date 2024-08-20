@@ -94,22 +94,20 @@ const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
 };
 
 const MainContainer = styled.div`
-  align-self: stretch;
-  flex-grow: 1;
-  border-radius: 10px;
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-  background-color: ${({ darkMode }) => (darkMode ? "#2D2D2D" : "#fff")};
-  color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
   display: flex;
   flex-direction: column;
-  padding: 10px;
-  font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
-
+  align-self: stretch;
+  width: 100%;
+   /* Ensure the container takes at least the full height of the viewport */
+  background-color: ${({ darkMode }) => (darkMode ? "#2D2D2D" : "#fff")};
+  color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
+  border-radius: 10px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(123, 117, 127, 1);
+  padding: 20px;
+  box-sizing: border-box;
   transition: background-color 0.3s;
-  border-color: rgba(123, 117, 127, 1);
-  border-style: solid;
-  border-width: 1px;
-  width: 100%; /* Full width */
+  overflow: auto; /* Handle overflow if content exceeds the container */
 `;
 
 const Header = styled.header`
@@ -120,33 +118,42 @@ const Header = styled.header`
 `;
 
 const Content = styled.main`
-  justify-content: center;
-  align-content: center;
-  flex-wrap: wrap;
   display: flex;
-  margin-top: 40px;
   flex-direction: column;
-  padding: 0 20px;
+  flex-grow: 1; /* Ensure content stretches to fill available space */
+  justify-content: space-between; /* Distribute content evenly */
+  gap: 20px;
+  box-sizing: border-box;
+
   @media (max-width: 991px) {
-    max-width: 100%;
     padding: 0 20px;
   }
 `;
 
 const Section = styled.section`
+  display: flex;
+  flex-direction: column;
+
+
+  justify-content: space-between; /* Spread content vertically */
+
+  box-sizing: border-box;
+
   @media (max-width: 991px) {
-    max-width: 100%;
     height: 100%;
   }
 `;
 
 const PanelsContainer = styled.div`
-  gap: 10px;
   display: flex;
+  flex-grow: 1;
+  gap: 30px;
+  align-items: stretch; /* Ensure even stretching */
+  box-sizing: border-box; /* Prevent unexpected overflow */
+
   @media (max-width: 991px) {
     flex-direction: column;
-    align-items: stretch;
-    gap: 0px;
+    gap: 15px; /* Add spacing between panels on mobile */
   }
 `;
 
@@ -155,12 +162,14 @@ const PanelSection = styled.article`
   border: 2px solid ${(props) => props.borderColor};
   background-color: ${({ darkMode }) => (darkMode ? "#3C3C3C" : "#fff")};
   display: flex;
-  width: 100%;
-  flex-grow: 1;
   flex-direction: column;
+  justify-content: space-between; /* Spread content vertically */
+  flex-grow: 1;
   margin: 20px 0;
+  padding: 20px;
+  box-sizing: border-box;
   transition: background-color 0.3s;
-  font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
+
   @media (max-width: 991px) {
     margin-top: 21px;
   }
@@ -172,7 +181,7 @@ const PanelHeader = styled.header`
   background-color: ${(props) => props.backgroundColor};
   display: flex;
   gap: 8px;
-  font-size: ${({ fontSize }) => calculateFontSize(18, fontSize)};
+  font-size: ${({ fontSize }) => calculateFontSize(26, fontSize)};
   color: #fff;
   font-weight: 600;
   line-height: 156%;
@@ -185,7 +194,7 @@ const PanelHeader = styled.header`
 
 const Title = styled.h2`
   font-family: Inter, sans-serif;
-  font-size: ${({ fontSize }) => calculateFontSize(18, fontSize)};
+  font-size: ${({ fontSize }) => calculateFontSize(20, fontSize)};
 `;
 
 const Img = styled.img`
@@ -194,19 +203,24 @@ const Img = styled.img`
   width: 24px;
   margin: auto 0;
 `;
-
 const PanelBody = styled.div`
   display: flex;
   gap: 10px;
-  font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
-  color: ${({ darkMode }) => (darkMode ? "#CCCCCC" : "var(--Schemes-Outline, #7b757f)")};
+  font-size: ${({ fontSize }) => calculateFontSize(20, fontSize)};
+  color: ${({ darkMode }) => (darkMode ? "#CCCCCC" : "#7b757f")};
   font-weight: 500;
   letter-spacing: 0.25px;
-  line-height: 20px;
-  padding: 20px;
+  line-height: 1.5; /* Increased line height for better readability */
+  padding: 10px;
+  box-sizing: border-box;
   transition: color 0.3s;
-`;
+  flex-wrap: wrap; /* Allow wrapping of content */
 
+  @media (max-width: 991px) {
+    flex-direction: column; /* Stack content vertically on mobile */
+    gap: 15px; /* Increase gap for better spacing on mobile */
+  }
+`;
 const Icon = styled.img`
   aspect-ratio: 1;
   object-fit: cover;
@@ -217,7 +231,13 @@ const Icon = styled.img`
 const Description = styled.p`
   font-family: Poppins, sans-serif;
   flex: 1;
-  font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
-`;
+  padding: 20px;
+  font-size: ${({ fontSize }) => calculateFontSize(24, fontSize)};
+  line-height: 1.5; /* Increased line height for better readability */
+  word-wrap: break-word; /* Ensure long words break correctly */
 
+  @media (max-width: 991px) {
+    padding: 15px; /* Adjust padding for mobile */
+  }
+`;
 export default AdminPanel;

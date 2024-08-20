@@ -358,8 +358,8 @@ export const NoShortlistsMessage = styled.p`
 
 export const GlobalStyles = createGlobalStyle`
   .rbc-btn-group button {
-    font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)}; /* Adjust the font size */
-    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6B538C")}; /* Change the text color */
+    font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)}; /* Adjust the font size */ca
+    color: ${({ darkMode }) => (darkMode ? "#FFF" : "#6B538C")}; /* Change the text color */
     transition: color 0.3s, background-color 0.3s;
   }
 

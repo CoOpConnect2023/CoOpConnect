@@ -22,13 +22,14 @@ export const Wrapper = styled.main`
     flex-direction: column;
     padding: 20px;
     animation: ${fadeIn} 0.8s ease-in-out;
-    background-color: ${({ darkMode }) => (darkMode ? '#121212' : '#ffffff')};
+
     transition: background-color 0.5s;
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
 
     @media (max-width: 480px) {
         padding: 10px;
+        min-height: 80vh;
     }
 `;
 
@@ -47,6 +48,7 @@ export const FileSection = styled.section`
     display: flex;
     flex-direction: column;
     width: 70%;
+    border: 2px solid ${({ darkMode }) => (darkMode ? "#444" : "#e2e8f0")};
     padding: 20px 0px;
     border-radius: 10px;
     background: ${({ darkMode }) => (darkMode ? '#2C2C2C' : '#fff')};
@@ -274,8 +276,9 @@ export const FormSection = styled.section`
     width: 30%;
     height: 100%;
     flex-direction: column;
-    padding: 10px;
 
+border: 2px solid ${({ darkMode }) => (darkMode ? "#444" : "#e2e8f0")};
+border-radius: 10px;
     @media (max-width: 991px) {
         width: 100%;
         padding: 0;

@@ -23,7 +23,7 @@ const AcceptApplicant = () => {
     const [timeSlots, setTimeSlots] = useState([""]);
     const darkMode = useSelector(state => state.accessibility.darkMode);
     const fontSize = useSelector(state => state.accessibility.textSize);
-const user = useSelector(selectUser);
+    const user = useSelector(selectUser);
     const dispatch = useDispatch();
 
     const applicant = useSelector(selectApplicant);
@@ -52,13 +52,12 @@ const user = useSelector(selectUser);
         dispatch(getSingleUserDetails({ userJobsId: applicantId }));
         dispatch(getUserJob({ userJobId: applicantId }));
     }, [dispatch, applicantId]);
-console.log(userJob)
+    console.log(userJob);
     const handleSubmit = async (e) => {
         e.preventDefault();
         const timeSlotsAsDates = timeSlots.map((slot) => slot.toDate());
 
         try {
-            // First, update the user job status to "Interview"
             await dispatch(
                 patchUserJob({
                     userJobsId: applicantId,
@@ -68,17 +67,6 @@ console.log(userJob)
                 })
             ).unwrap();
 
-            // Log the notification data to ensure it's correct
-            console.log("postNotification payload:", {
-                from_user_id: user.id,
-                to_user_id: userJob.userId,
-                viewed: false,
-                content: `Your job application for ${userJob.jobTitle} has been accepted. An interview has been scheduled.`,
-                type: "Application Accepted",
-                interview_date: null, // Assuming the first time slot is the interview date
-            });
-
-            // Then, send a notification to the user
             await dispatch(
                 postNotification({
                     from_user_id: user.id,
@@ -86,17 +74,14 @@ console.log(userJob)
                     viewed: false,
                     content: `Your job application for ${userJob.jobTitle} has been accepted. Interview times have been sent for your approval.`,
                     type: "Application Accepted",
-                    interview_date: null, // Assuming the first time slot is the interview date
+                    interview_date: null,
                 })
             ).unwrap();
 
-            // Redirect to the view applicants page after both actions are successful
             window.location.href = `/employer/viewapplicants/${userJob.jobsId}`;
         } catch (error) {
-            // Handle errors from either dispatch
-            console.error("Error in processing submission:", error);
 
-            // Provide appropriate error message to the user
+            console.error("Error in processing submission:", error);
             alert("An error occurred while processing the application. Please try again.");
         }
     };
@@ -184,7 +169,7 @@ export const Container = styled.div`
     padding: 30px;
     width: 70%;
 
-    flex:1 1;
+    flex:1;
     margin: 20px auto;
     background-color: ${({ darkMode }) => (darkMode ? "#333" : "#ffffff")};
     color: ${({ darkMode }) => (darkMode ? "#f1f1f1" : "#333")};
@@ -197,6 +182,7 @@ export const Container = styled.div`
 
     @media (max-width: 991px) {
         padding: 20px;
+        min-height: 100vh;
        width: 100%;
     }
 `;

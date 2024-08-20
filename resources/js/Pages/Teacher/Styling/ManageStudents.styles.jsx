@@ -31,6 +31,7 @@ export const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  max-height: 87.25vh;
   border-radius: 10px;
   background-color: ${({ darkMode }) => (darkMode ? "#1C1C1C" : "#fff")};
   transition: background-color 0.3s;
@@ -41,19 +42,34 @@ export const MainContainer = styled.div`
 `;
 
 export const Section = styled.section`
-  flex: 1; /* Grow to fill remaining space */
+  flex-grow: 1; /* Grow to fill remaining space */
   border-radius: 10px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   background-color: ${({ darkMode }) => (darkMode ? "#2D2D2D" : "#fff")};
   display: flex;
   flex-direction: column;
   padding: 20px;
-  max-height: 50vh; /* Adjust as needed */
-    overflow-y: auto;
+  max-height: 50vh; /* Default max height for medium screens */
+  overflow-y: auto;
   gap: 20px;
-  overflow-y: auto; /* Enable scrolling within this section */
   transition: background-color 0.3s;
   font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+
+  @media (min-width: 1025px) {
+    max-height: 60vh; /* Set max height for screens larger than 1024px */
+  }
+
+  @media (max-width: 1024px) {
+    max-height: 50vh; /* Adjust for medium screens */
+  }
+
+  @media (max-width: 768px) {
+    max-height: 40vh; /* Adjust for smaller screens */
+  }
+
+  @media (max-width: 480px) {
+    max-height: 30vh; /* Adjust for very small screens */
+  }
 `;
 
 export const SectionTitle = styled.h1`
@@ -94,6 +110,7 @@ export const StyledTable = styled.table`
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
   gap: 10px;
   margin-top: 20px;
   font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
@@ -103,8 +120,8 @@ export const Input = styled.input`
   padding: ${({ fontSize }) => calculateFontSize(8, fontSize)};
   border: 1px solid ${({ darkMode }) => (darkMode ? "#666666" : "#cbd5e0")};
   border-radius: ${({ fontSize }) => calculateFontSize(6, fontSize)};
-  background-color: ${({ darkMode }) => (darkMode ? "#FFFFFF" : "#fff")}; /* White background in dark mode */
-  color: ${({ darkMode }) => (darkMode ? "#000" : "#000")}; /* Black text in dark mode */
+  background-color: ${({ darkMode }) => (darkMode ? "#4F4F4F" : "#fff")}; /* White background in dark mode */
+  color: ${({ darkMode }) => (darkMode ? "#FFF" : "#000")}; /* Black text in dark mode */
   font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
   font-family: Poppins, sans-serif;
   transition: background-color 0.3s, color 0.3s, border-color 0.3s;

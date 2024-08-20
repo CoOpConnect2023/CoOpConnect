@@ -153,7 +153,7 @@ const MainContainer = styled.div`
     flex-shrink: 0;
     border-radius: 10px;
     width: 100%;
-    min-height: 100vh;
+    flex:1;
     transition: background-color 0.5s ease, color 0.5s ease;
     background-color: ${({ darkMode }) => (darkMode ? '#121212' : '#fff')};
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};

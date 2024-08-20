@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\School;
 use App\Models\Courses;
 use App\Imports\UsersImport;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -85,34 +87,30 @@ class UserController extends Controller
 
     public function updateProfile(Request $request, User $user)
     {
-
         if (!Auth::user()->isAdmin() && Auth::id() != $user->id) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-
         if ($request->hasFile('profile_image')) {
             $image = $request->file('profile_image');
-
-
             $imageName = time() . '.' . $image->getClientOriginalExtension();
-
-
             $image->storeAs('public/profile_images', $imageName);
-
-
             $user->profile_image = '/storage/profile_images/' . $imageName;
-
-
             info('Uploaded image path: ' . $user->profile_image);
         }
 
-        // Update other fields
+        
         $user->description = $request->description;
         $user->name = $request->name;
         $user->email = $request->email;
         $user->role = $request->role;
-        $user->school_id = $request->school_id;
+
+
+        if ($request->has('school_id')) {
+
+            $user->school_id = $request->school_id !== 'null' && $request->school_id !== null ? $request->school_id : null;
+        }
+
         $user->positiontitle = $request->positiontitle;
         $user->company_name = $request->company_name;
 
@@ -121,30 +119,22 @@ class UserController extends Controller
         if (is_string($skills)) {
             $skills = json_decode($skills, true);
         }
-
         $user->skills = $skills;
 
         $user->save();
 
+
         if ($request->has('courses')) {
             $courses = json_decode($request->input('courses'), true);
-
             if (is_array($courses)) {
                 if (empty($courses)) {
-                    // If courses array is empty, remove all associated courses
                     $user->courses()->detach();
                 } else {
-                    // Extract course IDs from the courses array
                     $courseIds = array_column($courses, 'id');
-
-                    // Sync user's courses with the provided course IDs
                     $user->courses()->sync($courseIds);
                 }
             }
         }
-
-
-        info('Updated user data: ' . json_encode($user));
 
         info('Updated user data: ' . json_encode($user));
 
@@ -153,13 +143,13 @@ class UserController extends Controller
 
     public function getStudentsByTeacherCourses(Request $request, $teacherId)
 {
-    // Fetch students enrolled in courses where teacher_id matches $teacherId
+
     $students = User::whereHas('courses', function ($query) use ($teacherId) {
             $query->where('teacher_id', $teacherId);
         })
         ->where('role', 'student')
         ->with(['courses' => function ($query) use ($teacherId) {
-            $query->where('teacher_id', $teacherId); // Filter courses by teacher_id
+            $query->where('teacher_id', $teacherId);
         }])
         ->get(['id', 'name', 'email', 'profile_image', 'working', 'interviewing', 'searching']);
 
@@ -235,38 +225,64 @@ public function deleteUser(Request $request, $id)
     }
 
     public function uploadUsers(Request $request)
-    {
-        $usersData = $request->input('users');
+{
+    $usersData = $request->input('users');
+    $schoolsData = $request->input('schools');
 
-        if (empty($usersData)) {
-            return response()->json(['message' => 'No users data received'], 400);
-        }
+    if (empty($usersData) && empty($schoolsData)) {
+        return response()->json(['message' => 'No users or schools data received'], 400);
+    }
 
-        try {
+    try {
+        // Handle users data
+        if (!empty($usersData)) {
             foreach ($usersData as $userData) {
-
                 $validator = validator()->make($userData, [
                     'name' => 'required|string',
                     'email' => 'required|email|unique:users,email',
                     'class' => 'required|string',
                     'password' => 'required|string|min:6',
                     'role' => 'required|string',
-
                 ]);
 
                 if ($validator->fails()) {
-                    return response()->json(['message' => 'Validation failed', 'errors' => $validator->errors()], 400);
+                    return response()->json(['message' => 'Validation failed for users', 'errors' => $validator->errors()], 400);
                 }
+
+                // Add remember_token to user data
+                $userData['remember_token'] = Str::random(10);
 
                 // Create user
                 User::create($userData);
             }
-
-            return response()->json(['message' => 'Users created successfully'], 201);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Failed to create users', 'error' => $e->getMessage()], 500);
         }
+
+        // Handle schools data
+        if (!empty($schoolsData)) {
+            foreach ($schoolsData as $schoolData) {
+                $validator = validator()->make($schoolData, [
+                    'name' => 'required|string',
+                    'location' => 'required|string',
+                    'description' => 'nullable|string',
+                    'principal_name' => 'nullable|string|max:255',
+                    'contact_email' => 'nullable|email|max:255',
+                    'contact_phone' => 'nullable|string|max:255',
+                ]);
+
+                if ($validator->fails()) {
+                    return response()->json(['message' => 'Validation failed for schools', 'errors' => $validator->errors()], 400);
+                }
+
+                // Create school
+                School::create($schoolData);
+            }
+        }
+
+        return response()->json(['message' => 'Users and schools created successfully'], 201);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Failed to create users or schools', 'error' => $e->getMessage()], 500);
     }
+}
 
     public function changePassword(ChangePasswordRequest $request)
     {

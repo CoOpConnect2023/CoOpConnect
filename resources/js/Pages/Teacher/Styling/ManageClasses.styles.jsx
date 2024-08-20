@@ -34,6 +34,11 @@ export const MainContainer = styled.div`
   background-color: ${({ darkMode }) => (darkMode ? "#1C1C1C" : "#fff")};
   transition: background-color 0.3s;
   font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+
+   @media (max-width: 768px) {
+    min-height: 80vh; /* Adjust for smaller screens */
+  }
+
 `;
 
 export const Section = styled.section`

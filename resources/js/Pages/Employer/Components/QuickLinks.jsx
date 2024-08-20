@@ -68,7 +68,7 @@ const MainContainer = styled.section`
     align-self: stretch;
     border-radius: 10px;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-    background-color: ${({ darkMode }) => (darkMode ? "#1f1f1f" : "#fff")};
+    background-color: ${({ darkMode }) => (darkMode ? "#3c3c3c" : "#fff")};
     display: flex;
 border: 2px solid ${({ darkMode }) => (darkMode ? "#444" : "#e2e8f0")};
     width: 50%;
