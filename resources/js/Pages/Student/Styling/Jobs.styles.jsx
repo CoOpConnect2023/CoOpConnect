@@ -228,30 +228,34 @@ export const JobColumn = styled.div`
 `;
 
 export const JobCard = styled.article`
-    max-width: 400px;
-    align-items: center;
-    border-radius: 10px;
-    transition: background-color 0.5s ease, color 0.5s ease;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-    border: 2px solid ${({ darkMode }) => (darkMode ? '#444' : '#773dc3')};
-    background-color: ${({ darkMode }) => (darkMode ? '#2C2C2C' : '#eddcff')};
-    display: flex;
-    width: 100%;
+   display: flex;
     flex-direction: column;
-    padding: 20px 40px;
-    margin-top: ${(props) => (props.hasMargin ? "10px" : "0")};
+    align-items: center;
+    background-color: ${({ darkMode }) => (darkMode ? '#444444' : '#eddcff')};
+    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#260e44')};
+    border-radius: 10px;
+    border: 2px solid ${({ darkMode }) => (darkMode ? '#444' : '#773dc3')};
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    padding: 20px;
+    text-align: center;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
     animation: ${appearFromTop} 0.8s ease forwards;
     animation-delay: ${(props) => props.index * 0.3}s;
     opacity: 0;
-    transition: transform 0.7s ease, box-shadow 0.3s ease;
+    min-width: 250px;
+    max-width: 400px;
+    max-height: 800px;
+    justify-content: space-between;
+    box-sizing: border-box;
 
     &:hover {
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
         transform: translateY(-5px);
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     }
 
     @media (max-width: 991px) {
-        padding: 0 20px;
+        width: 100%; /* Ensure full width on smaller screens */
+        flex-direction: column;
     }
 `;
 
@@ -343,11 +347,12 @@ export const FeaturedJob = styled.div`
     line-height: normal;
     width: 100%;
     margin-left: 20px;
-
+min-width: 500px;
     @media (max-width: 991px) {
         width: 100%;
         margin-left: 0;
         margin-top: 2vh;
+        min-width: 100px;
     }
 `;
 
@@ -359,6 +364,7 @@ export const JobCardFeatured = styled.article`
     transition: background-color 0.5s ease, color 0.5s ease;
     display: flex;
     width: 100%;
+    min-width: 250px;
     flex-direction: column;
     padding: 20px 40px;
     margin-bottom: 10px;
@@ -367,6 +373,7 @@ export const JobCardFeatured = styled.article`
 
     @media (max-width: 991px) {
         padding: 0 20px;
+        min-width: none;
     }
 `;
 

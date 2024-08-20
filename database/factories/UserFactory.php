@@ -26,6 +26,10 @@ class UserFactory extends Factory
     protected $model = User::class;
     public function definition()
     {
+
+        $statusOptions = ['working', 'interviewing', 'searching'];
+        $selectedStatus = $this->faker->randomElement($statusOptions);
+
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
@@ -37,6 +41,11 @@ class UserFactory extends Factory
             'skills' => $this->faker->randomElements(['JavaScript', 'PHP', 'HTML', 'CSS', 'Python'], $this->faker->numberBetween(1, 4)),
             'status' => $this->faker->randomElement(['searching', 'interviewing', 'working']),
             'school_id' => School::inRandomOrder()->first()->id,
+
+
+            'working' => $selectedStatus === 'working',
+            'interviewing' => $selectedStatus === 'interviewing',
+            'searching' => $selectedStatus === 'searching',
         ];
     }
 

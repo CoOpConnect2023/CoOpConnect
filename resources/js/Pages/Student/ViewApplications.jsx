@@ -146,7 +146,7 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-flex: 1;
+    flex-grow: 1;
 
     padding: 20px;
     background-color: ${({ darkMode }) => (darkMode ? '#2C2C2C' : '#FFF7FF')};
@@ -155,6 +155,7 @@ flex: 1;
 
     @media (max-width: 768px) {
         padding: 10px;
+        height: 100vh;
     }
 `;
 
@@ -168,6 +169,7 @@ const Tabs = styled.div`
 
     @media (max-width: 768px) {
         margin-bottom: 10px;
+
     }
 `;
 

@@ -1,5 +1,87 @@
 # CoOp Connect
 
+
+
+## Table of Contents
+- [Installation](#installation)
+- [Usage](#usage)
+- [Routes](#routes)
+- [Features](#features)
+- [Contributing](#contributing)
+- [License](#license)
+
+
+
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/username/project-name.git
+   ```
+
+2. Navigate to the project directory:
+   ```bash
+   cd project-name
+   ```
+
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+4. Set up environment variables:
+   ```bash
+   cp .env.example .env
+   ```
+
+5. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+
+
+
+## Usage
+
+Run the application with the following command:
+bash
+npm start
+
+
+
+
+
+
+
+
+
+##  Features
+- A list of features included in the project, highlighting key functionalities.
+
+
+## Features
+- User authentication and authorization
+- Real-time chat
+- File upload and management
+- Responsive design
+- Calendar
+- notifications
+- email password reset
+- darkmode
+- job posting
+- job application
+- user management
+
+
+
+
+
+
+
+
+
+
 ## Routes
 
 /
@@ -135,3 +217,29 @@
 /employer/settings/
 /employer/viewapplicants/
 /employer/accept-applicant/
+
+
+
+## Contributors
+
+
+
+
+
+
+
+
+
+
+
+## Technologies Used
+- A list of technologies, frameworks, and tools used in the project.
+
+```markdown
+## Technologies Used
+- React
+- Laravel
+- mysql
+
+## Contact
+Reach out to me at bradshaweric762@gmail.com.

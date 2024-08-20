@@ -21,7 +21,7 @@ export const Main = styled.main`
     align-items: center;
     border-radius: 10px;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-    background-color: ${({ darkMode }) => (darkMode ? '#2C2C2C' : '#fff')};
+    background-color: ${({ darkMode }) => (darkMode ? '#3C3C3C' : '#fff')};
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
     display: flex;
     justify-content: center;

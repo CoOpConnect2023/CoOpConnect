@@ -72,6 +72,8 @@ export const FileSection = styled.section`
     @media (max-width: 991px) {
         padding: 0;
         width: 100%;
+        margin-bottom: 1vh;
+
 
 
     }
@@ -118,7 +120,7 @@ export const FileList = styled.div`
     gap: ${({ fontSize }) => calculateFontSize(20, fontSize)};
     padding: 0 ${({ fontSize }) => calculateFontSize(80, fontSize)};
     flex-grow: 1;
-
+width: 100%;
     @media (max-width: 991px) {
         padding: 0 ${({ fontSize }) => calculateFontSize(20, fontSize)};
     }
@@ -130,8 +132,9 @@ export const FileContainer = styled.article`
     padding: ${({ fontSize }) => calculateFontSize(20, fontSize)} ${({ fontSize }) => calculateFontSize(10, fontSize)};
     border: 1px solid ${({ darkMode }) => (darkMode ? "#555555" : "#7b757f")};
     border-radius: 10px;
+    width: 100%;
     transition: transform 0.5s ease, border-color 0.3s;
-    
+
 
     &:hover {
         transform: scale(1.01);
@@ -139,6 +142,7 @@ export const FileContainer = styled.article`
 
     @media (max-width: 991px) {
         flex-wrap: wrap;
+
     }
 `;
 
@@ -160,7 +164,7 @@ export const FileDetails = styled.div`
 
 export const FileTitle = styled.h2`
     font-weight: 500;
-    font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
+    font-size: ${({ fontSize }) => calculateFontSize(12, fontSize)};
     color: ${({ darkMode }) => (darkMode ? "#E0E0E0" : "#000")};
     transition: color 0.3s;
 `;
@@ -183,7 +187,7 @@ export const ActionButton = styled.button`
     align-items: center;
     gap: ${({ fontSize }) => calculateFontSize(8, fontSize)};
     padding: ${({ fontSize }) => calculateFontSize(6, fontSize)} ${({ fontSize }) => calculateFontSize(12, fontSize)};
-    font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
+    font-size: ${({ fontSize }) => calculateFontSize(10, fontSize)};
     font-weight: 600;
     border-radius: 10px;
     cursor: pointer;
@@ -212,6 +216,7 @@ export const FormSection = styled.section`
         flex-grow: 1;
         height: 100%
          min-height: 100vh;
+         margin-top 1vh;
     }
 `;
 
@@ -220,6 +225,7 @@ export const Form = styled.form`
     flex-direction: column;
     padding: ${({ fontSize }) => calculateFontSize(20, fontSize)};
     margin: 0 auto;
+    height:100%;
     border-radius: 10px;
     background: ${({ darkMode }) => (darkMode ? "#2D2D2D" : "#fff")};
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
@@ -230,7 +236,7 @@ export const Form = styled.form`
 `;
 
 export const Title = styled.h2`
-    font-size: ${({ fontSize }) => calculateFontSize(24, fontSize)};
+    font-size: ${({ fontSize }) => calculateFontSize(20, fontSize)};
     font-weight: 500;
     color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
     transition: color 0.3s;

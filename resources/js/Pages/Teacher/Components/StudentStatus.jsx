@@ -23,24 +23,23 @@ const Container = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   font-size: 16px;
   font-weight: 400;
   line-height: 150%;
+  width: 25%;
+  height: 100%;
+  max-height: 60vh;
 
-height: 100%;
-width: 30%;
-padding: 20px;
-
-
-
-
+  padding: 20px;
   border: 1px solid rgba(123, 117, 127, 1);
-
   transition: background-color 0.3s, color 0.3s;
+  box-sizing: border-box; /* Ensure padding doesn't affect layout */
 
   @media (max-width: 991px) {
-    height: 450px;
+    height: auto; /* Adjust height for mobile */
     width: 100%;
+    padding: 20px;
   }
 `;
 
@@ -48,6 +47,7 @@ const Title = styled.h2`
   text-align: center;
   color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
   font: 500 24px/133% Poppins, sans-serif;
+  margin-bottom: 20px; /* Add spacing below the title */
   transition: color 0.3s;
 `;
 
@@ -65,12 +65,12 @@ function StudentStatus({ fontSize, percentages }) {
   return (
     <Container darkMode={darkMode}>
       <Title darkMode={darkMode}>Student Status</Title>
-      <ResponsiveContainer width={250} aspect={0.5}>
+      <ResponsiveContainer width="100%" aspect={1}>
         <PieChart>
           <Pie
             data={data}
-            cx="50%"  // Center the chart horizontally
-            cy="50%"  // Center the chart vertically
+            cx="50%" // Center the chart horizontally
+            cy="50%" // Center the chart vertically
             labelLine={false}
             label={({ value }) => `${value}%`}
             outerRadius="80%"

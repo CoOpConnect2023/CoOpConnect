@@ -7,6 +7,16 @@ const fadeIn = keyframes`
         opacity: 1;
     }
 `;
+
+
+const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
+    const em = parseFloat(emValue);
+    if (emValue === '1em') return `${basePixelSize * em}px`;
+    if (emValue === '1.07em') return `${basePixelSize * em * 1.3}px`;
+    if (emValue === '1.12em') return `${basePixelSize * em * 1.7}px`;
+    return `${basePixelSize * em * factor}px`;
+};
+
 export const CardContainer = styled.div`
   display: flex;
   align-items: center;

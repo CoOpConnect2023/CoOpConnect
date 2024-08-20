@@ -37,6 +37,7 @@ const AcceptInterview = () => {
 
     const dispatch = useDispatch();
     const job = useSelector(selectJob);
+    
 
     const { props } = usePage();
     const { userJobsId } = props;
@@ -98,7 +99,7 @@ const AcceptInterview = () => {
                         from_user_id: user.id,
                         to_user_id: job.userId,
                         viewed: false,
-                        content: `You have a new interview scheduled with ${user.name} at ${user.company_name} .`,
+                        content: `You have a new interview scheduled with ${user.name} for ${job.title} .`,
                         type: "Interview Scheduled",
                         interview_date: formattedStart
                     })
@@ -186,6 +187,13 @@ const Container = styled.div`
     background-color: ${({ darkMode }) => (darkMode ? '#121212' : '#fff')};
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+    flex: 1;
+
+     @media (max-width: 991px) {
+        padding: 20px;
+        min-height: 80vh;
+       width: 100%;
+    }
 `;
 
 const JobInfo = styled.div`

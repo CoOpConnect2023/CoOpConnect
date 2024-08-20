@@ -1,77 +1,109 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateUserProfile, getAllUsers } from '@/Features/users/userSlice';
+import { editSchool } from '@/Features/schools/schoolsSlice';
 import { Description } from '@/Pages/SignUp/EmployerSignUp';
 import { CardContainer, CardInfo, Avatar, InfoText, CardActions, Button, Input } from '../Styling/Card.styles';
-const Card = ({ name, classroom, email, id, profileImage, schoolId, status, onViewClick, onDeleteClick, onEditSave, role, emailVerified, description, rememberToken, company, positiontitle, fontSize, darkMode }) => {
+
+
+
+const SchoolCardComponent = ({ name, email, id, profileImage, schoolId, status, onViewClick, onDeleteClick, role, emailVerified, description, rememberToken, company, positiontitle, fontSize, darkMode, principal, phone, location }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+
+    // State variables for each editable field
     const [editName, setEditName] = useState(name);
     const [editEmail, setEditEmail] = useState(email);
-    const [editStatus, setEditStatus] = useState(status);
+    const [editLocation, setEditLocation] = useState(location);
+    const [editDescription, setEditDescription] = useState(description);
+    const [editPrincipal, setEditPrincipal] = useState(principal);
+    const [editPhone, setEditPhone] = useState(phone);
+
+
     const dispatch = useDispatch();
+
     const handleViewClick = () => {
         onViewClick();
     };
+
     const handleDeleteClick = () => {
         onDeleteClick();
     };
+
     const beginDelete = () => {
         setShowDeleteConfirmation(true);
     };
+
     const confirmDelete = () => {
-        onDeleteClick(id); // Pass the user id to delete to the parent component
+        onDeleteClick(id); // Pass the school id to delete to the parent component
         setShowDeleteConfirmation(false);
     };
+
     const cancelDelete = () => {
         setShowDeleteConfirmation(false);
     };
+
     const handleEditClick = () => {
         setIsEditing(true);
     };
+
     const handleSaveClick = () => {
+        // Dispatch editSchool instead of updateUserProfile
         dispatch(
-            updateUserProfile({
-                id,
-                name: editName,
-                email: editEmail,
-                status: editStatus,
-                role: role,
-                school_id: schoolId,
-                profile_image: profileImage,
-                company_name: company,
-                positiontitle: positiontitle,
-                description: description,
-                email_verified_at: emailVerified,
-                remember_token: rememberToken
+            editSchool({
+                schoolId: id,
+                editedSchoolData: {
+                    name: editName,
+                    contact_email: editEmail,
+                    location: editLocation,
+                    description: editDescription,
+                    principal_name: editPrincipal,
+                    contact_phone: editPhone,
+
+                },
             })
         );
         setIsEditing(false);
-        dispatch(getAllUsers());
     };
+
     const handleCancelEdit = () => {
         setIsEditing(false);
+        // Revert changes by resetting state variables to original values
         setEditName(name);
         setEditEmail(email);
-        setEditStatus(status);
+        setEditLocation(location);
+        setEditDescription(description);
+        setEditPrincipal(principal);
+        setEditPhone(phone);
+
     };
+
     return (
         <CardContainer fontSize={fontSize} darkMode={darkMode} data-testid={`user-card-${email}`}>
             <CardInfo fontSize={fontSize} darkMode={darkMode}>
-                <Avatar fontSize={fontSize} darkMode={darkMode} src={profileImage} alt={`${name}'s avatar`} />
                 {isEditing ? (
                     <InfoText fontSize={fontSize} darkMode={darkMode}>
                         <Input fontSize={fontSize} darkMode={darkMode} type="text" value={editName} onChange={(e) => setEditName(e.target.value)} />
+                        <Input fontSize={fontSize} darkMode={darkMode} type="text" value={editLocation} onChange={(e) => setEditLocation(e.target.value)} />
+                        <Input fontSize={fontSize} darkMode={darkMode} type="text" value={editPrincipal} onChange={(e) => setEditPrincipal(e.target.value)} />
                         <Input fontSize={fontSize} darkMode={darkMode} type="text" value={editEmail} onChange={(e) => setEditEmail(e.target.value)} />
-                        <Input fontSize={fontSize} darkMode={darkMode} type="text" value={editStatus} onChange={(e) => setEditStatus(e.target.value)} />
+                        <Input fontSize={fontSize} darkMode={darkMode} type="text" value={editPhone} onChange={(e) => setEditPhone(e.target.value)} />
+                        <Input fontSize={fontSize} darkMode={darkMode} type="text" value={editDescription} onChange={(e) => setEditDescription(e.target.value)} />
+
+
+
                     </InfoText>
                 ) : (
                     <InfoText fontSize={fontSize} darkMode={darkMode}>
-                        <p>Name: {name}</p>
-                        <p>SchoolID: {schoolId}</p>
-                        <p>Current Status: {status}</p>
-                        <p>Email: {email}</p>
-                        <p>UserID: {id}</p>
+                        {name &&<p>Name: {name}</p>}
+                       {schoolId && <p>SchoolID: {schoolId}</p>}
+                       {location &&<p>Location: {location}</p>}
+                        {principal &&<p>Current Principal: {principal}</p>}
+                      {email && <p>Email: {email}</p>}
+                      {phone &&  <p>Phone: {phone}</p>}
+                       {description && <p>Description: {description}</p>}
+                       {positiontitle && <p>Position Title: {positiontitle}</p>}
+                        {company && <p>Company: {company}</p>}
                     </InfoText>
                 )}
             </CardInfo>
@@ -90,4 +122,5 @@ const Card = ({ name, classroom, email, id, profileImage, schoolId, status, onVi
         </CardContainer>
     );
 };
-export default Card;
+
+export default SchoolCardComponent;

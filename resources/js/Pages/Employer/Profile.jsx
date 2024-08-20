@@ -119,7 +119,7 @@ function Profile() {
             formData.append("name", user.name);
             formData.append("email", user.email);
             formData.append("role", user.role);
-            formData.append("school_id", user.school_id);
+            formData.append("school_id", null);
             formData.append("positiontitle", user.positiontitle);
             formData.append("company_name", user.company_name);
 

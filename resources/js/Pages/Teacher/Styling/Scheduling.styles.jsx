@@ -31,7 +31,7 @@ const fadeIn = keyframes`
 export const GlobalStyles = createGlobalStyle`
   .rbc-btn-group button {
     font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)}; /* Adjust the font size */
-    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6B538C")}; /* Change the text color */
+    color: ${({ darkMode }) => (darkMode ? "#FFF" : "#6B538C")}; /* Change the text color */
     transition: color 0.3s, background-color 0.3s;
   }
 

@@ -30,7 +30,7 @@ const fadeInLeft = keyframes`
 export const MainContainer = styled.main`
     display: flex;
     flex-direction: column;
-    height: 89vh;
+    height: 89vh;  /* Make sure it takes the full viewport height */
     background: ${({ darkMode }) => (darkMode ? '#121212' : 'var(--Schemes-Background, #fff7ff)')};
     padding: 20px;
     animation: ${fadeIn} 0.8s ease-in-out;
@@ -41,9 +41,10 @@ export const MainContainer = styled.main`
 
     @media (max-width: 991px) {
         padding: 10px;
-        height: 80%;
+        height: auto;  /* Allow it to adjust height on smaller screens */
     }
 `;
+
 
 export const SearchSection = styled.section`
     display: flex;
@@ -55,7 +56,7 @@ export const SearchSection = styled.section`
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     padding: 20px;
     margin-top: 20px;
-    height: 35%;
+    
     transition: box-shadow 0.3s ease, transform 0.3s ease;
 
     &:hover {
@@ -107,7 +108,7 @@ export const Button = styled.button`
     border-radius: 12px;
     letter-spacing: 0.5px;
     padding: 8px 16px;
-    margin-top: 30px;
+    margin-top: 10px;
     cursor: pointer;
     align-self: center;
     transition: background-color 0.3s ease, transform 0.3s ease;
@@ -132,8 +133,8 @@ export const JobsSection = styled.section`
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     padding: 20px;
     margin-top: 20px;
-    flex-grow: 1;
-    max-height: 65%;
+    flex-grow: 1;  /* Allow the section to grow and fill the available space */
+    align-self: stretch;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
     overflow-y: auto;
 
@@ -148,6 +149,7 @@ export const JobsSection = styled.section`
         flex-grow: 1;
     }
 `;
+
 
 export const JobsHeader = styled.h2`
     font-size: ${({ fontSize }) => calculateFontSize(32, fontSize)};
@@ -172,21 +174,22 @@ export const JobsSubHeader = styled.p`
 `;
 
 export const JobListings = styled.div`
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Adjust column size dynamically */
+    gap: 40px;
+    width: 100%;  /* Take full width */
     margin-top: 20px;
-
     overflow-y: auto;
+    max-height: 50vh;  /* Limit the height of the job listings */
 
     @media (max-width: 991px) {
-        flex-direction: row;
-        align-items: stretch;
+        grid-template-columns: 1fr;  /* Single column on smaller screens */
         max-height: 40vh;
         overflow-y: auto;
+        width: 100%;
     }
 `;
+
 
 export const JobCardContainer = styled.article`
     display: flex;
@@ -197,15 +200,17 @@ export const JobCardContainer = styled.article`
     border-radius: 10px;
     border: 2px solid ${({ darkMode }) => (darkMode ? '#444' : '#773dc3')};
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    max-width: 400px;
-    width: 100%;
     padding: 20px;
-    margin: 0 auto;
     text-align: center;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
     animation: ${fadeInLeft} 0.5s ease forwards;
     animation-delay: ${(props) => props.index * 0.1}s;
     opacity: 0;
+    min-width: 250px;
+    max-width: 400px;
+    max-height: 800px;
+    justify-content: space-between;
+    box-sizing: border-box;
 
     &:hover {
         box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
@@ -213,32 +218,31 @@ export const JobCardContainer = styled.article`
     }
 
     @media (max-width: 991px) {
-        max-width: 80%;
-        height: 100%; /* Allow the height to be flexible */
+        width: 100%; /* Ensure full width on smaller screens */
         flex-direction: column;
     }
 `;
 
 export const JobTitle = styled.h3`
     font-size: ${({ fontSize }) => calculateFontSize(28, fontSize)};
-    align-self: stretch;
     margin-bottom: 10px;
     color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#2C2C2C')};
+    flex-shrink: 0; /* Prevent shrinking of title */
 `;
 
 export const CompanyName = styled.p`
     font-family: Poppins, sans-serif;
-    letter-spacing: 0.15px;
     margin-top: 18px;
     color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#2C2C2C')};
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+    flex-shrink: 0; /* Prevent shrinking of company name */
 `;
 
 export const Location = styled.p`
     font-family: Poppins, sans-serif;
-    letter-spacing: 0.15px;
     color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#2C2C2C')};
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+    flex-shrink: 0; /* Prevent shrinking of location */
 `;
 
 export const SkillsList = styled.div`
@@ -252,8 +256,22 @@ export const SkillsList = styled.div`
     line-height: 133%;
     margin-top: 17px;
     text-align: center;
+
 `;
 
+export const JobDescription = styled.p`
+    text-align: center;
+    letter-spacing: 0.25px;
+    margin-top: 15px;
+    font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
+    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Limit to 2 lines */
+    -webkit-box-orient: vertical;
+    flex-shrink: 0; /* Prevent shrinking of description */
+`;
 export const SkillBadge = styled.span`
     font-family: Poppins, sans-serif;
     border: 1px solid ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#773dc3')};
@@ -270,28 +288,6 @@ export const SkillBadge = styled.span`
     }
 `;
 
-export const JobDescription = styled.p`
-    text-align: center;
-    letter-spacing: 0.25px;
-    margin-top: 15px;
-    font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
-    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
-    text-overflow: ellipsis;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-`;
-
-export const Divider = styled.hr`
-    width: 86px;
-    height: 1px;
-    margin-top: 14px;
-    background-color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#260e44')};
-    border: none;
-    align-self: center;
-`;
-
 export const JobButton = styled.button`
     background-color: ${({ darkMode }) => (darkMode ? '#6b538c' : '#6b538c')};
     color: #fff;
@@ -300,11 +296,11 @@ export const JobButton = styled.button`
     border-radius: 12px;
     letter-spacing: 0.5px;
     padding: 8px 16px;
-    margin-top: 15px;
     cursor: pointer;
-    align-self: center;
     transition: background-color 0.3s ease, transform 0.3s ease;
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+    margin-top: 20px; /* Add spacing between the button and the content above */
+    align-self: center; /* Center the button within the container */
 
     &:hover {
         background-color: ${({ darkMode }) => (darkMode ? '#5a4175' : '#5a4175')};
@@ -316,6 +312,17 @@ export const JobButton = styled.button`
         padding: 6px 12px;
     }
 `;
+
+export const Divider = styled.hr`
+    width: 86px;
+    height: 1px;
+    margin-top: 14px;
+    background-color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#260e44')};
+    border: none;
+    align-self: center;
+`;
+
+
 
 export const EmptyMessage = styled.div`
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#ff6347')};

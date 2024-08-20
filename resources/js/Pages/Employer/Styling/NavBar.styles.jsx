@@ -2,6 +2,24 @@ import styled, { keyframes, css } from 'styled-components';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { navButtonLightBackground, navDarkBackground, navLightBackground } from '@/Layouts/Global.styles';
 
+
+const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
+    const em = parseFloat(emValue); // Convert emValue to a number
+
+    if (emValue === '1em') {
+        return `${basePixelSize * em}px`;
+    }
+
+    if (emValue === '1.07em') {
+        return `${basePixelSize * em * 1.3}px`;
+    }
+
+    if (emValue === '1.12em') {
+        return `${basePixelSize * em * 1.7}px`;
+    }
+
+    return `${basePixelSize * em * factor}px`;
+};
 // Keyframes for vibration animation
 const vibration = keyframes`
   0% { transform: translateX(0); }
@@ -575,12 +593,15 @@ export const ModalItem = styled.div`
 `;
 
 export const NoNotificationsMessage = styled.div`
-  padding: 20px;
-  text-align: center;
-  font-size: 16px;
-  color: #666;
-  font-size: ${({ fontSize }) => getFontSize(fontSize)};
+  background-color: ${({ darkMode }) => (darkMode ? '#4F4F4F' : '#F0F0F0')}; /* Darker background for dark mode, lighter for light mode */
+  color: ${({ darkMode }) => (darkMode ? '#FFFFFF' : '#000000')}; /* Text color based on mode */
+  padding: 20px; /* Add padding for better spacing */
+  border-radius: 10px; /* Rounded corners */
+  text-align: center; /* Center the text */
+  font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+  margin: 20px 0; /* Add some margin to separate it from other content */
 `;
+
 
 export const pulse = keyframes`
   0% { transform: scale(1); opacity: 1; }
@@ -652,6 +673,10 @@ export const Footer = styled.footer`
   transition: transform 0.3s ease;
   transform: translateY(${({ isVisible }) => (isVisible ? "0%" : "100%")});
   z-index: 999;
+  color: ${({ darkMode }) => (darkMode ? "#FFF" : "#000")};
+  background-color: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "#FFF")};
+  font: 600 36px/122% Poppins, sans-serif;
+  font: 600 36px/122% Poppins, sans-serif;
   font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
@@ -663,7 +688,7 @@ export const CloseButton = styled.button`
   border: none;
   font-size: 30px;
   cursor: pointer;
-  color: #000;
+  color: ${({ darkMode }) => (darkMode ? "#FFF" : "#000")};
   font-size: ${({ fontSize }) => getFontSize(fontSize)};
 
   &:hover {

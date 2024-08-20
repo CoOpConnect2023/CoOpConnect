@@ -14,6 +14,8 @@ class School extends Model
         'location',
         'description',
         'principal_name',
+        'contact_email',
+        'contact_phone',
     ];
 
     // Define a relationship with the Class model

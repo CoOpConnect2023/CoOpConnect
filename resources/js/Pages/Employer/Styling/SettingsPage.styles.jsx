@@ -14,7 +14,7 @@ export const Main = styled.main`
 
     border-radius: 10px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    background-color: ${({ darkMode }) => (darkMode ? "#1f1f1f" : "#fff")};
+    background-color: ${({ darkMode }) => (darkMode ? "#3c3c3c" : "#fff")};
     color: ${({ darkMode }) => (darkMode ? "#f5f5f5" : "#000")};
     display: flex;
     border: 2px solid ${({ darkMode }) => (darkMode ? "#444" : "#e2e8f0")};

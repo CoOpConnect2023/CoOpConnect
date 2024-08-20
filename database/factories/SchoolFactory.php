@@ -16,6 +16,8 @@ class SchoolFactory extends Factory
             'location' => $this->faker->address,
             'description' => $this->faker->paragraph,
             'principal_name' => $this->faker->name,
+            'contact_phone' => $this->faker->phoneNumber,
+            'contact_email' => $this->faker->safeEmail,
         ];
     }
 }
