@@ -12,6 +12,7 @@
         "laravel/sanctum": "^3.2",
         "laravel/socialite": "^5.12",
         "laravel/tinker": "^2.8",
+        "laravel/ui": "^4.5",
         "pusher/pusher-php-server": "^7.2",
         "spatie/laravel-permission": "^6.4",
         "tightenco/ziggy": "^1.0"

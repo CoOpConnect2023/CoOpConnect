@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\UserJobs;
+use App\Models\User;
 use App\Http\Requests\V1\StoreUserJobsRequest;
 use App\Http\Requests\V1\UpdateUserJobsRequest;
 use App\Http\Controllers\Controller;
@@ -135,7 +136,7 @@ class UserJobsController extends Controller
         if (!$userJob) {
             return response()->json(['error' => 'User job not found'], 404);
         }
-
+        $user = $userJob->job->user;
         // Prepare the user details
         $jobDetails = [
             'title' => $userJob->job->title,
@@ -145,6 +146,7 @@ class UserJobsController extends Controller
             'timeSlots' => $userJob->time_slots,
             'message' => $userJob->message,
             'userId' => $userJob->job->user_id,
+            'userEmail' => $userJob->job->user->email,
         ];
 
         Log::info('Final jobs array', ['jobs' => $jobDetails]);

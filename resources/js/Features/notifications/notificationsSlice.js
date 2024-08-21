@@ -84,6 +84,68 @@ export const postNotification = createAsyncThunk(
     }
 );
 
+export const postEmailNotification = createAsyncThunk(
+    "notifications/postEmailNotification",
+    async (params) => {
+        const { user_id, job_title, time_slots, message } = params;
+
+        const response = await axios({
+            url: "/notifications/send-job-application-notification",
+            method: "POST",
+            data: {
+                user_id,
+                job_title,
+                time_slots,
+                message,
+            },
+        });
+        return response.data;
+    }
+);
+
+export const postEmailAcceptNotification = createAsyncThunk(
+    "notifications/postEmailNotification",
+    async (params) => {
+        const { user_id, job_title, time_slots, message, email, student_id } = params;
+
+        const response = await axios({
+            url: "/notifications/interviews/accept",
+            method: "POST",
+            data: {
+                email,
+                user_id,
+                job_title,
+                time_slots,
+                message,
+                student_id
+            },
+        });
+        return response.data;
+    }
+);
+
+export const postEmailDeclineNotification = createAsyncThunk(
+    "notifications/postEmailDeclineNotification",
+    async (params) => {
+        const { email, user_id, student_id, job_title } = params;
+
+        const response = await axios({
+            url: "/notifications/decline",  // Assuming this is your endpoint
+            method: "POST",
+            data: {
+                email,
+                user_id,
+                student_id,
+                job_title,
+
+            },
+        });
+        console.log("firing", response.data)
+        return response.data;
+    }
+);
+
+
 export const putNotification = createAsyncThunk(
     "notifications/putNotification",
     async (params) => {
@@ -204,6 +266,28 @@ export const notificationsSlice = createSlice({
             })
             .addCase(postNotification.rejected, (state, action) => {
                 state.status.postNotification = "failed";
+                state.error = action.error.message;
+            })
+
+            .addCase(postEmailNotification.pending, (state) => {
+                state.status.postEmailNotification = "loading";
+            })
+            .addCase(postEmailNotification.fulfilled, (state) => {
+                state.status.postEmailNotification = "succeeded";
+            })
+            .addCase(postEmailNotification.rejected, (state, action) => {
+                state.status.postEmailNotification = "failed";
+                state.error = action.error.message;
+            })
+
+            .addCase(postEmailDeclineNotification.pending, (state) => {
+                state.status.postEmailDeclineNotification = "loading";
+            })
+            .addCase(postEmailDeclineNotification.fulfilled, (state) => {
+                state.status.postEmailDeclineNotification = "succeeded";
+            })
+            .addCase(postEmailDeclineNotification.rejected, (state, action) => {
+                state.status.postEmailDeclineNotification = "failed";
                 state.error = action.error.message;
             })
 

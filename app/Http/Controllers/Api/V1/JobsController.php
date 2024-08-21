@@ -59,10 +59,15 @@ class JobsController extends Controller
      */
     public function show(Jobs $job)
     {
-        $job->load('applications.user');
+        // Load applications with the related user and make sure the user's email is included
+        $job->load([
+            'applications.user' => function ($query) {
+                $query->select('id', 'name', 'email'); // Add other fields as necessary
+            }
+        ]);
+
         return new JobsResource($job);
     }
-
     /**
      * Update the specified resource in storage.
      */

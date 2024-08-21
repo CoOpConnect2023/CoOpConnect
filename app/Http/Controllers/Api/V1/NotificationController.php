@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Notification;
+use App\Models\User;
+use Carbon\Carbon;
+use App\Models\UserJobs;
 use App\Http\Requests\V1\StoreNotificationRequest;
 use App\Http\Requests\V1\UpdateNotificationRequest;
 use App\Http\Controllers\Controller;
@@ -12,6 +15,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Filters\V1\NotificationFilter;
+use App\Mail\JobApplicationAccepted;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\StudentAcceptedInterview;
+use App\Mail\StudentDeclinedInterview;
+
 
 class NotificationController extends Controller
 {
@@ -110,4 +118,92 @@ class NotificationController extends Controller
         $notification->delete();
         return response()->noContent();
     }
+
+
+    public function sendJobApplicationNotification(Request $request)
+    {
+
+        $validatedData = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'job_title' => 'required|string',
+            'time_slots' => 'required|array',
+            'message' => 'nullable|string',
+        ]);
+
+
+        $user = User::find($validatedData['user_id']);
+
+
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+
+        $jobTitle = $validatedData['job_title'];
+        $timeSlots = $validatedData['time_slots'];
+        $message = $validatedData['message'] ?? '';
+
+
+        Mail::to($user->email)->send(new JobApplicationAccepted($user, $jobTitle, $timeSlots, $message));
+
+
+
+
+        return response()->json(['message' => 'Notification sent successfully'], 200);
+    }
+
+    public function acceptInterview(Request $request)
+{
+
+    $email = $request->input('email');
+    $employerId = $request->input('user_id');
+    $studentId = $request->input('student_id');
+    $jobTitle = $request->input('job_title');
+    $timeSlots = $request->input('time_slots');
+    $message = $request->input('message');
+
+
+    $student = User::find($studentId);
+    $employer = User::find($employerId);
+
+    if (!$student) {
+        return response()->json(['error' => 'Student not found'], 404);
+    }
+
+
+    $acceptedTime = Carbon::parse($timeSlots[0])->format('F jS \a\t g:i A');
+
+
+    Mail::to($email)->send(new StudentAcceptedInterview($student->name,$employer->name, $jobTitle, $acceptedTime, $message));
+
+    return response()->json(['message' => 'Interview accepted and notification sent']);
+}
+
+
+public function declineInterview(Request $request)
+{
+    $email = $request->input('email');
+    $employerId = $request->input('user_id');
+    $studentId = $request->input('student_id');
+    $jobTitle = $request->input('job_title');
+
+
+    $student = User::find($studentId);
+    $employer = User::find($employerId);
+
+    if (!$student || !$employer) {
+        return response()->json(['error' => 'Student or employer not found'], 404);
+    }
+
+  
+    Mail::to($email)->send(new StudentDeclinedInterview($student->name, $employer->name, $jobTitle));
+
+    Log::info('Declined interview email sent to: ' . $email);
+
+    return response()->json(['message' => 'Interview declined and notification sent']);
+}
+
+
+
+
 }

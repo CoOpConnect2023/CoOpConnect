@@ -16,7 +16,7 @@
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/username/project-name.git
+   git clone git@github.com:CoOpConnect2023/CoOpConnect.git
    ```
 
 2. Navigate to the project directory:
@@ -27,17 +27,23 @@
 3. Install dependencies:
    ```bash
    npm install
+   composer installl
    ```
 
 4. Set up environment variables:
    ```bash
    cp .env.example .env
    ```
+5. Install php environment with xampp or configure manually with apache & manual php install.
 
-5. Start the development server:
+6. Migrate the database and fill with sample data
+php artisan migrate:fresh --seed
+
+
+6. Start the development server:
    ```bash
    npm run dev
-   ```
+   php artisan serve
 
 
 
@@ -45,8 +51,17 @@
 ## Usage
 
 Run the application with the following command:
+
+migrate the database and fill with sample data
+php artisan migrate:fresh --seed
+
 bash
-npm start
+npm run dev
+php artisan serve
+
+
+
+
 
 
 
@@ -68,6 +83,7 @@ npm start
 - Calendar
 - notifications
 - email password reset
+- email confirmations
 - darkmode
 - job posting
 - job application
@@ -222,8 +238,13 @@ npm start
 
 ## Contributors
 
-
-
+Github
+Eliass-g
+EricBradshaw98
+hsohail7
+ishanshah1802
+perera5A
+thanosan23
 
 
 

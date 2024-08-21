@@ -15,6 +15,8 @@ use Illuminate\Http\JsonResponse;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Requests\ChangePasswordRequest;
 use Illuminate\Support\Facades\Hash;
+use App\Mail\WelcomeEmail;
+use Illuminate\Support\Facades\Mail;
 
 
 class UserController extends Controller
@@ -99,7 +101,7 @@ class UserController extends Controller
             info('Uploaded image path: ' . $user->profile_image);
         }
 
-        
+
         $user->description = $request->description;
         $user->name = $request->name;
         $user->email = $request->email;
@@ -225,64 +227,87 @@ public function deleteUser(Request $request, $id)
     }
 
     public function uploadUsers(Request $request)
-{
-    $usersData = $request->input('users');
-    $schoolsData = $request->input('schools');
+    {
+        $usersData = $request->input('users');
+        $schoolsData = $request->input('schools');
 
-    if (empty($usersData) && empty($schoolsData)) {
-        return response()->json(['message' => 'No users or schools data received'], 400);
-    }
+        // Log the received users data
+        Log::info('Users data received:', $usersData);
 
-    try {
-        // Handle users data
-        if (!empty($usersData)) {
-            foreach ($usersData as $userData) {
-                $validator = validator()->make($userData, [
-                    'name' => 'required|string',
-                    'email' => 'required|email|unique:users,email',
-                    'class' => 'required|string',
-                    'password' => 'required|string|min:6',
-                    'role' => 'required|string',
-                ]);
-
-                if ($validator->fails()) {
-                    return response()->json(['message' => 'Validation failed for users', 'errors' => $validator->errors()], 400);
-                }
-
-                // Add remember_token to user data
-                $userData['remember_token'] = Str::random(10);
-
-                // Create user
-                User::create($userData);
-            }
+        if (empty($usersData) && empty($schoolsData)) {
+            return response()->json(['message' => 'No users or schools data received'], 400);
         }
 
-        // Handle schools data
-        if (!empty($schoolsData)) {
-            foreach ($schoolsData as $schoolData) {
-                $validator = validator()->make($schoolData, [
-                    'name' => 'required|string',
-                    'location' => 'required|string',
-                    'description' => 'nullable|string',
-                    'principal_name' => 'nullable|string|max:255',
-                    'contact_email' => 'nullable|email|max:255',
-                    'contact_phone' => 'nullable|string|max:255',
-                ]);
+        try {
+            $createdUsers = [];
 
-                if ($validator->fails()) {
-                    return response()->json(['message' => 'Validation failed for schools', 'errors' => $validator->errors()], 400);
+            // Handle users data
+            if (!empty($usersData)) {
+                foreach ($usersData as $userData) {
+                    // Log the user data before validation
+                    Log::info('Validating user data:', $userData);
+
+                    $validator = validator()->make($userData, [
+                        'name' => 'required|string',
+                        'email' => 'required|email|unique:users,email',
+                        'class' => 'required|string',
+                        'password' => 'required|string|min:6',
+                        'role' => 'required|string',
+                    ]);
+
+                    if ($validator->fails()) {
+                        // Log the validation errors
+                        Log::error('Validation failed for user:', $validator->errors()->toArray());
+
+                        // Stop the process and return the errors
+                        return response()->json(['message' => 'Validation failed for users', 'errors' => $validator->errors()], 400);
+                    }
+
+                    // Create user
+                    $user = User::create($userData);
+                    $createdUsers[] = $user;
+
+                    // Log the created user
+                    Log::info('User created:', $user->toArray());
                 }
-
-                // Create school
-                School::create($schoolData);
             }
-        }
 
-        return response()->json(['message' => 'Users and schools created successfully'], 201);
-    } catch (\Exception $e) {
-        return response()->json(['message' => 'Failed to create users or schools', 'error' => $e->getMessage()], 500);
+            // Handle schools data (no change from your original code)
+            if (!empty($schoolsData)) {
+                foreach ($schoolsData as $schoolData) {
+                    Log::info('Validating school data:', $schoolData);
+
+                    $validator = validator()->make($schoolData, [
+                        'name' => 'required|string|unique:schools,name',
+                        'location' => 'required|string',
+                        'description' => 'nullable|string',
+                        'principal_name' => 'nullable|string|max:255',
+                        'contact_email' => 'nullable|email|max:255|unique:schools,contact_email',
+                        'contact_phone' => 'nullable|string|max:255|unique:schools,contact_phone',
+                    ]);
+
+                    if ($validator->fails()) {
+                        Log::error('Validation failed for school:', $validator->errors()->toArray());
+                        return response()->json(['message' => 'Validation failed for schools', 'errors' => $validator->errors()], 400);
+                    }
+
+                    // Create school
+                    School::create($schoolData);
+                }
+            }
+
+            // Send welcome emails
+            foreach ($createdUsers as $user) {
+                Mail::to($user->email)->send(new WelcomeEmail($user));
+                Log::info('Welcome email sent to:', ['email' => $user->email]);
+            }
+
+            return response()->json(['message' => 'Users and schools created successfully'], 201);
+        } catch (\Exception $e) {
+            Log::error('Failed to create users or schools:', ['error' => $e->getMessage()]);
+            return response()->json(['message' => 'Failed to create users or schools', 'error' => $e->getMessage()], 500);
+        }
     }
-}
 
     public function changePassword(ChangePasswordRequest $request)
     {

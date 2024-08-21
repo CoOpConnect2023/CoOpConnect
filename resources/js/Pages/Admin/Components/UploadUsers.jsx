@@ -125,8 +125,10 @@ const UploadUsers = ({ fontSize, darkMode }) => {
                 // Assign data based on sheet name
                 if (sheetName.toLowerCase().includes("users")) {
                     setUsers(parsedData);
+                    console.log(parsedData)
                 } else if (sheetName.toLowerCase().includes("schools")) {
                     setSchools(parsedData);
+                    console.log(parsedData)
                 }
             });
         };
