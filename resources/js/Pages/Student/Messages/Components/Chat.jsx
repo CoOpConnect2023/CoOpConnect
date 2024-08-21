@@ -24,7 +24,7 @@ export default function Chat({newMessage, setNewMessage, brandNewMessage, setBra
       const handleBackToConversations = () => {
 
         setConversationsID(null);
-        console.log("firing", conversationID)
+       
       };
 
 

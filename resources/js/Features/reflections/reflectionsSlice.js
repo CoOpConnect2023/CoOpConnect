@@ -130,7 +130,7 @@ export const getMyReflections = createAsyncThunk(
             url: "/myreflections",
             method: "GET",
         });
-        console.log(response.data.data)
+        
         return response.data.data;
     }
 );

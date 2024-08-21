@@ -36,7 +36,7 @@ export const getSchools = createAsyncThunk(
             url: `/schools`,
             method: "GET",
         });
-console.log(response.data)
+
         return response.data.data;
     }
 );
@@ -72,7 +72,7 @@ export const getCoursesStudents = createAsyncThunk(
     async (userID) => {
         try {
             const response = await axios.get(`/courses/teacher/${userID}`);
-            console.log(response.data);
+
             return response.data;
         } catch (error) {
             console.error("Error fetching courses:", error);
@@ -161,7 +161,7 @@ export const editSchool = createAsyncThunk(
         const response = await axios.put(`/schools/${schoolId}`, {
             ...filteredData,
         });
-        console.log("firing", filteredData);
+
         return response.data.data;
     }
 );

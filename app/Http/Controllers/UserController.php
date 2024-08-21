@@ -8,7 +8,7 @@ use App\Models\Courses;
 use App\Imports\UsersImport;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
@@ -231,8 +231,8 @@ public function deleteUser(Request $request, $id)
         $usersData = $request->input('users');
         $schoolsData = $request->input('schools');
 
-        // Log the received users data
-        Log::info('Users data received:', $usersData);
+
+
 
         if (empty($usersData) && empty($schoolsData)) {
             return response()->json(['message' => 'No users or schools data received'], 400);
@@ -244,8 +244,7 @@ public function deleteUser(Request $request, $id)
             // Handle users data
             if (!empty($usersData)) {
                 foreach ($usersData as $userData) {
-                    // Log the user data before validation
-                    Log::info('Validating user data:', $userData);
+
 
                     $validator = validator()->make($userData, [
                         'name' => 'required|string',
@@ -256,8 +255,8 @@ public function deleteUser(Request $request, $id)
                     ]);
 
                     if ($validator->fails()) {
-                        // Log the validation errors
-                        Log::error('Validation failed for user:', $validator->errors()->toArray());
+
+
 
                         // Stop the process and return the errors
                         return response()->json(['message' => 'Validation failed for users', 'errors' => $validator->errors()], 400);
@@ -267,15 +266,15 @@ public function deleteUser(Request $request, $id)
                     $user = User::create($userData);
                     $createdUsers[] = $user;
 
-                    // Log the created user
-                    Log::info('User created:', $user->toArray());
+                  
+
                 }
             }
 
             // Handle schools data (no change from your original code)
             if (!empty($schoolsData)) {
                 foreach ($schoolsData as $schoolData) {
-                    Log::info('Validating school data:', $schoolData);
+
 
                     $validator = validator()->make($schoolData, [
                         'name' => 'required|string|unique:schools,name',
@@ -287,7 +286,7 @@ public function deleteUser(Request $request, $id)
                     ]);
 
                     if ($validator->fails()) {
-                        Log::error('Validation failed for school:', $validator->errors()->toArray());
+
                         return response()->json(['message' => 'Validation failed for schools', 'errors' => $validator->errors()], 400);
                     }
 
@@ -299,12 +298,12 @@ public function deleteUser(Request $request, $id)
             // Send welcome emails
             foreach ($createdUsers as $user) {
                 Mail::to($user->email)->send(new WelcomeEmail($user));
-                Log::info('Welcome email sent to:', ['email' => $user->email]);
+
             }
 
             return response()->json(['message' => 'Users and schools created successfully'], 201);
         } catch (\Exception $e) {
-            Log::error('Failed to create users or schools:', ['error' => $e->getMessage()]);
+
             return response()->json(['message' => 'Failed to create users or schools', 'error' => $e->getMessage()], 500);
         }
     }
@@ -328,10 +327,7 @@ public function deleteUser(Request $request, $id)
         $user = Auth::user();
 
 
-        Log::info('Updating user preferences', [
-            'user_id' => $user->id,
-            'request_data' => $request->all(),
-        ]);
+
 
 
         $validatedData = $request->validate([
@@ -340,14 +336,12 @@ public function deleteUser(Request $request, $id)
         ]);
 
 
-        Log::info('Validated data', [
-            'validated_data' => $validatedData,
-        ]);
+
 
 
         if ($request->has('darkMode')) {
             $user->darkMode = $request->darkMode;
-            Log::info('User dark mode updated', ['user_id' => $user->id, 'darkMode' => $user->darkMode]);
+
         }
 
 
@@ -363,18 +357,14 @@ public function deleteUser(Request $request, $id)
                     $user->fontSize = 'large';
                     break;
             }
-            Log::info('User font size updated', ['user_id' => $user->id, 'fontSize' => $user->fontSize]);
+
         }
 
 
         $user->save();
 
 
-        Log::info('User preferences saved', [
-            'user_id' => $user->id,
-            'darkMode' => $user->darkMode,
-            'fontSize' => $user->fontSize,
-        ]);
+
 
         return response()->json(['message' => 'Preferences updated successfully']);
     }

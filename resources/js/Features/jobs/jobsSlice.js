@@ -97,7 +97,7 @@ export const jobsSlice = createSlice({
                 state.status.jobs = "loading";
             })
             .addCase(searchJobsbySkill.fulfilled, (state, action) => {
-                console.log(action.payload);
+               
                 state.jobs = action.payload;
                 state.status.jobs = "succeeded";
             })
@@ -156,7 +156,7 @@ export const jobsSlice = createSlice({
             })
             .addCase(deleteJob.fulfilled, (state, action) => {
                 state.jobs = state.jobs.filter((job) => job.id !== action.payload);
-                console.log(state.jobs, "statejobs")
+
               })
             .addCase(deleteJob.rejected, (state, action) => {
                 state.status.deleteJob = "failed";

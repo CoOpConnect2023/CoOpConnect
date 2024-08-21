@@ -67,7 +67,7 @@ export const interviewsSlice = createSlice({
             .addCase(postInterview.fulfilled, (state, action) => {
                 state.postInterview = action.payload;
                 state.status.postInterview = "succeeded";
-                console.log('postInterview fulfilled:', action.payload);
+               
             })
             .addCase(postInterview.rejected, (state, action) => {
                 state.status.postInterview = "failed";
@@ -154,7 +154,7 @@ export const getInterviewsForInterviewer = createAsyncThunk(
 export const postInterview = createAsyncThunk(
     "interviews/postInterview",
     async (params) => {
-        console.log("Params:", params);
+
         const {
             title,
             startDate,
@@ -177,7 +177,7 @@ export const postInterview = createAsyncThunk(
                 interviewerId,
             },
         });
-        console.log(response.data.data)
+
         return response.data.data;
     }
 );

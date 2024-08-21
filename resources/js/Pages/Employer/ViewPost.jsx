@@ -27,7 +27,7 @@ function ViewPost() {
 
     const handleDelete = () => {
         dispatch(deleteJob({ jobId: jobId }));
-        console.log(`Delete job posting with ID: ${jobId}`);
+
     };
 
     return (

@@ -73,7 +73,7 @@ function SettingsPanel({darkMode, fontSize}) {
             new_password: newPassword,
             new_password_confirmation: confirmNewPassword,
         };
-        console.log('Dispatching updateUserPassword with:', passwordData);
+       
         dispatch(updateUserPassword(passwordData))
             .unwrap()
             .then(() => {
@@ -117,11 +117,11 @@ function SettingsPanel({darkMode, fontSize}) {
     };
     const handleDarkModeToggle = () => {
         dispatch(toggleDarkMode());
-        console.log(darkMode)
+
     };
     const handleTextSizeChange = (size) => {
         dispatch(setTextSize(size));
-        console.log(fontSize)
+
     };
 
     const convertFontSizeToString = (fontSize) => {

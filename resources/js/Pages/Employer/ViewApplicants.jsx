@@ -71,7 +71,7 @@ const ViewApplicants = () => {
         setSelectedApplicant(applicant);
         setIsDeclineModalOpen(true);
     };
-console.log(selectedApplicant)
+
     const handleDeclineSubmit = async (message) => {
         try {
 
@@ -84,14 +84,7 @@ console.log(selectedApplicant)
                 })
             ).unwrap();
 
-            console.log("postNotification payload:", {
-                from_user_id: user.id,
-                to_user_id: selectedApplicant.userId,
-                viewed: false,
-                content: `Your job application for ${job.title} has been rejected.`,
-                type: "Application Rejected",
-                interview_date: null,
-            });
+
             await dispatch(
                 postNotification({
                     from_user_id: user.id,

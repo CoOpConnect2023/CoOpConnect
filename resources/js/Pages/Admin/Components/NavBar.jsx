@@ -199,7 +199,7 @@ function Header({ header }) {
     };
     const handleDarkModeToggle = () => {
         dispatch(toggleDarkMode());
-        console.log(darkMode);
+        
     };
 
 

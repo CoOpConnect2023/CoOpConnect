@@ -286,7 +286,7 @@ export const sendNewMessage = createAsyncThunk(
                 user_id: userInfo.id,
                 recipient_email: recipientEmail
             };
-            console.log("firing", requestData )
+            
             await axios.post(`/sendnewmessages`, requestData);
 
             dispatch(getMessages({ conversationID }));

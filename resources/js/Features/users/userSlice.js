@@ -53,7 +53,7 @@ export const updateUserProfile = createAsyncThunk(
 export const updateUserPreferences = createAsyncThunk(
     "user/updateUserPreferences",
     async ({ darkMode, fontSize }) => {
-      console.log("Updating user preferences with:", { darkMode, fontSize });
+     
 
       try {
         const response = await axios({
@@ -65,7 +65,7 @@ export const updateUserPreferences = createAsyncThunk(
           },
         });
 
-        console.log("Response from server:", response.data);
+
         return response.data.user;
       } catch (error) {
         console.error("Error updating user preferences:", error);
@@ -88,7 +88,7 @@ export const updateUserPassword = createAsyncThunk(
                 new_password_confirmation,
             },
         });
-        console.log(response)
+
         return response.data.user;
     }
 );

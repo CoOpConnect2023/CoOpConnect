@@ -11,7 +11,7 @@ use App\Http\Resources\V1\UserJobsResource;
 use App\Http\Resources\V1\UserJobsCollection;
 use Illuminate\Http\Request;
 use App\Filters\V1\UserJobsFilter;
-use Illuminate\Support\Facades\Log;
+
 
 class UserJobsController extends Controller
 {
@@ -105,11 +105,11 @@ class UserJobsController extends Controller
     {
         $userId = auth()->user()->id;
 
-        Log::info('User ID retrieved', ['userId' => $userId]);
+        
 
         $userJobs = UserJobs::where('user_id', $userId)->get();
 
-        Log::info('User jobs retrieved', ['userJobs' => $userJobs]);
+
 
         $jobs = $userJobs->map(function ($userJob) {
             return [
@@ -123,7 +123,7 @@ class UserJobsController extends Controller
             ];
         });
 
-        Log::info('Final jobs array', ['jobs' => $jobs]);
+
 
         return response()->json($jobs);
     }
@@ -149,7 +149,7 @@ class UserJobsController extends Controller
             'userEmail' => $userJob->job->user->email,
         ];
 
-        Log::info('Final jobs array', ['jobs' => $jobDetails]);
+
 
         // Return the user details as JSON
         return response()->json($jobDetails);
@@ -159,11 +159,11 @@ class UserJobsController extends Controller
     {
         $userId = auth()->user()->id;
 
-        Log::info('User ID retrieved', ['userId' => $userId]);
+
 
         $userJobs = UserJobs::where('user_id', $userId)->where('status', 'Scheduled')->get();
 
-        Log::info('User jobs retrieved', ['userJobs' => $userJobs]);
+
 
         $jobs = $userJobs->map(function ($userJob) {
             return [
@@ -177,7 +177,7 @@ class UserJobsController extends Controller
             ];
         });
 
-        Log::info('Final jobs array', ['jobs' => $jobs]);
+
 
         return response()->json($jobs);
     }

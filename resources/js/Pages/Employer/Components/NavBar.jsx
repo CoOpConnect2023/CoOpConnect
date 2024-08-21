@@ -114,12 +114,12 @@ function Sidebar() {
 
     useEffect(() => {
         const path = window.location.pathname;
-        console.log('Full Path:', path);
+       
 
 
         const segments = path.split('/');
         const specificSegment = segments[segments.length - 1];
-        console.log('Specific Segment:', specificSegment);
+
         setActiveTab(path);
     }, []);
 
@@ -269,7 +269,7 @@ function Header({ header }) {
     };
     const handleDarkModeToggle = () => {
         dispatch(toggleDarkMode());
-        console.log(darkMode);
+
     };
 
     if (!user || !conversations) {
@@ -419,12 +419,8 @@ function NotificationModal({
     const fontSize = useSelector((state) => state.accessibility.textSize);
     const notifications = useSelector((state) => state.notifications.myNotifications);
 
-    // Log notifications whenever they change
-    useEffect(() => {
-        if (notifications) {
-            console.log("Notifications:", notifications);
-        }
-    }, [notifications]);
+
+
 
     // Fetch notifications only on component mount
     useEffect(() => {
@@ -444,7 +440,7 @@ function NotificationModal({
 
 
     const markAsRead = (notificationId) => {
-        console.log("firing",);
+
         dispatch(patchNotification({
             notificationId,
             viewed: true,  // Only updating the 'viewed' field

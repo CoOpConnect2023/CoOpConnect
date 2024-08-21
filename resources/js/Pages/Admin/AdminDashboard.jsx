@@ -28,7 +28,7 @@ const AdminDashboard = () => {
         dispatch(getSchools())
     }, [dispatch]);
 
-console.log(schoolsList)
+
 
     const categorizeUsersByRole = (users) => {
         return users.reduce((acc, user) => {

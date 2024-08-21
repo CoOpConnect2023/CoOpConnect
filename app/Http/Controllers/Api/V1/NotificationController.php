@@ -12,7 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\V1\NotificationResource;
 use App\Http\Resources\V1\NotificationCollection;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+
 use Illuminate\Support\Facades\Auth;
 use App\Filters\V1\NotificationFilter;
 use App\Mail\JobApplicationAccepted;
@@ -48,23 +48,17 @@ class NotificationController extends Controller
     public function store(StoreNotificationRequest $request)
     {
         try {
-            // Log the incoming request data
-            Log::info('Received notification request data:', $request->all());
+
 
             // Attempt to create the notification
             $notification = Notification::create($request->all());
 
-            // Log the successful creation of the notification
-            Log::info('Notification created successfully:', $notification->toArray());
+
 
             return new NotificationResource($notification);
         } catch (\Exception $e) {
-            // Log any exceptions that occur
-            Log::error('Error creating notification:', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-                'request_data' => $request->all(),
-            ]);
+            
+
 
             // Return a JSON response with the error message and 422 status code
             return response()->json(['error' => 'Unprocessable Content', 'details' => $e->getMessage()], 422);
@@ -195,10 +189,10 @@ public function declineInterview(Request $request)
         return response()->json(['error' => 'Student or employer not found'], 404);
     }
 
-  
+
     Mail::to($email)->send(new StudentDeclinedInterview($student->name, $employer->name, $jobTitle));
 
-    Log::info('Declined interview email sent to: ' . $email);
+
 
     return response()->json(['message' => 'Interview declined and notification sent']);
 }

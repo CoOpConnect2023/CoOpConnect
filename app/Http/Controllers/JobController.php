@@ -71,20 +71,18 @@ class JobController extends Controller
         'location' => 'required|string|max:255',
     ]);
 
-    // Debugging: Log the validated data
-    \Illuminate\Support\Facades\Log::info('Validated Data:', $validatedData);
+
+
 
     // Find the job by ID
     $job = Job::findOrFail($id);
 
-    // Debugging: Log the found job
-    \Illuminate\Support\Facades\Log::info('Found Job:', $job);
-
+   
     // Update the job with validated data
     $job->update($validatedData);
 
-    // Debugging: Log the updated job
-    \Illuminate\Support\Facades\Log::info('Updated Job:', $job);
+
+
 
     // Return updated job as JSON response
     return response()->json($job);
@@ -115,7 +113,7 @@ class JobController extends Controller
                 $query->orWhereRaw("LOWER(skills) LIKE ?", ['%"' . strtolower($skill) . '"%']);
             }
         })->get();
-        \Log::info('Matching jobs served:', $matchingJobs->toArray());
+
 
         // Return the matching jobs as JSON
         return response()->json($matchingJobs);
@@ -146,7 +144,7 @@ class JobController extends Controller
 
         $matchingJobs = $query->get();
 
-        \Log::info('Search jobs served:', $matchingJobs->toArray());
+
 
         return response()->json($matchingJobs);
     }

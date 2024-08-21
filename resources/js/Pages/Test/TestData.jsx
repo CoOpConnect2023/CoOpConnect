@@ -16,7 +16,7 @@ export default function TestData() {
     }, [dispatch]);
 
 
-    console.log(interviews);
+   
 
     return <div></div>;
 }

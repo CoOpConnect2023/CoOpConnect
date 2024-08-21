@@ -125,10 +125,10 @@ const UploadUsers = ({ fontSize, darkMode }) => {
                 // Assign data based on sheet name
                 if (sheetName.toLowerCase().includes("users")) {
                     setUsers(parsedData);
-                    console.log(parsedData)
+
                 } else if (sheetName.toLowerCase().includes("schools")) {
                     setSchools(parsedData);
-                    console.log(parsedData)
+
                 }
             });
         };
@@ -149,10 +149,7 @@ const UploadUsers = ({ fontSize, darkMode }) => {
         }
         axios.post(`${appUrl}/api/upload-users`, { users, schools })
             .then(response => {
-                console.log("Posted users:", users);
-                console.log("Posted schools:", schools);
-                console.log('Response:', response.data);
-                console.log('Data uploaded successfully');
+
                 clearFile();
                 dispatch(getAllUsers());
                 dispatch(getSchools())

@@ -20,7 +20,7 @@ function ClassesPage() {
 
     useEffect(() => {
         if (user?.id) {
-            console.log("Fetching courses for user:", user.id);
+
             dispatch(getCourses(user.id))
                 .then(() => setLoading(false))
                 .catch((error) => {
@@ -28,7 +28,7 @@ function ClassesPage() {
                     setLoading(false);
                 });
         } else {
-            setLoading(false); // Ensure loading state is updated if user is not available
+            setLoading(false);
         }
     }, [dispatch, user?.id]);
 
@@ -36,7 +36,7 @@ function ClassesPage() {
         setLoading(true);
         dispatch(createClass({ newClass, user }))
             .then((action) => {
-                console.log("Class created:", action.payload);
+
                 if (action.payload) {
                     dispatch(getCourses(user.id)).finally(() => setLoading(false));
                 } else {
@@ -53,7 +53,7 @@ function ClassesPage() {
     const handleEditClass = (classId) => {
         dispatch(editClass({ classId, editedClassData: editingClass, user }))
             .then((action) => {
-                console.log("Class edited:", action.payload);
+
                 setEditingClass(null);
             })
             .catch((error) => {
@@ -64,7 +64,7 @@ function ClassesPage() {
     const handleDeleteClass = (classId) => {
         dispatch(deleteClass(classId))
             .then((action) => {
-                console.log("Class deleted:", action.payload);
+             
             })
             .catch((error) => {
                 console.error("Error deleting class:", error);

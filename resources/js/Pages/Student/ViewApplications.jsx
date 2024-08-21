@@ -33,7 +33,7 @@ const ViewApplications = () => {
 
     const handleAccept = (id) => {
         // Handle the accept action
-        console.log(`Accepted application with id: ${id}`);
+
         window.location.href = `/student/accept-interview/${id}`;
     };
 
@@ -134,7 +134,7 @@ const ViewApplications = () => {
                 </Tabs>
                 {jobs.length > 0 ? (
                     <ApplicationsContainer fontSize={fontSize} darkMode={darkMode}>
-                        {console.log(jobs)}
+                        
                         {renderApplications()}
                     </ApplicationsContainer>
                 ) : (

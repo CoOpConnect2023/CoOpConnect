@@ -10,7 +10,7 @@ use App\Http\Resources\V1\JobsResource;
 use App\Http\Resources\V1\JobsCollection;
 use Illuminate\Http\Request;
 use App\Filters\V1\JobsFilter;
-use Illuminate\Support\Facades\Log;
+
 
 class JobsController extends Controller
 {
@@ -88,11 +88,11 @@ class JobsController extends Controller
 
     public function matchSkills(Request $request)
     {
-        Log::info("Request: " . print_r($request->all(), true));
+
         // Get skills from request or default to the authenticated user's skills
         $userSkills = $request->input('skills');
 
-        Log::info("Skills from Request: " . print_r($userSkills, true));
+
         // Parse the skills into an array, handle cases where it's null or empty
         $userSkillsArray = $userSkills ?: auth()->user()->skills ?: [];
 
@@ -105,7 +105,7 @@ class JobsController extends Controller
                 $query->orWhereRaw("LOWER(skills) LIKE ?", ['%"' . strtolower($skill) . '"%']);
             }
         })->get();
-        Log::info('Matching jobs served:', $matchingJobs->toArray());
+
 
         if ($matchingJobs->isEmpty()) {
             return response()->json(['message' => 'No jobs match the provided skills.'], 404);
@@ -118,14 +118,13 @@ class JobsController extends Controller
     public function searchJobs(Request $request)
     {
 
-        Log::info('Full Request:', ['request' => request()->all()]);
+
 
 
         $searchTerms = $request->input('searchTerm');
         $location = $request->input('location');
 
-        Log::info('Received Search Term:', ['searchTerm' => $searchTerms]);
-        Log::info('Received Location:', ['location' => $location]);
+
 
 
 

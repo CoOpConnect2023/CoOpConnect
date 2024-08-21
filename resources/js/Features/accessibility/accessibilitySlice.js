@@ -49,49 +49,45 @@ const accessibilitySlice = createSlice({
   reducers: {
     toggleDarkMode(state) {
       state.darkMode = !state.darkMode;
-      console.log('Dark mode toggled:', state.darkMode);
+
     },
     setTextSize(state, action) {
       state.textSize = getFontSize(action.payload);
-      console.log('Text size set to:', state.textSize);
+     
     },
     increaseFontSize(state) {
 
         const currentSizeKey = ['small', 'medium', 'large'].find(key => getFontSize(key) === state.textSize);
         const newSizeKey = getNextFontSize(currentSizeKey, 'increase');
-        console.log('Current size key:', currentSizeKey);
-        console.log('Next size key:', newSizeKey);
-        console.log('State before change:', state.textSize);
+
         state.textSize = getFontSize(newSizeKey);
-        console.log('Font size increased to:', state.textSize);
+
       },
       decreaseFontSize(state) {
 
         const currentSizeKey = ['small', 'medium', 'large'].find(key => getFontSize(key) === state.textSize);
         const newSizeKey = getNextFontSize(currentSizeKey, 'decrease');
-        console.log('Current size key:', currentSizeKey);
-        console.log('Next size key:', newSizeKey);
-        console.log('State before change:', state.textSize);
+
         state.textSize = getFontSize(newSizeKey);
-        console.log('Font size decreased to:', state.textSize);
+
       },
   },
   extraReducers: (builder) => {
     builder
       .addCase(getUser.pending, (state) => {
         state.status = 'loading';
-        console.log('Fetching user data, status:', state.status);
+
       })
       .addCase(getUser.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.darkMode = action.payload.darkMode;
         state.textSize = getFontSize(action.payload.fontSize);
-        console.log('User data fetched successfully:', state.darkMode);
+
       })
       .addCase(getUser.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
-        console.log('Failed to fetch user data, error:', state.error);
+
       });
   },
 });

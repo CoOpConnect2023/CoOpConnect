@@ -14,7 +14,7 @@ use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Log;
+
 
 class RegisteredUserController extends Controller
 {
@@ -53,7 +53,7 @@ class RegisteredUserController extends Controller
 
         $user = Auth::user();
 
-        Log::info("Test" . print_r($user, true));
+
 
         // Redirect based on user role
         switch ($user->role) {

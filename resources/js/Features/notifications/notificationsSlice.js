@@ -140,7 +140,7 @@ export const postEmailDeclineNotification = createAsyncThunk(
 
             },
         });
-        console.log("firing", response.data)
+        
         return response.data;
     }
 );

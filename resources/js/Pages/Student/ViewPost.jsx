@@ -69,7 +69,7 @@ function ViewPost() {
         ).then((response) => {
             dispatch(checkUserJob({ userId: userId, jobsId: jobId }));
         });
-        console.log("Resume Link:", resumeLink);
+       
         setIsModalOpen(false);
     };
 

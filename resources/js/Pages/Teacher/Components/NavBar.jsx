@@ -108,12 +108,12 @@ function Sidebar() {
     const fontSize = useSelector(state => state.accessibility.textSize);
     useEffect(() => {
         const path = window.location.pathname;
-        console.log('Full Path:', path);
+      
 
 
         const segments = path.split('/');
         const specificSegment = segments[segments.length - 1];
-        console.log('Specific Segment:', specificSegment);
+
         setActiveTab(path);
     }, []);
 
@@ -200,7 +200,7 @@ function Header({ header }) {
     const altAvatarSrc = "https://cdn.builder.io/api/v1/image/assets/TEMP/c449c761188f38db922c89455e070256b822a267e33f51baa6901c76b73a4e78?apiKey=d66532d056b14640a799069157705b77&";
     const darkMode = useSelector(state => state.accessibility.darkMode);
     const fontSize = useSelector(state => state.accessibility.textSize);
-    console.log(fontSize);
+
 
 
 
@@ -258,11 +258,11 @@ const hasUnreadMessages =
 
     const handleDarkModeToggle = () => {
         dispatch(toggleDarkMode());
-        console.log(darkMode);
+
     };
     const handleTextSizeChange = (size) => {
         dispatch(setTextSize(size));
-        console.log(fontSize);
+
     };
 
 
@@ -420,7 +420,7 @@ function NotificationModal({
     // Log notifications whenever they change
     useEffect(() => {
         if (notifications) {
-            console.log("Notifications:", notifications);
+
         }
     }, [notifications]);
 
@@ -442,7 +442,7 @@ function NotificationModal({
 
 
     const markAsRead = (notificationId) => {
-        console.log("firing",)
+
         dispatch(patchNotification({
             notificationId,
             viewed: true,  // Only updating the 'viewed' field

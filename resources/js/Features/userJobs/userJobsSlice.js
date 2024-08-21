@@ -74,7 +74,7 @@ export const userJobsSlice = createSlice({
             })
             .addCase(patchUserJob.fulfilled, (state, action) => {
                 state.status.patchUserJob = "succeeded";
-                console.log(action.payload);
+
                 if (state.userJobs) {
                     state.userJobs = state.userJobs.map((userJob) =>
                         userJob.id === action.payload.id
@@ -216,7 +216,7 @@ export const postUserJob = createAsyncThunk(
     async (params) => {
         const { userId, jobsId, resume } = params;
         const status = "Pending";
-        console.log(userId, jobsId, resume, status);
+        
         const response = await axios({
             url: "/userjobs",
             method: "POST",
@@ -235,7 +235,7 @@ export const putUserJob = createAsyncThunk(
     "userJobs/putUserJob",
     async (params) => {
         const { userJobsId, userId, jobsId, resume, status } = params;
-        console.log(userJobsId, userId, jobsId, resume, status);
+
         const response = await axios({
             url: `/userjobs/${userJobsId}`,
             method: "PUT",
@@ -254,7 +254,7 @@ export const patchUserJob = createAsyncThunk(
     "userJobs/patchUserJob",
     async (params) => {
         const { userJobsId, status, message, timeSlots } = params;
-        console.log(userJobsId, status, message, timeSlots);
+
         const response = await axios({
             url: `/userjobs/${userJobsId}`,
             method: "PATCH",
@@ -323,7 +323,7 @@ export const getJobsDetails = createAsyncThunk(
             url: `/userjobs/jobs`,
             method: "GET",
         });
-        console.log(response.data);
+
         return response.data;
     }
 );
@@ -347,7 +347,7 @@ export const getInterviews = createAsyncThunk(
             url: `/userjobs/interviews`,
             method: "GET",
         });
-        console.log(response.data);
+
         return response.data;
     }
 );
