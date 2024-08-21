@@ -28,12 +28,13 @@ export const ProfileWrapper = styled.section`
     flex-direction: column;
     width: 100%;
     border-radius: 10px;
+    height: 100%;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     background-color: ${({ darkMode }) => (darkMode ? '#1F1F1F' : '#fff')};
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
-    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+    font-size: ${({ fontSize }) => calculateFontSize(20, fontSize)};
     /* Ensure the form does not stretch too much */
-    margin: 0 auto;
+    
     padding: 20px;
     @media (max-width: 991px) {
         padding: 20px;
@@ -45,7 +46,7 @@ export const ProfileHeader = styled.h1`
     text-decoration: underline;
     align-self: center;
     font-weight: 600;
-    font-size: ${({ fontSize }) => calculateFontSize(24, fontSize)};
+    font-size: ${({ fontSize }) => calculateFontSize(28, fontSize)};
     font-family: Poppins, sans-serif;
     margin-bottom: 20px;
 `;
@@ -65,7 +66,7 @@ export const ProfileContainer = styled.div`
     flex-direction: row;
 
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 `;
 
 export const ProfileImageWrapper = styled.figure`
@@ -97,7 +98,7 @@ export const BioValue = styled.input`
     border: 2px solid ${({ darkMode }) => (darkMode ? '#444' : '#260e44')};
     background-color: ${({ darkMode }) => (darkMode ? '#2C2C2C' : '#fff7ff')};
     color: ${({ darkMode }) => (darkMode ? '#CCC' : '#7b757f')};
-    font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
     font-family: Poppins, sans-serif;
     height: 100%;
     width: 90%;
@@ -108,7 +109,7 @@ export const BioHeader = styled.h2`
     color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#2d3648')};
     letter-spacing: 0.1px;
     font-weight: 500;
-    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)}; /* Adjusted font size */
+    font-size: ${({ fontSize }) => calculateFontSize(18, fontSize)}; /* Adjusted font size */
     font-family: Poppins, sans-serif;
 `;
 
@@ -127,7 +128,7 @@ export const ProfileDetailItem = styled.div`
 export const DetailLabel = styled.label`
     color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#6b538c')};
     font-weight: 500;
-    font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
+    font-size: ${({ fontSize }) => calculateFontSize(21, fontSize)};
     margin-bottom: 5px;
     display: block;
 `;
@@ -137,7 +138,7 @@ export const DetailValue = styled.input`
     border: 2px solid ${({ darkMode }) => (darkMode ? '#444' : '#260e44')};
     background-color: ${({ darkMode }) => (darkMode ? '#2C2C2C' : '#fff7ff')};
     color: ${({ darkMode }) => (darkMode ? '#CCC' : '#7b757f')};
-    font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
+    font-size: ${({ fontSize }) => calculateFontSize(17, fontSize)};
     padding: 8px;
     width: 100%;
 `;

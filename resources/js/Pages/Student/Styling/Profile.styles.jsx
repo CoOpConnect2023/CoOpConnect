@@ -17,6 +17,7 @@ export const MainContainer = styled.div`
 export const ProfileContainer = styled.div`
     width: 65%; /* Adjusted to take up 70% of the width */
     display: flex;
+    flex: 1;
     flex-direction: column;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
 
