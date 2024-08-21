@@ -11,6 +11,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\MessagingController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\EmailController;
@@ -57,6 +58,7 @@ Route::get('/employer/viewpost/{jobId}', function ($jobId) {
 });
 
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+
 
 
 

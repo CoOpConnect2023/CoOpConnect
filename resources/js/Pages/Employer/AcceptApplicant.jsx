@@ -11,7 +11,7 @@ import {
     selectUserJob,
     getSingleUserDetails,
 } from "@/Features/userJobs/userJobsSlice";
-import { postNotification } from "@/Features/notifications/notificationsSlice";
+import { postNotification, postEmailNotification } from "@/Features/notifications/notificationsSlice";
 import { getUser, selectUser } from "@/Features/users/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Inertia } from "@inertiajs/inertia";
@@ -52,7 +52,9 @@ const AcceptApplicant = () => {
         dispatch(getSingleUserDetails({ userJobsId: applicantId }));
         dispatch(getUserJob({ userJobId: applicantId }));
     }, [dispatch, applicantId]);
-    console.log(userJob);
+
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const timeSlotsAsDates = timeSlots.map((slot) => slot.toDate());
@@ -64,6 +66,15 @@ const AcceptApplicant = () => {
                     status: "Interview",
                     message: message,
                     timeSlots: timeSlotsAsDates,
+                })
+            ).unwrap();
+
+            await dispatch(
+                postEmailNotification({
+                    user_id: userJob.userId,
+                    job_title: userJob.jobTitle,
+                    time_slots: timeSlotsAsDates,
+                    message: message,
                 })
             ).unwrap();
 
@@ -80,7 +91,6 @@ const AcceptApplicant = () => {
 
             window.location.href = `/employer/viewapplicants/${userJob.jobsId}`;
         } catch (error) {
-
             console.error("Error in processing submission:", error);
             alert("An error occurred while processing the application. Please try again.");
         }

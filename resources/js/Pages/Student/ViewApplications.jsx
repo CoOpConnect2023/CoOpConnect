@@ -5,20 +5,29 @@ import {
     selectJobs,
     getJobsDetails,
     patchUserJob,
+    selectJob,
+    getSingleJobDetails
 } from "@/Features/userJobs/userJobsSlice";
+import { selectUser } from "@/Features/users/userSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { postEmailDeclineNotification } from "@/Features/notifications/notificationsSlice";
 
 const ViewApplications = () => {
     const [activeTab, setActiveTab] = useState("Pending");
     const darkMode = useSelector(state => state.accessibility.darkMode);
     const fontSize = useSelector(state => state.accessibility.textSize);
-
+    const user = useSelector(selectUser);
+    const job = useSelector(selectJob);
     const dispatch = useDispatch();
     const jobs = useSelector(selectJobs);
-
+    const userJobsId = jobs?.id
     useEffect(() => {
         dispatch(getJobsDetails());
     }, [dispatch]);
+
+    useEffect(() => {
+        dispatch(getSingleJobDetails({ userJobsId }));
+    }, [dispatch, userJobsId]);
 
     const tabs = ["Pending", "Interview", "Scheduled", "Declined", "Rejected"];
 
@@ -28,16 +37,34 @@ const ViewApplications = () => {
         window.location.href = `/student/accept-interview/${id}`;
     };
 
-    const handleDecline = (id) => {
-        if (
-            window.confirm("Are you sure you want to decline this application?")
-        ) {
-            dispatch(
-                patchUserJob({
-                    userJobsId: id,
-                    status: "Declined",
-                })
-            );
+    const handleDecline = async (id) => {
+        if (window.confirm("Are you sure you want to decline this application?")) {
+            try {
+
+                await dispatch(
+                    patchUserJob({
+                        userJobsId: id,
+                        status: "Declined",
+                    })
+                ).unwrap();
+
+
+                await dispatch(
+                    postEmailDeclineNotification({
+                        email: job.userEmail,
+                        user_id: user.id,
+                        student_id: 456,
+                        job_title: job.title,
+
+                    })
+                ).unwrap();
+
+
+                alert("Application declined and notification sent.");
+            } catch (error) {
+                console.error("Error during decline process:", error);
+                alert("An error occurred while declining the application. Please try again.");
+            }
         }
     };
 

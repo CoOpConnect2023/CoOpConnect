@@ -102,8 +102,12 @@ const Interviews = () => {
     }
 
     const handleEventResize = async ({ event, start, end }) => {
-
-        const formatDateTime = (dateTime) => {
+        // Check if the user is allowed to edit the event
+        if (
+            (event.interviewerId === event.intervieweeId) ||
+            (event.interviewerId === user.id)
+        ) {
+            const formatDateTime = (dateTime) => {
                 const year = dateTime.getFullYear();
                 const month = String(dateTime.getMonth() + 1).padStart(2, "0");
                 const day = String(dateTime.getDate()).padStart(2, "0");
@@ -115,7 +119,6 @@ const Interviews = () => {
             };
 
             try {
-
                 const payload = {
                     title: event.title,
                     start_date: formatDateTime(start),
@@ -126,13 +129,12 @@ const Interviews = () => {
                     interviewer_id: event.interviewerId,
                 };
 
-
                 const response = await axios.put(
                     `${appUrl}/api/v1/interviews/${event.id}`,
                     payload
                 );
 
-        const updatedEvents = events.map((existingEvent) =>
+                const updatedEvents = events.map((existingEvent) =>
                     existingEvent.id === event.id ? { ...existingEvent, start, end } : existingEvent
                 );
 
@@ -140,52 +142,54 @@ const Interviews = () => {
             } catch (error) {
                 console.error("Error updating event:", error);
             }
-        };
+        } else {
+            console.warn("User is not allowed to edit this event.");
+        }
+    };
 
     const handleEventDrop = async ({ event, start, end }) => {
+        // Check if the user is allowed to edit the event
+        if (
+            (event.interviewerId === event.intervieweeId) ||
+            (event.interviewerId === user.id)
+        ) {
+            const formatDateTime = (dateTime) => {
+                const year = dateTime.getFullYear();
+                const month = String(dateTime.getMonth() + 1).padStart(2, "0");
+                const day = String(dateTime.getDate()).padStart(2, "0");
+                const hours = String(dateTime.getHours()).padStart(2, "0");
+                const minutes = String(dateTime.getMinutes()).padStart(2, "0");
+                const seconds = String(dateTime.getSeconds()).padStart(2, "0");
 
-        const formatDateTime = (dateTime) => {
-            const year = dateTime.getFullYear();
-            const month = String(dateTime.getMonth() + 1).padStart(2, "0");
-            const day = String(dateTime.getDate()).padStart(2, "0");
-            const hours = String(dateTime.getHours()).padStart(2, "0");
-            const minutes = String(dateTime.getMinutes()).padStart(2, "0");
-            const seconds = String(dateTime.getSeconds()).padStart(2, "0");
-
-            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-        };
-
-
-
-        try {
-
-            const payload = {
-                title: event.title,
-                start_date: formatDateTime(start),
-                end_date: formatDateTime(end),
-                status: event.status,
-                description: event.description,
-                interviewee_id: event.intervieweeId,
-                interviewer_id: event.interviewerId,
+                return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
             };
 
+            try {
+                const payload = {
+                    title: event.title,
+                    start_date: formatDateTime(start),
+                    end_date: formatDateTime(end),
+                    status: event.status,
+                    description: event.description,
+                    interviewee_id: event.intervieweeId,
+                    interviewer_id: event.interviewerId,
+                };
 
+                const response = await axios.put(
+                    `${appUrl}/api/v1/interviews/${event.id}`,
+                    payload
+                );
 
-            const response = await axios.put(
-                `${appUrl}/api/v1/interviews/${event.id}`,
-                payload
-            );
+                const updatedEvents = events.map((existingEvent) =>
+                    existingEvent.id === event.id ? { ...existingEvent, start, end } : existingEvent
+                );
 
-
-
-
-            const updatedEvents = events.map((existingEvent) =>
-                existingEvent.id === event.id ? { ...existingEvent, start, end } : existingEvent
-            );
-
-            setEvents(updatedEvents);
-        } catch (error) {
-            console.error("Error updating event:", error);
+                setEvents(updatedEvents);
+            } catch (error) {
+                console.error("Error updating event:", error);
+            }
+        } else {
+            console.warn("User is not allowed to edit this event.");
         }
     };
 
@@ -323,25 +327,30 @@ const Interviews = () => {
                         </CalendarDiv>
                     </Wrapper>
                     <EventsContainer darkMode={darkMode} fontSize={fontSize}>
-                        <EventsHeader darkMode={darkMode} fontSize={fontSize}>All Events</EventsHeader>
-                        {events && events.length > 0 ? (
-                            events.map((event) => (
-                                <Event darkMode={darkMode} fontSize={fontSize} key={event.id}>
-                                    <DeleteButton darkMode={darkMode} fontSize={fontSize} onClick={() => handleDeleteClick(event)}>X</DeleteButton>
-                                    <div>Title: {event.title}</div>
-                                    <div>Description: {event.description}</div>
-                                    <div>
-                                        Start Date: {moment(event.start).format("YYYY-MM-DD HH:mm:ss")}
-                                    </div>
-                                    <div>
-                                        End Date: {moment(event.end).format("YYYY-MM-DD HH:mm:ss")}
-                                    </div>
-                                </Event>
-                            ))
-                        ) : (
-                            <NoEventsMessage darkMode={darkMode} fontSize={fontSize}>No events found</NoEventsMessage>
-                        )}
-                    </EventsContainer>
+    <EventsHeader darkMode={darkMode} fontSize={fontSize}>All Events</EventsHeader>
+    {events && events.length > 0 ? (
+        events.map((event) => {
+            
+            return (
+                <Event darkMode={darkMode} fontSize={fontSize} key={event.id}>
+                    {(event.interviewerId === event.intervieweeId || event.interviewerId === user.id) && (
+                        <DeleteButton darkMode={darkMode} fontSize={fontSize} onClick={() => handleDeleteClick(event)}>X</DeleteButton>
+                    )}
+                    <div>Title: {event.title}</div>
+                    <div>Description: {event.description}</div>
+                    <div>
+                        Start Date: {moment(event.start).format("YYYY-MM-DD HH:mm:ss")}
+                    </div>
+                    <div>
+                        End Date: {moment(event.end).format("YYYY-MM-DD HH:mm:ss")}
+                    </div>
+                </Event>
+            );
+        })
+    ) : (
+        <NoEventsMessage darkMode={darkMode} fontSize={fontSize}>No events found</NoEventsMessage>
+    )}
+</EventsContainer>
                 </Container>
             </MainContainer>
             {showModal && (

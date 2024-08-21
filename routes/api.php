@@ -36,7 +36,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/jobs/match', [JobsController::class, 'matchSkills'])->name('jobs.match');
 
-Route::get('/filterjobs', [JobController::class, 'filterJobs']);
+
 
 
 
@@ -141,6 +141,12 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
 
     Route::apiResource('notifications', NotificationController::class);
     Route::get('/notifications/unviewed', [NotificationController::class, 'getUnviewedNotifications']);
+    Route::post('/notifications/send-job-application-notification', [NotificationController::class, 'sendJobApplicationNotification']);
+    Route::post('/notifications/interviews/accept', [NotificationController::class, 'acceptInterview']);
+    Route::post('/notifications/decline',
+    [NotificationController::class, 'declineInterview']);
+
+
 
 
 

@@ -7,7 +7,7 @@ import {
     patchUserJob,
 } from "@/Features/userJobs/userJobsSlice";
 import { postInterview } from "@/Features/interviews/interviewsSlice";
-import { postNotification } from "@/Features/notifications/notificationsSlice";
+import { postNotification, postEmailAcceptNotification } from "@/Features/notifications/notificationsSlice";
 import { getUser, selectUser } from "@/Features/users/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { usePage } from "@inertiajs/react";
@@ -37,7 +37,7 @@ const AcceptInterview = () => {
 
     const dispatch = useDispatch();
     const job = useSelector(selectJob);
-    
+
 
     const { props } = usePage();
     const { userJobsId } = props;
@@ -74,6 +74,7 @@ const AcceptInterview = () => {
             const formattedEnd = formatDateTime(endDate);
 
             try {
+
                 await dispatch(
                     postInterview({
                         title: `Interview with ${user.name} for ${job.title}`,
@@ -86,6 +87,7 @@ const AcceptInterview = () => {
                     })
                 ).unwrap();
 
+
                 await dispatch(
                     patchUserJob({
                         userJobsId,
@@ -94,14 +96,27 @@ const AcceptInterview = () => {
                     })
                 ).unwrap();
 
+
                 await dispatch(
                     postNotification({
                         from_user_id: user.id,
                         to_user_id: job.userId,
                         viewed: false,
-                        content: `You have a new interview scheduled with ${user.name} for ${job.title} .`,
+                        content: `You have a new interview scheduled with ${user.name} for ${job.title}.`,
                         type: "Interview Scheduled",
-                        interview_date: formattedStart
+                        interview_date: formattedStart,
+                    })
+                ).unwrap();
+
+
+                await dispatch(
+                    postEmailAcceptNotification({
+                        user_id: job.userId,
+                        student_id: user.id,
+                        email: job.userEmail,
+                        job_title: job.title,
+                        time_slots: [selectedSlot],
+                        message: `The student ${user.name} has accepted your interview request. Please connect with the student on the platform. A calendar event has been added to both calendars.`,
                     })
                 ).unwrap();
 
