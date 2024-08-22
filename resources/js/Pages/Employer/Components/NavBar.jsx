@@ -114,7 +114,7 @@ function Sidebar() {
 
     useEffect(() => {
         const path = window.location.pathname;
-       
+
 
 
         const segments = path.split('/');
@@ -276,11 +276,14 @@ function Header({ header }) {
         return LoadingDot;
     }
 
+    const firstName = user.name.split(' ')[0];
+    const possessiveName = firstName.endsWith('s') ? `${firstName}'` : `${firstName}s`;
+
     return (
         <header>
             {user &&
                 <HeaderContainer fontSize={fontSize} darkMode={darkMode} data-testid="nav-student-component">
-                    <Title fontSize={fontSize} darkMode={darkMode}>{header}</Title>
+                    <Title fontSize={fontSize} darkMode={darkMode}>{possessiveName} {header}</Title>
                     <UserProfile animate={animate} fontSize={fontSize} darkMode={darkMode}>
 
 

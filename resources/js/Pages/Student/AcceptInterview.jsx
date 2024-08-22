@@ -152,7 +152,7 @@ const AcceptInterview = () => {
     };
 
     return (
-        <NavBar header={"Accept Interview"} fontSize={fontSize} darkMode={darkMode}>
+        <NavBar header={"Interviews"} fontSize={fontSize} darkMode={darkMode}>
             <Container fontSize={fontSize} darkMode={darkMode}>
                 {job && (
                     <>

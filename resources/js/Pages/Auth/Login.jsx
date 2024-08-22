@@ -10,7 +10,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import logo from './Images/COOPCONNECTLOGO.png';
 import './Login.scss';
 
-export default function Login({ status, canResetPassword }) {
+export default function Login({ status, canResetPassword, error }) {  // Add the `error` prop
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -43,6 +43,12 @@ export default function Login({ status, canResetPassword }) {
             {status && (
                 <div className="mb-4 font-medium text-sm text-green-600">
                     {status}
+                </div>
+            )}
+
+            {error && (  // Display the error message if it exists
+                <div className="mb-4 font-medium text-sm text-red-600">
+                    {error}
                 </div>
             )}
 
@@ -121,7 +127,6 @@ export default function Login({ status, canResetPassword }) {
                             </label>
                         </div>
 
-
                         {canResetPassword && (
                             <div className="mt-4 text-left">
                                 <Link
@@ -132,7 +137,6 @@ export default function Login({ status, canResetPassword }) {
                                 </Link>
                             </div>
                         )}
-
 
                         <div className="flex flex-col items-center mt-4">
                             <PrimaryButton disabled={processing}>

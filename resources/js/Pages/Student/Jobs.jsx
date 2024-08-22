@@ -150,7 +150,7 @@ function Jobs() {
     };
 
     return (
-        <NavBar header={"Job Postings"}>
+        <NavBar header={"Job Suggestions"}>
             <MainContainer darkMode={darkMode} fontSize={fontSize}>
 
                 <SearchContainer darkMode={darkMode} fontSize={fontSize}>

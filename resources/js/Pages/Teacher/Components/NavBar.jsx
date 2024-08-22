@@ -108,7 +108,7 @@ function Sidebar() {
     const fontSize = useSelector(state => state.accessibility.textSize);
     useEffect(() => {
         const path = window.location.pathname;
-      
+
 
 
         const segments = path.split('/');
@@ -271,10 +271,13 @@ const hasUnreadMessages =
         return LoadingDot;
     }
 
+    const firstName = user.name.split(' ')[0];
+    const possessiveName = firstName.endsWith('s') ? `${firstName}'` : `${firstName}s`;
+
     return (
         <header>
             <HeaderContainer fontSize={fontSize} darkMode={darkMode}>
-                <Title fontSize={fontSize} darkMode={darkMode}>{header}</Title>
+                <Title fontSize={fontSize} darkMode={darkMode}>{possessiveName} {header}</Title>
                 <UserProfile fontSize={fontSize} darkMode={darkMode}>
 
                     <NotificationIcon fontSize={fontSize} darkMode={darkMode} onClick={handleDarkModeToggle}

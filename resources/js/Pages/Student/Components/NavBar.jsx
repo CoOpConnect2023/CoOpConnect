@@ -133,7 +133,7 @@ function Sidebar() {
 
         const segments = path.split('/');
         const specificSegment = segments[segments.length - 1];
-       
+
         setActiveTab(path)
       }, []);
 
@@ -294,11 +294,14 @@ const hasUnreadMessages =
         return LoadingDot;
     }
 
+    const firstName = user.name.split(' ')[0];
+    const possessiveName = firstName.endsWith('s') ? `${firstName}'` : `${firstName}s`;
+
     return (
         <header>
             {user &&
             <HeaderContainer fontSize={fontSize} darkMode={darkMode} data-testid="nav-student-component">
-                <Title fontSize={fontSize} darkMode={darkMode}>{header}</Title>
+                <Title fontSize={fontSize} darkMode={darkMode}>{possessiveName} {header}</Title>
                 <UserProfile fontSize={fontSize} darkMode={darkMode}>
 
 

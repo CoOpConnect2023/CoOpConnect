@@ -31,21 +31,26 @@ class AuthenticatedSessionController extends Controller
      * Handle an incoming authentication request.
      */
     public function store(LoginRequest $request): RedirectResponse
-    {
-        $request->authenticate();
+{
+    $user = Auth::attempt($request->only('email', 'password'));
 
-        $request->session()->regenerate();
+    if ($user) {
 
-        $user = Auth::user();
+        if (!Auth::user()->hasVerifiedEmail()) {
+            Auth::logout();
+            return redirect()->route('login')->withErrors(['email' => 'You need to verify your account first before logging in.']);
+        }
 
-        Log::info("Test" . print_r($user, true));
+        $request->session()->regenerate(); // Now regenerate session after verification
+
+        Log::info("Test" . print_r(Auth::user(), true));
 
         // Redirect based on user role
-        switch ($user->role) {
+        switch (Auth::user()->role) {
             case 'teacher':
                 return redirect()->intended(RouteServiceProvider::HOME_TEACHER);
-                case 'admin':
-                    return redirect()->intended(RouteServiceProvider::HOME_ADMIN);
+            case 'admin':
+                return redirect()->intended(RouteServiceProvider::HOME_ADMIN);
             case 'employee':
                 return redirect()->intended(RouteServiceProvider::HOME_EMPLOYER);
             case 'student':
@@ -53,6 +58,9 @@ class AuthenticatedSessionController extends Controller
                 return redirect()->intended(RouteServiceProvider::HOME_STUDENT);
         }
     }
+
+    return redirect()->route('login')->withErrors(['email' => 'Invalid login credentials.']);
+}
 
     /**
      * Destroy an authenticated session.

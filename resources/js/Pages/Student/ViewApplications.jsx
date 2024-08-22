@@ -119,7 +119,7 @@ const ViewApplications = () => {
     };
 
     return (
-        <NavBar header={"View Applications"}>
+        <NavBar header={"Applications"}>
             <Container fontSize={fontSize} darkMode={darkMode}>
                 <Tabs fontSize={fontSize} darkMode={darkMode}>
                     {tabs.map((tab) => (
@@ -134,7 +134,7 @@ const ViewApplications = () => {
                 </Tabs>
                 {jobs.length > 0 ? (
                     <ApplicationsContainer fontSize={fontSize} darkMode={darkMode}>
-                        
+
                         {renderApplications()}
                     </ApplicationsContainer>
                 ) : (

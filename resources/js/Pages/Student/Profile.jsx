@@ -16,7 +16,7 @@ export default function Profile() {
     const darkMode = useSelector(state => state.accessibility.darkMode);
     const fontSize = useSelector(state => state.accessibility.textSize);
     return (
-        <NavBar header="My Profile">
+        <NavBar header="Profile">
             <MainContainer fontSize={fontSize} darkMode={darkMode}>
                 <ProfileContainer fontSize={fontSize} darkMode={darkMode}>
                     <ProfileForm fontSize={fontSize} darkMode={darkMode} />

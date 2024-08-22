@@ -27,7 +27,9 @@ class JobApplicationAccepted extends Mailable
 
         // Format the times using Carbon
         $this->formattedTimes = array_map(function ($time) {
-            return Carbon::parse($time)->format('F jS \a\t g:i A');
+            return Carbon::parse($time)
+                         ->timezone('America/New_York') // Convert to Eastern Time
+                         ->format('F jS \a\t g:i A');   // Format the time
         }, $times);
     }
 

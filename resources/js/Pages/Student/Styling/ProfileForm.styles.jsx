@@ -1,21 +1,43 @@
 import { keyframes, styled } from "styled-components";
 
-const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
+const calculateFontSize = (basePixelSize, emValue, factor = 1.5, unit = 'rem') => {
     const em = parseFloat(emValue);
 
-    if (emValue === '1em') {
-        return `${basePixelSize * em}px`;
+    if (unit === 'rem') {
+        // Convert base pixel size to rem (assuming basePixelSize is in pixels)
+        const baseRemSize = basePixelSize / 16; // Assuming 16px is 1rem
+        if (emValue === '1em') {
+            return `${baseRemSize * em}rem`;
+        }
+
+        if (emValue === '1.07em') {
+            return `${baseRemSize * em * 1.3}rem`;
+        }
+
+        if (emValue === '1.12em') {
+            return `${baseRemSize * em * 1.7}rem`;
+        }
+
+        return `${baseRemSize * em * factor}rem`;
     }
 
-    if (emValue === '1.07em') {
-        return `${basePixelSize * em * 1.3}px`;
-    }
+    if (unit === 'vw') {
+        // Convert base pixel size to vw (assuming basePixelSize is a percentage of viewport width)
+        const baseVwSize = basePixelSize / 100; // Assuming 1vw is 1% of the viewport width
+        if (emValue === '1em') {
+            return `${baseVwSize * em}vw`;
+        }
 
-    if (emValue === '1.12em') {
-        return `${basePixelSize * em * 1.7}px`;
-    }
+        if (emValue === '1.07em') {
+            return `${baseVwSize * em * 1.3}vw`;
+        }
 
-    return `${basePixelSize * em * factor}px`;
+        if (emValue === '1.12em') {
+            return `${baseVwSize * em * 1.7}vw`;
+        }
+
+        return `${baseVwSize * em * factor}vw`;
+    }
 };
 
 export const spin = keyframes`
@@ -29,12 +51,11 @@ export const ProfileWrapper = styled.section`
     width: 100%;
     border-radius: 10px;
     height: 100%;
+    flex:1;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     background-color: ${({ darkMode }) => (darkMode ? '#1F1F1F' : '#fff')};
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
-    font-size: ${({ fontSize }) => calculateFontSize(20, fontSize)};
-    /* Ensure the form does not stretch too much */
-    
+    font-size: ${({ fontSize }) => calculateFontSize(20, fontSize, 1.9, 'rem')};
     padding: 20px;
     @media (max-width: 991px) {
         padding: 20px;
@@ -46,9 +67,12 @@ export const ProfileHeader = styled.h1`
     text-decoration: underline;
     align-self: center;
     font-weight: 600;
-    font-size: ${({ fontSize }) => calculateFontSize(28, fontSize)};
+    font-size: ${({ fontSize }) => calculateFontSize(28, fontSize, 1.5, 'rem')};
     font-family: Poppins, sans-serif;
     margin-bottom: 20px;
+    @media (max-width: 991px) {
+        font-size: ${({ fontSize }) => calculateFontSize(24, fontSize, 1.5, 'rem')};
+    }
 `;
 
 export const ProfileSection = styled.section`
@@ -58,13 +82,12 @@ export const ProfileSection = styled.section`
     width: 100%;
     margin-bottom: 20px;
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
-    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize, 1.5, 'rem')};
 `;
 
 export const ProfileContainer = styled.div`
     display: flex;
     flex-direction: row;
-
     width: 100%;
     margin-bottom: 40px;
 `;
@@ -98,7 +121,7 @@ export const BioValue = styled.input`
     border: 2px solid ${({ darkMode }) => (darkMode ? '#444' : '#260e44')};
     background-color: ${({ darkMode }) => (darkMode ? '#2C2C2C' : '#fff7ff')};
     color: ${({ darkMode }) => (darkMode ? '#CCC' : '#7b757f')};
-    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize, 1.5, 'rem')};
     font-family: Poppins, sans-serif;
     height: 100%;
     width: 90%;
@@ -109,7 +132,7 @@ export const BioHeader = styled.h2`
     color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#2d3648')};
     letter-spacing: 0.1px;
     font-weight: 500;
-    font-size: ${({ fontSize }) => calculateFontSize(18, fontSize)}; /* Adjusted font size */
+    font-size: ${({ fontSize }) => calculateFontSize(18, fontSize, 1.5, 'rem')};
     font-family: Poppins, sans-serif;
 `;
 
@@ -124,11 +147,10 @@ export const ProfileDetailItem = styled.div`
     margin-bottom: 15px;
 `;
 
-
 export const DetailLabel = styled.label`
     color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#6b538c')};
     font-weight: 500;
-    font-size: ${({ fontSize }) => calculateFontSize(21, fontSize)};
+    font-size: ${({ fontSize }) => calculateFontSize(21, fontSize, 1.5, 'rem')};
     margin-bottom: 5px;
     display: block;
 `;
@@ -138,7 +160,7 @@ export const DetailValue = styled.input`
     border: 2px solid ${({ darkMode }) => (darkMode ? '#444' : '#260e44')};
     background-color: ${({ darkMode }) => (darkMode ? '#2C2C2C' : '#fff7ff')};
     color: ${({ darkMode }) => (darkMode ? '#CCC' : '#7b757f')};
-    font-size: ${({ fontSize }) => calculateFontSize(17, fontSize)};
+    font-size: ${({ fontSize }) => calculateFontSize(17, fontSize, 1.5, 'rem')};
     padding: 8px;
     width: 100%;
 `;
@@ -147,7 +169,7 @@ export const EditProfileButton = styled.button`
     background-color: ${({ darkMode }) => (darkMode ? '#6b538c' : '#6b538c')};
     color: #fff;
     padding: 10px 20px;
-    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize, 1.5, 'rem')};
     border-radius: 8px;
     cursor: pointer;
     margin-top: 20px;
@@ -173,7 +195,7 @@ export const DropzoneContainer = styled.div`
     text-align: center;
     color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#6b538c')};
     font-family: Poppins, sans-serif;
-    font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
+    font-size: ${({ fontSize }) => calculateFontSize(14, fontSize, 1.5, 'rem')};
     font-weight: 500;
     letter-spacing: 0.1px;
     cursor: pointer;
@@ -195,7 +217,7 @@ export const SkillChip = styled.div`
     color: ${({ darkMode }) => (darkMode ? '#CCC' : '#333')};
     padding: 6px 12px;
     border-radius: 20px;
-    font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
+    font-size: ${({ fontSize }) => calculateFontSize(14, fontSize, 1.5, 'rem')};
 `;
 
 export const AddSkillButton = styled.button`
@@ -203,7 +225,7 @@ export const AddSkillButton = styled.button`
     color: #fff;
     border: none;
     padding: 8px 16px;
-    font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
+    font-size: ${({ fontSize }) => calculateFontSize(14, fontSize, 1.5, 'rem')};
     border-radius: 4px;
     cursor: pointer;
 `;
@@ -213,7 +235,7 @@ export const LoadingScreen = styled.div`
     justify-content: center;
     align-items: center;
     height: 100vh;
-    font-size: ${({ fontSize }) => calculateFontSize(20, fontSize)};
+    font-size: ${({ fontSize }) => calculateFontSize(20, fontSize, 1.5, 'rem')};
     background-color: ${({ darkMode }) => (darkMode ? '#121212' : '#f0f0f0')};
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#333')};
 `;
@@ -244,7 +266,7 @@ export const AutocompleteItem = styled.li`
     padding: 8px;
     cursor: pointer;
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#333')};
-    font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
+    font-size: ${({ fontSize }) => calculateFontSize(14, fontSize, 1.5, 'rem')};
 
     &:hover {
         background-color: ${({ darkMode }) => (darkMode ? '#333' : '#f0f0f0')};
@@ -260,4 +282,3 @@ export const ProfileDetailOne = styled.div`
 
 export const ProfileDetailTwo = styled(ProfileDetailOne)`
 `;
-

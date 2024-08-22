@@ -74,7 +74,7 @@ function Home() {
     };
 
     return (
-        <NavBar>
+        <NavBar header={"Job List"}>
             <MainContainer darkMode={darkMode} fontSize={fontSize} >
                 <SearchSection darkMode={darkMode} fontSize={fontSize}>
                     <SearchTitle darkMode={darkMode} fontSize={fontSize}>Search for Job Postings</SearchTitle>

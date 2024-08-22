@@ -69,12 +69,12 @@ function ViewPost() {
         ).then((response) => {
             dispatch(checkUserJob({ userId: userId, jobsId: jobId }));
         });
-       
+
         setIsModalOpen(false);
     };
 
     return (
-        <NavBar fontSize={fontSize} darkMode={darkMode} header={"Job Posting"}>
+        <NavBar fontSize={fontSize} darkMode={darkMode} header={"Job Posting View"}>
             <MainContainer fontSize={fontSize} darkMode={darkMode}>
                 <Container fontSize={fontSize} darkMode={darkMode}>
                     <JobPostingCard fontSize={fontSize} darkMode={darkMode}>
