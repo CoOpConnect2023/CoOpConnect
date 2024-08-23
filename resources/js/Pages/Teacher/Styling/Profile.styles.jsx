@@ -48,6 +48,13 @@ export const Main = styled.main`
   &:hover {
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
   }
+
+  @media (max-width: 991px) {
+        padding: 10px;
+        width: 100vw;
+        align-self: center;
+        box-sizing: border-box;
+    }
 `;
 
 export const Section = styled.section`

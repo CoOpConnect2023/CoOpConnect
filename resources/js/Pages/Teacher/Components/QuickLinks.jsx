@@ -58,6 +58,7 @@ border: 2px solid ${({ darkMode }) => (darkMode ? "#444" : "#e2e8f0")};
     transition: background-color 0.5s ease;
      @media (max-width: 991px) {
         padding: 10px;
+        
         width: 100%;
         flex-direction: column;
     }

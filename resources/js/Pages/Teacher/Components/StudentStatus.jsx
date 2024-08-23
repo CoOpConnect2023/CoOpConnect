@@ -38,7 +38,8 @@ const Container = styled.section`
 
   @media (max-width: 991px) {
     height: auto; /* Adjust height for mobile */
-    width: 100%;
+    width: 100vw;
+    align-self: center;
     padding: 20px;
   }
 `;

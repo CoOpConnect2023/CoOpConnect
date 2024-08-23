@@ -57,9 +57,18 @@ const StatusContainer = styled.div`
 const Input = styled.input`
   margin-bottom: 20px;
   padding: 10px;
+
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+
+   @media (max-width: 768px) {
+    padding: 5px;
+    font-size: ${({ fontSize }) => calculateFontSize(12, fontSize)};
+    width: 80%;
+    display: block;
+    margin: 0 auto;
+  }
 `;
 
 const Button = styled.button`

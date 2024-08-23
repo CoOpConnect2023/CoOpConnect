@@ -98,7 +98,7 @@ export default function Messages() {
 
 
 
-    
+
     if (userStatus === 'loading') {
         return <LogoLoadingComponent  darkMode={darkMode}/>;
     }
@@ -171,6 +171,12 @@ const PageContainer = styled.div`
     flex-direction: column;
     height: 100vh;
 
+
+    @media (max-width: 768px) {
+    width: 100vw;
+   align-self: center;
+  }
+
 `;
 
 const ChatContainer = styled.div`
@@ -178,4 +184,10 @@ const ChatContainer = styled.div`
     display: flex;
     flex-direction: column;
     overflow: hidden;
+
+    @media (max-width: 768px) {
+    width: 100vw;
+   align-self: center;
+  }
+
 `;

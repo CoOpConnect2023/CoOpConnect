@@ -108,6 +108,11 @@ const MainContainer = styled.div`
   box-sizing: border-box;
   transition: background-color 0.3s;
   overflow: auto; /* Handle overflow if content exceeds the container */
+
+   @media (max-width: 991px) {
+    width: 100%;
+    padding: 0px;
+  }
 `;
 
 const Header = styled.header`
@@ -126,7 +131,8 @@ const Content = styled.main`
   box-sizing: border-box;
 
   @media (max-width: 991px) {
-    padding: 0 20px;
+    padding: 0px;
+    width: 100%;
   }
 `;
 

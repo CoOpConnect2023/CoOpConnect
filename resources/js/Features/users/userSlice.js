@@ -3,6 +3,7 @@ import axios from "axios";
 
 const appUrl = import.meta.env.VITE_APP_URL;
 
+
 const initialState = {
     user: null,
     users: null,
@@ -53,7 +54,7 @@ export const updateUserProfile = createAsyncThunk(
 export const updateUserPreferences = createAsyncThunk(
     "user/updateUserPreferences",
     async ({ darkMode, fontSize }) => {
-     
+
 
       try {
         const response = await axios({

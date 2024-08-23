@@ -53,20 +53,21 @@ export const GlobalStyles = createGlobalStyle`
 
 export const MainContainer = styled.div`
     display: flex;
- box-sizing: border-box;
+    box-sizing: border-box;
     flex: 1;
     flex-direction: column;
     background-color: ${({ darkMode }) => (darkMode ? "#1C1C1C" : "#fff")};
     color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
     animation: ${fadeIn} 0.8s ease-in-out;
     transition: background-color 0.3s, color 0.3s;
+    padding: 20px; /* Optional padding adjustment */
 
-     @media (max-width: 991px) {
-
-        width: 100%;
+    @media (max-width: 991px) {
+        padding: 10px;
+        width: 100vw;
+        align-self: center;
     }
 `;
-
 export const Container = styled.div`
     display: flex;
     height: 100%;

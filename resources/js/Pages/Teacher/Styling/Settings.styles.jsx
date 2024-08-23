@@ -15,5 +15,8 @@ export const MainContainer = styled.div`
         align-items: center;
         justify-content: center;
         gap: 10px;
+        width: 100vw;
+        align-self: center;
+        
     }
 `
