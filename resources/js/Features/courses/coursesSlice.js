@@ -63,8 +63,12 @@ export const coursesSlice = createSlice({
                 state.status.putCourse = "loading";
             })
             .addCase(putCourse.fulfilled, (state, action) => {
+                state.courses = state.courses.map((course) =>
+                course.id  === action.payload.id ? action.payload : course)
                 state.status.putCourse = "succeeded";
             })
+
+            
             .addCase(putCourse.rejected, (state, action) => {
                 state.status.putCourse = "failed";
             })
@@ -80,8 +84,11 @@ export const coursesSlice = createSlice({
             .addCase(deleteCourse.pending, (state, action) => {
                 state.status.deleteCourse = "loading";
             })
+
+
             .addCase(deleteCourse.fulfilled, (state, action) => {
-                state.status.deleteCourse = "succeeded";
+                state.courses = state.courses.filter((course) => course.id !== action.payload);
+                state.status.courses = "succeeded";
             })
             .addCase(deleteCourse.rejected, (state, action) => {
                 state.status.deleteCourse = "failed";
@@ -141,16 +148,19 @@ export const postCourse = createAsyncThunk(
 export const putCourse = createAsyncThunk(
     "courses/putCourse",
     async (params) => {
-        const { courseId, name, startDate, endDate } = params;
+        const { courseId, name, startDate, endDate, schoolID, teacherID } = params;
         const response = await axios({
             url: `/courses/${courseId}`,
             method: "PUT",
             data: {
                 name,
-                startDate,
-                endDate,
+                start_date: startDate,
+                end_date: endDate,
+                teacher_id: teacherID,
+                school_id: schoolID
             },
         });
+
         return response.data.data;
     }
 );
@@ -172,18 +182,16 @@ export const patchCourse = createAsyncThunk(
     }
 );
 
+
+
+
 export const deleteCourse = createAsyncThunk(
     "courses/deleteCourse",
-    async (params) => {
-        const { courseId } = params;
-        const response = await axios({
-            url: `/courses/${courseId}`,
-            method: "DELETE",
-            data: { courseId },
-        });
-        return response.data.data;
+    async (schoolId) => {
+        await axios.delete(`/courses/${schoolId}`);
+        return schoolId;
     }
-);
+)
 
 export const selectCourses = (state) => state.courses.courses;
 export const selectCoursesStatus = (state) => state.courses.status.courses;

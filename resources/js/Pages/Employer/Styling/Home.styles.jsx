@@ -44,6 +44,10 @@ export const MainContainer = styled.main`
     animation: ${fadeIn} 0.8s ease-in-out;
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+
+    @media (max-width: 768px) {
+    min-height: 80vh; // Show on desktop
+  }
 `;
 
 export const CreateJobSection = styled.section`

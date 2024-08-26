@@ -29,6 +29,11 @@ import {
     ModalContent,
     ModalItem,
     NoNotificationsMessage,
+    LoadingContainer,
+    LoadingDot,
+    IconContainer,
+    Footer,
+    CloseButton,
     FontSizer
 } from "../Styling/NavBar.styles";
 import logo from "@/Pages/Images/puzzle.svg";
@@ -92,6 +97,15 @@ function Sidebar() {
 
     const darkMode = useSelector(state => state.accessibility.darkMode);
     const fontSize = useSelector(state => state.accessibility.textSize);
+    const [footerVisible, setFooterVisible] = useState(false);
+
+    const toggleFooterVisibility = () => {
+        setFooterVisible(!footerVisible);
+    };
+
+    const closeFooter = () => {
+        setFooterVisible(false);
+    };
   return (
     <aside>
       <NavContainer fontSize={fontSize} darkMode={darkMode}>
@@ -124,7 +138,16 @@ function Sidebar() {
             <Icon fontSize={fontSize} darkMode={darkMode} src={settings} alt="" loading="lazy" />
           </IconButton>
         </Link>
-      </NavContainer>
+        <IconContainer fontSize={fontSize} darkMode={darkMode} data-test-id="map-link" onClick={toggleFooterVisibility}>
+                    <FontAwesomeIcon fontSize={fontSize} darkMode={darkMode} icon={faMap} className="fa-icon" />
+                </IconContainer>
+            </NavContainer>
+            <Footer fontSize={fontSize} darkMode={darkMode} isVisible={footerVisible}>
+                <CloseButton fontSize={fontSize} darkMode={darkMode} onClick={closeFooter}>
+                    <FontAwesomeIcon fontSize={fontSize} darkMode={darkMode} icon={faTimes} />
+                </CloseButton>
+                  <p>HTML Sitemap: <a href="/">Home</a> | <a href="/teacher/home">Teacher Home</a> | <a href="/employer/home">Employer Home</a> | <a href="/student/home">Student Home</a></p>
+            </Footer>
     </aside>
   );
 }
@@ -199,7 +222,7 @@ function Header({ header }) {
     };
     const handleDarkModeToggle = () => {
         dispatch(toggleDarkMode());
-        
+
     };
 
 

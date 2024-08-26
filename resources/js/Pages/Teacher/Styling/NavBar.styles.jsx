@@ -99,6 +99,9 @@ transition: background-color 0.5s ease, color 0.5s ease;
 
   @media (max-width: 991px) {
     flex-direction: column;
+    width: 100vw;
+    margin: 0 auto; /* Center the content */
+
   }
 `;
 
@@ -118,14 +121,15 @@ transition: background-color 0.5s ease, color 0.5s ease;
   @media (max-width: 991px) {
     align-items: center;
     display: flex;
-    width: 100%;
+    width: 100vw;
     height: 12vh;
     border-radius: 10px 10px 0 0;
     border-bottom: 1px solid rgba(123, 117, 127, 1);
     flex-direction: row;
     justify-content: space-around;
-    padding: 10px;
+    padding 10px;
     margin-bottom: 1vh;
+
   }
 `;
 
@@ -200,12 +204,14 @@ export const HeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
-  gap: 10px;
+
   margin-bottom: 40px;
   align-items: center;
 
   @media (max-width: 991px) {
     flex-direction: row;
+    justify-content: space-between;
+
   }
 `;
 
@@ -225,10 +231,11 @@ export const UserProfile = styled.div`
     `}
 
   @media (max-width: 991px) {
-    justify-content: flex-end;
+justify-content: space-around;
+gap: none;
     width: 100%;
     align-items: center;
-    gap: 10px;
+
   }
 `;
 
@@ -253,6 +260,11 @@ export const ContentContainer = styled.section`
 export const Title = styled.h1`
   color: ${({ darkMode }) => (darkMode ? "#FFF" : "#000")};
   font: 600 36px/122% Poppins, sans-serif;
+
+  @media (max-width: 991px) {
+    display: none;
+
+  }
 
 `;
 
@@ -294,8 +306,8 @@ export const NotificationIcon = styled.div`
   }
 
   @media (max-width: 768px) {
-    width: 35px;
-    height: 35px;
+    width: 60px;
+    height: 60px;
     svg {
       font-size: 18px;
     }
@@ -468,6 +480,13 @@ opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
  transform: ${({ isOpen }) => (isOpen ? "translateY(0)" : "translateY(-100%)")};
   pointer-events: ${({ isOpen }) => (isOpen ? "auto" : "none")};
   font-size: ${({ fontSize }) => getFontSize(fontSize)};
+
+   @media (max-width: 768px) {
+
+   top: 150px;
+    right: 5px;
+
+  }
 `;
 
 export const NotificationModalContainer = styled.div`

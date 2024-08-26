@@ -60,7 +60,7 @@ const OptionsWrapper = styled.div`
   justify-content: center;
   margin-top: 10px;
   width: 100%;
-  max-width: 430px;
+  max-width: 500px;
   gap: 10px;
   font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
   color: #fff;

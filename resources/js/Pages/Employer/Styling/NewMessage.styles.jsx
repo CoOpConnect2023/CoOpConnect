@@ -55,6 +55,7 @@ export const Div6 = styled.div`
     border-radius: 10px;
     border-color: ${({ darkMode }) => (darkMode ? "rgba(123, 117, 127, 1)" : "#000")};
     border-style: solid;
+    width: 100%;
     border-width: 1px;
     display: flex;
     margin-top: 10px;
@@ -69,6 +70,8 @@ export const Div6 = styled.div`
 export const Div7 = styled.div`
     display: flex;
     gap: 10px;
+    padding: 10px;
+    width: 100%;
     justify-content: flex-start;
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)}; /* Apply font size */
 `;
@@ -130,8 +133,9 @@ export const Div11 = styled.div`
 export const Div12 = styled.div`
     display: flex;
     gap: 10px;
+    width: 100%;
     font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)}; /* Apply font size */
-    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#7b757f")};
+    color: ${({ darkMode }) => (darkMode ? "#7b757f" : "#7b757f")};
     font-weight: 600;
     letter-spacing: 0.25px;
     line-height: 143%;
@@ -147,6 +151,7 @@ export const Img = styled.img`
 export const Div13 = styled.div`
     font-family: Poppins, sans-serif;
     margin: auto 0;
+    width: 100%;
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)}; /* Apply font size */
 `;
 
@@ -166,10 +171,14 @@ export const Input = styled.input`
     border-radius: 5px;
     outline: none;
     font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)}; /* Apply font size */
+
+     @media (max-width: 991px) {
+        padding: 10px;
+    }
 `;
 
 export const SendButton = styled.button`
-    padding: 10px 15px;
+    padding: 10px 20px;
     background-color: #B7A1E5;
     color: white;
     border: none;

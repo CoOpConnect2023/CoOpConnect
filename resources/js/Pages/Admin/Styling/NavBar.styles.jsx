@@ -1,6 +1,25 @@
 import styled, { keyframes, css } from 'styled-components';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { navButtonLightBackground, navDarkBackground, navLightBackground } from '@/Layouts/Global.styles';
 
+
+const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
+    const em = parseFloat(emValue); // Convert emValue to a number
+
+    if (emValue === '1em') {
+        return `${basePixelSize * em}px`;
+    }
+
+    if (emValue === '1.07em') {
+        return `${basePixelSize * em * 1.3}px`;
+    }
+
+    if (emValue === '1.12em') {
+        return `${basePixelSize * em * 1.7}px`;
+    }
+
+    return `${basePixelSize * em * factor}px`;
+};
 // Keyframes for vibration animation
 const vibration = keyframes`
   0% { transform: translateX(0); }
@@ -27,7 +46,7 @@ const slideOut = keyframes`
   }
   100% {
     opacity: 0;
-    transform: translateX(100%);
+    transform: translateX(-100%);
   }
 `;
 
@@ -75,38 +94,45 @@ export const AppContainer = styled.div`
   background-color: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "var(--Schemes-Background, #fff7ff)")};
   gap: 0px;
 
+transition: background-color 0.5s ease, color 0.5s ease;
   flex-direction: row;
 
 
   @media (max-width: 991px) {
     flex-direction: column;
+    width: 100vw;
+    margin: 0 auto; /* Center the content */
+
   }
 `;
 
 export const NavContainer = styled.nav`
   align-items: center;
   border: 1px solid rgba(123, 117, 127, 1);
-
-  background-color: ${({ darkMode }) => (darkMode ? "#B7A1E5" : "#FFF")};
+transition: background-color 0.5s ease, color 0.5s ease;
+  background-color: ${({ darkMode }) => (darkMode ? navDarkBackground : navLightBackground)};
   display: flex;
+  position: fixed;
   flex-direction: column;
   width: 90px;
   padding: 30px 20px 20px;
   border-radius: 0 10px 10px 0;
   height: 100vh;
-  z-index: 1000;
+
 
   @media (max-width: 991px) {
     align-items: center;
     display: flex;
-    width: 100%;
-    height: 12vh;
+    width: 100vw;
+position: static;
+height: 10vh;
     border-radius: 10px 10px 0 0;
     border-bottom: 1px solid rgba(123, 117, 127, 1);
     flex-direction: row;
     justify-content: space-around;
-    padding: 10px;
+    padding 10px;
     margin-bottom: 1vh;
+
   }
 `;
 
@@ -126,23 +152,35 @@ export const IconButton = styled.button`
   align-items: center;
   width: 100%;
   height: 50px;
-
   padding: 0 10px;
   border-radius: 10px;
-  border: 1px solid;
-  margin-top: 30px;
-  cursor: pointer;
-  background-color: ${({ active }) => (active ? "rgba(0, 0, 0, 0.15)" : "transparent")};
+  border: 1px solid ${({ darkMode }) => (darkMode ? "#fff" : "rgba(0, 0, 0, 0.1)")}; /* White border for dark mode */
+  background-color: ${({ darkMode, active }) =>
+    darkMode
+      ? active
+        ? "rgba(255, 255, 255, 0.32)"
+        : "transparent"
+      : active
+      ? "rgba(0, 0, 0, 0.15)"
+      : "transparent"}; /* White background for dark mode when active */
   box-shadow: ${({ active }) => (active ? "0px 4px 8px rgba(0, 0, 0, 0.1)" : "none")};
   transform: ${({ active }) => (active ? "translateX(5px)" : "none")};
+  margin-top: 30px;
+  cursor: pointer;
 
   @media (max-width: 991px) {
     width: auto;
     height: auto;
     margin-top: 0;
     padding: 5px;
-    background-color: ${({ active }) => (active ? "rgba(0, 0, 0, 0.2)" : "transparent")};
-  }
+   background-color: ${({ darkMode, active }) =>
+    darkMode
+      ? active
+        ? "rgba(255, 255, 255, 0.32)"
+        : "transparent"
+      : active
+      ? "rgba(0, 0, 0, 0.15)"
+      : "transparent"};
 `;
 
 export const Icon = styled.img`
@@ -169,12 +207,14 @@ export const HeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
-  gap: 10px;
+
   margin-bottom: 40px;
   align-items: center;
 
   @media (max-width: 991px) {
     flex-direction: row;
+    justify-content: space-between;
+
   }
 `;
 
@@ -194,10 +234,11 @@ export const UserProfile = styled.div`
     `}
 
   @media (max-width: 991px) {
-    justify-content: flex-end;
+justify-content: space-around;
+gap: none;
     width: 100%;
     align-items: center;
-    gap: 10px;
+
   }
 `;
 
@@ -223,13 +264,18 @@ export const Title = styled.h1`
   color: ${({ darkMode }) => (darkMode ? "#FFF" : "#000")};
   font: 600 36px/122% Poppins, sans-serif;
 
+  @media (max-width: 991px) {
+    display: none;
+
+  }
+
 `;
 
 export const NotificationIcon = styled.div`
   width: 40px;
   height: 40px;
  color: ${({ darkMode }) => (darkMode ? "#FFF" : "#000")};
-  background-color: ${({ darkMode }) => (darkMode ? "#B7A1E5" : "#EDDCFF")};
+  background-color: ${({ darkMode }) => (darkMode ? navDarkBackground : navButtonLightBackground)};
   border: 2px solid ${({ darkMode }) => (darkMode ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 1)')};
   border-radius: 50%;
   display: flex;
@@ -239,11 +285,7 @@ export const NotificationIcon = styled.div`
   position: relative;
   transition: transform 0.5s ease;
 
-  ${(props) =>
-    props.hasUnreadMessages &&
-    css`
-      animation: ${vibration} 0.5s ease infinite;
-    `}
+
 
   &:hover {
     transform: scale(1.05);
@@ -267,8 +309,8 @@ export const NotificationIcon = styled.div`
   }
 
   @media (max-width: 768px) {
-    width: 35px;
-    height: 35px;
+    width: 60px;
+    height: 60px;
     svg {
       font-size: 18px;
     }
@@ -318,7 +360,7 @@ export const UserDetails = styled.div`
   gap: 10px;
   border-radius: 50px;
   border: 2px solid ${({ darkMode }) => (darkMode ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 1)')};
-  background-color: ${({ darkMode }) => (darkMode ? "#B7A1E5" : "#EDDCFF")};
+  background-color: ${({ darkMode }) => (darkMode ? navDarkBackground : navButtonLightBackground)};
   padding: 5px 10px;
 
   @media (max-width: 768px) {
@@ -393,7 +435,7 @@ export const FontSizer = styled.div`
   color: ${({ darkMode }) => (darkMode ? "#fff" : "#6B538C")};
   border-radius: 50px;
   border: 2px solid ${({ darkMode }) => (darkMode ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 1)')};
-  background-color: ${({ darkMode }) => (darkMode ? "#B7A1E5" : "#EDDCFF")};
+  background-color: ${({ darkMode }) => (darkMode ? navDarkBackground : navButtonLightBackground)};
   height: 40px;
   padding: 0 20px; /* Added padding to give some horizontal spacing */
 
@@ -424,23 +466,37 @@ export const Main = styled.main`
   display: flex;
   flex-direction: column;
   flex: 1;
+  margin-left: 90px;
   overflow-y: auto;
+
+   @media (max-width: 768px) {
+
+   margin-left: 0;
+
+  }
 `;
 
 export const Modal = styled.div`
   position: absolute;
-  top: 80px;
-  right: 20px;
-  background-color: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "#fff")};
-  border: 1px solid #ccc;
+  top: 60px;
+  right: 5px;
+
+
   border-radius: 5px;
-  box-shadow: 02px 10px rgba(0, 0, 0, 0.1);
+opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
   z-index: 1000;
   transition: opacity 0.3s ease, transform 0.3s ease;
-  opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
+
  transform: ${({ isOpen }) => (isOpen ? "translateY(0)" : "translateY(-100%)")};
   pointer-events: ${({ isOpen }) => (isOpen ? "auto" : "none")};
   font-size: ${({ fontSize }) => getFontSize(fontSize)};
+
+   @media (max-width: 768px) {
+
+   top: 170px;
+    right: 5px;
+
+  }
 `;
 
 export const NotificationModalContainer = styled.div`
@@ -448,38 +504,45 @@ export const NotificationModalContainer = styled.div`
   position: absolute;
   top: 80px; /* Adjusted to move the modal slightly lower */
   right: 0;
-  background: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "#fff")};
-  border: 1px solid #ccc;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+
+
   border-radius: 8px;
   overflow: hidden;
   z-index: 10;
   max-height: 80vh;
+  max-width: 60%;
   overflow-y: auto;
   font-size: ${({ fontSize }) => getFontSize(fontSize)};
-  animation: ${slideIn} 0.3s ease-out; /* Apply the slide-in animation */
+ animation: ${({ isOpen }) => (isOpen ? slideInFromRight : slideOut)} 0.3s ease-out forwards;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+
+  @media (min-width: 700px) {
+
+  }
 `;
 
 export const NotificationModalContent = styled.ul`
   list-style: none;
   margin: 0;
-  background-color: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "#fff")};
+
   padding: 20px;
   font-size: ${({ fontSize }) => getFontSize(fontSize)};
   color: ${({ darkMode }) => (darkMode ? "#fff" : "#2C2C2C")};
 `;
 
 export const Conversation = styled.div`
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   padding: 15px;
   border: 1px solid #f0f0f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   border-radius: 8px;
   background-color: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "#fafafa")};
   font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
 export const ConversationInfo = styled.div`
-  margin-bottom: 15px;
+  margin-bottom: 5px;
   font-size: 14px;
   color: ${({ darkMode }) => (darkMode ? "#fff" : "#2C2C2C")};
   font-size: ${({ fontSize }) => getFontSize(fontSize)};
@@ -492,18 +555,19 @@ export const MessagesList = styled.div`
 `;
 
 export const Message = styled.div`
-  background-color: #fff;
+  background-color: ${({ darkMode }) => (darkMode ? "#4c4c4c" : "#fff")};
   border: 1px solid #e0e0e0;
+  color: ${({ darkMode }) => (darkMode ? "#fff" : "black")};
   border-radius: 5px;
   padding: 10px;
-  margin-bottom: 10px;
+
   font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
 export const Button = styled.button`
   margin-top: 10px;
   padding: 8px 12px;
-  background-color: #B7A1E5;
+  background-color: ${navDarkBackground};
   color: white;
   border: none;
   border-radius: 5px;
@@ -531,21 +595,42 @@ export const ModalContent = styled.div`
 `;
 
 export const ModalItem = styled.div`
-  padding: 10px;
-  cursor: pointer;
-  font-size: ${({ fontSize }) => getFontSize(fontSize)};
+  padding: 12px 18px;
+  color: ${({ darkMode }) => (darkMode ? "#fff" : "black")};
+  border: 2px solid ${({ darkMode }) => (darkMode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.3)')};
+  text-decoration: none;
+  margin-top: 5px;
+  text-align: center;
+  display: block;
+  width: 100%;
+  border-radius: 8px;
+  background: ${({ darkMode }) => darkMode ? "linear-gradient(45deg, #6B538C, #9C85D8)" : "linear-gradient(45deg, #D3BDF2, #EDDCFF)"};
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+
   &:hover {
-    background-color: rgb(237, 220, 255);
+    transform: translateY(-3px);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+    opacity: 0.9;
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    opacity: 1;
   }
 `;
 
 export const NoNotificationsMessage = styled.div`
-  padding: 20px;
-  text-align: center;
-  font-size: 16px;
-  color: #666;
-  font-size: ${({ fontSize }) => getFontSize(fontSize)};
+  background-color: ${({ darkMode }) => (darkMode ? '#4F4F4F' : '#F0F0F0')}; /* Darker background for dark mode, lighter for light mode */
+  color: ${({ darkMode }) => (darkMode ? '#FFFFFF' : '#000000')}; /* Text color based on mode */
+  padding: 20px; /* Add padding for better spacing */
+  border-radius: 10px; /* Rounded corners */
+  text-align: center; /* Center the text */
+  font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+  margin: 20px 0; /* Add some margin to separate it from other content */
 `;
+
 
 export const pulse = keyframes`
   0% { transform: scale(1); opacity: 1; }
@@ -617,6 +702,10 @@ export const Footer = styled.footer`
   transition: transform 0.3s ease;
   transform: translateY(${({ isVisible }) => (isVisible ? "0%" : "100%")});
   z-index: 999;
+  color: ${({ darkMode }) => (darkMode ? "#FFF" : "#000")};
+  background-color: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "#FFF")};
+  font: 600 36px/122% Poppins, sans-serif;
+  font: 600 36px/122% Poppins, sans-serif;
   font-size: ${({ fontSize }) => getFontSize(fontSize)};
 `;
 
@@ -628,7 +717,7 @@ export const CloseButton = styled.button`
   border: none;
   font-size: 30px;
   cursor: pointer;
-  color: #000;
+  color: ${({ darkMode }) => (darkMode ? "#FFF" : "#000")};
   font-size: ${({ fontSize }) => getFontSize(fontSize)};
 
   &:hover {
@@ -671,7 +760,7 @@ export const IconContainer = styled.div`
     width: 100%;
     height: 100%;
 
-    color: ${({ darkMode }) => (darkMode ? "#000" : "#6B538C")};
+    color: ${({ darkMode }) => (darkMode ? "#fff" : "#6B538C")};
 
   }
 `;

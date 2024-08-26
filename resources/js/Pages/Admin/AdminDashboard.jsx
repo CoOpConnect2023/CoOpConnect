@@ -3,12 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import styled, { keyframes } from "styled-components";
 import Section from './Components/Section';
 import SchoolSectionComponent from "./Components/SchoolSection";
+import CourseSectionComponent from "./Components/CoursesSection";
 import NavBar from './Components/NavBar';
 import { getPercentages, getSchools, selectPercentages, selectPercentagesStatus, deleteSchool } from '@/Features/schools/schoolsSlice';
 import { getUser, getAllUsers, selectAllUsers, selectUser, deleteUser } from '@/Features/users/userSlice';
+import { getCourses, deleteCourse } from "@/Features/courses/coursesSlice";
 
 import UploadUsers from "./Components/UploadUsers";
 import { HomePageContainer, Header, Content } from "./Styling/AdminDashboard.styles";
+
 
 
 const AdminDashboard = () => {
@@ -18,6 +21,7 @@ const AdminDashboard = () => {
     const darkMode = useSelector(state => state.accessibility.darkMode);
     const fontSize = useSelector(state => state.accessibility.textSize);
     const schoolsList = useSelector(state => state.schools.schoolslist);
+    const coursesList = useSelector(state => state.courses.courses);
 
     const [categorizedUsers, setCategorizedUsers] = useState({});
 
@@ -26,9 +30,10 @@ const AdminDashboard = () => {
         dispatch(getUser());
         dispatch(getAllUsers());
         dispatch(getSchools())
+        dispatch(getCourses())
     }, [dispatch]);
 
-
+console.log(coursesList)
 
     const categorizeUsersByRole = (users) => {
         return users.reduce((acc, user) => {
@@ -52,6 +57,8 @@ const AdminDashboard = () => {
     const teachers = categorizedUsers?.teacher;
     const students = categorizedUsers?.student;
     const employee = categorizedUsers?.employee;
+    const admins = categorizedUsers?.admin;
+
 
 
 
@@ -72,6 +79,11 @@ const AdminDashboard = () => {
 
     };
 
+    const handleDeleteCourse = (userId) => {
+        dispatch(deleteCourse(userId));
+
+    };
+
 
 
     return (
@@ -83,11 +95,12 @@ const AdminDashboard = () => {
                 {categorizedUsers && (
                     <Content fontSize={fontSize} darkMode={darkMode}>
                         <UploadUsers fontSize={fontSize} darkMode={darkMode} />
+                        <Section fontSize={fontSize} darkMode={darkMode} handleDeleteUser={handleDeleteUser} users={admins}  title="Admin Users" />
                         <Section fontSize={fontSize} darkMode={darkMode} handleDeleteUser={handleDeleteUser} users={students}  title="Current Students" />
                         <Section fontSize={fontSize} darkMode={darkMode} handleDeleteUser={handleDeleteUser} users={employee}  title="Current Employers" />
                         <Section fontSize={fontSize} darkMode={darkMode} handleDeleteUser={handleDeleteUser} users={teachers}  title="Current Teachers" />
                         <SchoolSectionComponent fontSize={fontSize} darkMode={darkMode} handleDeleteUser={handleDeleteSchool} users={schoolsList}  title="Current Schools" />
-
+<CourseSectionComponent users={coursesList} title="Current Courses" fontSize={fontSize} darkMode={darkMode} handleDeleteUser={handleDeleteCourse}/>
                     </Content>
                 )}
             </HomePageContainer>

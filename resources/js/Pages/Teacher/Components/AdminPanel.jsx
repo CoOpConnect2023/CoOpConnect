@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 import { Link } from "@inertiajs/react";
 import { useSelector } from "react-redux";
 
-function AdminPanel({fontSize}) {
+function AdminPanel({ fontSize }) {
   const darkMode = useSelector((state) => state.accessibility.darkMode);
 
   const panels = [
@@ -75,22 +75,8 @@ function AdminPanel({fontSize}) {
   );
 }
 
-const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
-    const em = parseFloat(emValue); // Convert emValue to a number
-
-    if (emValue === '1em') {
-        return `${basePixelSize * em}px`;
-    }
-
-    if (emValue === '1.07em') {
-        return `${basePixelSize * em * 1.3}px`;
-    }
-
-    if (emValue === '1.12em') {
-        return `${basePixelSize * em * 1.7}px`;
-    }
-    // Otherwise, apply the amplification factor
-    return `${basePixelSize * em * factor}px`;
+const calculateFontSize = (minSize, preferredSize, maxSize) => {
+  return `clamp(${minSize}, ${preferredSize}, ${maxSize})`;
 };
 
 const MainContainer = styled.div`
@@ -98,20 +84,19 @@ const MainContainer = styled.div`
   flex-direction: column;
   align-self: stretch;
   width: 100%;
-   /* Ensure the container takes at least the full height of the viewport */
   background-color: ${({ darkMode }) => (darkMode ? "#2D2D2D" : "#fff")};
   color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
   border-radius: 10px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   border: 1px solid rgba(123, 117, 127, 1);
-  padding: 20px;
+  padding: 10px;
   box-sizing: border-box;
   transition: background-color 0.3s;
-  overflow: auto; /* Handle overflow if content exceeds the container */
+
 `;
 
 const Header = styled.header`
-  font: 500 ${({ fontSize }) => calculateFontSize(24, fontSize)} Poppins, sans-serif;
+  font: 500 ${({ fontSize }) => calculateFontSize("1.5rem", "2vw", "2rem")} Poppins, sans-serif;
   @media (max-width: 991px) {
     max-width: 100%;
   }
@@ -120,8 +105,8 @@ const Header = styled.header`
 const Content = styled.main`
   display: flex;
   flex-direction: column;
-  flex-grow: 1; /* Ensure content stretches to fill available space */
-  justify-content: space-between; /* Distribute content evenly */
+  flex-grow: 1;
+  justify-content: space-between;
   gap: 20px;
   box-sizing: border-box;
 
@@ -133,10 +118,7 @@ const Content = styled.main`
 const Section = styled.section`
   display: flex;
   flex-direction: column;
-
-
-  justify-content: space-between; /* Spread content vertically */
-
+  justify-content: space-between;
   box-sizing: border-box;
 
   @media (max-width: 991px) {
@@ -148,12 +130,12 @@ const PanelsContainer = styled.div`
   display: flex;
   flex-grow: 1;
   gap: 30px;
-  align-items: stretch; /* Ensure even stretching */
-  box-sizing: border-box; /* Prevent unexpected overflow */
+  align-items: stretch;
+  box-sizing: border-box;
 
   @media (max-width: 991px) {
     flex-direction: column;
-    gap: 15px; /* Add spacing between panels on mobile */
+    gap: 15px;
   }
 `;
 
@@ -163,10 +145,10 @@ const PanelSection = styled.article`
   background-color: ${({ darkMode }) => (darkMode ? "#3C3C3C" : "#fff")};
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Spread content vertically */
+  justify-content: space-between;
   flex-grow: 1;
-  margin: 20px 0;
-  padding: 20px;
+  margin: 10px 0;
+  padding: 10px;
   box-sizing: border-box;
   transition: background-color 0.3s;
 
@@ -181,7 +163,7 @@ const PanelHeader = styled.header`
   background-color: ${(props) => props.backgroundColor};
   display: flex;
   gap: 8px;
-  font-size: ${({ fontSize }) => calculateFontSize(26, fontSize)};
+  font-size: ${({ fontSize }) => calculateFontSize("0.8rem", "1.3vw", "1.9rem")};
   color: #fff;
   font-weight: 600;
   line-height: 156%;
@@ -194,7 +176,7 @@ const PanelHeader = styled.header`
 
 const Title = styled.h2`
   font-family: Inter, sans-serif;
-  font-size: ${({ fontSize }) => calculateFontSize(20, fontSize)};
+  font-size: ${({ fontSize }) => calculateFontSize("0.8rem", "1vw", "1.9rem")};
 `;
 
 const Img = styled.img`
@@ -203,24 +185,26 @@ const Img = styled.img`
   width: 24px;
   margin: auto 0;
 `;
+
 const PanelBody = styled.div`
   display: flex;
-  gap: 10px;
-  font-size: ${({ fontSize }) => calculateFontSize(20, fontSize)};
+  gap: 5px;
+  font-size: ${({ fontSize }) => calculateFontSize("0.6rem", "0.9vw", "1.9rem")};
   color: ${({ darkMode }) => (darkMode ? "#CCCCCC" : "#7b757f")};
   font-weight: 500;
   letter-spacing: 0.25px;
-  line-height: 1.5; /* Increased line height for better readability */
+  line-height: 1.5;
   padding: 10px;
   box-sizing: border-box;
   transition: color 0.3s;
-  flex-wrap: wrap; /* Allow wrapping of content */
+  flex-wrap: wrap;
 
   @media (max-width: 991px) {
-    flex-direction: column; /* Stack content vertically on mobile */
-    gap: 15px; /* Increase gap for better spacing on mobile */
+    flex-direction: column;
+    gap: 15px;
   }
 `;
+
 const Icon = styled.img`
   aspect-ratio: 1;
   object-fit: cover;
@@ -232,12 +216,13 @@ const Description = styled.p`
   font-family: Poppins, sans-serif;
   flex: 1;
   padding: 20px;
-  font-size: ${({ fontSize }) => calculateFontSize(24, fontSize)};
-  line-height: 1.5; /* Increased line height for better readability */
-  word-wrap: break-word; /* Ensure long words break correctly */
+  font-size: ${({ fontSize }) => calculateFontSize("0.9rem", "1.1vw", "1.75rem")};
+  line-height: 1.5;
+  word-wrap: break-word;
 
   @media (max-width: 991px) {
-    padding: 15px; /* Adjust padding for mobile */
+    padding: 15px;
   }
 `;
+
 export default AdminPanel;

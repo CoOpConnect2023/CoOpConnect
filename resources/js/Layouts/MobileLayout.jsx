@@ -36,13 +36,13 @@ const Hamburger = styled.div`
     isOpen &&
     `
     span:nth-child(1) {
-      transform: rotate(-45deg) translate(-5px, 5px);
+      transform: rotate(-45deg) translate(-5px, 10px);
     }
     span:nth-child(2) {
       opacity: 0;
     }
     span:nth-child(3) {
-      transform: rotate(45deg) translate(-5px, -5px);
+      transform: rotate(45deg) translate(-5px, -10px);
     }
   `}
 `;

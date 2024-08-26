@@ -33,7 +33,7 @@ const ParentContainer = styled.div`
   display: flex;
   flex-direction: column;
 
-  height: 100%;
+  min-height: 100vh;
   width: 100%;
 `;
 
@@ -50,6 +50,8 @@ const GuideContainer = styled.div`
     color: ${darkMode ? '#ffffff' : '#333333'};
     background-color: ${darkMode ? '#333333' : '#ffffff'};
   `}
+
+
 `;
 
 const StepBlock = styled.div`
@@ -61,7 +63,7 @@ const StepBlock = styled.div`
   flex-direction: column;
   align-items: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  flex-grow: 1;
+  
   ${({ darkMode }) => css`
     border-color: ${darkMode ? '#555555' : '#dddddd'};
     background-color: ${darkMode ? '#444444' : '#ffffff'};

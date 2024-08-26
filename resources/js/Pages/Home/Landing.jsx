@@ -58,6 +58,7 @@ const Subtitle = styled.h2`
   margin-top: 1rem;
   font-size: 2.25rem;
   font-weight: 400;
+  margin-bottom: 1rem;
   color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6B538C")};
   span {
     color: ${({ darkMode }) => (darkMode ? "#D3BDF2" : "#9C85D8")};
@@ -97,7 +98,7 @@ export default function Landing({ auth, laravelVersion, phpVersion }) {
               href={route("register")}
               className="ms-4 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
             >
-              
+
             </Link>
           </TextContainer>
         </ContentWrapper>

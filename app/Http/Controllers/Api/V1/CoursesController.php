@@ -11,6 +11,7 @@ use App\Http\Resources\V1\CoursesResource;
 use App\Http\Resources\V1\CoursesCollection;
 use Illuminate\Http\Request;
 use App\Filters\V1\CoursesFilter;
+use Illuminate\Support\Facades\Log;
 
 class CoursesController extends Controller
 {
@@ -112,7 +113,13 @@ public function getCourseDocumentsForTeacher($userId)
      */
     public function update(UpdateCoursesRequest $request, Courses $course)
 {
+    // Validate and get the request data
     $validatedData = $request->validated();
+
+    // Log the validated data
+    Log::info('Updating course with the following data:', $validatedData);
+
+    // Update the course with the validated data
     $course->update($validatedData);
 
     // Return the updated course resource

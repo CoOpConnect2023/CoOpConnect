@@ -200,7 +200,8 @@ function Header({ header }) {
     const altAvatarSrc = "https://cdn.builder.io/api/v1/image/assets/TEMP/c449c761188f38db922c89455e070256b822a267e33f51baa6901c76b73a4e78?apiKey=d66532d056b14640a799069157705b77&";
     const darkMode = useSelector(state => state.accessibility.darkMode);
     const fontSize = useSelector(state => state.accessibility.textSize);
-
+    const windowSize = useWindowSize();
+    const isMobile = windowSize.width <= 991;
 
 
 
@@ -277,7 +278,11 @@ const hasUnreadMessages =
     return (
         <header>
             <HeaderContainer fontSize={fontSize} darkMode={darkMode}>
-                <Title fontSize={fontSize} darkMode={darkMode}>{possessiveName} {header}</Title>
+            {!isMobile && (
+                    <Title fontSize={fontSize} darkMode={darkMode}>
+                        {possessiveName} {header}
+                    </Title>
+                )}
                 <UserProfile fontSize={fontSize} darkMode={darkMode}>
 
                     <NotificationIcon fontSize={fontSize} darkMode={darkMode} onClick={handleDarkModeToggle}
@@ -343,9 +348,9 @@ function MainContent({ header, children }) {
     return (
         <Main>
             <ContentContainer>
-                <Header header={header} />{isMobile && <Sidebar />}
-                {children}
+                 <Header header={header} />
 
+                {children}
             </ContentContainer>
         </Main>
     );
@@ -358,10 +363,9 @@ function NavBar({ header, children }) {
     const fontSize = useSelector(state => state.accessibility.textSize);
 
     return (
-        <AppContainer fontSize={fontSize} darkMode={darkMode} >
-            {isMobile ? null : <Sidebar />}
+        <AppContainer fontSize={fontSize} darkMode={darkMode}>
+            <Sidebar />
             <MainContent header={header}>{children}</MainContent>
-
         </AppContainer>
     );
 }

@@ -43,6 +43,8 @@ export const CardInfo = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
+  padding: 10px;
+  width: 100%;
   @media (max-width: 768px) {
     width: 100%;
     justify-content: space-between;
@@ -56,7 +58,9 @@ export const Avatar = styled.img`
 `;
 export const InfoText = styled.div`
   display: flex;
+  gap: 5px;
   flex-direction: column;
+  width: 100%;
 `;
 export const CardActions = styled.div`
   display: flex;
@@ -82,6 +86,7 @@ export const Button = styled.button`
 export const Input = styled.input`
   padding: 5px;
   border: 1px solid #ccc;
+  width: 100%;
   border-radius: 4px;
   font-size: ${({ fontSize }) => calculateFontSize(10, fontSize)};
   @media (max-width: 768px) {

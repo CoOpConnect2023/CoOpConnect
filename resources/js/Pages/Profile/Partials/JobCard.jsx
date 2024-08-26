@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import JobModal from './JobModal'; // Import the modal component
+
 
 const JobCard = ({ job }) => {
     const [showModal, setShowModal] = useState(false);

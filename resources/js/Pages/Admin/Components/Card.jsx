@@ -55,6 +55,29 @@ const Card = ({ name, classroom, email, id, profileImage, schoolId, status, onVi
         setEditEmail(email);
         setEditStatus(status);
     };
+
+    function parseDateTime(datetimeString) {
+
+        const date = new Date(datetimeString);
+
+
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+
+
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const seconds = date.getSeconds().toString().padStart(2, '0');
+
+
+        const formattedDate = `${year}-${month}-${day}`;
+        const formattedTime = `${hours}:${minutes}:${seconds}`;
+
+        return `${formattedDate} ${formattedTime}`;
+    }
+
+
     return (
         <CardContainer fontSize={fontSize} darkMode={darkMode} data-testid={`user-card-${email}`}>
             <CardInfo fontSize={fontSize} darkMode={darkMode}>
@@ -68,10 +91,11 @@ const Card = ({ name, classroom, email, id, profileImage, schoolId, status, onVi
                 ) : (
                     <InfoText fontSize={fontSize} darkMode={darkMode}>
                         <p>Name: {name}</p>
-                        <p>SchoolID: {schoolId}</p>
+                        <p>School-ID: {schoolId}</p>
                         <p>Current Status: {status}</p>
                         <p>Email: {email}</p>
-                        <p>UserID: {id}</p>
+                        <p>Verified: {parseDateTime(emailVerified)}</p>
+                        <p>User-ID: {id}</p>
                     </InfoText>
                 )}
             </CardInfo>

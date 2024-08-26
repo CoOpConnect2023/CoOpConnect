@@ -17,6 +17,7 @@ export const Main = styled.main`
     background-color: ${({ darkMode }) => (darkMode ? "#1f1f1f" : "#fff")};
     color: ${({ darkMode }) => (darkMode ? "#f5f5f5" : "#000")};
     display: flex;
+    flex-grow: 1;
     border: 2px solid ${({ darkMode }) => (darkMode ? "#444" : "#e2e8f0")};
     flex-direction: column;
     padding: 20px;
@@ -28,6 +29,7 @@ export const Main = styled.main`
     @media (max-width: 991px) {
         padding: 10px;
         width: 100%;
+        
         flex-direction: column;
     }
 `;

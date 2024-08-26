@@ -10,4 +10,11 @@ export default defineConfig({
         }),
         react(),
     ],
+
+//comment this out to serve dev
+
+    // build: {
+    //     outDir: 'public/build',
+    // },
+
 });

@@ -468,7 +468,7 @@ const SpacedInput = styled.input`
     padding: 8px;
     border-radius: 4px;
     border: 1px solid #ccc;
-    color: ${({ darkMode }) => (darkMode ? 'black' : 'white')};
+    color: ${({ darkMode }) => (darkMode ? 'black' : 'black')};
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
 `;
 

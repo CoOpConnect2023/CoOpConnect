@@ -57,6 +57,7 @@ export const Div6 = styled.div`
     border-style: solid;
     border-width: 1px;
     display: flex;
+    width: 100%;
     margin-top: 10px;
     padding: 10px;
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)}; /* Apply font size */
@@ -69,6 +70,7 @@ export const Div6 = styled.div`
 export const Div7 = styled.div`
     display: flex;
     gap: 10px;
+    width: 100%;
     justify-content: flex-start;
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)}; /* Apply font size */
 `;
@@ -130,8 +132,9 @@ export const Div11 = styled.div`
 export const Div12 = styled.div`
     display: flex;
     gap: 10px;
+    width: 100%;
     font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)}; /* Apply font size */
-    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#7b757f")};
+    color: ${({ darkMode }) => (darkMode ? "#7b757f" : "#7b757f")};
     font-weight: 600;
     letter-spacing: 0.25px;
     line-height: 143%;
@@ -147,6 +150,7 @@ export const Img = styled.img`
 export const Div13 = styled.div`
     font-family: Poppins, sans-serif;
     margin: auto 0;
+    width: 100%;
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)}; /* Apply font size */
 `;
 

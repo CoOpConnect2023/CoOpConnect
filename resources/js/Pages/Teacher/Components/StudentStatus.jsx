@@ -31,7 +31,7 @@ const Container = styled.section`
   height: 100%;
   max-height: 60vh;
 
-  padding: 20px;
+  padding: 30px;
   border: 1px solid rgba(123, 117, 127, 1);
   transition: background-color 0.3s, color 0.3s;
   box-sizing: border-box; /* Ensure padding doesn't affect layout */

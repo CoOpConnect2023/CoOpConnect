@@ -69,6 +69,7 @@ export const Div6 = styled.div`
 export const Div7 = styled.div`
     display: flex;
     gap: 10px;
+    width: 100%;
     justify-content: flex-start;
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)}; /* Apply font size */
 `;
@@ -84,7 +85,7 @@ export const Div8 = styled.div`
 
 export const Div9 = styled.div`
     width: 100%;
-    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#260e44")};
+    color: ${({ darkMode }) => (darkMode ? "#260e44" : "#260e44")};
     letter-spacing: 0.25px;
     margin: auto 0;
     font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)}; /* Apply font size */
@@ -131,8 +132,9 @@ export const Div12 = styled.div`
     display: flex;
     gap: 10px;
     font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)}; /* Apply font size */
-    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#7b757f")};
+    color: ${({ darkMode }) => (darkMode ? "#7b757f" : "#7b757f")};
     font-weight: 600;
+    width: 100%;
     letter-spacing: 0.25px;
     line-height: 143%;
 `;
@@ -147,6 +149,7 @@ export const Img = styled.img`
 export const Div13 = styled.div`
     font-family: Poppins, sans-serif;
     margin: auto 0;
+    width: 100%;
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)}; /* Apply font size */
 `;
 
@@ -183,6 +186,6 @@ export const SendButton = styled.button`
 `;
 
 export const StyledMessage = styled.div`
-    color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#260e44")};
+    color: ${({ darkMode }) => (darkMode ? "#260e44" : "#260e44")};
     font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)}; /* Apply font size */
 `;

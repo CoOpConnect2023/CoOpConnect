@@ -30,13 +30,17 @@ class StudentAcceptedInterview extends Mailable
      * @param $message
      */
     public function __construct($studentName, $employerName, $jobTitle, $acceptedTime, $message)
-    {
-        $this->studentName = $studentName;
-        $this->employerName = $employerName;
-        $this->jobTitle = $jobTitle;
-        $this->acceptedTime = $acceptedTime;
-        $this->message = $message;
-    }
+{
+    $this->studentName = $studentName;
+    $this->employerName = $employerName;
+    $this->jobTitle = $jobTitle;
+    $this->message = $message;
+
+    // Format the acceptedTime 
+    $this->acceptedTime = Carbon::parse($acceptedTime)
+                                ->timezone('America/New_York') // Convert to Eastern Time
+                                ->format('F jS \a\t g:i A');   // Format the time
+}
 
     /**
      * Build the message.

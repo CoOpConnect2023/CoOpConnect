@@ -202,6 +202,8 @@ function Header({ header }) {
     const markMessageStatus = useSelector(selectMarkMessageAsReadStatus);
     const darkMode = useSelector(state => state.accessibility.darkMode);
     const fontSize = useSelector(state => state.accessibility.textSize);
+    const windowSize = useWindowSize();
+    const isMobile = windowSize.width <= 991;
     const [isProfileModalOpen, setIsProfileModalOpen] = React.useState(false);
     const [isNotificationModalOpen, setIsNotificationModalOpen] = React.useState(false);
     const [animate, setAnimate] = useState(true);
@@ -281,63 +283,66 @@ function Header({ header }) {
 
     return (
         <header>
-            {user &&
-                <HeaderContainer fontSize={fontSize} darkMode={darkMode} data-testid="nav-student-component">
-                    <Title fontSize={fontSize} darkMode={darkMode}>{possessiveName} {header}</Title>
-                    <UserProfile animate={animate} fontSize={fontSize} darkMode={darkMode}>
+            <HeaderContainer fontSize={fontSize} darkMode={darkMode}>
+            {!isMobile && (
+                    <Title fontSize={fontSize} darkMode={darkMode}>
+                        {possessiveName} {header}
+                    </Title>
+                )}
+                <UserProfile fontSize={fontSize} darkMode={darkMode}>
+
+                    <NotificationIcon fontSize={fontSize} darkMode={darkMode} onClick={handleDarkModeToggle}
+                    >{darkMode ? <FontAwesomeIcon icon={faMoon} /> : <FontAwesomeIcon icon={faSun} />}
 
 
-                        <NotificationIcon fontSize={fontSize} darkMode={darkMode} onClick={handleDarkModeToggle}
-                        >{darkMode ? <FontAwesomeIcon icon={faMoon} /> : <FontAwesomeIcon icon={faSun} />}</NotificationIcon>
-
-                        <NotificationIcon fontSize={fontSize} darkMode={darkMode} data-testid="nav-student-notification" onClick={toggleNotificationModal}
-                            hasUnreadMessages={hasUnreadMessages}><FontAwesomeIcon icon={faBell} />
+                    </NotificationIcon>
+                    <NotificationIcon fontSize={fontSize} darkMode={darkMode} onClick={toggleNotificationModal}
+                        hasUnreadMessages={hasUnreadMessages}><FontAwesomeIcon icon={faBell} />
 
 
-                        </NotificationIcon>
-                        <FontToggler />
-                        <UserDetails fontSize={fontSize} darkMode={darkMode} onClick={toggleProfileModal}>
-                            {user && user.profile_image ? (
-                                <Avatar fontSize={fontSize} darkMode={darkMode}
-                                    src={user.profile_image}
-                                    alt="User Avatar"
-                                    loading="lazy"
-                                />
-                            ) : (
-                                <Avatar fontSize={fontSize} darkMode={darkMode}
-                                    src={altAvatarSrc}
-                                    alt="Default Avatar"
-                                    loading="lazy"
-                                />
-                            )}
-                            <ExpandIcon
-                                icon={faChevronDown}
-                                isOpen={isExpanded}
-                                fontSize={fontSize}
-                                darkMode={darkMode}
+                    </NotificationIcon>
+                    <FontToggler />
+                    <UserDetails fontSize={fontSize} darkMode={darkMode} onClick={toggleProfileModal}>
+                        {user && user.profile_image ? (
+                            <Avatar fontSize={fontSize} darkMode={darkMode}
+                                src={user.profile_image}
+                                alt="User Avatar"
+                                loading="lazy"
                             />
-                        </UserDetails>
-                    </UserProfile>
-                    <Modal fontSize={fontSize} darkMode={darkMode} isOpen={isProfileModalOpen}>
-                        <ModalContent fontSize={fontSize} darkMode={darkMode}>
-                            <Link fontSize={fontSize} darkMode={darkMode} href="/employer/profile">
-                                <ModalItem fontSize={fontSize} darkMode={darkMode}>Profile</ModalItem>
-                            </Link>
-                            <Link fontSize={fontSize} darkMode={darkMode} href="/employer/settings">
-                                <ModalItem fontSize={fontSize} darkMode={darkMode}>Settings</ModalItem>
-                            </Link>
-                            <ModalItem fontSize={fontSize} darkMode={darkMode} as="button" onClick={handleLogout}>Logout</ModalItem>
-                        </ModalContent>
-                    </Modal>
-                    <NotificationModal fontSize={fontSize} darkMode={darkMode} data-testid="nav-employer-notification-modal" isOpen={isNotificationModalOpen} conversations={conversations} handleMarkAsRead={handleMarkAsRead} handleRedirect={handleRedirect} currentUser={user} notificationsStatus={notificationsStatus}>
-                        <ModalContent fontSize={fontSize} darkMode={darkMode}>
-                            <ModalItem>Notification 1</ModalItem>
-                            <ModalItem>Notification 2</ModalItem>
-                            <ModalItem>Notification 3</ModalItem>
-                        </ModalContent>
-                    </NotificationModal>
-                </HeaderContainer>
-            }
+                        ) : (
+                            <Avatar fontSize={fontSize} darkMode={darkMode}
+                                src={altAvatarSrc}
+                                alt="Default Avatar"
+                                loading="lazy"
+                            />
+                        )}
+                        <ExpandIcon
+                            icon={faChevronDown}
+                            isOpen={isExpanded}
+                            fontSize={fontSize}
+                            darkMode={darkMode}
+                        />
+                    </UserDetails>
+                </UserProfile>
+                <Modal fontSize={fontSize} darkMode={darkMode} isOpen={isProfileModalOpen}>
+                    <ModalContent fontSize={fontSize} darkMode={darkMode}>
+                        <Link fontSize={fontSize} darkMode={darkMode} href="/employer/profile">
+                            <ModalItem fontSize={fontSize} darkMode={darkMode}>Profile</ModalItem>
+                        </Link>
+                        <Link fontSize={fontSize} darkMode={darkMode} href="/employer/settings">
+                            <ModalItem fontSize={fontSize} darkMode={darkMode}>Settings</ModalItem>
+                        </Link>
+                        <ModalItem fontSize={fontSize} darkMode={darkMode} as="button" onClick={handleLogout}>Logout</ModalItem>
+                    </ModalContent>
+                </Modal>
+                <NotificationModal isOpen={isNotificationModalOpen} conversations={conversations} handleMarkAsRead={handleMarkAsRead} handleRedirect={handleRedirect} currentUser={user} notificationsStatus={notificationsStatus}>
+                    <ModalContent>
+                        <ModalItem>Notification 1</ModalItem>
+                        <ModalItem>Notification 2</ModalItem>
+                        <ModalItem>Notification 3</ModalItem>
+                    </ModalContent>
+                </NotificationModal>
+            </HeaderContainer>
         </header>
     );
 }
@@ -349,9 +354,9 @@ function MainContent({ header, children }) {
     return (
         <Main>
             <ContentContainer>
-                <Header header={header} />{isMobile && <Sidebar />}
-                {children}
+                 <Header header={header} />
 
+                {children}
             </ContentContainer>
         </Main>
     );
@@ -365,9 +370,8 @@ function NavBar({ header, children }) {
 
     return (
         <AppContainer fontSize={fontSize} darkMode={darkMode}>
-            {isMobile ? null : <Sidebar fontSize={fontSize} darkMode={darkMode} />}
-            <MainContent fontSize={fontSize} darkMode={darkMode} header={header}>{children}</MainContent>
-
+            <Sidebar />
+            <MainContent header={header}>{children}</MainContent>
         </AppContainer>
     );
 }

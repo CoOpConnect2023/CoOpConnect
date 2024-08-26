@@ -91,7 +91,7 @@ export default function NewMessage({ newMessage, setNewMessage, handleSendNewMes
                         /></Div13><SendButton darkMode={darkMode}
         fontSize={fontSize}  data-testid="send-button" onClick={handleSendNewMessage}>Send</SendButton>
                     </Div12>
-                    <Div14 darkMode={darkMode}
+                    {/* <Div14 darkMode={darkMode}
         fontSize={fontSize}>
                         <img
                             loading="lazy"
@@ -101,7 +101,7 @@ export default function NewMessage({ newMessage, setNewMessage, handleSendNewMes
                             loading="lazy"
                             src="https://cdn.builder.io/api/v1/image/assets/TEMP/8ad0c75797c11a3cca0eab47099060da2128dc39e1cbf2928ea5d120dd074356?apiKey=d66532d056b14640a799069157705b77&"
                         />
-                    </Div14>
+                    </Div14> */}
                 </Div11>
             </Div10>
         </Div4>

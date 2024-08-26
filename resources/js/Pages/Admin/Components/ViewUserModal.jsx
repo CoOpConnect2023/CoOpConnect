@@ -40,6 +40,10 @@ const UserModal = ({ isOpen, onClose, user, fontSize, darkMode }) => {
         {user.email && <p><strong>Email:</strong> {user.email}</p>}
         {user.contactEmail && <p><strong>Email:</strong> {user.contactEmail}</p>}
         {user.school_id && <p><strong>School ID:</strong> {user.school_id}</p>}
+        {user.teacherID && <p><strong>Teacher ID:</strong> {user.teacherID}</p>}
+        {user.schoolID && <p><strong>School ID:</strong> {user.schoolID}</p>}
+        {user.startDate && <p><strong>Start Date:</strong> {user.startDate}</p>}
+        {user.endDate && <p><strong>End Date:</strong> {user.endDate}</p>}
         {user.created_at && <p><strong>Created:</strong> {user.created_at}</p>}
         {user.updated_at && <p><strong>Updated:</strong> {user.updated_at}</p>}
         {user.status && <p><strong>Status:</strong> {user.status}</p>}
