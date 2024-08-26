@@ -266,7 +266,7 @@ public function deleteUser(Request $request, $id)
                     $user = User::create($userData);
                     $createdUsers[] = $user;
 
-                  
+
 
                 }
             }
@@ -281,7 +281,7 @@ public function deleteUser(Request $request, $id)
                         'location' => 'required|string',
                         'description' => 'nullable|string',
                         'principal_name' => 'nullable|string|max:255',
-                        'contact_email' => 'nullable|email|max:255|unique:schools,contact_email',
+                        'contact_email' => 'nullable|max:255|unique:schools,contact_email',
                         'contact_phone' => 'nullable|string|max:255|unique:schools,contact_phone',
                     ]);
 

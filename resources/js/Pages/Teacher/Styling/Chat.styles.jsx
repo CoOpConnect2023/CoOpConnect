@@ -77,6 +77,7 @@ export const LeftColumn = styled.div`
     @media (max-width: 991px) {
         max-width: 100%;
         max-height: 90vh;
+        min-height: 90vh;
         margin-top: 10px;
     }
 `;

@@ -13,8 +13,8 @@ export default defineConfig({
 
 //comment this out to serve dev
 
-    // build: {
-    //     outDir: 'public/build',
-    // },
+    build: {
+        outDir: 'public/build',
+    },
 
 });
