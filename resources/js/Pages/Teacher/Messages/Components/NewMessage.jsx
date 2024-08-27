@@ -84,11 +84,11 @@ export default function NewMessage({ newMessage, setNewMessage, brandNewMessage,
                     fontSize={fontSize}>
                     <Div12 darkMode={darkMode}
                         fontSize={fontSize}>
-                        <Img darkMode={darkMode}
+                        {/* <Img darkMode={darkMode}
                             fontSize={fontSize}
                             loading="lazy"
                             src="https://cdn.builder.io/api/v1/image/assets/TEMP/b1fe555b0ffdbe13c397278b479bee6782aab134a4d597d83c876620c9e724f1?apiKey=d66532d056b14640a799069157705b77&"
-                        />
+                        /> */}
                         <Div13 darkMode={darkMode}
                             fontSize={fontSize}>
                             <Input darkMode={darkMode}
@@ -103,7 +103,7 @@ export default function NewMessage({ newMessage, setNewMessage, brandNewMessage,
                         <SendButton darkMode={darkMode}
                             fontSize={fontSize} data-testid="send-button-teacher" onClick={onSendNewMessage}>Send</SendButton>
                     </Div12>
-                    
+
                 </Div11>
             </Div10>
         </Div4>

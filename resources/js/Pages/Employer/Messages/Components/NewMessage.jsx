@@ -75,10 +75,10 @@ export default function NewMessage({ newMessage, setNewMessage, handleSendNewMes
         fontSize={fontSize}>
                     <Div12 darkMode={darkMode}
         fontSize={fontSize}>
-                        <Img
+                        {/* <Img
                             loading="lazy"
                             src="https://cdn.builder.io/api/v1/image/assets/TEMP/b1fe555b0ffdbe13c397278b479bee6782aab134a4d597d83c876620c9e724f1?apiKey=d66532d056b14640a799069157705b77&"
-                        />
+                        /> */}
                         <Div13 darkMode={darkMode}
         fontSize={fontSize}><Input darkMode={darkMode}
         fontSize={fontSize}

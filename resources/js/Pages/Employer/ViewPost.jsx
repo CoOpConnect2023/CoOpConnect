@@ -38,10 +38,10 @@ function ViewPost() {
                     <JobPostingCard darkMode={darkMode} fontSize={fontSize}>
                         <JobInfo darkMode={darkMode} fontSize={fontSize}>
                             <JobInfoLeft darkMode={darkMode} fontSize={fontSize}>
-                                <CompanyLogo darkMode={darkMode} fontSize={fontSize}
+                                {/* <CompanyLogo darkMode={darkMode} fontSize={fontSize}
                                     src="https://cdn.builder.io/api/v1/image/assets/TEMP/c18c37d4baea2f5cbd4d392adacf6fa12686c4c99b1f2a12d132c4a3ef4a5899?apiKey=d66532d056b14640a799069157705b77&"
                                     alt="Company Logo"
-                                />
+                                /> */}
                                 <JobDetails darkMode={darkMode} fontSize={fontSize}>
                                     <JobTitle darkMode={darkMode} fontSize={fontSize}>{job.title}</JobTitle>
                                     <CompanyName darkMode={darkMode} fontSize={fontSize}>{job.company}</CompanyName>

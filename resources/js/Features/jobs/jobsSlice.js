@@ -97,7 +97,7 @@ export const jobsSlice = createSlice({
                 state.status.jobs = "loading";
             })
             .addCase(searchJobsbySkill.fulfilled, (state, action) => {
-               
+
                 state.jobs = action.payload;
                 state.status.jobs = "succeeded";
             })
@@ -159,6 +159,18 @@ export const jobsSlice = createSlice({
 
               })
             .addCase(deleteJob.rejected, (state, action) => {
+                state.status.deleteJob = "failed";
+            })
+
+            .addCase(deleteAJob.pending, (state, action) => {
+                state.status.deleteAJob = "loading";
+            })
+            .addCase(deleteAJob.fulfilled, (state, action) => {
+                state.jobs = state.jobs.filter((job) => job.id !== action.payload);
+                state.status.jobs = "succeeded";
+
+              })
+            .addCase(deleteAJob.rejected, (state, action) => {
                 state.status.deleteJob = "failed";
             });
     },
@@ -362,7 +374,18 @@ export const deleteJob = createAsyncThunk("jobs/deleteJob", async (params) => {
         url: `/jobs/${jobId}`,
         method: "DELETE",
     });
+    console.log(userId)
     return userId;
+});
+
+export const deleteAJob = createAsyncThunk("jobs/deleteAJob", async (params) => {
+    const { jobId } = params;
+    const response = await axios({
+        url: `/jobs/${jobId}`,
+        method: "DELETE",
+    });
+    console.log(userId)
+    return jobId;
 });
 
 export const applyJob = createAsyncThunk(

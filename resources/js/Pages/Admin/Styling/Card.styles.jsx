@@ -22,7 +22,7 @@ export const CardContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 10px;
-  color: ${({ darkMode }) => (darkMode ? '#fff' : 'black')};
+  color: ${({ darkMode }) => (darkMode ? 'white' : 'black')};
   animation: ${fadeIn} 0.8s ease-in-out;
   background-color: ${({ darkMode }) => (darkMode ? '#2C2C2C' : '#fff')};
   border: 1px solid #ddd;
@@ -87,6 +87,7 @@ export const Input = styled.input`
   padding: 5px;
   border: 1px solid #ccc;
   width: 100%;
+  color: ${({ darkMode }) => (darkMode ? 'black' : 'black')};
   border-radius: 4px;
   font-size: ${({ fontSize }) => calculateFontSize(10, fontSize)};
   @media (max-width: 768px) {

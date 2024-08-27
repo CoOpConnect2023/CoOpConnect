@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateUserProfile, getAllUsers } from '@/Features/users/userSlice';
+import { putCourse } from '@/Features/courses/coursesSlice';
 import { Description } from '@/Pages/SignUp/EmployerSignUp';
 import { CardContainer, CardInfo, Avatar, InfoText, CardActions, Button, Input } from '../Styling/Card.styles';
+
 import styled from 'styled-components';
 
 
@@ -33,32 +35,22 @@ const ModalButton = styled(Button)`
     margin: 0 10px;
 `;
 
-const Card = ({
-    name,
-    classroom,
-    email,
-    id,
-    profileImage,
-    schoolId,
-    status,
-    onViewClick,
-    onDeleteClick,
-    onEditSave,
-    role,
-    emailVerified,
-    description,
-    rememberToken,
-    company,
-    positiontitle,
-    fontSize,
-    darkMode
-}) => {
+
+
+
+const JobsCardComponent = ({ name, email, id, profileImage, schoolId, status, onViewClick, onDeleteClick, role, emailVerified, description, rememberToken, company, positiontitle, fontSize, darkMode, principal, phone, location, startDate, endDate, teacherID, jobTitle, userID, jobType, postingStatus, skills, title, jobCompany }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+
+    // State variables for each editable field
     const [editName, setEditName] = useState(name);
-    const [editEmail, setEditEmail] = useState(email);
-    const [editStatus, setEditStatus] = useState(status);
-    const [editVerified, setEditVerified] = useState(parseDateTime(emailVerified));
+    const [editStartDate, setEditStartDate] = useState(startDate);
+    const [editEndDate, setEditEndDate] = useState(endDate);
+    const [editTeacherID, setEditTeacherID] = useState(teacherID);
+    const [editStudentId, setEditStudentId] = useState(schoolId);
+
+
+
     const dispatch = useDispatch();
 
     const handleViewClick = () => {
@@ -72,92 +64,80 @@ const Card = ({
     const confirmDelete = () => {
         onDeleteClick(id); // Pass the user id to delete to the parent component
         setShowDeleteConfirmation(false);
+        console.log(id)
     };
 
     const cancelDelete = () => {
         setShowDeleteConfirmation(false);
     };
 
+
     const handleEditClick = () => {
         setIsEditing(true);
     };
 
     const handleSaveClick = () => {
+
         dispatch(
-            updateUserProfile({
-                id,
+            putCourse({
+                courseId: id,
                 name: editName,
-                email: editEmail,
-                status: editStatus,
-                role,
-                school_id: schoolId,
-                profile_image: profileImage,
-                company_name: company,
-                positiontitle,
-                description,
-                email_verified_at: unparseDateTime(editVerified),
-                remember_token: rememberToken
+                startDate: editStartDate,
+                endDate: editEndDate,
+                teacherID: editTeacherID,
+                schoolID: editStudentId
+
+
+
             })
         );
         setIsEditing(false);
-        dispatch(getAllUsers());
     };
 
     const handleCancelEdit = () => {
         setIsEditing(false);
+        // Revert changes by resetting state variables to original values
         setEditName(name);
-        setEditEmail(email);
-        setEditStatus(status);
-        setEditVerified(emailVerified)
+        setEditEndDate(endDate);
+        setEditStartDate(startDate);
+        setEditStudentId(schoolId);
+        setEditTeacherID(teacherID);
+
+
+
+
+
+
     };
-
-    function parseDateTime(datetimeString) {
-        const date = new Date(datetimeString);
-        const year = date.getFullYear();
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const day = date.getDate().toString().padStart(2, '0');
-        const hours = date.getHours().toString().padStart(2, '0');
-        const minutes = date.getMinutes().toString().padStart(2, '0');
-        const seconds = date.getSeconds().toString().padStart(2, '0');
-
-        const formattedDate = `${year}-${month}-${day}`;
-        const formattedTime = `${hours}:${minutes}:${seconds}`;
-
-        return `${formattedDate} ${formattedTime}`;
-    }
-
-
-    function unparseDateTime(dateString) {
-        const [datePart, timePart] = dateString.split(' ');
-        const [year, month, day] = datePart.split('-');
-        const [hours, minutes, seconds] = timePart.split(':');
-
-        const date = new Date(year, month - 1, day, hours, minutes, seconds);
-
-
-        return date.toISOString();
-    }
 
     return (
         <>
             <CardContainer fontSize={fontSize} darkMode={darkMode} data-testid={`user-card-${email}`}>
                 <CardInfo fontSize={fontSize} darkMode={darkMode}>
-                    <Avatar fontSize={fontSize} darkMode={darkMode} src={profileImage} alt={`${name}'s avatar`} />
                     {isEditing ? (
                         <InfoText fontSize={fontSize} darkMode={darkMode}>
                             <Input fontSize={fontSize} darkMode={darkMode} type="text" value={editName} onChange={(e) => setEditName(e.target.value)} />
-                            <Input fontSize={fontSize} darkMode={darkMode} type="text" value={editEmail} onChange={(e) => setEditEmail(e.target.value)} />
-                            <Input fontSize={fontSize} darkMode={darkMode} type="text" value={editStatus} onChange={(e) => setEditStatus(e.target.value)} />
-                            <Input fontSize={fontSize} darkMode={darkMode} type="text" value={editVerified} onChange={(e) => setEditVerified(e.target.value)} />
+
+                            <Input fontSize={fontSize} darkMode={darkMode} type="text" value={editStudentId} onChange={(e) => setEditStudentId(e.target.value)} />
+                            <Input fontSize={fontSize} darkMode={darkMode} type="text" value={editTeacherID} onChange={(e) => setEditTeacherID(e.target.value)} />
+                            <Input fontSize={fontSize} darkMode={darkMode} type="text" value={editStartDate} onChange={(e) => setEditStartDate(e.target.value)} />
+                            <Input fontSize={fontSize} darkMode={darkMode} type="text" value={editEndDate} onChange={(e) => setEditEndDate(e.target.value)} />
+
+
+
+
                         </InfoText>
                     ) : (
                         <InfoText fontSize={fontSize} darkMode={darkMode}>
-                            <p>Name: {name}</p>
-                            <p>School-ID: {schoolId}</p>
-                            <p>Current Status: {status}</p>
-                            <p>Email: {email}</p>
-                            <p>Verified: {parseDateTime(emailVerified)}</p>
-                            <p>User-ID: {id}</p>
+                            {jobTitle && <p>Title: {jobTitle}</p>}
+                            {id && <p>Job-ID: {id}</p>}
+                            {userID && <p>User-ID: {userID}</p>}
+                            {jobType && <p>Type: {jobType}</p>}
+                            {location && <p>Location: {location}</p>}
+                            {postingStatus && <p>Post Status: {postingStatus}</p>}
+                            {description && <p>Description: {description}</p>}
+                            {skills && <p>Skills: {skills.join(', ')}</p>}
+                            {jobCompany && <p>Company: {jobCompany}</p>}
                         </InfoText>
                     )}
                 </CardInfo>
@@ -188,4 +168,4 @@ const Card = ({
     );
 };
 
-export default Card;
+export default JobsCardComponent;

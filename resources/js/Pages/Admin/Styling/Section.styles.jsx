@@ -35,7 +35,7 @@ export const SchoolSearchInput = styled.input`
 export const SectionTitle = styled.h2`
   color: ${({ darkMode }) => (darkMode ? '#B6A1E5' : '#6E3AA7')};
   margin-bottom: 10px;
-  font-size: ${({ fontSize, basePixelSize }) => calculateFontSize(basePixelSize || 16, fontSize || '1em')};
+  font-size: ${({ fontSize, basePixelSize }) => calculateFontSize(basePixelSize || 24, fontSize || '1em')};
 `;
 
 export const SectionContent = styled.div`

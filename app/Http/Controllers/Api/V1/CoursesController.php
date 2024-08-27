@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Filters\V1\CoursesFilter;
 use Illuminate\Support\Facades\Log;
 
+
 class CoursesController extends Controller
 {
     /**

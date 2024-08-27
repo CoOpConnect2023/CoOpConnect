@@ -5,6 +5,37 @@ import { putCourse } from '@/Features/courses/coursesSlice';
 import { Description } from '@/Pages/SignUp/EmployerSignUp';
 import { CardContainer, CardInfo, Avatar, InfoText, CardActions, Button, Input } from '../Styling/Card.styles';
 
+import styled from 'styled-components';
+
+
+
+
+const ConfirmModal = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`;
+
+const ModalContent = styled.div`
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+`;
+
+const ModalButton = styled(Button)`
+    margin: 0 10px;
+`;
+
+
 
 
 const CoursesCardComponent = ({ name, email, id, profileImage, schoolId, status, onViewClick, onDeleteClick, role, emailVerified, description, rememberToken, company, positiontitle, fontSize, darkMode, principal, phone, location, startDate, endDate, teacherID }) => {
@@ -27,15 +58,11 @@ const CoursesCardComponent = ({ name, email, id, profileImage, schoolId, status,
     };
 
     const handleDeleteClick = () => {
-        onDeleteClick();
-    };
-
-    const beginDelete = () => {
         setShowDeleteConfirmation(true);
     };
 
     const confirmDelete = () => {
-        onDeleteClick(id); // Pass the school id to delete to the parent component
+        onDeleteClick(id); // Pass the user id to delete to the parent component
         setShowDeleteConfirmation(false);
     };
 
@@ -43,19 +70,13 @@ const CoursesCardComponent = ({ name, email, id, profileImage, schoolId, status,
         setShowDeleteConfirmation(false);
     };
 
+
     const handleEditClick = () => {
         setIsEditing(true);
     };
 
     const handleSaveClick = () => {
-        console.log("Saving course with the following details:", {
-            courseId: id,
-            name: editName,
-            startDate: editStartDate,
-            endDate: editEndDate,
-            teacherID: teacherID,
-            schoolId: schoolId
-        });
+       
         dispatch(
             putCourse({
                 courseId: id,
@@ -89,6 +110,7 @@ const CoursesCardComponent = ({ name, email, id, profileImage, schoolId, status,
     };
 
     return (
+        <>
         <CardContainer fontSize={fontSize} darkMode={darkMode} data-testid={`user-card-${email}`}>
             <CardInfo fontSize={fontSize} darkMode={darkMode}>
                 {isEditing ? (
@@ -131,6 +153,17 @@ const CoursesCardComponent = ({ name, email, id, profileImage, schoolId, status,
                 <Button fontSize={fontSize} darkMode={darkMode} data-testid={`delete-button-${email}`} onClick={handleDeleteClick}>Delete</Button>
             </CardActions>
         </CardContainer>
+
+        {showDeleteConfirmation && (
+            <ConfirmModal>
+                <ModalContent>
+                    <p>Are you sure you want to delete {name}?</p>
+                    <ModalButton fontSize={fontSize} darkMode={darkMode} onClick={confirmDelete}>Yes</ModalButton>
+                    <ModalButton fontSize={fontSize} darkMode={darkMode} onClick={cancelDelete}>No</ModalButton>
+                </ModalContent>
+            </ConfirmModal>
+        )}
+        </>
     );
 };
 

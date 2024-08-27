@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\School;
 use App\Models\Courses;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
+use App\Models\Jobs;
 use App\Imports\UsersImport;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
@@ -230,53 +233,30 @@ public function deleteUser(Request $request, $id)
     {
         $usersData = $request->input('users');
         $schoolsData = $request->input('schools');
+        $coursesData = $request->input('courses');
+        $jobsData = $request->input('jobs');
 
-
-
-
-        if (empty($usersData) && empty($schoolsData)) {
-            return response()->json(['message' => 'No users or schools data received'], 400);
+        if (empty($usersData) && empty($schoolsData) && empty($coursesData)) {
+            return response()->json(['message' => 'No users, schools, or courses data received'], 400);
         }
 
         try {
+            DB::beginTransaction();
+
             $createdUsers = [];
+            $createdSchools = [];
 
-            // Handle users data
-            if (!empty($usersData)) {
-                foreach ($usersData as $userData) {
-
-
-                    $validator = validator()->make($userData, [
-                        'name' => 'required|string',
-                        'email' => 'required|email|unique:users,email',
-                        'class' => 'required|string',
-                        'password' => 'required|string|min:6',
-                        'role' => 'required|string',
-                    ]);
-
-                    if ($validator->fails()) {
-
-
-
-                        // Stop the process and return the errors
-                        return response()->json(['message' => 'Validation failed for users', 'errors' => $validator->errors()], 400);
-                    }
-
-                    // Create user
-                    $user = User::create($userData);
-                    $createdUsers[] = $user;
-
-
-
-                }
-            }
-
-            // Handle schools data (no change from your original code)
+            // Handle schools data and store created schools
             if (!empty($schoolsData)) {
                 foreach ($schoolsData as $schoolData) {
+                    $existingSchool = School::where('name', $schoolData['name'])->first();
+                    if ($existingSchool) {
+                        // Skip creating the school and store the reference
+                        $createdSchools[$existingSchool->name] = $existingSchool->id;
+                        continue;  // Continue to the next school
+                    }
 
-
-                    $validator = validator()->make($schoolData, [
+                    $validator = Validator::make($schoolData, [
                         'name' => 'required|string|unique:schools,name',
                         'location' => 'required|string',
                         'description' => 'nullable|string',
@@ -286,25 +266,205 @@ public function deleteUser(Request $request, $id)
                     ]);
 
                     if ($validator->fails()) {
-
-                        return response()->json(['message' => 'Validation failed for schools', 'errors' => $validator->errors()], 400);
+                        continue;  // Skip creating the school if validation fails
                     }
 
-                    // Create school
-                    School::create($schoolData);
+                    // Create school and store the reference
+                    $school = School::create($schoolData);
+                    $createdSchools[$school->name] = $school->id; // Store the school ID by name
                 }
             }
+
+            // Handle users data after schools are created
+            if (!empty($usersData)) {
+                foreach ($usersData as $userData) {
+                    $existingUser = User::where('email', $userData['email'])->first();
+                    if ($existingUser) {
+                        continue;  // Skip creating the user if they already exist
+                    }
+
+                    $schoolId = null;
+
+                    // Check if school_id is provided and valid
+                    if (isset($userData['school_id']) && School::where('id', $userData['school_id'])->exists()) {
+                        $schoolId = $userData['school_id'];
+                    }
+                    // If school_name is provided, find or create the school by name
+                    elseif (isset($userData['school_name'])) {
+                        if (isset($createdSchools[$userData['school_name']])) {
+                            $schoolId = $createdSchools[$userData['school_name']];
+                        } else {
+                            $existingSchool = School::where('name', $userData['school_name'])->first();
+                            if ($existingSchool) {
+                                $schoolId = $existingSchool->id;
+                            } else {
+                                // Optionally, create the school here if it doesn't exist
+                                // $school = School::create([...]);
+                                // $schoolId = $school->id;
+                                continue;  // Skip creating the user if school is not found
+                            }
+                        }
+                    }
+
+                    // Set the school_id to the correct value
+                    $userData['school_id'] = $schoolId;
+
+                    $validator = Validator::make($userData, [
+                        'name' => 'required|string',
+                        'email' => 'required|email|unique:users,email',
+                        'class' => 'required|string',
+                        'password' => 'required|string|min:6',
+                        'role' => 'required|string',
+                        'school_id' => 'nullable|exists:schools,id',
+                    ]);
+
+                    if ($validator->fails()) {
+                        continue;  // Skip creating the user if validation fails
+                    }
+
+                    // Create user
+                    $user = User::create($userData);
+                    $createdUsers[] = $user;
+                }
+            }
+
+            // Handle courses data
+            if (!empty($coursesData)) {
+                foreach ($coursesData as $courseData) {
+                    $existingCourse = Courses::where('name', $courseData['name'])->first();
+                    if ($existingCourse) {
+                        continue;  // Skip creating the course if it already exists
+                    }
+
+                    $schoolId = null;
+
+                    // Check if school_id is provided and valid
+                    if (isset($courseData['school_id']) && School::where('id', $courseData['school_id'])->exists()) {
+                        $schoolId = $courseData['school_id'];
+                    }
+                    // If school_name is provided, find or create the school by name
+                    elseif (isset($courseData['school_name'])) {
+                        if (isset($createdSchools[$courseData['school_name']])) {
+                            $schoolId = $createdSchools[$courseData['school_name']];
+                        } else {
+                            $existingSchool = School::where('name', $courseData['school_name'])->first();
+                            if ($existingSchool) {
+                                $schoolId = $existingSchool->id;
+                            } else {
+                                continue;  // Skip creating the course if school is not found
+                            }
+                        }
+                    } else {
+                        continue;  // Skip creating the course if school_id or name is not provided
+                    }
+
+                    // Set the school_id to the correct value
+                    $courseData['school_id'] = $schoolId;
+
+                    // Ensure either teacher_id or teacher_name is provided
+                    if (isset($courseData['teacher_id']) && User::where('id', $courseData['teacher_id'])->exists()) {
+                        $teacherId = $courseData['teacher_id'];
+                    } elseif (isset($courseData['teacher_name'])) {
+                        $teacher = User::where('name', $courseData['teacher_name'])->first();
+                        if ($teacher) {
+                            $teacherId = $teacher->id;
+                        } else {
+                            continue;  // Skip creating the course if teacher is not found
+                        }
+                    } else {
+                        continue;  // Skip creating the course if teacher ID or name is not provided
+                    }
+
+                    // Set the teacher_id to the correct value
+                    $courseData['teacher_id'] = $teacherId;
+
+                    $validator = Validator::make($courseData, [
+                        'name' => 'required|string|unique:courses,name',
+                        'description' => 'nullable|string',
+                        'start_date' => 'required|date',
+                        'end_date' => 'required|date|after_or_equal:start_date',
+                        'school_id' => 'required|exists:schools,id',
+                        'teacher_id' => 'required|exists:users,id',
+                    ]);
+
+                    if ($validator->fails()) {
+                        continue;  // Skip creating the course if validation fails
+                    }
+
+                    // Create course
+                    Courses::create($courseData);
+                }
+
+                  // Handle jobs data
+                  if (!empty($jobsData)) {
+                    foreach ($jobsData as $jobData) {
+                        Log::info('Processing job data:', $jobData); // Log the incoming job data
+
+                        // Convert the skills field from a string to an array if necessary
+        if (isset($jobData['skills']) && is_string($jobData['skills'])) {
+            // Remove the brackets and split the string by commas
+            $jobData['skills'] = explode(',', str_replace(['[', ']', "'"], '', $jobData['skills']));
+            // Trim any extra whitespace from each skill
+            $jobData['skills'] = array_map('trim', $jobData['skills']);
+        }
+
+        Log::info('Parsed skills:', ['skills' => $jobData['skills']]); // Log the parsed skills
+
+        // Check if a job with the same title and company already exists
+        $existingJob = Jobs::where('title', $jobData['title'])
+            ->where('company', $jobData['company'])
+            ->first();
+
+        if ($existingJob) {
+            Log::info('Skipping job creation, job already exists with title and company:', [
+                'title' => $jobData['title'],
+                'company' => $jobData['company']
+            ]);
+            continue;  // Skip creating the job if it already exists with the same title and company
+        }
+
+        // Log before validation
+        Log::info('Validating job data:', $jobData);
+
+        $validator = Validator::make($jobData, [
+            'title' => 'required|string',
+            'description' => 'required|string',
+            'skills' => 'required|array',  // Ensure this is required as per the store request
+            'location' => 'required|string',
+            'posting_status' => ['required', Rule::in(['Open', 'Closed'])],
+            'job_type' => 'required|string',
+            'company' => 'required|string',
+            'user_id' => 'required|exists:users,id',
+        ]);
+
+        if ($validator->fails()) {
+            Log::error('Job validation failed:', $validator->errors()->toArray());
+            continue;  // Skip creating the job if validation fails
+        }
+
+        // Log before creating the job
+        Log::info('Creating job with data:', $jobData);
+
+        // Create the job
+        Jobs::create($jobData);
+
+        Log::info('Job created successfully:', $jobData);
+    }
+
+                }
+            }
+
+            DB::commit();
 
             // Send welcome emails
             foreach ($createdUsers as $user) {
                 Mail::to($user->email)->send(new WelcomeEmail($user));
-
             }
 
-            return response()->json(['message' => 'Users and schools created successfully'], 201);
+            return response()->json(['message' => 'Users, schools, and courses processed successfully'], 201);
         } catch (\Exception $e) {
-
-            return response()->json(['message' => 'Failed to create users or schools', 'error' => $e->getMessage()], 500);
+            DB::rollBack();
+            return response()->json(['message' => 'Failed to process users, schools, or courses', 'error' => $e->getMessage()], 500);
         }
     }
 

@@ -24,7 +24,7 @@ class StoreReflectionsRequest extends FormRequest
         return [
             'content' => ['required', 'string'],
             'user_id' => ['required', 'exists:users,id'],
-            'jobs_id' => ['required', 'exists:jobs,id'],
+            'jobs_id' => ['nullable', 'exists:jobs,id'],
         ];
     }
 

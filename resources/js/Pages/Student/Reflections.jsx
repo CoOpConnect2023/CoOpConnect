@@ -96,7 +96,7 @@ function Reflections() {
             postReflection({
                 userId: userId,
                 content: reflectionContent,
-                jobsId: 4,
+                jobsId: null,
                 createdAt: currentDate,
                 updatedAt: currentDate,
             })

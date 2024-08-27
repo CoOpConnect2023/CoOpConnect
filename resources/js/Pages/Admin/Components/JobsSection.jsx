@@ -1,5 +1,5 @@
 import React from 'react';
-import SchoolCardComponent from './SchoolCard';
+import JobsCardComponent from './JobsCard';
 import StatusChart from './StatusChart';
 import { useState, useEffect } from "react";
 import UserModal from './ViewUserModal';
@@ -8,7 +8,7 @@ import { SectionContainer, SectionTitle, SectionContent, CardList, SchoolSearchI
 
 
 
-const SchoolSectionComponent = ({ title, percentages, users, handleDeleteUser, fontSize, darkMode }) => {
+const JobsSectionComponent = ({ title, percentages, users, handleDeleteUser, fontSize, darkMode, }) => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -28,11 +28,14 @@ const SchoolSectionComponent = ({ title, percentages, users, handleDeleteUser, f
 
     // Filter users based on the search query
     const filteredUsers = users?.filter(user =>
-        user?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user?.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user?.location?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user?.principalName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user?.id?.toString().includes(searchQuery)
+        user?.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user?.company?.toString().includes(searchQuery.toLowerCase()) ||
+        user?.location?.toString().includes(searchQuery.toLowerCase()) ||
+        user?.jobType?.toString().includes(searchQuery.toLowerCase()) ||
+        user?.skills?.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        user?.id?.toString().includes(searchQuery.toLowerCase()) ||
+        user?.userId?.toString().includes(searchQuery.toLowerCase())
+
     );
 
     return (
@@ -42,31 +45,40 @@ const SchoolSectionComponent = ({ title, percentages, users, handleDeleteUser, f
                 fontSize={fontSize}
                 darkMode={darkMode}
                 type="text"
-                placeholder="Search schools..."
+                placeholder="Search Courses..."
                 value={searchQuery}
                 onChange={handleSearchChange}
             />
             <SectionContent fontSize={fontSize} darkMode={darkMode}>
                 <CardList fontSize={fontSize} darkMode={darkMode}>
                     {filteredUsers && filteredUsers.map(user => (
-                        <SchoolCardComponent
+                        <JobsCardComponent
                             fontSize={fontSize}
                             darkMode={darkMode}
                             key={user.id}
                             name={user.name}
                             classroom={user.class}
+                            startDate={user.startDate}
+                            endDate={user.endDate}
+                            teacherID={user.teacherID}
                             email={user.contactEmail}
                             phone={user.contactPhone}
                             id={user.id}
-                            schoolId={user.id}
+                            userID={user.userId}
+                            schoolId={user.schoolID}
                             rememberToken={user.remember_token}
                             principal={user.principalName}
                             location={user.location}
                             emailVerified={user.email_verified_at}
                             role={user.role}
+                            postingStatus={user.postingStatus}
                             description={user.description}
                             company={user.company_name}
                             positiontitle={user.positiontitle}
+                            jobTitle={user.title}
+                            jobCompany={user.company}
+                            jobType={user.jobType}
+                            skills={user.skills}
                             created={user.created_at}
                             updated={user.updated_at}
                             onViewClick={() => openModal(user)}
@@ -86,4 +98,4 @@ const SchoolSectionComponent = ({ title, percentages, users, handleDeleteUser, f
     );
 };
 
-export default SchoolSectionComponent;
+export default JobsSectionComponent;

@@ -6,6 +6,8 @@ import styled from 'styled-components';
 const appUrl = import.meta.env.VITE_APP_URL;
 import { getAllUsers } from '@/Features/users/userSlice';
 import { getSchools } from '@/Features/schools/schoolsSlice';
+import { getCourses } from '@/Features/courses/coursesSlice';
+import { getJobs } from '@/Features/jobs/jobsSlice';
 
 const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
     const em = parseFloat(emValue);
@@ -106,6 +108,8 @@ const SuccessMessage = styled.div`
 const UploadUsers = ({ fontSize, darkMode }) => {
     const [users, setUsers] = useState([]);
     const [schools, setSchools] = useState([]);
+    const [courses, setCourses] = useState([]);
+    const [jobs, setJobs] = useState([]);
     const [file, setFile] = useState(null);
     const [successMessage, setSuccessMessage] = useState(false);
     const dispatch = useDispatch();
@@ -134,11 +138,14 @@ const UploadUsers = ({ fontSize, darkMode }) => {
                 // Assign data based on sheet name
                 if (sheetName.toLowerCase().includes("users")) {
                     setUsers(parsedData);
-
                 } else if (sheetName.toLowerCase().includes("schools")) {
                     setSchools(parsedData);
-
-                }
+                } else if (sheetName.toLowerCase().includes("courses")) {
+                    setCourses(parsedData);
+                } else if (sheetName.toLowerCase().includes("jobs")) {
+                setJobs(parsedData);
+                console.log(parsedData)
+            }
             });
         };
         reader.readAsArrayBuffer(file);
@@ -148,21 +155,24 @@ const UploadUsers = ({ fontSize, darkMode }) => {
         setFile(null);
         setUsers([]);
         setSchools([]);
+        setCourses([]);
+        setJobs([]);
         document.getElementById('fileInput').value = null;
     };
 
     const uploadFile = () => {
-        if (users.length === 0 && schools.length === 0) {
+        if (users.length === 0 && schools.length === 0 && courses.length === 0 && jobs.length === 0) {
             alert('No data to upload');
             return;
         }
-        axios.post(`${appUrl}/api/upload-users`, { users, schools })
+        axios.post(`${appUrl}/api/upload-users`, { users, schools, courses, jobs })
             .then(response => {
 
                 clearFile();
                 dispatch(getAllUsers());
                 dispatch(getSchools())
-
+                dispatch(getCourses())
+                dispatch(getJobs())
                 setSuccessMessage(true);
                 setTimeout(() => setSuccessMessage(false), 3000);
             })
