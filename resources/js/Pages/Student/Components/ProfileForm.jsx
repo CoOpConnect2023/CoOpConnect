@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import { useDropzone } from 'react-dropzone';
-import { spin, ProfileWrapper, ProfileHeader, ProfileSection, ProfileContainer, ProfileImageWrapper, ProfileImage, ProfileBio, BioHeader, ProfileDetail, ProfileDetailItem, DetailLabel, DetailValue, EditProfileButton, ClearProfileButton, DropzoneContainer, SkillsContainer, SkillChip, AddSkillButton, LoadingScreen, Spinner, AutocompleteList, AutocompleteItem, BioValue, ProfileDetailOne, ProfileDetailTwo } from "../Styling/ProfileForm.styles";
+import { spin, ProfileWrapper, ProfileHeader, ProfileSection, ProfileContainer, ProfileImageWrapper, ProfileImage, ProfileBio, BioHeader, ProfileDetail, ProfileDetailItem, DetailLabel, DetailValue, EditProfileButton, ClearProfileButton, DropzoneContainer, SkillsContainer, SkillChip, AddSkillButton, LoadingScreen, Spinner, AutocompleteList, AutocompleteItem, BioValue, ProfileDetailOne, ProfileDetailTwo, StatusRadioButton, StatusContainer, StatusLabel } from "../Styling/ProfileForm.styles";
 import { useSelector, useDispatch } from "react-redux";
 import {
 
@@ -35,7 +35,30 @@ const ProfileForm = ({fontSize, darkMode}) => {
     const [courses, setCourses] = useState([]);
     const [filteredCourses, setFilteredCourses] = useState([]);
     const [courseQuery, setCourseQuery] = useState("");
+    const [status, setStatus] = useState({
+        searching: false,
+        interviewing: false,
+        working: false,
+    });
 
+
+
+
+const handleStatusChange = (e) => {
+    const { name } = e.target;
+    setStatus((prevStatus) => ({
+        searching: name === "searching" ? 1 : 0,
+        interviewing: name === "interviewing" ? 1 : 0,
+        working: name === "working" ? 1 : 0,
+    }));
+
+    setUser((prevData) => ({
+        ...prevData,
+        searching: name === "searching" ? 1 : 0,
+        interviewing: name === "interviewing" ? 1 : 0,
+        working: name === "working" ? 1 : 0,
+    }));
+};
 
     useEffect(() => {
       const fetchUserData = async () => {
@@ -55,6 +78,12 @@ const ProfileForm = ({fontSize, darkMode}) => {
           }
 
           setUser(userData);
+
+          setStatus({
+            searching: !!userData.searching,
+            interviewing: !!userData.interviewing,
+            working: !!userData.working,
+        });
 
           // Fetch available courses for autocomplete
           const coursesResponse = await axios.get(
@@ -80,14 +109,13 @@ const ProfileForm = ({fontSize, darkMode}) => {
     }, []);
 
     const handleCourseSelect = (course) => {
-      setUser((prevData) => ({
-        ...prevData,
-        courses: [...prevData.courses, course],
-        newCourse: "", // Clear input field after selection
-      }));
-      setFilteredCourses([]); // Clear filtered courses
-    };
-
+        setUser((prevData) => ({
+          ...prevData,
+          courses: [...prevData.courses, course],
+        }));
+        setCourseQuery(""); // Clear the input field after selecting the course
+        setFilteredCourses([]); // Clear the filtered list
+      };
     const addCourse = (course) => {
 
 
@@ -96,6 +124,7 @@ const ProfileForm = ({fontSize, darkMode}) => {
         courses: [...prevData.courses, course.id],
         newCourse: "", // Clear input field after adding
       }));
+      setCourseQuery("");
     };
 
     const removeCourse = (index) => {
@@ -177,6 +206,9 @@ const ProfileForm = ({fontSize, darkMode}) => {
         formData.append("school_id", user.school_id);
         formData.append("positiontitle", user.positiontitle);
         formData.append("skills", JSON.stringify(user.skills));
+        formData.append("searching", user.searching);
+        formData.append("interviewing", user.interviewing);
+        formData.append("working", user.working);
 
         const coursesData = user.courses.map((course) => ({
           id: course.id,
@@ -394,6 +426,40 @@ const ProfileForm = ({fontSize, darkMode}) => {
 
           </SkillsContainer>
         </ProfileDetailItem>
+        <ProfileDetailItem fontSize={fontSize} darkMode={darkMode}>
+                        <DetailLabel fontSize={fontSize} darkMode={darkMode}>
+                            Current Status
+                        </DetailLabel>
+                        <StatusContainer fontSize={fontSize}>
+                            <StatusLabel fontSize={fontSize} darkMode={darkMode}>
+                                <StatusRadioButton
+                                    name="searching"
+                                    checked={status.searching}
+                                    onChange={handleStatusChange}
+                                    darkMode={darkMode}
+                                />
+                                Searching
+                            </StatusLabel>
+                            <StatusLabel fontSize={fontSize} darkMode={darkMode}>
+                                <StatusRadioButton
+                                    name="interviewing"
+                                    checked={status.interviewing}
+                                    onChange={handleStatusChange}
+                                    darkMode={darkMode}
+                                />
+                                Interviewing
+                            </StatusLabel>
+                            <StatusLabel fontSize={fontSize} darkMode={darkMode}>
+                                <StatusRadioButton
+                                    name="working"
+                                    checked={status.working}
+                                    onChange={handleStatusChange}
+                                    darkMode={darkMode}
+                                />
+                                Working
+                            </StatusLabel>
+                        </StatusContainer>
+                    </ProfileDetailItem>
         </ProfileDetailTwo>
       </ProfileDetail>
       <EditProfileButton fontSize={fontSize} darkMode={darkMode} onClick={handleSubmit}>Save Profile Changes</EditProfileButton>

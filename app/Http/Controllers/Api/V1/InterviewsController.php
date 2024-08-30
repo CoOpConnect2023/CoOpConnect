@@ -10,6 +10,9 @@ use App\Http\Resources\V1\InterviewsResource;
 use App\Http\Resources\V1\InterviewsCollection;
 use Illuminate\Http\Request;
 use App\Filters\V1\InterviewsFilter;
+use App\Mail\InterviewTimeChanged;
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 
 class InterviewsController extends Controller
 {
@@ -53,5 +56,24 @@ class InterviewsController extends Controller
     public function destroy(Interviews $interview)
     {
         $interview->delete();
+    }
+
+
+    public function sendInterviewTimeChanged(Request $request)
+    {
+
+        $validated = $request->validate([
+            'student_id' => 'required|exists:users,id',
+            'job_title' => 'required|string',
+            'new_time' => 'required|date',
+        ]);
+
+
+        $student = User::findOrFail($validated['student_id']);
+
+
+        Mail::to($student->email)->send(new InterviewTimeChanged($student, $validated['job_title'], $validated['new_time']));
+
+        return response()->json(['message' => 'Interview time update email sent successfully.']);
     }
 }

@@ -67,7 +67,7 @@ export const interviewsSlice = createSlice({
             .addCase(postInterview.fulfilled, (state, action) => {
                 state.postInterview = action.payload;
                 state.status.postInterview = "succeeded";
-               
+
             })
             .addCase(postInterview.rejected, (state, action) => {
                 state.status.postInterview = "failed";
@@ -254,6 +254,33 @@ export const deleteInterview = createAsyncThunk(
         return response.data.data;
     }
 );
+
+
+export const sendInterviewTimeChanged = createAsyncThunk(
+    "interviews/sendInterviewTimeChanged",
+    async (params) => {
+        const {
+            studentId,
+            jobTitle,
+            newTime,
+        } = params;
+
+        const response = await axios({
+            url: "/send-interview-time-changed",
+            method: "POST",
+            data: {
+                student_id: studentId,
+                job_title: jobTitle,
+                new_time: newTime,
+            },
+        });
+
+        return response.data.message;
+    }
+);
+
+
+
 
 export const selectInterviews = (state) => state.interviews;
 

@@ -126,7 +126,37 @@ class UserController extends Controller
         }
         $user->skills = $skills;
 
+        if ($request->input('searching') == 1) {
+            $user->searching = 1;
+            $user->interviewing = 0;
+            $user->working = 0;
+            $user->status = 'searching';
+        } elseif ($request->input('interviewing') == 1) {
+            $user->searching = 0;
+            $user->interviewing = 1;
+            $user->working = 0;
+            $user->status = 'interviewing';
+        } elseif ($request->input('working') == 1) {
+            $user->searching = 0;
+            $user->interviewing = 0;
+            $user->working = 1;
+            $user->status = 'working';
+        }
+
         $user->save();
+
+
+        if ($request->has('status')) {
+            $status = $request->input('status');
+
+            if (in_array($status, ['hiring', 'nothiring'])) {
+                $user->status = $status;
+                $user->save();
+                return response()->json(['message' => 'Status updated successfully', 'user' => $user]);
+            } else {
+                return response()->json(['error' => 'Invalid status'], 400);
+            }
+        }
 
 
         if ($request->has('courses')) {

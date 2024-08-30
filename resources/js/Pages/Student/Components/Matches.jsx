@@ -256,9 +256,9 @@ function Matches({ darkMode, fontSize }) {
             </JobCard>
           ))}
         </JobList>
-        <ScrollButton darkMode={darkMode} fontSize={fontSize} onClick={toggleScrolling}>
+        {/* <ScrollButton darkMode={darkMode} fontSize={fontSize} onClick={toggleScrolling}>
           {isScrolling ? 'Stop Scrolling' : 'Start Scrolling'}
-        </ScrollButton>
+        </ScrollButton> */}
         {selectedJob && <JobModal job={selectedJob} onClose={handleCloseModal} />}
       </JobContainer>
     );

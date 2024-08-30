@@ -29,6 +29,21 @@ const fadeIn = keyframes`
     }
 `;
 
+export const PurpleButton = styled.button`
+  background-color: #6E3AA7;
+  color: #fff;
+  border: none;
+  padding: 8px 15px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: ${({ fontSize }) => fontSize || '1em'};
+  margin-top: 10px;
+
+  &:hover {
+    background-color: #5b2a8b;
+  }
+`;
+
 export const MainContainer = styled.div`
     display: flex;
     flex-direction: column;

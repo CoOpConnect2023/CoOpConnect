@@ -42,11 +42,7 @@ export default function NewMessage({ newMessage, setNewMessage, brandNewMessage,
         return <div>Loading...</div>;
     }
 
-    useEffect(() => {
-        if (uniqueEmails.size > 0 && recipientEmail === '') {
-            setRecipientEmail([...uniqueEmails][0]);
-        }
-    }, [uniqueEmails]);
+  
 
     return (
         <Div4 darkMode={darkMode}
@@ -60,23 +56,14 @@ export default function NewMessage({ newMessage, setNewMessage, brandNewMessage,
                     <Div8 darkMode={darkMode}
                         fontSize={fontSize}>To: </Div8>
                     <Div9 darkMode={darkMode}
-                        fontSize={fontSize}>
-                        {hasUsers ? (
-                            <StyledSelect darkMode={darkMode}
-                                fontSize={fontSize} value={recipientEmail} onChange={handleSelectChange}>
-                                {[...uniqueEmails].map(email => (
-                                    <option key={email} value={email}>
-                                        {email}
-                                    </option>
-                                ))}
-                            </StyledSelect>
-                        ) : (
-                            <StyledMessage darkMode={darkMode}
-                                fontSize={fontSize}>
-                                Add some users to your course to message them.
-                            </StyledMessage>
-                        )}
-                    </Div9>
+        fontSize={fontSize}> <Input darkMode={darkMode}
+        fontSize={fontSize}
+                                type="email"
+                                placeholder="Enter recipient's email"
+                                value={recipientEmail}
+                                onChange={handleRecipientChange}
+                                data-testid="recipient-email-input"
+                            /></Div9>
                 </Div7>
             </Div6>
             <Div10>

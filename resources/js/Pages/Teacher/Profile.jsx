@@ -254,7 +254,7 @@ function Profile() {
                         onChange={(e) => setSpecialty(e.target.value)}
                     />
                     <EditProfileButton darkMode={darkMode} fontSize={fontSize} onClick={handleUpdateProfile}>
-                        Edit Profile
+                        Save Profile Changes
                     </EditProfileButton>
                     {showSuccessMessage && <SuccessMessage darkMode={darkMode} fontSize={fontSize}>Profile updated successfully!</SuccessMessage>}
                 </Section>

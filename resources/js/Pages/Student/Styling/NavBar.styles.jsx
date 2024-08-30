@@ -224,12 +224,7 @@ export const UserProfile = styled.div`
   position: relative;
   transition: transform 0.3s ease, opacity 0.3s ease;
 
-  // Apply slide-in animation when isOpen prop is true
-  ${(props) =>
-    css`
-      animation: ${slideInFromRight} 0.5s ease-out;
-    `}
-
+  
   @media (max-width: 991px) {
 justify-content: space-around;
 gap: none;

@@ -32,7 +32,10 @@ import {
     EditProfileButton,
     DetailValue,
     DropzoneContainer,
-    SuccessMessage
+    SuccessMessage,
+    StatusContainer,
+    StatusLabel,
+    StatusRadioButton
 } from "./Styling/Profile.styles";
 
 const appUrl = import.meta.env.VITE_APP_URL;
@@ -56,7 +59,7 @@ function Profile() {
     const fontSize = useSelector(state => state.accessibility.textSize);
     const dispatch = useDispatch();
     const user = useSelector(selectUser);
-
+const [userStatus, setUserStatus] = useState("");
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
     const [accountType, setAccountType] = useState("");
@@ -66,6 +69,14 @@ function Profile() {
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
     const [droppedImage, setDroppedImage] = useState(null);
     const [droppedFile, setDroppedFile] = useState(null);
+    const [status, setStatus] = useState({
+        searching: false,
+        interviewing: false,
+        working: false,
+        hiring: false,
+        nothiring: false,
+    });
+    console.log(user)
 
     const handleDrop = (acceptedFiles) => {
         if (acceptedFiles && acceptedFiles.length > 0) {
@@ -89,7 +100,16 @@ function Profile() {
             setDescription(user.description || "");
             setSpecialty(user.positiontitle || "");
             setCompany(user.company_name || "");
+            setUserStatus(user.status)
 
+            // Properly update the status object based on user.status
+            setStatus((prevStatus) => ({
+                searching: !!user.searching,
+                interviewing: !!user.interviewing,
+                working: !!user.working,
+                hiring: user.status === 'hiring',
+                nothiring: user.status === 'nothiring',
+            }));
 
             if (user.profile_image) {
                 setDroppedImage(user.profile_image);
@@ -97,8 +117,22 @@ function Profile() {
         }
     }, [user]);
 
+    const handleStatusChange = (e) => {
+        const { name } = e.target;
 
 
+        setStatus((prevStatus) => ({
+            searching: name === "searching" ? 1 : 0,
+            interviewing: name === "interviewing" ? 1 : 0,
+            working: name === "working" ? 1 : 0,
+            hiring: name === "hiring" ? 1 : 0,
+            nothiring: name === "nothiring" ? 1 : 0,
+        }));
+
+
+        setUserStatus(name);
+
+    };
 
 
     const handleUpdateProfile = async () => {
@@ -122,6 +156,8 @@ function Profile() {
             formData.append("school_id", null);
             formData.append("positiontitle", user.positiontitle);
             formData.append("company_name", user.company_name);
+            formData.append("status", userStatus);
+
 
             await axios.post(
                 `${appUrl}/api/update-profile/${user.id}`,
@@ -159,7 +195,7 @@ function Profile() {
 
     const handleClear = () => {
 
-        setDroppedImage(null)
+        setDroppedImage(null);
     };
 
     if (!user) {
@@ -173,7 +209,7 @@ function Profile() {
                     <Title fontSize={fontSize} darkMode={darkMode}>Employer Profile</Title>
                     <ProfileWrapper fontSize={fontSize} darkMode={darkMode}>
                         <ProfileDetails fontSize={fontSize} darkMode={darkMode}>
-                        <ProfileImageWrapper fontSize={fontSize} darkMode={darkMode}>
+                            <ProfileImageWrapper fontSize={fontSize} darkMode={darkMode}>
                                 {droppedImage ? (
                                     <ProfileImage fontSize={fontSize} darkMode={darkMode}
                                         loading="lazy"
@@ -231,8 +267,34 @@ function Profile() {
                         value={specialty}
                         onChange={(e) => setSpecialty(e.target.value)}
                     />
+                    <FieldTitle fontSize={fontSize} darkMode={darkMode}>
+                        Current Status
+                    </FieldTitle>
+                    <StatusContainer fontSize={fontSize}>
+
+                        <StatusLabel fontSize={fontSize} darkMode={darkMode}>
+                            <StatusRadioButton
+                                name="hiring"
+                                checked={status.hiring}
+                                onChange={handleStatusChange}
+                                darkMode={darkMode}
+                            />
+                            Hiring
+                        </StatusLabel>
+                        <StatusLabel fontSize={fontSize} darkMode={darkMode}>
+                            <StatusRadioButton
+                                name="nothiring"
+                                checked={status.nothiring}
+                                onChange={handleStatusChange}
+                                darkMode={darkMode}
+                            />
+                            Not Hiring
+                        </StatusLabel>
+                    </StatusContainer>
+
+
                     <EditProfileButton fontSize={fontSize} darkMode={darkMode} onClick={handleUpdateProfile}>
-                        Edit Profile
+                        Save Profile Changes
                     </EditProfileButton>
                     {showSuccessMessage && <SuccessMessage v>Profile updated successfully!</SuccessMessage>}
                 </Section>

@@ -5,6 +5,7 @@ const appUrl = import.meta.env.VITE_APP_URL;
 import styled, { keyframes } from "styled-components";
 import NavBar from "./Components/NavBar";
 import Modal from "../Profile/Partials/AddEventModal";
+import ConfirmModal from "../Profile/Partials/ConfirmStudentEventModal";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import { Calendar, momentLocalizer } from "react-big-calendar";
@@ -17,6 +18,7 @@ import {
     postInterview,
     selectInterviewsStatus,
     selectInterviews,
+    sendInterviewTimeChanged
 } from "@/Features/interviews/interviewsSlice";
 import { getUser, selectUser } from "@/Features/users/userSlice";
 import axios from "axios";
@@ -40,13 +42,15 @@ import {
     EventsContainer,
     EventsHeader,
     Event,
-    GlobalStyles
+    GlobalStyles,
+    PurpleButton
 
 
 } from "./Styling/Interviews.styles";
 
 const Interviews = () => {
     const [showModal, setShowModal] = useState(false);
+    const [showConfirmModal, setShowConfirmModal] =useState(false)
     const [selectedDate, setSelectedDate] = useState(null);
     const [events, setEvents] = useState([]);
     const user = useSelector(selectUser);
@@ -57,6 +61,7 @@ const Interviews = () => {
     const interviewsStatus = useSelector(selectInterviewsStatus);
     const darkMode = useSelector(state => state.accessibility.darkMode);
     const fontSize = useSelector(state => state.accessibility.textSize);
+    const [selectedEvent, setSelectedEvent] = useState(null);
 
     useEffect(() => {
         dispatch(getUser());
@@ -70,6 +75,35 @@ const Interviews = () => {
             })
         );
     }, [userId]);
+
+    const handlePurpleButtonClick = (event) => {
+        setShowConfirmModal(true);
+        setSelectedEvent(event)
+    };
+
+    const handleCloseConfirmModal = () => {
+        setShowConfirmModal(false);
+    };
+
+    const handleConfirm = () => {
+
+
+        dispatch(sendInterviewTimeChanged({
+            studentId: selectedEvent.intervieweeId,
+            jobTitle: selectedEvent.title,
+            newTime: moment(selectedEvent.start).format("YYYY-MM-DD HH:mm:ss"),
+        }))
+        .then(response => {
+            console.log('Confirmed action and email sent:', response);
+            console.log(selectedEvent.intervieweeId, selectedEvent.title, selectedEvent.start)
+        })
+        .catch(error => {
+            console.error("Failed to send email:", error);
+        })
+        .finally(() => {
+            setShowConfirmModal(false);
+        });
+    };
 
 
 
@@ -366,7 +400,7 @@ const Interviews = () => {
             <MainContainer darkMode={darkMode} fontSize={fontSize}>
                 <Container darkMode={darkMode} fontSize={fontSize}>
                     <Wrapper darkMode={darkMode} fontSize={fontSize}>
-                        
+
                         <CalendarDiv darkMode={darkMode} fontSize={fontSize}>
                             <DndProvider darkMode={darkMode} fontSize={fontSize} backend={HTML5Backend}>
                                 <DnDCalendar darkMode={darkMode} fontSize={fontSize}
@@ -426,6 +460,9 @@ const Interviews = () => {
                                     <div>
                                         End Date: {moment(event.end).format("YYYY-MM-DD HH:mm:ss")}
                                     </div>
+                                    <PurpleButton fontSize={fontSize} onClick={() => handlePurpleButtonClick(event)}>
+                                        Send Updated Interview Time
+                                    </PurpleButton>
                                 </Event>
                             ))
                         ) : (
@@ -440,6 +477,15 @@ const Interviews = () => {
                     onSubmit={handleAddEvent}
                     defaultDate={new Date(getTodayDate())}
                     applicants={shortlists.flatMap((shortlist) => shortlist.applicants)}
+                />
+
+            )}
+  {showConfirmModal && (
+                <ConfirmModal
+                    darkMode={darkMode}
+                    fontSize={fontSize}
+                    onClose={handleCloseConfirmModal}
+                    onConfirm={handleConfirm}
                 />
             )}
         </NavBar>

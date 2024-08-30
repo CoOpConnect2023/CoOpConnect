@@ -98,7 +98,11 @@ export default function Messages() {
     }, [dispatch, currentUser]);
 
 
-
+    useEffect(() => {
+        if (messages && messages.length > 0) {
+            dispatch(getConversations({ userId: currentUser }));
+        }
+    }, [messages, dispatch, currentUser]);
 
 
     if (userStatus === 'loading') {

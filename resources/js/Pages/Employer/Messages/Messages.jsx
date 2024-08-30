@@ -95,6 +95,12 @@ export default function Messages() {
         }
     }, [dispatch, currentUser]);
 
+    useEffect(() => {
+        if (messages && messages.length > 0) {
+            dispatch(getConversations({ userId: currentUser }));
+        }
+    }, [messages, dispatch, currentUser]);
+
 
     if (userStatus === 'loading') {
         return <LoadingScreen><Spinner /></LoadingScreen>;
@@ -166,7 +172,7 @@ const PageContainer = styled.div`
     display: flex;
     flex-direction: column;
     height: 100vh;
-    
+
 `;
 
 const ChatContainer = styled.div`

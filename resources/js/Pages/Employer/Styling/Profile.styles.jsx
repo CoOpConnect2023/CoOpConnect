@@ -345,3 +345,43 @@ export const SuccessMessage = styled.div`
     margin-top: 10px;
     font: 500 14px Poppins, sans-serif;
 `;
+
+
+
+export const StatusRadioButton = styled.input.attrs({ type: 'radio' })`
+    appearance: none;
+    border: 2px solid ${({ darkMode }) => (darkMode ? '#6b538c' : '#6b538c')};
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+
+    &:checked {
+        background-color: ${({ darkMode }) => (darkMode ? '#6b538c' : '#6b538c')};
+        border-color: ${({ darkMode }) => (darkMode ? '#6b538c' : '#6b538c')};
+    }
+
+    &:focus {
+        border-color: ${({ darkMode }) => (darkMode ? '#8e6aae' : '#8e6aae')};
+    }
+`;
+
+export const StatusLabel = styled.label`
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize, 1.5, 'rem')};
+    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#333')};
+    font-family: Poppins, sans-serif;
+    cursor: pointer;
+`;
+
+export const StatusContainer = styled.div`
+    display: flex;
+    gap: 16px;
+    margin-top: 10px;
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize, 1.5, 'rem')};
+`;

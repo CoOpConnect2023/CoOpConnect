@@ -45,6 +45,8 @@ php artisan migrate:fresh --seed
    npm run dev
    php artisan serve
 
+   npm run build will create the build 
+
 
 
 

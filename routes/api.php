@@ -168,6 +168,8 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
     Route::get('/myreflections', [ReflectionsController::class, 'showforuser']);
 
     Route::apiResource('interviews', InterviewsController::class);
+    Route::post('/send-interview-time-changed', [InterviewsController::class, 'sendInterviewTimeChanged']);
+
     Route::apiResource('applications', ApplicationController::class);
     Route::apiResource('shortlists', ShortListController::class);
 });
