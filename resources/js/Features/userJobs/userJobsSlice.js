@@ -184,6 +184,16 @@ export const userJobsSlice = createSlice({
             })
             .addCase(getInterviews.rejected, (state) => {
                 state.status.getInterviews = "failed";
+            })
+            .addCase(getUserJobsByUserId.pending, (state) => {
+                state.status.userJobs = "loading";
+            })
+            .addCase(getUserJobsByUserId.fulfilled, (state, action) => {
+                state.userJobs = action.payload;
+                state.status.userJobs = "succeeded";
+            })
+            .addCase(getUserJobsByUserId.rejected, (state) => {
+                state.status.userJobs = "failed";
             });
     },
 });
@@ -195,9 +205,48 @@ export const getUserJobs = createAsyncThunk(
             url: "/userjobs",
             method: "GET",
         });
+        console.log(response.data.data)
         return response.data.data;
     }
 );
+
+export const getUserJobsByUserId = createAsyncThunk(
+    "userJobs/getUserJobsByUserId",
+    async () => {
+        const response = await axios({
+            url: `/userjobs/owned`,
+            method: "GET",
+        });
+console.log(response.data)
+        return response.data;
+    }
+);
+
+
+export const editHiredStudent = createAsyncThunk(
+    "userJobs/editHiredStudent",
+    async (params) => {
+        const { userJobsId, email, jobTitle, startDate, endDate, status, timeSlots, message } = params;
+
+        // Send a PATCH request to update the hired student information and job title
+        const response = await axios({
+            url: `/userjobs/${userJobsId}/edit-hired-student`, // Specific route for this action
+            method: "PATCH",
+            data: {
+                email,       // Update the user email
+                job_title: jobTitle, // Update the job title
+                start_date: startDate,
+                end_date: endDate,
+                status,
+                time_slots: timeSlots, // Optional fields
+                message
+            },
+        });
+        return response.data.data;
+    }
+);
+
+
 
 export const getUserJob = createAsyncThunk(
     "userJobs/getUserJob",
@@ -214,9 +263,11 @@ export const getUserJob = createAsyncThunk(
 export const postUserJob = createAsyncThunk(
     "userJobs/postUserJob",
     async (params) => {
-        const { userId, jobsId, resume } = params;
-        const status = "Pending";
-        
+        // Destructure and set default status to "Pending" if it's not provided in params
+        const { userId, jobsId, resume, startDate, endDate, status = "Pending" } = params;
+
+        console.log("Posting user job with parameters:", { userId, jobsId, resume, startDate, endDate, status });
+
         const response = await axios({
             url: "/userjobs",
             method: "POST",
@@ -224,12 +275,19 @@ export const postUserJob = createAsyncThunk(
                 userId,
                 jobsId,
                 resume,
-                status,
+                status, // Use the provided status or the default "Pending"
+                startDate,
+                endDate
             },
         });
+
+        console.log("Response from posting user job:", response.data.data);
+
         return response.data.data;
     }
 );
+
+
 
 export const putUserJob = createAsyncThunk(
     "userJobs/putUserJob",

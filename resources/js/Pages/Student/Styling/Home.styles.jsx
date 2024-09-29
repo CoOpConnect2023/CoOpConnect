@@ -30,7 +30,8 @@ const fadeInLeft = keyframes`
 export const MainContainer = styled.main`
     display: flex;
     flex-direction: column;
-    height: 89vh;  /* Make sure it takes the full viewport height */
+    border-radius: 10px;
+    height: 87vh;  /* Make sure it takes the full viewport height */
     background: ${({ darkMode }) => (darkMode ? '#121212' : 'var(--Schemes-Background, #fff7ff)')};
     padding: 20px;
     animation: ${fadeIn} 0.8s ease-in-out;
@@ -56,7 +57,7 @@ export const SearchSection = styled.section`
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     padding: 20px;
     margin-top: 20px;
-    
+
     transition: box-shadow 0.3s ease, transform 0.3s ease;
 
     &:hover {

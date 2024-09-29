@@ -20,8 +20,8 @@ export const SectionContainer = styled.div`
 `;
 
 export const SchoolSearchInput = styled.input`
-  margin-bottom: 20px;
-  padding: 10px;
+
+  padding: 5px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
@@ -69,3 +69,11 @@ export const StatusContainer = styled.div`
     justify-content: flex-start;
   }
 `;
+
+export const SearchAndButtonContainer = styled.div`
+display: flex;
+width: 100%;
+flex-direction: row;
+gap: 10px;
+margin-bottom: 20px;
+`

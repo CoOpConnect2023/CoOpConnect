@@ -12,7 +12,6 @@ use App\Http\Resources\V1\UserJobsCollection;
 use Illuminate\Http\Request;
 use App\Filters\V1\UserJobsFilter;
 
-
 class UserJobsController extends Controller
 {
     /**
@@ -21,7 +20,7 @@ class UserJobsController extends Controller
     public function index(Request $request)
     {
         $filter = new UserJobsFilter();
-        $filterItems = $filter->transform($request);  //[['column,', 'operator', 'value']]
+        $filterItems = $filter->transform($request);
         return new UserJobsCollection(UserJobs::where($filterItems)->get());
     }
 
@@ -30,7 +29,9 @@ class UserJobsController extends Controller
      */
     public function store(StoreUserJobsRequest $request)
     {
-        return new UserJobsResource(UserJobs::create($request->all()));
+        $userJob = UserJobs::create($request->all());
+
+        return new UserJobsResource($userJob);
     }
 
     /**
@@ -61,7 +62,6 @@ class UserJobsController extends Controller
 
     public function getUserDetails($jobsId)
     {
-
         $userJobs = UserJobs::where('jobs_id', $jobsId)->get();
 
         $users = $userJobs->map(function ($userJob) {
@@ -72,6 +72,8 @@ class UserJobsController extends Controller
                 'resume' => $userJob->resume,
                 'status' => $userJob->status,
                 'timeSlots' => $userJob->time_slots,
+                'startDate' => $userJob->start_date,
+                'endDate' => $userJob->end_date,
                 'userId' => $userJob->user_id,
             ];
         });
@@ -81,35 +83,29 @@ class UserJobsController extends Controller
 
     public function getSingleUserDetails($userJobsId)
     {
-        // Retrieve the UserJobs record based on the provided userJobs ID
         $userJob = UserJobs::find($userJobsId);
 
         if (!$userJob) {
             return response()->json(['error' => 'User job not found'], 404);
         }
 
-        // Prepare the user details
         $userDetails = [
             'id' => $userJob->user->id,
             'name' => $userJob->user->name,
             'email' => $userJob->user->email,
             'resume' => $userJob->resume,
             'status' => $userJob->status,
+            'startDate' => $userJob->start_date,
+            'endDate' => $userJob->end_date,
         ];
 
-        // Return the user details as JSON
         return response()->json($userDetails);
     }
 
     public function getJobsDetails()
     {
         $userId = auth()->user()->id;
-
-        
-
         $userJobs = UserJobs::where('user_id', $userId)->get();
-
-
 
         $jobs = $userJobs->map(function ($userJob) {
             return [
@@ -120,24 +116,22 @@ class UserJobsController extends Controller
                 'company' => $userJob->job->company,
                 'status' => $userJob->status,
                 'timeSlots' => $userJob->time_slots,
+                'startDate' => $userJob->start_date,
+                'endDate' => $userJob->end_date,
             ];
         });
-
-
 
         return response()->json($jobs);
     }
 
     public function getSingleJobDetails($userJobsId)
     {
-        // Retrieve the UserJobs record based on the provided userJobs ID
         $userJob = UserJobs::find($userJobsId);
 
         if (!$userJob) {
             return response()->json(['error' => 'User job not found'], 404);
         }
-        $user = $userJob->job->user;
-        // Prepare the user details
+
         $jobDetails = [
             'title' => $userJob->job->title,
             'description' => $userJob->job->description,
@@ -145,25 +139,19 @@ class UserJobsController extends Controller
             'company' => $userJob->job->company,
             'timeSlots' => $userJob->time_slots,
             'message' => $userJob->message,
+            'startDate' => $userJob->start_date,
+            'endDate' => $userJob->end_date,
             'userId' => $userJob->job->user_id,
             'userEmail' => $userJob->job->user->email,
         ];
 
-
-
-        // Return the user details as JSON
         return response()->json($jobDetails);
     }
 
     public function getInterviews()
     {
         $userId = auth()->user()->id;
-
-
-
         $userJobs = UserJobs::where('user_id', $userId)->where('status', 'Scheduled')->get();
-
-
 
         $jobs = $userJobs->map(function ($userJob) {
             return [
@@ -174,11 +162,74 @@ class UserJobsController extends Controller
                 'company' => $userJob->job->company,
                 'status' => $userJob->status,
                 'timeSlots' => $userJob->time_slots,
+                'startDate' => $userJob->start_date,
+                'endDate' => $userJob->end_date,
             ];
         });
 
-
-
         return response()->json($jobs);
     }
+
+    public function getOwnedUserJobs(Request $request)
+    {
+        $userId = auth()->user()->id;
+
+        // Retrieve only the jobs where the status is 'Hired'
+        $userJobs = UserJobs::whereHas('job', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        })
+        ->where('status', 'Hired') // Filter by status 'Hired'
+        ->with(['job.company', 'user']) // Eager load the job and user relationships
+        ->get();
+
+        return response()->json($userJobs);
+    }
+
+    public function editHiredStudent(Request $request, $id)
+{
+    // Validate the incoming data
+    $validatedData = $request->validate([
+        'email' => 'required|email',
+        'job_title' => 'required|string',
+        'start_date' => 'required|date',
+        'end_date' => 'nullable|date',
+        'status' => 'required|string',
+    ]);
+
+    // Find the UserJob by its ID
+    $userJob = UserJobs::findOrFail($id);
+
+    // Find the user by email, if exists
+    $user = User::where('email', $validatedData['email'])->first();
+    if ($user) {
+        // If the user exists, update the user ID in the UserJobs model
+        $userJob->user_id = $user->id;
+    }
+
+    // Update the associated job details (title, start_date, end_date)
+    $job = $userJob->job;
+    $job->title = $validatedData['job_title'];
+    $job->start_date = $validatedData['start_date'];
+    $job->end_date = $validatedData['end_date'];
+    $job->save();
+
+    // Update the UserJob model with the new data (status, time_slots, message)
+    $userJob->update([
+        'start_date' => $validatedData['start_date'],
+        'end_date' => $validatedData['end_date'],
+        'status' => $validatedData['status'],
+        'time_slots' => $request->time_slots,
+        'message' => $request->message
+    ]);
+
+    // Return a success response with the updated UserJob
+    return response()->json(['message' => 'Hired student and job updated successfully', 'userJob' => $userJob], 200);
 }
+
+
+
+
+
+
+}
+

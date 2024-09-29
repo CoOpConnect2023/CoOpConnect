@@ -22,6 +22,8 @@ class UserJobs extends Model
         'status',
         'time_slots',
         'message',
+        'start_date',   
+        'end_date',
     ];
 
     public function user()

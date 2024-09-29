@@ -24,6 +24,8 @@ class JobsResource extends JsonResource
             'jobType' => $this->job_type,
             'company' => $this->company,
             'userId' => $this->user_id,
+            'startDate' => $this->start_date,  // Added start_date
+            'endDate' => $this->end_date,      // Added end_date
             'users' => $this->whenLoaded('users'),
             'applications' => ApplicationResource::collection($this->whenLoaded('applications')),
         ];

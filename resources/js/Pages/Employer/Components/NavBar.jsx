@@ -50,9 +50,10 @@ import whiteuser from "@/Pages/Images/whiteuser.svg";
 import whitesettings from "@/Pages/Images/whitesettings.svg";
 import { Link } from "@inertiajs/react";
 import { getMyNotifications, patchNotification } from "@/Features/notifications/notificationsSlice";
+import { updateUserPreferences } from "@/Features/users/userSlice";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBell, faMap, faTimes, faList, faSun, faMoon, faPlus, faMinus, faTextHeight, faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { faBell, faMap, faTimes, faList, faSun, faMoon, faPlus, faMinus, faTextHeight, faChevronDown, faUserCheck } from "@fortawesome/free-solid-svg-icons";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleDarkMode, setTextSize, increaseFontSize, decreaseFontSize } from "@/Features/accessibility/accessibilitySlice";
 import {
@@ -102,13 +103,43 @@ function useWindowSize() {
 }
 
 function Sidebar() {
-
+    const dispatch = useDispatch();
     const [activeTab, setActiveTab] = useState("/");
     const [footerVisible, setFooterVisible] = useState(false);
     const darkMode = useSelector(state => state.accessibility.darkMode);
     const fontSize = useSelector(state => state.accessibility.textSize);
+    const [previousDarkMode, setPreviousDarkMode] = useState(darkMode);
+    const [previousFontSize, setPreviousFontSize] = useState(fontSize);
+
+
+    const convertFontSizeToString = (fontSize) => {
+        if (fontSize === "1em") {
+            return "small";
+        } else if (fontSize === "1.07em") {
+            return "medium";
+        } else if (fontSize === "1.12em") {
+            return "large";
+        } else {
+            return "unknown"; // Optional: Handle unexpected font sizes
+        }
+    };
+
 
     const handleTabClick = (path) => {
+        // Check if darkMode or fontSize has changed
+        if (darkMode !== previousDarkMode || fontSize !== previousFontSize) {
+            const fontSizeString = convertFontSizeToString(fontSize);
+            dispatch(updateUserPreferences({
+                darkMode: darkMode,
+                fontSize: fontSizeString,
+            }));
+
+            // Update the previous darkMode and fontSize to the current ones
+            setPreviousDarkMode(darkMode);
+            setPreviousFontSize(fontSize);
+        }
+
+        // Set active tab
         setActiveTab(path);
     };
 
@@ -151,11 +182,22 @@ function Sidebar() {
                 </Link>
                 <Divider fontSize={fontSize} darkMode={darkMode} />
 
-                <Link fontSize={fontSize} darkMode={darkMode} data-test-id="home-link" href="/employer/home" onClick={() => handleTabClick("/employer/home")}>
-                    <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/employer/home"}>
+                <Link fontSize={fontSize} darkMode={darkMode} data-test-id="home-link" href="/employer/home" >
+                    <IconButton onClick={() => handleTabClick("/employer/home")} fontSize={fontSize} darkMode={darkMode} active={activeTab === "/employer/home"}>
                         <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitebriefcase : briefcase} alt="Icon 1" loading="lazy" />
                     </IconButton>
                 </Link>
+
+                <Link fontSize={fontSize} darkMode={darkMode} data-test-id="home-link" href="/employer/hiredstudents" onClick={() => handleTabClick("/employer/hiredstudents")}>
+    <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/employer/hiredstudents"}>
+        <FontAwesomeIcon
+            icon={faUserCheck}
+            style={{ fontSize: `calc(${fontSize} + 0.4em)` }}  // Slightly larger than fontSize
+            color={darkMode ? '#ffffff' : '#000000'}
+            alt="User Check Icon"
+        />
+    </IconButton>
+</Link>
 
                 <Link fontSize={fontSize} darkMode={darkMode} data-test-id="messages-link" href="/employer/messages" onClick={() => handleTabClick("/employer/messages")}>
                     <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/employer/messages"}>

@@ -62,6 +62,11 @@ class EmployerController extends Controller
         return Inertia::render('Employer/Settings');
     }
 
+    public function hiredstudents()
+    {
+        return Inertia::render('Employer/ManageHiredStudents');
+    }
+
     public function viewApplicants($id)
     {
         return Inertia::render('Employer/ViewApplicants', ['jobId' => $id]);

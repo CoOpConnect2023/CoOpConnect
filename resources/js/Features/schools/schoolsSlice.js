@@ -9,11 +9,13 @@ const initialState = {
     schoolslist: null,
     courses: null,
     coursesStudents: null,
+    employers: [],
     status: {
         schools: "idle",
         percentages: "idle",
         schools: "idle",
         courses: "idle",
+        employers: "idle",
     },
 };
 
@@ -26,6 +28,70 @@ export const getStudents = createAsyncThunk(
         });
 
         return response.data.students;
+    }
+);
+
+
+
+
+export const getEmployers = createAsyncThunk(
+    "employers/getEmployers",
+    async (teacherID) => {
+        try {
+            const response = await axios.get(`/teacheremployers/${teacherID}`);
+            console.log(response.data);
+            return response.data.data;
+        } catch (error) {
+            console.error("Error fetching employers:", error);
+            throw error;
+        }
+    }
+);
+
+export const createEmployer = createAsyncThunk(
+    "employers/createEmployer",
+    async ({ teacher_id, employer_email, employer_name = null, company_name }, { rejectWithValue }) => {
+      try {
+        const payload = {
+          teacher_id,
+          employer_email,
+          ...(employer_name && { employer_name }),
+          ...(company_name && { company_name }),
+        };
+
+        console.log("Payload being sent to the server:", payload);
+
+        const response = await axios.post(`/teacheremployers`, payload);
+
+        console.log("Response received:", response.data);
+
+        // Return the attached array which contains the created employer details
+        return response.data.attached; // Use attached array from the response
+      } catch (error) {
+        if (error.response && error.response.data) {
+          console.error("Error response from server:", error.response.data);
+          return rejectWithValue(error.response.data.message);
+        }
+        console.error("Network or other error:", error.message);
+        return rejectWithValue(error.message);
+      }
+    }
+  );
+
+
+
+
+
+  export const deleteEmployer = createAsyncThunk(
+    "employers/deleteEmployer",
+    async ({ teacherID, employerID }) => {
+        try {
+            await axios.delete(`/teacheremployers/${teacherID}/${employerID}`);
+            return employerID;
+        } catch (error) {
+            console.error("Error deleting employer:", error);
+            throw error;
+        }
     }
 );
 
@@ -290,6 +356,39 @@ export const schoolsSlice = createSlice({
             })
             .addCase(editSchool.rejected, (state, action) => {
                 state.status.schools = "failed";
+            })
+            .addCase(getEmployers.pending, (state) => {
+                state.status.employers = "loading";
+              })
+              .addCase(getEmployers.fulfilled, (state, action) => {
+                state.employers = action.payload;
+                state.status.employers = "succeeded";
+              })
+              .addCase(getEmployers.rejected, (state) => {
+                state.status.employers = "failed";
+              })
+              .addCase(createEmployer.pending, (state, action) => {
+                state.status.employers = "loading";
+            })
+            .addCase(createEmployer.fulfilled, (state, action) => {
+                state.employers = [...state.employers, action.payload];
+                state.status.employers = "succeeded";
+            })
+            .addCase(createEmployer.rejected, (state, action) => {
+                state.status.employers = "failed";
+            })
+              .addCase(deleteEmployer.pending, (state) => {
+                state.status.employers = "loading";
+            })
+            .addCase(deleteEmployer.fulfilled, (state, action) => {
+
+                state.employers = state.employers.filter(
+                    (employer) => employer.id !== action.payload
+                );
+                state.status.employers = "succeeded";
+            })
+            .addCase(deleteEmployer.rejected, (state) => {
+                state.status.employers = "failed";
             });
         }
     });
@@ -298,6 +397,8 @@ export const schoolsSlice = createSlice({
 
 export const selectStudents = (state) => state.schools.students;
 export const selectStudentsStatus = (state) => state.students.status;
+export const selectEmployers = (state) => state.schools.employers;
+export const selectEmployersStatus = (state) => state.schools.status.employers;
 export const selectPercentages = (state) => state.schools.percentages;
 export const selectPercentagesStatus = (state) => state.percentages.status;
 export const selectSchoolslist = (state) => state.schools.schoolslist;

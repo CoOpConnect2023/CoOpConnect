@@ -22,6 +22,9 @@ class Jobs extends Model
         'job_type',
         'company',
         'user_id',
+        'company_id',
+        'start_date',
+        'end_date',
     ];
 
     public function users()
@@ -44,4 +47,15 @@ class Jobs extends Model
 {
     return $this->hasMany(Application::class);
 }
+
+public function company()
+    {
+        return $this->belongsTo(Company::class, 'company_id');
+    }
+
+    public function questions()
+    {
+        return $this->hasMany(Question::class);
+    }
+
 }

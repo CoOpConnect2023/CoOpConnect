@@ -91,7 +91,7 @@ const ViewApplications = () => {
                         <b>Position:</b> {app.title}
                     </h3>
                     <p>
-                        <b>Company:</b> {app.company}
+                        <b>Company:</b> {app?.user?.company}
                     </p>
                     <p>
                         <b>Location:</b> {app.location}

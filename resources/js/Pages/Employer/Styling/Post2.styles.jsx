@@ -9,12 +9,13 @@ const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
 };
 
 export const Container = styled.section`
-    align-self: stretch;
+
     display: flex;
-    flex: 1;
+
     width: 100%;
+    height: 100vh;
     flex-direction: column;
-    padding: 20px;
+    padding: 1%;
     background-color: ${({ darkMode }) => (darkMode ? '#121212' : '#ffffff')};
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
@@ -24,14 +25,14 @@ export const Container = styled.section`
 export const Card = styled.article`
     align-items: center;
     border-radius: 10px;
-    flex: 1;
+
     width: 100%;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    height: 100%;
     background-color: ${({ darkMode }) => (darkMode ? '#444' : '#fff')};
     display: flex;
-    margin-top: 40px;
+    flex-grow: 1;
     justify-content: center;
-    padding: 20px 10px;
+    padding: 1%;
     @media (max-width: 991px) {
         max-width: 100%;
         padding: 0 20px;
@@ -40,8 +41,8 @@ export const Card = styled.article`
 
 export const FormWrapper = styled.div`
     display: flex;
-
-    width: 60%;
+flex-grow: 1;
+    width: 100%;
     height: 100%;
     flex-direction: column;
     @media (max-width: 991px) {
@@ -173,9 +174,9 @@ export const StyledInput = styled.input`
     background-color: ${({ darkMode }) => (darkMode ? '#333' : '#fff')};
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
     margin-top: 8px;
-    width: 371px;
+
     max-width: 100%;
-    height: 48px;
+    width: 100%;
     transition: background-color 0.5s ease;
 `;
 
@@ -271,11 +272,17 @@ export const ActionButton = styled.button`
 export const SubmitButton = styled.button`
     font-family: Roboto, sans-serif;
     justify-content: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
     border-radius: 12px;
     background-color: ${({ darkMode }) => (darkMode ? '#773dc3' : '#6b538c')};
     color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#fff')};
     white-space: nowrap;
     padding: 8px 16px;
+
+     &:hover {
+        background-color: ${({ darkMode }) => (darkMode ? '#28a745' : '#28a745')}; /* Green hover background */
+        color: white; /* Optional: Change text color to white for better contrast */
+    }
     @media (max-width: 991px) {
         white-space: initial;
     }
@@ -288,4 +295,81 @@ export const ButtonContainerPost2 = styled.div`
     align-items: flex-start;
     gap: 8px;
     flex-shrink: 0;
+`;
+
+export const NewQuestionDiv = styled.div`
+display: flex;
+flex-direction: column;
+`
+
+export const AddOptionButton = styled.button`
+    font-family: Roboto, sans-serif;
+    justify-content: center;
+    border: 2px solid ${({ darkMode }) => (darkMode ? '#773dc3' : '#6b538c')};
+    border-radius: 12px;
+    color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#6b538c')};
+    padding: 8px 16px;
+    background: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin-top: 1%;
+
+    &:hover {
+        background-color: ${({ darkMode }) => (darkMode ? '#28a745' : '#28a745')}; /* Green hover background */
+        color: white; /* Optional: Change text color to white for better contrast */
+    }
+
+    @media (max-width: 991px) {
+        white-space: initial;
+    }
+`;
+
+// Styled component for wrapping each option input and correct option checkbox
+export const OptionWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+`;
+
+// Styled component for the correct option checkbox
+export const CorrectOptionCheckbox = styled.input`
+    margin-left: 10px;
+    margin-right: 10px;
+`;
+
+
+
+// Styled component for the question list
+export const QuestionList = styled.ul`
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+`;
+
+// Styled component for each question item
+export const QuestionItem = styled.li`
+    margin-bottom: 12px;
+    font-size: ${({ fontSize }) => (fontSize === 'large' ? '1.1em' : '1em')};
+    color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#333')};
+    padding: 8px 12px;
+    border-bottom: 1px solid ${({ darkMode }) => (darkMode ? '#773dc3' : '#6b538c')};
+`;
+
+// Styled component for the option list within a multiple-choice question
+export const OptionList = styled.ul`
+    list-style-type: none;
+    padding-left: 20px;
+`;
+
+// Styled component for each option
+export const OptionItem = styled.li`
+    padding: 4px 0;
+    font-size: ${({ fontSize }) => (fontSize === 'large' ? '1em' : '0.9em')};
+    color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#555')};
+`;
+
+// Styled component for correct option tag
+export const CorrectTag = styled.span`
+    color: #28a745;
+    font-weight: bold;
+    margin-left: 8px;
 `;

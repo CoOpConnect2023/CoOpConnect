@@ -27,9 +27,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'school_id',
         'class',
         'profile_image',
-        'company_name',
-        'company',
+        'company_id',
         'positiontitle',
+        'pronouns',
         'description',
         'working',
         'interviewing',
@@ -37,6 +37,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'skills',
         'darkMode',
         'fontSize',
+        'notifications',
 
     ];
 
@@ -149,4 +150,24 @@ public function school()
 {
     return $this->role === 'admin';
 }
+
+public function employers()
+{
+    return $this->belongsToMany(User::class, 'employer_teacher', 'teacher_id', 'employer_id')
+                ->withTimestamps();
+}
+
+// Many-to-many relationship: an employer can have many teachers
+public function teachers()
+{
+    return $this->belongsToMany(User::class, 'employer_teacher', 'employer_id', 'teacher_id')
+                ->withTimestamps();
+}
+
+public function company()
+{
+    return $this->belongsTo(Company::class, 'company_id'); // Assumes the foreign key is 'company_id'
+}
+
+
 }

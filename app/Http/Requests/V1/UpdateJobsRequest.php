@@ -30,7 +30,9 @@ class UpdateJobsRequest extends FormRequest
                 'location' => ['required'],
                 'postingStatus' => ['required', Rule::in(['Open', 'Closed'])],
                 'jobType' => ['required'],
-                'company' => ['required']
+                'company_id' => ['required'],
+                'startDate' => ['required', 'date'],
+                'endDate' => ['nullable', 'date'],
             ];
         } else {
             return [
@@ -40,7 +42,9 @@ class UpdateJobsRequest extends FormRequest
                 'location' => ['sometimes', 'required'],
                 'postingStatus' => ['sometimes', 'required', Rule::in(['Open', 'Closed'])],
                 'jobType' => ['sometimes', 'required'],
-                'company' => ['sometimes', 'required']
+                'company' => ['sometimes', 'required'],
+                'startDate' => ['sometimes', 'required'],
+                'endDate' => ['sometimes', 'nullable'],
             ];
         }
     }
@@ -53,3 +57,4 @@ class UpdateJobsRequest extends FormRequest
         ]));
     }
 }
+

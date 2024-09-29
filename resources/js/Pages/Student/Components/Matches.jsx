@@ -247,7 +247,7 @@ function Matches({ darkMode, fontSize }) {
               <JobDetails darkMode={darkMode} fontSize={fontSize}>
                 <img loading="lazy" src={job.imgSrc} alt={job.imgAlt} />
                 <CompanyInfo darkMode={darkMode} fontSize={fontSize}>
-                  <CompanyName darkMode={darkMode} fontSize={fontSize}>{job.company}</CompanyName>
+                  <CompanyName darkMode={darkMode} fontSize={fontSize}>{job.company.name}</CompanyName>
                   <Location darkMode={darkMode} fontSize={fontSize}>{job.location}</Location>
                 </CompanyInfo>
               </JobDetails>

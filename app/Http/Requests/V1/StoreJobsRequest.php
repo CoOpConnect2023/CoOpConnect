@@ -29,8 +29,10 @@ class StoreJobsRequest extends FormRequest
             'location' => ['required'],
             'postingStatus' => ['required', Rule::in(['Open', 'Closed'])],
             'jobType' => ['required'],
-            'company' => ['required'],
-            'userId' => ['required']
+            'company_id' => ['required'],
+            'userId' => ['required'],
+            'startDate' => ['nullable', 'date', 'before_or_equal:endDate'],
+            'endDate' => ['nullable', 'date', 'after_or_equal:startDate'],
         ];
     }
 
@@ -39,7 +41,9 @@ class StoreJobsRequest extends FormRequest
         $this->merge(array_filter([
             'posting_status' => $this->postingStatus,
             'job_type' => $this->jobType,
-            'user_id' => $this->userId
+            'user_id' => $this->userId,
+            'start_date' => $this->startDate,
+            'end_date' => $this->endDate
         ]));
     }
 }

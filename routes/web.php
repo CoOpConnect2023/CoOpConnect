@@ -67,6 +67,7 @@ Route::middleware(['auth', 'teacher'])->group(function () {
     Route::get('/teacher/settings', [TeacherController::class, 'settings'])->name('teacher.settings');
     Route::get('/teacher/classes', [TeacherController::class, 'classes'])->name('teacher.classes');
     Route::get('/teacher/students', [TeacherController::class, 'students'])->name('teacher.classes');
+    Route::get('/teacher/employers', [TeacherController::class, 'employers'])->name('teacher.employers');
 });
 
 Route::middleware(['auth', 'employee'])->group(function () {
@@ -81,6 +82,7 @@ Route::middleware(['auth', 'employee'])->group(function () {
     Route::get('/employer/interviews', [EmployerController::class, 'interviews'])->name('employer.interviews');
     Route::get('/employer/profile', [EmployerController::class, 'profile'])->name('employer.profile');
     Route::get('/employer/settings', [EmployerController::class, 'settings'])->name('employer.settings');
+    Route::get('/employer/hiredstudents', [EmployerController::class, 'hiredstudents'])->name('employer.hiredstudents');
     Route::get('/employer/viewapplicants/{jobId}', [EmployerController::class, 'viewApplicants'])->name('employer.viewapplicants');
     Route::get('/employer/accept-applicant/{id}', [EmployerController::class, 'acceptApplicant'])->name('employer.acceptapplicant');
 });
@@ -118,7 +120,7 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
 
 Route::get('/email/verify', [VerificationController::class, 'show'])->middleware('auth')->name('verification.notice');
 Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
-    ->middleware(['signed'])  
+    ->middleware(['signed'])
     ->name('verification.verify');
 Route::post('/email/resend', [VerificationController::class, 'resend'])->middleware(['auth', 'throttle:6,1'])->name('verification.resend');
 

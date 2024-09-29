@@ -1,187 +1,199 @@
 import styled, { keyframes } from "styled-components";
 
 const fadeIn = keyframes`
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 `;
 
 const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
-    const em = parseFloat(emValue);
-    if (emValue === '1em') return `${basePixelSize * em}px`;
-    if (emValue === '1.07em') return `${basePixelSize * em * 1.3}px`;
-    if (emValue === '1.12em') return `${basePixelSize * em * 1.7}px`;
-    return `${basePixelSize * em * factor}px`;
+  const em = parseFloat(emValue);
+  if (emValue === '1em') return `${basePixelSize * em}px`;
+  if (emValue === '1.07em') return `${basePixelSize * em * 1.3}px`;
+  if (emValue === '1.12em') return `${basePixelSize * em * 1.7}px`;
+  return `${basePixelSize * em * factor}px`;
 };
 
 export const Main = styled.main`
-    align-items: center;
-    border-radius: 10px;
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-    background-color: ${({ darkMode }) => (darkMode ? '#3C3C3C' : '#fff')};
-    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
-    display: flex;
-    justify-content: center;
-    align-content: center;
+  align-items: center;
+  border-radius: 10px;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  background-color: ${({ darkMode }) => (darkMode ? '#3C3C3C' : '#fff')};
+  color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  width: 100%;
+  padding: 20px;
+  flex-grow: 1;
+  transition: box-shadow 0.3s ease, transform 0.5s ease, background-color 0.3s ease;
+  animation: ${fadeIn} 0.8s ease-in-out;
+  font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
 
-    padding: 20px;
-    flex-grow: 1;
-    transition: box-shadow 0.3s ease, transform 0.5s ease, background-color 0.3s ease;
+  &:hover {
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  }
 
-    animation: ${fadeIn} 0.8s ease-in-out;
-    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
-
-    &:hover {
-        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    }
-
-    @media (max-width: 768px) {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-        padding: 10px;
-    }
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px;
+  }
 `;
 
 export const Section = styled.section`
-    display: flex;
-    width: 600px;
-    max-width: 100%;
-    flex-direction: column;
-    margin-right: 10vw;
-    flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex-grow: 1;
 
-    @media (max-width: 768px) {
-        margin-right: 0;
-        width: 100%;
-    }
+  @media (max-width: 768px) {
+    margin-right: 0;
+    width: 100%;
+  }
 `;
 
 export const RightContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 20%;
-    background-color: ${({ darkMode }) => (darkMode ? '#2C2C2C' : '#fff')};
-    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
-    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
-    padding: 20px;
-    box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 20%;
+  background-color: ${({ darkMode }) => (darkMode ? '#2C2C2C' : '#fff')};
+  color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
+  font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+  padding: 20px;
+  box-sizing: border-box;
 
-    @media (max-width: 768px) {
-        min-width: 100%;
-        padding: 10px;
-    }
+  @media (max-width: 768px) {
+    min-width: 100%;
+    padding: 10px;
+  }
 `;
 
 export const Title = styled.h1`
-    color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#6b538c')};
-    text-decoration: underline;
-    align-self: center;
-    font: 600 32px Poppins, sans-serif;
-    font-size: ${({ fontSize }) => calculateFontSize(32, fontSize)};
+  color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#6b538c')};
+  text-decoration: underline;
+  align-self: start;
+  font: 600 32px Poppins, sans-serif;
+  font-size: ${({ fontSize }) => calculateFontSize(32, fontSize)};
+  margin-bottom: 1%;
 
-    @media (max-width: 768px) {
-        font-size: ${({ fontSize }) => calculateFontSize(24, fontSize)};
-        text-align: center;
-        margin-top: 10px;
-    }
+  @media (max-width: 768px) {
+    font-size: ${({ fontSize }) => calculateFontSize(24, fontSize)};
+    text-align: center;
+    margin-top: 10px;
+  }
 `;
 
 export const ProfileWrapper = styled.div`
-    margin-top: 20px;
+  display: flex;
+  width: 100%;
+justify-content: space-between;
+
+  @media (max-width: 768px) {
     max-width: 100%;
-    @media (max-width: 768px) {
-        max-width: 100%;
-        margin-top: 20px;
-    }
+    flex-direction: column;
+    margin-top: 20px;
+    height: auto;
+  }
 `;
 
 export const ProfileDetails = styled.div`
-    gap: 20px;
-    display: flex;
+  display: flex;
+  height: 20%;
+  width: 100%;
+  gap: 5%;
 
-    @media (max-width: 768px) {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 10px;
-    }
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
 `;
 
 export const ProfileImageWrapper = styled.figure`
-    display: flex;
-    flex-direction: column;
-    line-height: normal;
-    width: 10%;
+  display: flex;
+  flex-direction: column;
+  line-height: normal;
+  max-width: 20%;
+  height: auto;
 
-    @media (max-width: 768px) {
-        width: 100%;
-        margin-top: 20px;
-    }
+  @media (max-width: 768px) {
+    width: 100%;
+    margin-top: 20px;
+    max-width: 100%;
+  }
 `;
 
 export const ProfileImage = styled.img`
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-    border: 2px solid rgba(45, 54, 72, 1);
-    background-color: #edf0f7;
-    display: block;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  max-width: 50%;
+  height: auto;
+  border: 2px solid rgba(45, 54, 72, 1);
+  background-color: #edf0f7;
+  display: block;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 
-    &:hover {
-        transform: scale(1.05);
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    }
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  }
 
-    @media (max-width: 768px) {
-        padding: 0 20px;
-    }
+  @media (max-width: 768px) {
+    padding: 0 20px;
+    max-width: 100%;
+  }
 `;
 
 export const ClearProfileButton = styled.button`
-    justify-content: center;
-    border-radius: 12px;
-    background: linear-gradient(135deg, #6b538c, #a97bbf);
-    align-self: start;
-    margin-top: 20px;
-    width: 100%;
-    color: #fff;
-    letter-spacing: 0.5px;
-    padding: 8px 16px;
-    font-weight: 700;
-    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
-    line-height: 150%;
-    font-family: Roboto, sans-serif;
-    border: none;
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s ease;
+  justify-content: center;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #6b538c, #a97bbf);
+  margin-top: 20px;
+  width: 100%;
+  max-width: 50%; /* Match the image's max-width */
+  color: #fff;
+  letter-spacing: 0.5px;
+  padding: 8px 16px;
+  font-weight: 700;
+  font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+  line-height: 150%;
+  font-family: Roboto, sans-serif;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
 
-    &:hover {
-        background: linear-gradient(135deg, #543b6f, #8e6aae);
-        transform: scale(1.05);
-    }
+  &:hover {
+    background: linear-gradient(135deg, #543b6f, #8e6aae);
+    transform: scale(1.05);
+  }
 
-    @media (max-width: 768px) {
-        align-self: center;
-        width: 100%;
-    }
+  @media (max-width: 768px) {
+    max-width: 100%; /* Ensure it resizes properly on smaller screens */
+    align-self: center;
+  }
 `;
+
 
 export const BioSection = styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-left: 20px;
 
-    @media (max-width: 768px) {
-        width: 100%;
-        margin-left: 0;
-    }
+  @media (max-width: 768px) {
+    width: 100%;
+    margin-left: 0;
+  }
 `;
+
+// ... Continue with other styled-components in the same structured manner
 
 export const BioTitle = styled.h2`
     color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#2d3648')};
@@ -318,10 +330,52 @@ export const DetailValue = styled.input`
     }
 `;
 
+export const ProfileDetailValue = styled.input`
+    align-items: start;
+    border-radius: 6px;
+    border: 2px solid ${({ darkMode }) => (darkMode ? '#EDDCFF' : 'rgba(38, 14, 68, 1)')};
+    background-color: ${({ darkMode }) => (darkMode ? '#444' : '#fff7ff')};
+
+    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#7b757f')};
+    letter-spacing: 0.25px;
+    padding: 19px 12px;
+    font-size: 14px;
+    font-family: Poppins, sans-serif;
+    line-height: 143%;
+    width: 100%;
+    box-sizing: border-box;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+
+    &:hover {
+        border-color: #6b538c;
+        background-color: ${({ darkMode }) => (darkMode ? '#5a4175' : '#f3e8ff')};
+    }
+
+    @media (max-width: 768px) {
+        max-width: 100%;
+        padding: 10px;
+    }
+`;
+
+
+export const ProfileDetailSection = styled.div`
+   display: flex;
+   flex-direction: row;
+   width: 100%;
+   height: 100%;
+   justify-content: space-between;
+   gap: 5%;
+
+`;
+
+
 export const DropzoneContainer = styled.div`
     border: 2px dashed #6b538c;
     border-radius: 10px;
     padding: 20px;
+    width: 100%;
     text-align: center;
     color: #6b538c;
     font-family: Poppins, sans-serif;
@@ -385,3 +439,40 @@ export const StatusContainer = styled.div`
     margin-top: 10px;
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize, 1.5, 'rem')};
 `;
+
+export const InputSection = styled.div`
+display:flex;
+width: 100%;
+height: 100%;
+flex-direction: row;
+gap: 1%;
+
+@media (max-width: 1024px) {
+        flex-direction: column;
+       width: 100%;
+    }
+
+
+`
+
+export const LeftSide = styled.div`
+display:flex;
+width: 50%;
+flex-direction: column;
+
+@media (max-width: 1024px) {
+        flex-direction: column;
+       width: 100%;
+    }
+`
+
+export const RightSide = styled.div`
+display:flex;
+width: 50%;
+flex-direction: column;
+
+@media (max-width: 1024px) {
+        flex-direction: column;
+       width: 100%;
+    }
+`

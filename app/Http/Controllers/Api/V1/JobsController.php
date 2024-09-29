@@ -72,11 +72,32 @@ class JobsController extends Controller
      * Update the specified resource in storage.
      */
     public function update(UpdateJobsRequest $request, Jobs $job)
-    {
-        $job->update($request->all());
+{
+    // Retrieve request data
+    $data = $request->all();
 
-        return new JobsResource($job);
+    // Map camelCase fields to snake_case based on the columnMap
+    $columnMap = [
+        'postingStatus' => 'posting_status',
+        'jobType' => 'job_type',
+        'userId' => 'user_id',
+        'startDate' => 'start_date',
+        'endDate' => 'end_date',
+    ];
+
+    foreach ($columnMap as $camelCase => $snakeCase) {
+        // If the camelCase field exists in the request, map it to the snake_case version
+        if (isset($data[$camelCase])) {
+            $data[$snakeCase] = $data[$camelCase];
+            unset($data[$camelCase]); // Remove the camelCase version
+        }
     }
+
+    // Update the job with the transformed data
+    $job->update($data);
+
+    return new JobsResource($job);
+}
 
     /**
      * Remove the specified resource from storage.

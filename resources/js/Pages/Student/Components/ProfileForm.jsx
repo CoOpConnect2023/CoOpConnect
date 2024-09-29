@@ -41,7 +41,7 @@ const ProfileForm = ({fontSize, darkMode}) => {
         working: false,
     });
 
-
+console.log(user)
 
 
 const handleStatusChange = (e) => {
@@ -209,6 +209,7 @@ const handleStatusChange = (e) => {
         formData.append("searching", user.searching);
         formData.append("interviewing", user.interviewing);
         formData.append("working", user.working);
+        formData.append("pronouns", user.pronouns);
 
         const coursesData = user.courses.map((course) => ({
           id: course.id,
@@ -358,6 +359,15 @@ const handleStatusChange = (e) => {
             type="text"
             name="positiontitle"
             value={user.positiontitle}
+            onChange={handleChange}
+          />
+        </ProfileDetailItem>
+        <ProfileDetailItem fontSize={fontSize} darkMode={darkMode}>
+          <DetailLabel fontSize={fontSize} darkMode={darkMode}>Preferred Pronouns</DetailLabel>
+          <DetailValue fontSize={fontSize} darkMode={darkMode}
+            type="text"
+            name="pronouns"
+            value={user.pronouns}
             onChange={handleChange}
           />
         </ProfileDetailItem></ProfileDetailOne>

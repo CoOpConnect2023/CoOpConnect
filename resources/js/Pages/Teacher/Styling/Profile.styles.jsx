@@ -34,17 +34,17 @@ export const spin = keyframes`
 `;
 
 export const Main = styled.main`
-  align-items: center;
+  align-items: start;
   border: 2px solid ${({ darkMode }) => (darkMode ? "#444" : "#e2e8f0")};
   border-radius: 10px;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   transition: background-color 0.5s ease;
   background-color: ${({ darkMode }) => (darkMode ? "#1f1f1f" : "#fff")};
   display: flex;
-  justify-content: center;
-  padding: 15px;
+  justify-content: start;
+  padding: 2%;
   animation: ${fadeIn} 0.8s ease-in-out;
-  flex: 1 0 auto; /* Can grow to fill available space */
+ width: 100%;
   &:hover {
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
   }
@@ -52,15 +52,15 @@ export const Main = styled.main`
 
 export const Section = styled.section`
   display: flex;
-  width: 600px;
-  max-width: 100%;
+width: 100%;
+
   flex-direction: column;
 `;
 
 export const Title = styled.h1`
   color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6B538C")};
   text-decoration: underline;
-  align-self: center;
+  align-self: start;
   font: 600 32px Poppins, sans-serif;
   font-size: ${({ fontSize }) => calculateFontSize(32, fontSize)};
 `;
@@ -87,7 +87,7 @@ export const ProfileImageWrapper = styled.figure`
   flex-direction: column;
   line-height: normal;
   width: 26%;
-  margin: 0 auto;
+  margin-bottom: 1%;
   @media (max-width: 991px) {
     width: 100%;
     margin-top: 20px;
@@ -95,8 +95,8 @@ export const ProfileImageWrapper = styled.figure`
 `;
 
 export const ProfileImage = styled.img`
-  justify-content: center;
-  align-items: center;
+  justify-content: start;
+  align-items: start;
   border-radius: 10px;
   border: 2px solid rgba(45, 54, 72, 1);
   background-color: #edf0f7;
@@ -194,6 +194,7 @@ export const FieldTitle = styled.h2`
   color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
   letter-spacing: 0.1px;
   margin-top: 10px;
+
   font: 500 Poppins, sans-serif;
   font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
   @media (max-width: 991px) {
@@ -207,6 +208,7 @@ export const Input = styled.input`
   border: 2px solid rgba(38, 14, 68, 1);
   background-color: #fff7ff;
   margin-top: 8px;
+  width: 100%;
   color: #7b757f;
   letter-spacing: 0.25px;
   justify-content: center;

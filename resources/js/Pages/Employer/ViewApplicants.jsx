@@ -8,11 +8,11 @@ import { selectJob, selectSingleJob } from "@/Features/jobs/jobsSlice";
 import { postNotification } from "@/Features/notifications/notificationsSlice";
 import { getUser, selectUser } from "@/Features/users/userSlice";
 // Decline Modal Component
-const DeclineModal = ({ applicant, onClose, onSubmit, darkMode, fontSize }) => {
+const DeclineModal = ({ applicant, onClose, onSubmit, darkMode, fontSize, rejectType }) => {
     const [message, setMessage] = useState("");
 
     const handleSubmit = () => {
-        onSubmit(message);
+        onSubmit(message, rejectType);
         onClose();
     };
 
@@ -20,7 +20,7 @@ const DeclineModal = ({ applicant, onClose, onSubmit, darkMode, fontSize }) => {
         <Modal darkMode={darkMode} fontSize={fontSize}>
             <ModalContent darkMode={darkMode} fontSize={fontSize}>
                 <h2 style={{ fontSize: fontSize, color: darkMode ? "#fff" : "#000" }}>
-                    Reject {applicant.name}
+                    {rejectType === "scheduled" ? `Reject Scheduled Applicant` : `Reject ${applicant.name}`}
                 </h2>
                 <FormGroup darkMode={darkMode} fontSize={fontSize}>
                     <Label darkMode={darkMode} fontSize={fontSize}>Message</Label>
@@ -46,6 +46,44 @@ const DeclineModal = ({ applicant, onClose, onSubmit, darkMode, fontSize }) => {
     );
 };
 
+const HireModal = ({ applicant, onClose, onSubmit, darkMode, fontSize }) => {
+    const [message, setMessage] = useState("");
+
+    const handleSubmit = () => {
+        onSubmit(message);
+        onClose();
+    };
+
+    return (
+        <Modal darkMode={darkMode} fontSize={fontSize}>
+            <ModalContent darkMode={darkMode} fontSize={fontSize}>
+                <h2 style={{ fontSize: fontSize, color: darkMode ? "#fff" : "#000" }}>
+                    Hire {applicant.name}
+                </h2>
+                <FormGroup darkMode={darkMode} fontSize={fontSize}>
+                    <Label darkMode={darkMode} fontSize={fontSize}>Message</Label>
+                    <TextArea
+                        rows="4"
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        placeholder="Enter a message for the hired candidate"
+                        darkMode={darkMode}
+                        fontSize={fontSize}
+                    />
+                </FormGroup>
+                <Actions darkMode={darkMode} fontSize={fontSize}>
+                    <Button color="gray" onClick={onClose} darkMode={darkMode} fontSize={fontSize}>
+                        Cancel
+                    </Button>
+                    <Button color="green" onClick={handleSubmit} darkMode={darkMode} fontSize={fontSize}>
+                        Send
+                    </Button>
+                </Actions>
+            </ModalContent>
+        </Modal>
+    );
+};
+
 // ViewApplicants Component
 const ViewApplicants = () => {
     const { props } = usePage();
@@ -59,53 +97,94 @@ const ViewApplicants = () => {
     const dispatch = useDispatch();
     const applicants = useSelector(selectApplicants);
     const job = useSelector(selectSingleJob);
+    const [isHireModalOpen, setIsHireModalOpen] = useState(false);
 
     useEffect(() => {
         dispatch(getUserDetails({ jobsId: jobId }));
         dispatch(selectJob({ jobId }));
     }, [dispatch, jobId]);
 
-    const tabs = ["Pending", "Interview", "Scheduled", "Declined", "Rejected"];
+    const tabs = ["Pending", "Interview", "Scheduled", "Declined", "Rejected", "Hired"];
 
     const handleDecline = (applicant) => {
         setSelectedApplicant(applicant);
         setIsDeclineModalOpen(true);
     };
 
-    const handleDeclineSubmit = async (message) => {
+    const handleDeclineSubmit = async (message, rejectType) => {
         try {
+            const status = rejectType === "scheduled" ? "Rejected" : "Application Rejected";
+            const notificationContent = rejectType === "scheduled"
+                ? `Unfortunately, your application for ${job.title} will not be moving forward. Thank you for your interest in the position`
+                : `Your job application for ${job.title} has been rejected.`;
 
+            // Patch user job
             await dispatch(
                 patchUserJob({
                     userJobsId: selectedApplicant.id,
-                    status: "Rejected",
+                    status: status,
                     message: message,
                     timeSlots: [""],
                 })
             ).unwrap();
 
-
+            // Post notification
             await dispatch(
                 postNotification({
                     from_user_id: user.id,
                     to_user_id: selectedApplicant.userId,
                     viewed: false,
-                    content: `Your job application for ${job.title} has been rejected.`,
+                    content: notificationContent,
                     type: "Application Rejected",
-                    interview_date: null
+                    interview_date: null,
                 })
             ).unwrap();
 
-
             alert("Applicant has been successfully rejected and notified.");
         } catch (error) {
-
-            console.error("Error in processing decline:", error);
-
-
+            console.error("Error in processing rejection:", error);
             alert("An error occurred while rejecting the applicant. Please try again.");
         }
     };
+
+    const handleHire = (applicant) => {
+        setSelectedApplicant(applicant);
+        setIsHireModalOpen(true);
+    };
+
+    const handleHireSubmit = async (message) => {
+        try {
+            // Update the applicant's status to "Hired"
+            await dispatch(
+                patchUserJob({
+                    userJobsId: selectedApplicant.id,
+                    status: "Hired",
+                    message: message,
+                    
+                })
+            ).unwrap();
+
+            // Send notification to the hired candidate
+            await dispatch(
+                postNotification({
+                    from_user_id: user.id,
+                    to_user_id: selectedApplicant.userId,
+                    viewed: false,
+                    content: `Congratulations! You have been hired for the position of ${job.title}. Here is a message from the employer: ${message}`,
+                    type: "Application Accepted",
+                    interview_date: null,
+                })
+            ).unwrap();
+
+            alert("Applicant has been successfully hired and notified.");
+        } catch (error) {
+            console.error("Error in processing hire:", error);
+            alert("An error occurred while hiring the applicant. Please try again.");
+        }
+    };
+
+
+
 
 
     const handleAccept = (applicant) => {
@@ -146,18 +225,30 @@ const ViewApplicants = () => {
                     </TableData>
 
                     {applicant.status === "Pending" && (
-                        <TableData darkMode={darkMode} fontSize={fontSize}>
-                            <Button color="green" onClick={() => handleAccept(applicant)} darkMode={darkMode} fontSize={fontSize}>
-                                Accept
-                            </Button>
-                            <Button color="red" onClick={() => handleDecline(applicant)} darkMode={darkMode} fontSize={fontSize}>
-                                Reject
-                            </Button>
-                        </TableData>
-                    )}
+    <TableData darkMode={darkMode} fontSize={fontSize}>
+        <Button color="green" onClick={() => handleAccept(applicant)} darkMode={darkMode} fontSize={fontSize}>
+            Accept
+        </Button>
+        <Button color="red" onClick={() => handleDecline(applicant, "pending")} darkMode={darkMode} fontSize={fontSize}>
+            Reject
+        </Button>
+    </TableData>
+)}
                     {applicant.status === "Scheduled" && (
                         <TableData darkMode={darkMode} fontSize={fontSize}>{formatDate(applicant.timeSlots)}</TableData>
+
                     )}
+
+{applicant.status === "Scheduled" && (
+    <TableData darkMode={darkMode} fontSize={fontSize}>
+        <Button color="green" onClick={() => handleHire(applicant)} darkMode={darkMode} fontSize={fontSize}>
+            Hire
+        </Button>
+        <Button color="red" onClick={() => handleDecline(applicant, "scheduled")} darkMode={darkMode} fontSize={fontSize}>
+            Reject
+        </Button>
+    </TableData>
+)}
                 </TableRow>
             ));
     };
@@ -168,7 +259,7 @@ const ViewApplicants = () => {
                 <>
                     <JobDetails darkMode={darkMode} fontSize={fontSize}>
                         <p><b>Position:</b> {job.title}</p>
-                        <p><b>Company:</b> {job.company}</p>
+                        <p><b>Company:</b> {job?.company?.name}</p>
                         <p><b>Location:</b> {job.location}</p>
                         <p><b>Description:</b> {job.description}</p>
                     </JobDetails>
@@ -200,6 +291,10 @@ const ViewApplicants = () => {
                                         {activeTab === "Scheduled" && (
                                             <TableHeader darkMode={darkMode} fontSize={fontSize}>Date</TableHeader>
                                         )}
+
+                                        {activeTab === "Scheduled" && (
+                                            <TableHeader darkMode={darkMode} fontSize={fontSize}>Hire Candidate?</TableHeader>
+                                        )}
                                     </TableRow>
                                 </TableHead>
                                 <tbody>
@@ -218,14 +313,26 @@ const ViewApplicants = () => {
                     </Container>
 
                     {isDeclineModalOpen && (
-                        <DeclineModal
-                            applicant={selectedApplicant}
-                            onClose={() => setIsDeclineModalOpen(false)}
-                            onSubmit={handleDeclineSubmit}
-                            darkMode={darkMode}
-                            fontSize={fontSize}
-                        />
-                    )}
+    <DeclineModal
+        applicant={selectedApplicant}
+        onClose={() => setIsDeclineModalOpen(false)}
+        onSubmit={handleDeclineSubmit}
+        rejectType={activeTab === "Scheduled" ? "scheduled" : "pending"} // Pass the correct rejectType based on the tab
+        darkMode={darkMode}
+        fontSize={fontSize}
+    />
+)}
+
+{isHireModalOpen && (
+    <HireModal
+        applicant={selectedApplicant}
+        onClose={() => setIsHireModalOpen(false)}
+        onSubmit={handleHireSubmit}
+        darkMode={darkMode}
+        fontSize={fontSize}
+    />
+)}
+
                 </>
             )}
         </NavBar>

@@ -16,7 +16,7 @@ export const Container = styled.section`
     flex: 1;
     flex-direction: column;
     width: 100%;
-    padding: 20px;
+    padding: 1%;
     background-color: ${({ darkMode }) => (darkMode ? '#121212' : '#ffffff')};
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
@@ -27,13 +27,13 @@ export const Card = styled.article`
     align-items: center;
     border-radius: 10px;
     flex: 1;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
     background-color: ${({ darkMode }) => (darkMode ? '#444' : '#fff')};
     display: flex;
     width: 100%;
-    margin-top: 40px;
+height: 100%;
     justify-content: center;
-    padding: 20px 10px;
+    padding: 1%;
     @media (max-width: 991px) {
         max-width: 100%;
         padding: 0 20px;
@@ -43,7 +43,7 @@ export const Card = styled.article`
 export const FormWrapper = styled.div`
     display: flex;
 
-    width: 60%;
+    width: 100%;
     height: 100%;
 
     flex-direction: column;
@@ -99,6 +99,7 @@ export const SectionTitle = styled.h2`
 export const FormRow = styled.div`
     display: flex;
     gap: 20px;
+     align-items: flex-start;
     margin: 20px 20px 0 0;
     @media (max-width: 991px) {
         margin-right: 10px;

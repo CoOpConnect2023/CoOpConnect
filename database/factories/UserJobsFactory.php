@@ -26,7 +26,9 @@ class UserJobsFactory extends Factory
             'user_id' => User::factory(),
             'jobs_id' => Jobs::factory(),
             'resume' => $this->faker->url,
-            'status' => $this->faker->randomElement(['Pending', 'Interview', 'Rejected']),
+            'status' => $this->faker->randomElement(['Pending', 'Interview', 'Rejected', 'Hired']),
+            'start_date' => $this->faker->dateTimeBetween('-1 year', 'now'), 
+            'end_date' => $this->faker->optional()->dateTimeBetween('now', '+1 year'),
         ];
     }
 }

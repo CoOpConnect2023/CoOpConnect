@@ -20,7 +20,9 @@ return new class extends Migration
             $table->string('location');
             $table->string('posting_status');
             $table->string('job_type');
-            $table->string('company');
+            $table->foreignId('company_id')->constrained()->onDelete('cascade');
+            $table->date('start_date')->nullable(); // Add start_date field
+            $table->date('end_date')->nullable();
             $table->timestamps();
 
 

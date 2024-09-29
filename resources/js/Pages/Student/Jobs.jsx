@@ -205,7 +205,7 @@ function Jobs() {
                 />
                 <CompanyDetails darkMode={darkMode} fontSize={fontSize}>
                     <CompanyName darkMode={darkMode} fontSize={fontSize}>
-                        {featuredJob.company}
+                        {featuredJob?.user?.company}
                     </CompanyName>
                     <CompanyLocation darkMode={darkMode} fontSize={fontSize}>
                         {featuredJob.location}
@@ -256,7 +256,7 @@ function Jobs() {
                                         <JobCard darkMode={darkMode} fontSize={fontSize} key={job.title}>
                                             <JobTitle darkMode={darkMode} fontSize={fontSize}>{job.title}</JobTitle>
                                             <JobMeta darkMode={darkMode} fontSize={fontSize}>
-                                                <div>{job.company}</div>
+                                                <div>{job?.user?.company}</div>
                                                 <div>{job.location}</div>
                                             </JobMeta>
                                             <SkillsList darkMode={darkMode} fontSize={fontSize}>

@@ -10,6 +10,7 @@ import schoolsReducer from "./Features/schools/schoolsSlice";
 import userJobsReducer from "./Features/userJobs/userJobsSlice";
 import accessibilityReducer from "./Features/accessibility/accessibilitySlice";
 import notificationsReducer from "./Features/notifications/notificationsSlice";
+import companiesReducer from "./Features/companies/companySlice"
 
 export const store = configureStore({
     reducer: {
@@ -24,6 +25,7 @@ export const store = configureStore({
         userJobs: userJobsReducer,
         accessibility: accessibilityReducer,
         notifications: notificationsReducer,
+        companies: companiesReducer
     },
 });
 

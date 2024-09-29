@@ -97,26 +97,73 @@ const AdminDashboard = () => {
     return (
         <NavBar>
             <HomePageContainer fontSize={fontSize} darkMode={darkMode}>
-                <Header fontSize={fontSize} darkMode={darkMode}>
-
-                </Header>
+                <Header fontSize={fontSize} darkMode={darkMode}></Header>
                 {categorizedUsers && (
                     <Content fontSize={fontSize} darkMode={darkMode}>
                         <UploadUsers fontSize={fontSize} darkMode={darkMode} />
-                        <Section fontSize={fontSize} darkMode={darkMode} handleDeleteUser={handleDeleteUser} users={admins} title="Admin Users" />
-                        <Section fontSize={fontSize} darkMode={darkMode} handleDeleteUser={handleDeleteUser} users={students} title="Current Students" />
-                        <Section fontSize={fontSize} darkMode={darkMode} handleDeleteUser={handleDeleteUser} users={employee} title="Current Employers" />
-                        <Section fontSize={fontSize} darkMode={darkMode} handleDeleteUser={handleDeleteUser} users={teachers} title="Current Teachers" />
-                        <SchoolSectionComponent fontSize={fontSize} darkMode={darkMode} handleDeleteUser={handleDeleteSchool} users={schoolsList} title="Current Schools" />
-                        <CourseSectionComponent users={coursesList} title="Current Courses" fontSize={fontSize} darkMode={darkMode} handleDeleteUser={handleDeleteCourse} />
-                        <JobsSectionComponent users={jobsList} title="Current Jobs" fontSize={fontSize} darkMode={darkMode} handleDeleteUser={handleDeleteJob}/>
+                        <Section
+                            fontSize={fontSize}
+                            darkMode={darkMode}
+                            handleDeleteUser={handleDeleteUser}
+                            users={admins}
+                            title="Admin Users"
+                            type="admin"
+                        />
+                        <Section
+                            fontSize={fontSize}
+                            darkMode={darkMode}
+                            handleDeleteUser={handleDeleteUser}
+                            users={students}
+                            title="Current Students"
+                            type="student"
+                        />
+                        <Section
+                            fontSize={fontSize}
+                            darkMode={darkMode}
+                            handleDeleteUser={handleDeleteUser}
+                            users={employee}
+                            title="Current Employers"
+                            type="employee"
+                        />
+                        <Section
+                            fontSize={fontSize}
+                            darkMode={darkMode}
+                            handleDeleteUser={handleDeleteUser}
+                            users={teachers}
+                            title="Current Teachers"
+                            type="teacher"
+                        />
+                        <SchoolSectionComponent
+                            fontSize={fontSize}
+                            darkMode={darkMode}
+                            handleDeleteUser={handleDeleteSchool}
+                            users={schoolsList}
+                            title="Current Schools"
+                            type="school"
+                        />
+                        <CourseSectionComponent
+                            users={coursesList}
+                            title="Current Courses"
+                            fontSize={fontSize}
+                            darkMode={darkMode}
+                            handleDeleteUser={handleDeleteCourse}
+                            type="course"
+                        />
+                        <JobsSectionComponent
+                            users={jobsList}
+                            title="Current Jobs"
+                            fontSize={fontSize}
+                            darkMode={darkMode}
+                            handleDeleteUser={handleDeleteJob}
+                            type="job"
+                        />
                     </Content>
                 )}
             </HomePageContainer>
         </NavBar>
     );
-};
 
+};
 
 
 const spin = keyframes`

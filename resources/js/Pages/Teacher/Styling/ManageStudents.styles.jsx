@@ -31,7 +31,10 @@ export const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  gap: 10px;
+  padding: 10px;
   max-height: 87.25vh;
+  min-height: 75vh;
   border-radius: 10px;
   background-color: ${({ darkMode }) => (darkMode ? "#1C1C1C" : "#fff")};
   transition: background-color 0.3s;
@@ -179,3 +182,99 @@ export const Label = styled.label`
   transition: color 0.3s;
 `;
 
+export const ModalOverlay = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
+export const ModalContainer = styled.div`
+    background: ${({ darkMode }) => (darkMode ? '#333' : '#fff')};
+    color: ${({ darkMode }) => (darkMode ? '#fff' : '#000')};
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+`;
+
+export const ModalTitle = styled.h3`
+    font-size: 1.5rem;
+    color: #6b538c; /* Purple title */
+    margin-bottom: 10px;
+`;
+
+export const ModalBody = styled.p`
+    font-size: 1rem;
+    color: ${({ darkMode }) => (darkMode ? '#ddd' : '#555')}; /* Light grey in dark mode, darker grey in light mode */
+    margin-bottom: 20px;
+`;
+
+export const ModalButtonContainer = styled.div`
+    display: flex;
+    justify-content: space-between;
+`;
+
+export const ModalButton = styled.button`
+    margin-top: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    font-size: 16px;
+`;
+
+export const ConfirmButton = styled(ModalButton)`
+    background-color: #6b538c; /* Purple confirm button */
+    color: white;
+
+    &:hover {
+        background-color: #5a4374; /* Darker shade on hover */
+    }
+`;
+
+export const CancelButton = styled(ModalButton)`
+    background-color: #ccc; /* Grey cancel button */
+    color: black;
+
+    &:hover {
+        background-color: #b3b3b3; /* Darker grey on hover */
+    }
+`;
+
+export const LoadingScreen = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 20px;
+    background-color: #f0f0f0;
+    color: #333;
+`;
+
+export const spin = keyframes`
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+`;
+
+
+export const Spinner = styled.div`
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: ${spin} 1s linear infinite;
+`;
+
+export const ErrorMessage = styled.div`
+    color: red;
+    font-size: 1rem;
+    margin-bottom: 10px;
+`;

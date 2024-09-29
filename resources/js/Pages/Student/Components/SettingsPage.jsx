@@ -55,6 +55,8 @@ function SettingsPanel({darkMode, fontSize}) {
     const [message, setMessage] = useState("");
     const [privacySetting, setPrivacySetting] = useState("Private");
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [notificationsEnabled, setNotificationsEnabled] = useState(user?.notifications ?? false);
+    console.log(user)
 
     useEffect(() => {
         dispatch(getUser());
@@ -73,7 +75,7 @@ function SettingsPanel({darkMode, fontSize}) {
             new_password: newPassword,
             new_password_confirmation: confirmNewPassword,
         };
-       
+
         dispatch(updateUserPassword(passwordData))
             .unwrap()
             .then(() => {
@@ -142,10 +144,13 @@ function SettingsPanel({darkMode, fontSize}) {
         dispatch(updateUserPreferences({
             darkMode: darkMode,
             fontSize: fontSizeString,
+            notifications: notificationsEnabled
         }));
     };
 
-
+    const handleNotificationsToggle = () => {
+        setNotificationsEnabled(!notificationsEnabled);
+    };
 
 
     return (
@@ -241,6 +246,27 @@ function SettingsPanel({darkMode, fontSize}) {
                     <SubmitButton fontSize={fontSize} darkMode={darkMode}>Change Password</SubmitButton>
                 </PasswordChangeForm>
             )}
+
+{activeTab === 'notifications' && (
+                    <SettingsSection fontSize={fontSize} darkMode={darkMode}>
+                        <SettingsHeader fontSize={fontSize} darkMode={darkMode}>
+                            <SettingsColumn fontSize={fontSize} darkMode={darkMode}>
+                                <SettingsContent fontSize={fontSize} darkMode={darkMode}>
+                                    <SettingsTitle fontSize={fontSize} darkMode={darkMode}>Notification Settings</SettingsTitle>
+                                    <SettingsDetail fontSize={fontSize} darkMode={darkMode}>
+                                        Enable or disable email notifications for your account.
+                                    </SettingsDetail>
+                                </SettingsContent>
+                            </SettingsColumn>
+                            <SettingsControls fontSize={fontSize} darkMode={darkMode}>
+                                <OtherOptionButton fontSize={fontSize} darkMode={darkMode} onClick={handleNotificationsToggle}>
+                                    {notificationsEnabled ? "Disable Notifications" : "Enable Notifications"}
+                                </OtherOptionButton>
+                                <SaveOptionButton fontSize={fontSize} darkMode={darkMode} onClick={handlePreferencesUpdate}>Save my preferences</SaveOptionButton>
+                            </SettingsControls>
+                        </SettingsHeader>
+                    </SettingsSection>
+                )}
 
             {activeTab === 'preferences' && (
                 <SettingsSection fontSize={fontSize} darkMode={darkMode}>

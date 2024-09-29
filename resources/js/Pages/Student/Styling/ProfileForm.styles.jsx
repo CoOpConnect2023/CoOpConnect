@@ -80,7 +80,8 @@ export const ProfileSection = styled.section`
     flex-wrap: wrap;
     justify-content: space-between;
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 2%;
+
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize, 1.5, 'rem')};
 `;
@@ -89,15 +90,15 @@ export const ProfileContainer = styled.div`
     display: flex;
     flex-direction: row;
     width: 100%;
-    margin-bottom: 40px;
+
 `;
 
 export const ProfileImageWrapper = styled.figure`
     display: flex;
     flex-direction: column;
     align-items: start;
-    width: 100px;
-    margin-bottom: 10px;
+
+
 `;
 
 export const ProfileImage = styled.img`
@@ -113,7 +114,7 @@ export const ProfileBio = styled.div`
     display: flex;
     flex-direction: column;
     width: 100%;
-    margin-top: 10px;
+
 `;
 
 export const BioValue = styled.input`
@@ -124,7 +125,7 @@ export const BioValue = styled.input`
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize, 1.5, 'rem')};
     font-family: Poppins, sans-serif;
     height: 100%;
-    width: 90%;
+    width: 80%;
     align-self: center;
 `;
 

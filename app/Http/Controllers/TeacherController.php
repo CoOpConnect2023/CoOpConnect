@@ -46,4 +46,9 @@ class TeacherController extends Controller
     {
         return Inertia::render('Teacher/ManageStudents');
     }
+
+    public function employers()
+    {
+        return Inertia::render('Teacher/ManageEmployers');
+    }
 }

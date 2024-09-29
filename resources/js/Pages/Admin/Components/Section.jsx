@@ -1,30 +1,45 @@
 import React from 'react';
 import Card from './Card';
 import StatusChart from './StatusChart';
+import { useDispatch } from 'react-redux';
+import { updateUserProfile, getAllUsers } from '@/Features/users/userSlice';
+
 import { useState, useEffect } from "react";
 import UserModal from './ViewUserModal';
-import { SectionContainer, SectionTitle, SectionContent, CardList, StatusContainer, SchoolSearchInput } from '../Styling/Section.styles';
+import { SectionContainer, SectionTitle, SectionContent, CardList, StatusContainer, SchoolSearchInput, SearchAndButtonContainer } from '../Styling/Section.styles';
+import { Button } from '../Styling/Card.styles';
+import AddUserModal from './AddNewUserModal';
+const appUrl = import.meta.env.VITE_APP_URL;
 
 
 
 
-const Section = ({ title, percentages, users, handleDeleteUser, fontSize, darkMode }) => {
+const Section = ({ title, percentages, users, handleDeleteUser, fontSize, darkMode, type }) => {
     const [selectedUser, setSelectedUser] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+    const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false); // State to handle add user modal
     const [searchQuery, setSearchQuery] = useState('');
 
-    const openModal = (user) => {
+    const openViewModal = (user) => {
         setSelectedUser(user);
-        setIsModalOpen(true);
+        setIsViewModalOpen(true);
     };
-    const closeModal = () => {
-        setIsModalOpen(false);
+
+    const closeViewModal = () => {
+        setIsViewModalOpen(false);
+    };
+
+    const openAddUserModal = () => {
+        setIsAddUserModalOpen(true); // Open the add user modal
+    };
+
+    const closeAddUserModal = () => {
+        setIsAddUserModalOpen(false); // Close the add user modal
     };
 
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value); // Update search query as user types
     };
-
 
     const filteredUsers = users?.filter(user =>
         user?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -39,6 +54,7 @@ const Section = ({ title, percentages, users, handleDeleteUser, fontSize, darkMo
     return (
         <SectionContainer fontSize={fontSize} darkMode={darkMode}>
             <SectionTitle fontSize={fontSize} darkMode={darkMode}>{title}</SectionTitle>
+            <SearchAndButtonContainer>
             <SchoolSearchInput
                 fontSize={fontSize}
                 darkMode={darkMode}
@@ -47,9 +63,14 @@ const Section = ({ title, percentages, users, handleDeleteUser, fontSize, darkMo
                 value={searchQuery}
                 onChange={handleSearchChange}
             />
+
+            <Button fontSize={fontSize} darkMode={darkMode} onClick={openAddUserModal}>
+                Add New User
+            </Button> </SearchAndButtonContainer>
+
             <SectionContent fontSize={fontSize} darkMode={darkMode}>
                 <CardList fontSize={fontSize} darkMode={darkMode}>
-                {filteredUsers && filteredUsers.map(user => (
+                    {filteredUsers && filteredUsers.map(user => (
                         <Card fontSize={fontSize} darkMode={darkMode}
                             key={user.id}
                             name={user.name}
@@ -67,7 +88,7 @@ const Section = ({ title, percentages, users, handleDeleteUser, fontSize, darkMo
                             positiontitle={user.positiontitle}
                             created={user.created_at}
                             updated={user.updated_at}
-                            onViewClick={() => openModal(user)}
+                            onViewClick={() => openViewModal(user)}
                             onDeleteClick={() => handleDeleteUser(user.id)}
                         />
                     ))}
@@ -78,8 +99,25 @@ const Section = ({ title, percentages, users, handleDeleteUser, fontSize, darkMo
                     </StatusContainer>
                 )}
             </SectionContent>
-            <UserModal fontSize={fontSize} darkMode={darkMode} isOpen={isModalOpen} onClose={closeModal} user={selectedUser} />
+
+            <UserModal
+                fontSize={fontSize}
+                darkMode={darkMode}
+                isOpen={isViewModalOpen}
+                onClose={closeViewModal}
+                user={selectedUser}
+            />
+
+            <AddUserModal
+                fontSize={fontSize}
+                darkMode={darkMode}
+                isOpen={isAddUserModalOpen}
+                onClose={closeAddUserModal}
+                appUrl={appUrl}
+                type={type}
+            />
         </SectionContainer>
     );
 };
+
 export default Section;

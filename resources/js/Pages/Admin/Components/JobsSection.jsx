@@ -1,14 +1,11 @@
 import React from 'react';
 import JobsCardComponent from './JobsCard';
 import StatusChart from './StatusChart';
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import UserModal from './ViewUserModal';
-import { SectionContainer, SectionTitle, SectionContent, CardList, SchoolSearchInput, StatusContainer } from '../Styling/Section.styles';
+import { SectionContainer, SectionTitle, SectionContent, CardList, SchoolSearchInput } from '../Styling/Section.styles';
 
-
-
-
-const JobsSectionComponent = ({ title, percentages, users, handleDeleteUser, fontSize, darkMode, }) => {
+const JobsSectionComponent = ({ title, percentages, users, handleDeleteUser, fontSize, darkMode }) => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -29,13 +26,12 @@ const JobsSectionComponent = ({ title, percentages, users, handleDeleteUser, fon
     // Filter users based on the search query
     const filteredUsers = users?.filter(user =>
         user?.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user?.company?.toString().includes(searchQuery.toLowerCase()) ||
-        user?.location?.toString().includes(searchQuery.toLowerCase()) ||
-        user?.jobType?.toString().includes(searchQuery.toLowerCase()) ||
+        user?.company?.name?.toLowerCase().includes(searchQuery.toLowerCase()) || // Fix: access company name directly
+        user?.location?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user?.jobType?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         user?.skills?.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase())) ||
         user?.id?.toString().includes(searchQuery.toLowerCase()) ||
         user?.userId?.toString().includes(searchQuery.toLowerCase())
-
     );
 
     return (
@@ -73,10 +69,8 @@ const JobsSectionComponent = ({ title, percentages, users, handleDeleteUser, fon
                             role={user.role}
                             postingStatus={user.postingStatus}
                             description={user.description}
-                            company={user.company_name}
-                            positiontitle={user.positiontitle}
-                            jobTitle={user.title}
-                            jobCompany={user.company}
+                            companyName={user.company?.name} // Fix: access company name directly
+                            companyDescription={user.company?.description} // Fix: access company description
                             jobType={user.jobType}
                             skills={user.skills}
                             created={user.created_at}

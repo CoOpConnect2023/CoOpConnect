@@ -14,10 +14,12 @@ return new class extends Migration {
             $table->id(); // Add an auto-incrementing primary key
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('jobs_id')->constrained()->onDelete('cascade');
-            $table->string("resume");
+            $table->string("resume")->nullable();
             $table->string("status");
             $table->text("message")->nullable();
             $table->json('time_slots')->nullable();
+            $table->date('start_date')->nullable(); // Add start_date
+            $table->date('end_date')->nullable();   // Add end_date
             $table->timestamps();
 
             $table->unique(['user_id', 'jobs_id']);

@@ -41,6 +41,8 @@ function Home() {
     const darkMode = useSelector(state => state.accessibility.darkMode);
     const fontSize = useSelector(state => state.accessibility.textSize);
 
+    console.log(jobs)
+
     useEffect(() => {
         dispatch(
             searchJobsbySkill({
@@ -55,7 +57,7 @@ function Home() {
                 <JobTitle darkMode={darkMode} fontSize={fontSize}>{job.title}</JobTitle>
 
 
-                <CompanyName darkMode={darkMode} fontSize={fontSize}  >{job.company}</CompanyName>
+                <CompanyName darkMode={darkMode} fontSize={fontSize}  >{job.company.name}</CompanyName>
 
                 <Location darkMode={darkMode} fontSize={fontSize} >{job.location}</Location>
 

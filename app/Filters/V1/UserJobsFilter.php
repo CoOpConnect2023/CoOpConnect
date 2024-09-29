@@ -15,12 +15,18 @@ class UserJobsFilter extends ApiFilter
         'status' => ['eq'],
         'message' => ['eq'],
         'timeSlots' => ['eq'],
+        'startDate' => ['eq'],
+        'endDate' => ['eq'],
+
+
     ];
 
     protected $columnMap = [
         'userId' => 'user_id',
         'jobsId' => 'jobs_id',
-        'timeSlots' => 'time_slots'
+        'timeSlots' => 'time_slots',
+        'startDate' => 'start_date',
+        'endDate' => 'end_date',
     ];
 
     protected $operatorMap = [

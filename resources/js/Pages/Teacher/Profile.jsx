@@ -64,6 +64,7 @@ function Profile() {
     const [school, setSchool] = useState("");
     const [schoolId, setSchoolId] = useState(null);
     const [specialty, setSpecialty] = useState("");
+    const [pronouns, setPronouns] = useState("");
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
     const [droppedImage, setDroppedImage] = useState(null);
     const [droppedFile, setDroppedFile] = useState(null);
@@ -91,6 +92,7 @@ function Profile() {
             setAccountType(user.role || "");
             setSpecialty(user.positiontitle || "");
             setSchoolId(user.school_id || null);
+            setPronouns(user.pronouns || null);
 
             if (user.profile_image) {
                 setDroppedImage(user.profile_image);
@@ -127,7 +129,7 @@ function Profile() {
             formData.append("role", user.role);
             formData.append("school_id", schoolId);
             formData.append("positiontitle", user.positiontitle);
-            formData.append("company_name", user.company_name);
+            formData.append("pronouns", user.pronouns);
 
             await axios.post(
                 `${appUrl}/api/update-profile/${user.id}`,
@@ -149,6 +151,7 @@ function Profile() {
                     role: accountType,
                     school_id: schoolId,
                     positiontitle: specialty,
+                    pronouns: pronouns,
                 })
             );
             setShowSuccessMessage(true);
@@ -252,6 +255,11 @@ function Profile() {
                     <Input darkMode={darkMode} fontSize={fontSize}
                         value={specialty}
                         onChange={(e) => setSpecialty(e.target.value)}
+                    />
+                    <FieldTitle darkMode={darkMode} fontSize={fontSize}>Pronouns</FieldTitle>
+                    <Input darkMode={darkMode} fontSize={fontSize}
+                        value={pronouns}
+                        onChange={(e) => setPronouns(e.target.value)}
                     />
                     <EditProfileButton darkMode={darkMode} fontSize={fontSize} onClick={handleUpdateProfile}>
                         Save Profile Changes

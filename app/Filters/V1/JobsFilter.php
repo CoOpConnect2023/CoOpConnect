@@ -17,12 +17,16 @@ class JobsFilter extends ApiFilter
         'jobType' => ['eq'],
         'company' => ['eq'],
         'userId' => ['eq'],
+        'startDate' => ['eq', 'lt', 'lte', 'gt', 'gte'], 
+        'endDate' => ['eq', 'lt', 'lte', 'gt', 'gte'],
     ];
 
     protected $columnMap = [
         'postingStatus' => 'posting_status',
         'jobType' => 'job_type',
-        'userId' => 'user_id'
+        'userId' => 'user_id',
+        'startDate' => 'start_date',
+        'endDate' => 'end_date',
     ];
 
     protected $operatorMap = [

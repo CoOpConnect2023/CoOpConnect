@@ -103,7 +103,7 @@ const JobPosting = ({ post, darkMode, fontSize }) => {
     return (
         <JobCard darkMode={darkMode} fontSize={fontSize} data-test-id={`job-card-${post.id}`}>
             <JobCardTitle darkMode={darkMode} fontSize={fontSize}>{post.title}</JobCardTitle>
-            <CompanyName darkMode={darkMode} fontSize={fontSize}>{post.company}</CompanyName>
+            <CompanyName darkMode={darkMode} fontSize={fontSize}>{post.company.name}</CompanyName>
             <Location darkMode={darkMode} fontSize={fontSize}>{post.location}</Location>
             <SkillsList darkMode={darkMode} fontSize={fontSize}>
                 {post.skills.map((tag, index) => (

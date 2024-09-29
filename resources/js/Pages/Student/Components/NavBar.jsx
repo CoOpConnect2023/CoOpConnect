@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import { updateUserPreferences } from "@/Features/users/userSlice";
 import styled from "styled-components";
 import {
     AppContainer,
@@ -123,8 +123,11 @@ function useWindowSize() {
 
 
 function Sidebar() {
+    const dispatch = useDispatch();
     const darkMode = useSelector(state => state.accessibility.darkMode);
     const fontSize = useSelector(state => state.accessibility.textSize);
+    const [previousDarkMode, setPreviousDarkMode] = useState(darkMode);
+    const [previousFontSize, setPreviousFontSize] = useState(fontSize);
     const [activeTab, setActiveTab] = useState("/");
     useEffect(() => {
         const path = window.location.pathname;
@@ -137,8 +140,35 @@ function Sidebar() {
         setActiveTab(path)
       }, []);
 
+      const convertFontSizeToString = (fontSize) => {
+        if (fontSize === "1em") {
+            return "small";
+        } else if (fontSize === "1.07em") {
+            return "medium";
+        } else if (fontSize === "1.12em") {
+            return "large";
+        } else {
+            return "unknown"; // Optional: Handle unexpected font sizes
+        }
+    };
+
+
     const handleTabClick = (path) => {
-      setActiveTab(path);
+        // Check if darkMode or fontSize has changed
+        if (darkMode !== previousDarkMode || fontSize !== previousFontSize) {
+            const fontSizeString = convertFontSizeToString(fontSize);
+            dispatch(updateUserPreferences({
+                darkMode: darkMode,
+                fontSize: fontSizeString,
+            }));
+
+            // Update the previous darkMode and fontSize to the current ones
+            setPreviousDarkMode(darkMode);
+            setPreviousFontSize(fontSize);
+        }
+
+        // Set active tab
+        setActiveTab(path);
     };
 
     const [footerVisible, setFooterVisible] = useState(false);

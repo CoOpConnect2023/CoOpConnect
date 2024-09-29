@@ -63,7 +63,7 @@ const StepBlock = styled.div`
   flex-direction: column;
   align-items: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  
+
   ${({ darkMode }) => css`
     border-color: ${darkMode ? '#555555' : '#dddddd'};
     background-color: ${darkMode ? '#444444' : '#ffffff'};
@@ -163,7 +163,16 @@ const Guide = ({ auth }) => {
   const userType = auth?.user?.role;
   const userSteps = steps.find(step => step.userType === userType);
 
-  if (!userSteps) return <p>No guide available for this user type.</p>;
+  if (!userSteps) return  <>
+  <Head darkMode={darkMode} title="About" />
+  <LandingLayout darkMode={darkMode} auth={auth} />
+<ParentContainer>
+<GuideContainer darkMode={darkMode}>
+<div>There is no guide available for the user. Please login to view guides.</div>
+</GuideContainer>
+</ParentContainer>
+
+</>;
 
   return (
     <>

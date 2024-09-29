@@ -29,6 +29,8 @@ class UpdateUserJobsRequest extends FormRequest
                 'status' => ['required'],
                 'message' => ['required'],
                 'timeSlots' => ['required'],
+                'start_date' => ['nullable', 'date'],
+                'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
             ];
         } else {
             return [
@@ -38,6 +40,8 @@ class UpdateUserJobsRequest extends FormRequest
                 'status' => ['sometimes', 'required'],
                 'message' => ['sometimes', 'required'],
                 'timeSlots' => ['sometimes', 'required'],
+                'start_date' => ['nullable', 'date'], 
+                'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
             ];
         }
     }

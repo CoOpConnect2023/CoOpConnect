@@ -44,7 +44,7 @@ function ViewPost() {
                                 /> */}
                                 <JobDetails darkMode={darkMode} fontSize={fontSize}>
                                     <JobTitle darkMode={darkMode} fontSize={fontSize}>{job.title}</JobTitle>
-                                    <CompanyName darkMode={darkMode} fontSize={fontSize}>{job.company}</CompanyName>
+                                    <CompanyName darkMode={darkMode} fontSize={fontSize}>{job?.company?.name}</CompanyName>
                                     <JobDescription darkMode={darkMode} fontSize={fontSize}>
                                         {job.description}
                                     </JobDescription>

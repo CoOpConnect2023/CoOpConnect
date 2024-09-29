@@ -12,29 +12,28 @@ export const MainContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 40px;
-    flex-shrink: 0;
+    justify-content: flex-start; /* Ensure items start from the top */
     width: 100%;
-    flex:1;
-    background-color: ${({ darkMode }) => (darkMode ? '#121212' : '#ffffff')};
+    min-height: 100vh; /* Ensure the container covers the full viewport height */
+    
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
-
-    @media (max-width: 991px) {
-        min-height: 100vh;
-    }
+    padding: 20px; /* Add padding for better spacing */
 `;
 
 export const Container = styled.section`
-    align-self: center;
     display: flex;
-    width: 788px;
-    max-width: 100%;
     flex-direction: column;
-    padding: 10px 10px 0;
+    width: 100%;
+
+    flex-grow: 1;
+    padding: 20px;
     background-color: ${({ darkMode }) => (darkMode ? '#2C2C2C' : '#fff')};
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
+    border-radius: 12px; /* Smooth corners */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
     transition: background-color 0.5s ease;
 `;
+
 
 export const Title = styled.h2`
     color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#1d1a20')};
@@ -51,16 +50,20 @@ export const JobPostingCard = styled.article`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    border-radius: 10px;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-    background-color: ${({ darkMode }) => (darkMode ? '#444' : '#eddcff')};
-    padding: 20px;
+    align-items: center; /* Center contents */
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Softer shadow for depth */
+    background-color: ${({ darkMode }) => (darkMode ? '#444' : '#f8f8ff')}; /* Slightly softer background */
+    padding: 30px; /* Increased padding for a spacious feel */
     margin-top: 20px;
     transition: background-color 0.5s ease;
+
     @media (max-width: 991px) {
-        max-width: 100%;
+        padding: 20px;
     }
 `;
+
 
 export const JobInfo = styled.section`
     display: flex;
@@ -304,6 +307,7 @@ export const ViewButton = styled.button`
 export const ActionButtons = styled.div`
     display: flex;
     justify-content: center;
+
     flex-direction: row;
     gap: 10px;
 `;

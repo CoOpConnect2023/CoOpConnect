@@ -55,6 +55,8 @@ function SettingsPanel({darkMode, fontSize}) {
     const [message, setMessage] = useState("");
     const [privacySetting, setPrivacySetting] = useState("Private");
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [previousDarkMode, setPreviousDarkMode] = useState(darkMode);
+    const [previousFontSize, setPreviousFontSize] = useState(fontSize);
 
     useEffect(() => {
         dispatch(getUser());
@@ -73,7 +75,7 @@ function SettingsPanel({darkMode, fontSize}) {
             new_password: newPassword,
             new_password_confirmation: confirmNewPassword,
         };
-       
+
         dispatch(updateUserPassword(passwordData))
             .unwrap()
             .then(() => {

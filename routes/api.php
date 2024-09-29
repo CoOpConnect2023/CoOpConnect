@@ -18,6 +18,8 @@ use App\Http\Controllers\DocumentsController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Api\V1\ApplicationController;
 use App\Http\Controllers\Api\V1\ShortlistController;
+use App\Http\Controllers\Api\V1\TeacherEmployerController;
+use App\Http\Controllers\Api\V1\CompaniesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,10 +71,17 @@ Route::get('/fetchdocs', [DocumentsController::class, 'fetchDoc']);
 Route::delete("/deletedoc/{id}", [DocumentsController::class, "deleteDoc"]);
 
 Route::get('/user-id', function () {
-    return response()->json(['user' => Auth::user()]);
+    // Eager load the 'company' relation
+    $user = Auth::user()->load('company');
+
+    return response()->json(['user' => $user]);
 })->middleware('auth:sanctum');
 Route::get('user-id/courses', [UserController::class, 'getUserId']);
 Route::get('/students/teacher/{teacherId}', [UserController::class, 'getStudentsByTeacherCourses']);
+
+Route::get('/employers/teacher/{teacherId}', [UserController::class, 'getEmployersByTeacher']);
+
+
 
 Route::get('/download/{id}', [DocumentsController::class, 'download'])->name('file.download');
 
@@ -81,8 +90,11 @@ Route::post('/update-preferences', [UserController::class, 'updatePreferences'])
 Route::get('/usersindex', [UserController::class, 'index'])->name('users.index');
 Route::get('/studentStatusPercents', [UserController::class, 'getStudentStatusPercentages'])->name('users.getStudentStatusPercentages');
 Route::get('/users', [UserController::class, 'getAllUsers']);
+Route::get('/users/students', [UserController::class, 'getAllStudents']);
+
 Route::delete('/users/{id}', [UserController::class, 'deleteUser']);
 Route::post('/upload-users', [UserController::class, 'uploadUsers']);
+Route::post('/users', [UserController::class, 'store']);
 
 
 Route::middleware('auth:sanctum')->post('/apply/{jobId}', [ApplicationController::class, 'apply']);
@@ -155,13 +167,23 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
 
 
     Route::apiResource('schools', SchoolController::class);
+
     Route::apiResource('token', TokenController::class);
     Route::get('/userjobs/list/{jobsId}', [UserJobsController::class, 'getUserDetails'])->name('jobs.getUserDetails');
     Route::get('/userjobs/user/{userJobsId}', [UserJobsController::class, 'getSingleUserDetails'])->name('jobs.getSingleUserDetails');
     Route::get('/userjobs/jobs', [UserJobsController::class, 'getJobsDetails'])->name('jobs.getJobsDetails');
     Route::get('/userjobs/job/{userJobsId}', [UserJobsController::class, 'getSingleJobDetails'])->name('jobs.getSingleJobDetails');
     Route::get('/userjobs/interviews', [UserJobsController::class, 'getInterviews'])->name('jobs.getInterviews');
+    Route::get('/userjobs/owned', [UserJobsController::class, 'getOwnedUserJobs'])->name('userjobs.getOwnedUserJobs');
+    Route::patch('/userjobs/{userJobsId}/edit-hired-student', [UserJobsController::class, 'editHiredStudent']);
+
     Route::apiResource('userjobs', UserJobsController::class);
+
+
+
+
+
+
     Route::apiResource('courses', CoursesController::class);
     Route::apiResource('usercourses', UserCoursesController::class);
     Route::apiResource('reflections', ReflectionsController::class);
@@ -172,4 +194,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
 
     Route::apiResource('applications', ApplicationController::class);
     Route::apiResource('shortlists', ShortListController::class);
+    Route::apiResource('teacheremployers', TeacherEmployerController::class);
+    Route::apiResource('companies', CompaniesController::class);
+    Route::delete('teacheremployers/{teacherId}/{employerId}', [TeacherEmployerController::class, 'destroy']);
 });

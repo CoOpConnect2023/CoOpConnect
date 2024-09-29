@@ -6,9 +6,11 @@ const appUrl = import.meta.env.VITE_APP_URL;
 const initialState = {
     user: null,
     users: null,
+    students: null,
     status: {
         user: "idle",
         users: "idle",
+        students: "idle",
         deleteUser: "idle",
     },
 };
@@ -37,6 +39,18 @@ export const getAllUsers = createAsyncThunk(
     }
 );
 
+export const getStudents = createAsyncThunk(
+    "user/getStudents",
+    async () => {
+        const response = await axios({
+            url: `${appUrl}/api/users/students`, // Assuming the API supports query params
+            method: "GET",
+        });
+
+        return response.data;
+    }
+);
+
 export const updateUserProfile = createAsyncThunk(
     "user/updateUserProfile",
     async (userData) => {
@@ -52,8 +66,8 @@ export const updateUserProfile = createAsyncThunk(
 
 export const updateUserPreferences = createAsyncThunk(
     "user/updateUserPreferences",
-    async ({ darkMode, fontSize }) => {
-     
+    async ({ darkMode, fontSize, notifications }) => {
+
 
       try {
         const response = await axios({
@@ -62,6 +76,7 @@ export const updateUserPreferences = createAsyncThunk(
           data: {
             darkMode: darkMode,
             fontSize: fontSize,
+            notifications: notifications,
           },
         });
 
@@ -176,6 +191,17 @@ export const userSlice = createSlice({
             })
             .addCase(updateUserPassword.rejected, (state, action) => {
                 state.status.user = "failed";
+            })
+
+            .addCase(getStudents.pending, (state) => {
+                state.status.students = "loading";
+            })
+            .addCase(getStudents.fulfilled, (state, action) => {
+                state.students = action.payload;
+                state.status.students = "succeeded";
+            })
+            .addCase(getStudents.rejected, (state) => {
+                state.status.students = "failed";
             });
     },
 });
@@ -184,6 +210,7 @@ export const { updateUser } = userSlice.actions;
 
 export const selectUser = (state) => state.user.user;
 export const selectUserStatus = (state) => state.user.status;
+export const selectAllStudents = (state) => state.user.students;
 export const selectAllUsers = (state) => state.user.users;
 export const selectAllUsersStatus = (state) => state.users.status;
 

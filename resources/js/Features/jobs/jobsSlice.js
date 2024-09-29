@@ -13,7 +13,7 @@ const initialState = {
         location: "",
         postingStatus: "Open",
         jobType: "Onsite",
-        company: "",
+        company_id: "",
         skills: [],
         userId: "",
     },
@@ -201,6 +201,7 @@ export const getJobsforUser = createAsyncThunk(
             url: `/jobs/user/${userId}`,
             method: "GET",
         });
+        console.log(response.data.data)
         return response.data.data;
     }
 );
@@ -275,9 +276,20 @@ export const postJob = createAsyncThunk(
           location,
           postingStatus,
           jobType,
-          company,
+          company_id,
           userId,
         } = params;
+
+        console.log('Posting job with the following data:', {
+            title,
+            description,
+            skills,
+            location,
+            postingStatus,
+            jobType,
+            company_id,
+            userId,
+          });
 
         const response = await axios({
           url: '/jobs',
@@ -289,7 +301,7 @@ export const postJob = createAsyncThunk(
             location,
             postingStatus,
             jobType,
-            company,
+            company_id,
             userId,
           },
         });
@@ -349,7 +361,13 @@ export const patchJob = createAsyncThunk("jobs/patchJob", async (params) => {
         postingStatus,
         jobType,
         company,
+        startDate,
+        endDate
     } = params;
+
+    // Log the params to ensure they are being passed correctly
+    console.log("Params received in patchJob:", params);
+
     const response = await axios({
         url: `/jobs/${jobsId}`,
         method: "PATCH",
@@ -362,11 +380,31 @@ export const patchJob = createAsyncThunk("jobs/patchJob", async (params) => {
             postingStatus,
             jobType,
             company,
+            startDate,
+            endDate
         },
     });
 
+    // Log the request data being sent in the PATCH request
+    console.log("Data sent in PATCH request:", {
+        jobsId,
+        title,
+        description,
+        skills,
+        location,
+        postingStatus,
+        jobType,
+        company,
+        startDate,
+        endDate
+    });
+
+    // Log the response from the server
+    console.log("Response received from PATCH request:", response.data);
+
     return response.data.data;
 });
+
 
 export const deleteJob = createAsyncThunk("jobs/deleteJob", async (params) => {
     const { jobId } = params;

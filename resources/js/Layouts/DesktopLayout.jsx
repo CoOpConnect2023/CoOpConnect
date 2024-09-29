@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import styled from 'styled-components';
 import logo from "@/Pages/Images/COOPCONNECTLOGO.png";
 import { useSelector } from "react-redux";
@@ -60,14 +60,16 @@ const LinkButton = styled(Link)`
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   }
 `;
+
 const navLinks = [
   { label: "Contact Us", href: "./contactus" },
   { label: "About Us", href: "./about" },
   { label: "Guide", href: "./guide" },
-  // Add more links as needed
+  { label: "Back to Home", href: "/" },
 ];
 
 export default function DesktopLayout({ auth }) {
+  const { url } = usePage(); // Get the current URL
   const darkMode = useSelector(state => state.accessibility.darkMode);
 
   function getUserLinks(userType) {
@@ -94,9 +96,12 @@ export default function DesktopLayout({ auth }) {
       </Link>
       <NavLinks darkMode={darkMode}>
         {navLinks.map(link => (
-          <LinkButton key={link.label} href={link.href} darkMode={darkMode}>
-            {link.label}
-          </LinkButton>
+          // Conditionally render the Back to Home link only if not on the home page
+          link.label === "Back to Home" && url === "/" ? null : (
+            <LinkButton key={link.label} href={link.href} darkMode={darkMode}>
+              {link.label}
+            </LinkButton>
+          )
         ))}
       </NavLinks>
       <AuthLinks>
@@ -106,7 +111,6 @@ export default function DesktopLayout({ auth }) {
           </LinkButton>
         ) : (
           <>
-            
             <LinkButton href={route("login")} darkMode={darkMode}>
               Sign In
             </LinkButton>

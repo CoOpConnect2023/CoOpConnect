@@ -39,6 +39,25 @@ class UserController extends Controller
         return response()->json($students);
     }
 
+    public function getAllStudents(Request $request)
+    {
+        // Fetch all users with the role of 'student', excluding the authenticated user
+        $students = User::where('id', '!=', $request->user()->id)  // Exclude the authenticated user
+            ->where('role', 'student')  // Filter users with the 'student' role
+            ->get(['id','email']);  // Select only required fields
+
+        // Return the filtered student data in JSON format
+        return response()->json($students);
+    }
+
+
+
+
+
+
+
+
+
     public function getUserId()
     {
         $userId = Auth::id();
@@ -109,6 +128,8 @@ class UserController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->role = $request->role;
+        $user->pronouns = $request->pronouns;
+        $user->company_id = $request->company_id;
 
 
         if ($request->has('school_id')) {
@@ -117,7 +138,7 @@ class UserController extends Controller
         }
 
         $user->positiontitle = $request->positiontitle;
-        $user->company_name = $request->company_name;
+
 
 
         $skills = $request->input('skills');
@@ -276,14 +297,14 @@ public function deleteUser(Request $request, $id)
             $createdUsers = [];
             $createdSchools = [];
 
-            // Handle schools data and store created schools
+
             if (!empty($schoolsData)) {
                 foreach ($schoolsData as $schoolData) {
                     $existingSchool = School::where('name', $schoolData['name'])->first();
                     if ($existingSchool) {
-                        // Skip creating the school and store the reference
+
                         $createdSchools[$existingSchool->name] = $existingSchool->id;
-                        continue;  // Continue to the next school
+                        continue;
                     }
 
                     $validator = Validator::make($schoolData, [
@@ -418,29 +439,27 @@ public function deleteUser(Request $request, $id)
                     ]);
 
                     if ($validator->fails()) {
-                        continue;  // Skip creating the course if validation fails
+                        continue;
                     }
 
-                    // Create course
+
                     Courses::create($courseData);
                 }
 
-                  // Handle jobs data
+
                   if (!empty($jobsData)) {
                     foreach ($jobsData as $jobData) {
-                        Log::info('Processing job data:', $jobData); // Log the incoming job data
+                        Log::info('Processing job data:', $jobData);
 
-                        // Convert the skills field from a string to an array if necessary
+
         if (isset($jobData['skills']) && is_string($jobData['skills'])) {
-            // Remove the brackets and split the string by commas
+
             $jobData['skills'] = explode(',', str_replace(['[', ']', "'"], '', $jobData['skills']));
-            // Trim any extra whitespace from each skill
+
             $jobData['skills'] = array_map('trim', $jobData['skills']);
         }
 
-        Log::info('Parsed skills:', ['skills' => $jobData['skills']]); // Log the parsed skills
 
-        // Check if a job with the same title and company already exists
         $existingJob = Jobs::where('title', $jobData['title'])
             ->where('company', $jobData['company'])
             ->first();
@@ -450,16 +469,16 @@ public function deleteUser(Request $request, $id)
                 'title' => $jobData['title'],
                 'company' => $jobData['company']
             ]);
-            continue;  // Skip creating the job if it already exists with the same title and company
+            continue;
         }
 
-        // Log before validation
-        Log::info('Validating job data:', $jobData);
+
+
 
         $validator = Validator::make($jobData, [
             'title' => 'required|string',
             'description' => 'required|string',
-            'skills' => 'required|array',  // Ensure this is required as per the store request
+            'skills' => 'required|array',
             'location' => 'required|string',
             'posting_status' => ['required', Rule::in(['Open', 'Closed'])],
             'job_type' => 'required|string',
@@ -469,13 +488,13 @@ public function deleteUser(Request $request, $id)
 
         if ($validator->fails()) {
             Log::error('Job validation failed:', $validator->errors()->toArray());
-            continue;  // Skip creating the job if validation fails
+            continue;
         }
 
-        // Log before creating the job
+
         Log::info('Creating job with data:', $jobData);
 
-        // Create the job
+
         Jobs::create($jobData);
 
         Log::info('Job created successfully:', $jobData);
@@ -486,7 +505,7 @@ public function deleteUser(Request $request, $id)
 
             DB::commit();
 
-            // Send welcome emails
+
             foreach ($createdUsers as $user) {
                 Mail::to($user->email)->send(new WelcomeEmail($user));
             }
@@ -497,6 +516,8 @@ public function deleteUser(Request $request, $id)
             return response()->json(['message' => 'Failed to process users, schools, or courses', 'error' => $e->getMessage()], 500);
         }
     }
+
+    //change password
 
     public function changePassword(ChangePasswordRequest $request)
     {
@@ -512,52 +533,69 @@ public function deleteUser(Request $request, $id)
         return response()->json(['message' => 'Password updated successfully']);
     }
 
+    //update user prefs
+
     public function updatePreferences(Request $request)
+{
+    $user = Auth::user();
+    $validatedData = $request->validate([
+        'darkMode' => 'boolean',
+        'fontSize' => 'sometimes|string|in:small,medium,large',
+        'notifications' => 'sometimes|boolean',
+    ]);
+
+    if ($request->has('darkMode')) {
+        $user->darkMode = $request->darkMode;
+    }
+
+    if ($request->has('fontSize')) {
+        switch ($request->fontSize) {
+            case 'small':
+                $user->fontSize = 'small';
+                break;
+            case 'medium':
+                $user->fontSize = 'medium';
+                break;
+            case 'large':
+                $user->fontSize = 'large';
+                break;
+        }
+    }
+
+    if ($request->has('notifications')) {
+        $user->notifications = $request->notifications;
+    }
+
+    $user->save();
+    return response()->json(['message' => 'Preferences updated successfully']);
+}
+
+
+    public function store(Request $request)
     {
-        $user = Auth::user();
+        // Validate the incoming request
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8|confirmed',
 
-
-
-
-
-        $validatedData = $request->validate([
-            'darkMode' => 'boolean',
-            'fontSize' => 'sometimes|string|in:small,medium,large',
         ]);
 
+        // Create the user
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            // You can also add additional fields here
+        ]);
 
-
-
-
-        if ($request->has('darkMode')) {
-            $user->darkMode = $request->darkMode;
-
-        }
-
-
-        if ($request->has('fontSize')) {
-            switch ($request->fontSize) {
-                case 'small':
-                    $user->fontSize = 'small';
-                    break;
-                case 'medium':
-                    $user->fontSize = 'medium';
-                    break;
-                case 'large':
-                    $user->fontSize = 'large';
-                    break;
-            }
-
-        }
-
-
-        $user->save();
-
-
-
-
-        return response()->json(['message' => 'Preferences updated successfully']);
+        // Return a response, you can return the newly created user or any message
+        return response()->json([
+            'message' => 'User created successfully!',
+            'user' => $user
+        ], 201);
     }
+
 
 
 }

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\School;
+use App\Models\Company;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -29,6 +30,7 @@ class UserFactory extends Factory
 
         $statusOptions = ['working', 'interviewing', 'searching'];
         $selectedStatus = $this->faker->randomElement($statusOptions);
+        $pronounOptions = ['he/him', 'she/her', 'they/them', 'other'];
 
         return [
             'name' => fake()->name(),
@@ -41,6 +43,8 @@ class UserFactory extends Factory
             'skills' => $this->faker->randomElements(['JavaScript', 'PHP', 'HTML', 'CSS', 'Python'], $this->faker->numberBetween(1, 4)),
             'status' => $this->faker->randomElement(['searching', 'interviewing', 'working']),
             'school_id' => School::inRandomOrder()->first()->id,
+            'company_id' => Company::factory(),
+            'pronouns' => $this->faker->randomElement($pronounOptions),
 
 
             'working' => $selectedStatus === 'working',

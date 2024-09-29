@@ -13,13 +13,14 @@ const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
 const Container = styled.section`
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid ${({ darkMode }) => (darkMode ? '#EDDCFF' : 'rgba(38, 14, 68, 1)')};
+    align-items: start;
+    justify-content: start;
+
     padding: 10px;
     border-radius: 10px;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
     transition: background-color 0.5s ease;
+    height: 100%;
 
     background-color: ${({ darkMode }) => (darkMode ? '#2C2C2C' : '#fff')};
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
@@ -95,7 +96,7 @@ const OptionImage = styled.img`
 
 const ReflectionDocuments = ({ darkMode, fontSize }) => (
     <Container darkMode={darkMode} fontSize={fontSize}>
-        <Title darkMode={darkMode} fontSize={fontSize}>Documents</Title>
+
         <OptionsWrapper darkMode={darkMode} fontSize={fontSize}>
             <OptionCard color="var(--Schemes-Tertiary, #7c4e7e)">
                 <Link href="/employer/documents">
