@@ -24,7 +24,7 @@ export default function Chat({newMessage, setNewMessage, brandNewMessage, setBra
       const handleBackToConversations = () => {
 
         setConversationsID(null);
-       
+
       };
 
 
@@ -56,7 +56,7 @@ export default function Chat({newMessage, setNewMessage, brandNewMessage, setBra
                         fontSize={fontSize}>
                     <RightColumn darkMode={darkMode}
                         fontSize={fontSize}>
-                        {selectedConversation && <UserPanel darkMode={darkMode}
+                        {selectedConversation && <UserPanel messages={messages} darkMode={darkMode}
                         fontSize={fontSize} conversation={selectedConversation} currentUser={currentUser} />}
                         <ScrollableContainer darkMode={darkMode}
                         fontSize={fontSize}>

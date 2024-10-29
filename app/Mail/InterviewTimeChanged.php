@@ -128,7 +128,7 @@ class InterviewTimeChanged extends Mailable
                                 </div>
                                 <div class="content">
                                     <p>Please confirm your availability as soon as possible.</p>
-                                    <a href="http://coop-connect.us-east-2.elasticbeanstalk.com/" style="display: inline-block; padding: 10px 20px; margin-top: 20px; font-size: 16px; color: #ffffff; background-color: #6E3AA7; border-radius: 5px; text-align: center; text-decoration: none;">View Interview Details</a>
+                                    <a href="' . config('app.url') . '" style="display: inline-block; padding: 10px 20px; margin-top: 20px; font-size: 16px; color: #ffffff; background-color: #6E3AA7; border-radius: 5px; text-align: center; text-decoration: none;">View Interview Details</a>
                                 </div>
                                 <div class="footer">
                                     <p>&copy; ' . date('Y') . ' COOP CONNECT. All rights reserved.</p>

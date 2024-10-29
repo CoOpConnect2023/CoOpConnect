@@ -1,11 +1,20 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
 import NavBar from "./Components/NavBar";
 import downarrow from "@/Pages/Images/Icon.svg";
-import wordlogo from "../Images/worddocicon.png";
-import pdflogo from "../Images/pdf-icon.png";
-const appUrl = import.meta.env.VITE_APP_URL;
-import { useSelector, useDispatch } from "react-redux";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FileItem } from "./Documents/FileItem";
+import { TabMenu } from "./Documents/TabMenu";
+import { DocumentDropZone } from "./Documents/DocumentDropZone";
+import userImage from "@/Pages/Images/user.svg";
+import {
+    getUser, selectUser, selectUserStatus
+} from "@/Features/users/userSlice";
+import { selectDocuments, getDocuments, patchDocument, postDocument, getUserDocuments, downloadDocument, deleteDocument, uploadDocuments } from "@/Features/documents/documentsSlice";
+
+import { selectUserDocuments, getDocumentsForUserWithUser, createUserDocumentsFromEmails, getDocumentsSharedWithUser, selectSharedUserDocuments } from "@/Features/userdocumentsSlice/userDocumentsSlice";
 import {
     Wrapper,
     Content,
@@ -14,187 +23,62 @@ import {
     TabList,
     TabItem,
     FileList,
-    FileContainer,
-    FileIcons,
-    FileDetails,
-    FileTitle,
-    FileSize,
-    FileActions,
-    ActionButton,
     FormSection,
     Form,
     Title,
     Label,
+    Input,
     FileDropContainer,
     DropText,
     FileTypes,
     SecurityNote,
     SubmitButton,
-    DropZoneWrapper,
-    DropZoneContainer,
-    DropZone,
-    DropZoneText,
-    DropZoneDescription,
-    PreviewImage,
+    ShareSection,
+    BackButton,
+    EmailInput,
+    EmailList,
+    EmailItem,
+    RemoveEmailButton,
+    ShareButton,
+    ButtonContainerUpload,
+    ToggleSwitch,
+    Slider,
+    ScrollableContainer,
+    ShareBackContainer,
+    ProfileImage,
 } from "./Styling/Document.styles";
-
-function DocumentDropZone({
-    onFileDrop,
-    imgSrc,
-    altText,
-    description,
-    clearPreviewsTrigger,
-}) {
-    const [isDragging, setIsDragging] = useState(false);
-    const [filesPreview, setFilesPreview] = useState([]);
-    const darkMode = useSelector(state => state.accessibility.darkMode);
-    const fontSize = useSelector(state => state.accessibility.textSize);
-
-    const handleDragOver = (e) => {
-        e.preventDefault();
-        setIsDragging(true);
-    };
-
-    const handleDragLeave = () => {
-        setIsDragging(false);
-    };
-
-    const handleDrop = (e) => {
-        e.preventDefault();
-        setIsDragging(false);
-        const files = Array.from(e.dataTransfer.files);
-        onFileDrop(files);
-        setFilesPreview(
-            files.map((file) => ({
-                file,
-                preview: URL.createObjectURL(file),
-                type: file.type,
-            }))
-        );
-    };
-
-    useEffect(() => {
-        if (clearPreviewsTrigger) {
-            setFilesPreview([]);
-        }
-    }, [clearPreviewsTrigger]);
-
-    const getIconForFileType = (fileType) => {
-        if (fileType.includes("pdf")) {
-            return pdflogo;
-        } else if (fileType.includes("word")) {
-            return wordlogo;
-        } else {
-            return null;
-        }
-    };
-
-    return (
-        <DropZoneContainer darkMode={darkMode} fontSize={fontSize}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            isDragging={isDragging}
-            data-testid="drop-zone-container-employer"
-        >
-            <DropZone darkMode={darkMode} fontSize={fontSize} data-testid="drop-zone-employer">
-                {filesPreview.length > 0 ? (
-                    filesPreview.map((fileObj, index) => {
-                        const icon = getIconForFileType(fileObj.type);
-                        return (
-                            <PreviewImage darkMode={darkMode} fontSize={fontSize} data-testid="drop-zone-employer"
-                                key={index}
-                                src={icon ? icon : fileObj.preview}
-                            />
-                        );
-                    })
-                ) : (
-                    <img data-testid="drop-zone-employer"
-                        src={imgSrc}
-                        alt={altText}
-                        style={{
-                            width: "100px",
-                            height: "100px",
-                        }}
-                    />
-                )}
-                <DropZoneText darkMode={darkMode} fontSize={fontSize}>Drag your files here</DropZoneText>
-            </DropZone>
-            <DropZoneDescription>{description}</DropZoneDescription>
-        </DropZoneContainer>
-    );
-}
-
-
-const TabMenu = ({ activeTab, handleTabChange, darkMode, fontSize }) => (
-    <TabList darkMode={darkMode} fontSize={fontSize} >
-      <TabItem darkMode={darkMode} fontSize={fontSize} onClick={() => handleTabChange("Employer Documents")} className={activeTab === "Employer Documents" ? "active" : ""}>
-        Employer Documents
-      </TabItem>
-      <TabItem darkMode={darkMode} fontSize={fontSize} onClick={() => handleTabChange("Shortlist Documents")} className={activeTab === "Shortlist Documents" ? "active" : ""}>
-        Shortlist Documents
-      </TabItem>
-      <TabItem darkMode={darkMode} fontSize={fontSize} onClick={() => handleTabChange("Applicant Documents")} className={activeTab === "Applicant Documents" ? "active" : ""}>
-        Applicant Documents
-      </TabItem>
-    </TabList>
-  );
+import wordlogo from "../Images/worddocicon.png";
+import pdflogo from "../Images/pdf-icon.png";
+const appUrl = import.meta.env.VITE_APP_URL;
 
 
 
-const FileItem = ({ title, type, downloadDocument, doc, handleDelete, darkMode, fontSize }) => (
-    <FileContainer darkMode={darkMode} fontSize={fontSize}>
-        <FileIcons darkMode={darkMode} fontSize={fontSize}>
-            <img
-                onClick={() => handleDelete(type)}
-                loading="lazy"
-                src="https://cdn.builder.io/api/v1/image/assets/TEMP/a4cdb93b18319c472265cce9eb4f7345c821b3f3e0269b1464d286a7094472e4?apiKey=d66532d056b14640a799069157705b77&"
-                alt=""
-                style={{ width: "24px", height: "24px" }}
-            />
-            <img
-                loading="lazy"
-                src="https://cdn.builder.io/api/v1/image/assets/TEMP/3a9403df13b2dd9b0c6d623620f8e8a11ded89bf005c81d6d7336457cda636ca?apiKey=d66532d056b14640a799069157705b77&"
-                alt=""
-                style={{ width: "24px", height: "24px" }}
-            />
-        </FileIcons>
-        <FileDetails darkMode={darkMode} fontSize={fontSize}>
-            <div>
-                <FileTitle darkMode={darkMode} fontSize={fontSize}   >{title}</FileTitle>
-                <FileSize darkMode={darkMode} fontSize={fontSize}>{type}</FileSize>
-            </div>
-            <FileActions darkMode={darkMode} fontSize={fontSize}>
-                <ActionButton darkMode={darkMode} fontSize={fontSize} onClick={() => downloadDocument(type, title)}>
-                    Download{" "}
-                    <img
-                        loading="lazy"
-                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/2af48e24c34a904b3b5a3559caeea0ddb30ee829cab8a5c4740ff86e9c992067?apiKey=d66532d056b14640a799069157705b77&"
-                        alt="Download icon"
-                    />
-                </ActionButton>
-                <ActionButton darkMode={darkMode} fontSize={fontSize} outline>
-                    Share{" "}
-                    <img
-                        loading="lazy"
-                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/8a625fb433ce98b0d17f96a94179431e6cdfe22a98d39394247a5eaf65fd6856?apiKey=d66532d056b14640a799069157705b77&"
-                        alt="Share icon"
-                    />
-                </ActionButton>
-            </FileActions>
-        </FileDetails>
-    </FileContainer>
-);
 
-function Document() {
+
+
+
+
+
+const Document = () => {
+    const dispatch = useDispatch();
+    const sharedDocuments = useSelector(selectUserDocuments);
+    const sharedDocumentsWithMe = useSelector(selectSharedUserDocuments);
+    const documents = useSelector(selectDocuments);
     const [filesToUpload, setFilesToUpload] = useState([]);
     const [clearPreviewsTrigger, setClearPreviewsTrigger] = useState(false);
     const [userId, setUserId] = useState(null);
     const [userDocuments, setUserDocuments] = useState([]);
-    const [activeTab, setActiveTab] = useState("Progress Reports");
-    const [shortlistDocuments, setShortlistDocuments] = useState([]);
+    const [activeTab, setActiveTab] = useState("My Files");
+    const [shareMode, setShareMode] = useState(false);
+    const [emailInput, setEmailInput] = useState('');
+    const [selectedDocumentId, setSelectedDocumentId] = useState(null);
+    const [selectedDocumentName, setSelectedDocumentName] = useState(null);
     const darkMode = useSelector(state => state.accessibility.darkMode);
     const fontSize = useSelector(state => state.accessibility.textSize);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [emailList, setEmailList] = useState([]);
+
+
 
 
 
@@ -202,16 +86,17 @@ function Document() {
     useEffect(() => {
         // Fetch the XSRF token from cookies and set it in Axios headers
         const csrfToken = document.cookie
-            .split("; ")
-            .find((row) => row.startsWith("XSRF-TOKEN="))
-            ?.split("=")[1];
-        axios.defaults.headers.common["X-XSRF-TOKEN"] = csrfToken;
+            .split('; ')
+            .find(row => row.startsWith('XSRF-TOKEN='))
+            ?.split('=')[1];
+        axios.defaults.headers.common['X-XSRF-TOKEN'] = csrfToken;
 
         // Fetch the user ID, only allows if token is correct
         const fetchUserId = async () => {
             try {
                 const response = await axios.get(`${appUrl}/api/user-id`);
                 setUserId(response.data.user.id);
+
             } catch (error) {
                 console.error("Error fetching user ID:", error);
             }
@@ -220,228 +105,298 @@ function Document() {
         fetchUserId();
     }, []);
 
+
     useEffect(() => {
-        const fetchDocuments = async () => {
-            try {
-                if (!userId) {
-                    return; // Exit early if userId is null or undefined
-                }
+        if (userId) {
+            dispatch(getUserDocuments({ userId }));
+        }
+    }, [dispatch, userId]);
 
-                const response = await axios.get(`${appUrl}/api/fetchdocs`, {
-                    params: {
-                        user_id: userId,
-                    },
-                });
 
-                if (response.data.status === 1) {
-                    setUserDocuments(response.data.data);
 
-                } else {
-                    console.error(
-                        "Error fetching documents:",
-                        response.data.message
-                    );
-                }
-            } catch (error) {
-                console.error("Error fetching documents:", error);
-            }
-        };
 
-        fetchDocuments();
-    }, [userId]);
 
-    const fetchShortlistDocuments = async () => {
-        try {
-            const response = await axios.get(`http://127.0.0.1:8000/api/users/${userId}/shortlists`);
+    useEffect(() => {
+        if (selectedDocumentId) {
+            dispatch(getDocumentsForUserWithUser({ documentID: selectedDocumentId }));
+        }
+    }, [dispatch, selectedDocumentId]);
 
-            if (response.data && response.data.shortlists && response.data.shortlists.length > 0) {
-                const allDocuments = response.data.shortlists.flatMap(shortlist =>
-                    shortlist.applicants.flatMap(applicant =>
-                        applicant.documents.map(doc => ({
-                            ...doc,
-                            applicantName: applicant.name,
-                        }))
-                    )
-                );
-                setShortlistDocuments(allDocuments);
 
-            } else {
-                console.error('No shortlist documents found in the response:', response);
-            }
-        } catch (error) {
-            console.error('Error fetching shortlist documents:', error);
+    const handleTabChange = (tab) => {
+        setActiveTab(tab);
+
+        // Check if the selected tab is "Shared With Me" and dispatch the action
+        if (tab === "Shared With Me") {
+            dispatch(getDocumentsSharedWithUser({ userId }));
         }
     };
+
+    console.log(sharedDocumentsWithMe);
+
+
+
+
+
+
+
+
+
 
     const handleFileDrop = async (files) => {
         setFilesToUpload((prevFiles) => [...prevFiles, ...files]);
         setClearPreviewsTrigger(false);
+
     };
 
     const handleDelete = async (id) => {
-        try {
-            const response = await axios.delete(
-                `${appUrl}/api/deletedoc/${id}`
-            );
-            if (response.data.status === 1) {
-                setUserDocuments((prevDocuments) =>
-                    prevDocuments.filter((doc) => doc.id !== id)
-                );
-
-            } else {
-                console.error(
-                    "Error deleting document:",
-                    response.data.message
-                );
-            }
-        } catch (error) {
-            console.error("Error deleting document:", error);
-        }
+        dispatch(deleteDocument({ documentId: id }));
     };
 
-    const handleUpload = async () => {
-        const formData = new FormData();
+    const handleUpload = (e) => {
+        e.preventDefault();
+        dispatch(uploadDocuments({ filesToUpload, userId }))
+            .then(() => {
+                // Clear files and reset state after successful upload
+                setFilesToUpload([]);
+                setClearPreviewsTrigger(true);
+            })
+            .catch((error) => {
+                console.error('Error uploading files:', error);
+            });
+    };
 
-        filesToUpload.forEach((file) => {
-            let fileType;
+    const handleDownload = (id, title) => {
+        dispatch(downloadDocument({ id, title }));
+    };
 
-            // Determine the file type based on the file's MIME type
-            if (file.type === "application/pdf") {
-                fileType = "pdf";
-            } else if (file.type === "application/docx") {
-                fileType = "word";
+    const userStatus = useSelector(selectUserStatus);
+    if (userStatus === 'loading') {
+        return <LogoLoadingComponent darkMode={darkMode} />;
+    }
+
+
+
+    const handleShareClick = (documentId, documentName) => {
+        setShareMode(true);
+        setSelectedDocumentId(documentId);
+        setSelectedDocumentName(documentName); // Set the selected document name
+        dispatch(getDocumentsForUserWithUser({ documentID: documentId }));
+    };
+
+
+    useEffect(() => {
+        if (sharedDocuments) {
+            setEmailList(sharedDocuments.map(item => ({
+                email: item.user?.email,
+                profile_image: item.user?.profile_image
+            })));
+        }
+    }, [sharedDocuments]);
+
+
+    const handleBackToDocuments = () => {
+        setShareMode(false);
+        setSelectedDocumentId(false);
+        setSelectedDocumentName(null);
+    };
+
+    const handleEmailInputChange = (e) => {
+        setEmailInput(e.target.value);
+    };
+
+    const handleAddEmail = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+
+            // Trim the email input and check if it's valid
+            const trimmedEmail = emailInput.trim();
+
+            // Check if the email is valid and doesn't already exist in the list
+            if (trimmedEmail !== '' && !emailList.some(item => (typeof item === 'object' ? item.email : item) === trimmedEmail)) {
+                console.log("Adding email to list:", trimmedEmail);
+
+                setEmailList((prevEmails) => {
+                    // Add the email in the format of { email: trimmedEmail, profile_image: null }
+                    const updatedList = [...prevEmails, { email: trimmedEmail, profile_image: null }];
+                    console.log("Updated email list:", updatedList);
+                    return updatedList;
+                });
+
+                // Reset the email input field after adding
+                setEmailInput('');
+                console.log("Email input cleared.");
             } else {
-                // Handle other file types as needed
-                fileType = "other";
-            }
-
-            // Append the file with its type to formData
-            formData.append("files[]", file);
-            formData.append("file_types[]", fileType);
-        });
-
-        formData.append("user_id", userId);
-
-        try {
-            const response = await axios.post(
-                `${appUrl}/api/uploaddocs`,
-                formData,
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
+                if (trimmedEmail === '') {
+                    console.log("Email input is empty after trimming.");
+                } else if (emailList.some(item => (typeof item === 'object' ? item.email : item) === trimmedEmail)) {
+                    console.log("Email already exists in the list:", trimmedEmail);
                 }
-            );
-
-            setFilesToUpload([]);
-            setClearPreviewsTrigger(true);
-            window.location.reload();
-        } catch (error) {
-            console.error("Error uploading files:", error);
+            }
         }
     };
 
-    const downloadDocument = async (id, title) => {
-        try {
-            const response = await axios.get(`${appUrl}/api/download/${id}`, {
-                responseType: "blob",
-            });
-
-            // Create a blob URL for the response data
-            const blob = new Blob([response.data], {
-                type: response.data.type,
-            });
-            const url = window.URL.createObjectURL(blob);
-
-            // Create a link element to trigger the download
-            const link = document.createElement("a");
-            link.href = url;
-            link.setAttribute("download", title);
-            document.body.appendChild(link);
-
-            // Trigger the download
-            link.click();
-
-            link.parentNode.removeChild(link);
-            window.URL.revokeObjectURL(url);
 
 
-    } catch (error) {
-        console.error("Error downloading document:", error);
-    }
-};
+    const handleRemoveEmailClick = (e, index) => {
+        e.preventDefault();
+        handleRemoveEmail(index);
+    };
 
-const handleTabChange = (tab) => {
-    setActiveTab(tab);
+    const handleShare = (e) => {
+        e.preventDefault();
 
-    // Fetch shortlist documents when Shortlist Documents tab is clicked
-    if (tab === 'Shortlist Documents') {
-        fetchShortlistDocuments();
-    }
-};
+        // Extract only the email addresses from emailList
+        const emailAddresses = emailList
+            .map(item => (typeof item === 'object' ? item.email : item))  // Extract email from object or string
+            .filter(email => email); // Ensure no null or undefined values
 
-return(
+        // Dispatch the action with only the email addresses
+        dispatch(createUserDocumentsFromEmails({ emailList: emailAddresses, selectedDocumentId }));
+    };
 
-    <NavBar header={"Documents"}>
-            <Wrapper darkMode={darkMode} fontSize={fontSize}>
-                <Content darkMode={darkMode} fontSize={fontSize}>
-                    <FileSection darkMode={darkMode} fontSize={fontSize}>
-                        <SectionHeader darkMode={darkMode} fontSize={fontSize}>
-                            <TabMenu darkMode={darkMode} fontSize={fontSize}
+
+    const handleRemoveEmail = (index) => {
+        setEmailList((prevEmails) => prevEmails.filter((_, i) => i !== index));
+    };
+
+
+
+    const filteredEmailList = emailList.filter(item => item?.email && item.email.toLowerCase().includes(searchQuery.toLowerCase()));
+
+    console.log(filteredEmailList)
+
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+    };
+    console.log(sharedDocumentsWithMe);
+
+    return (
+        <NavBar header={"Documents"}>
+            <Wrapper fontSize={fontSize} darkMode={darkMode}>
+                <Content fontSize={fontSize} darkMode={darkMode}>
+                    <FileSection fontSize={fontSize} darkMode={darkMode}>
+                        <SectionHeader fontSize={fontSize} darkMode={darkMode}>
+                            <TabMenu fontSize={fontSize} darkMode={darkMode}
                                 tabs={[
-                                    "Employer Documents",
-                                    "Shortlist Documents",
-                                    "Applicant Documents",
                                     "Progress Reports",
+                                    "Student Logs",
+                                    "Shared With Me",
+                                    "My Files",
                                 ]}
                                 activeTab={activeTab}
                                 setActiveTab={setActiveTab}
                                 handleTabChange={handleTabChange}
                             />
                         </SectionHeader>
-                        <FileList darkMode={darkMode} fontSize={fontSize}>
-                            {(activeTab === 'Employer Documents' && userDocuments.length > 0) &&
-                                userDocuments.map((doc, index) => (
-                                    <FileItem darkMode={darkMode} fontSize={fontSize}
+                        <FileList fontSize={fontSize} darkMode={darkMode}>
+                            {(activeTab === 'Shared With Me' && sharedDocumentsWithMe.length > 0) &&
+                                sharedDocumentsWithMe.map((doc, index) => (
+                                    <FileItem fontSize={fontSize} darkMode={darkMode}
+                                        key={index}
+                                        title={doc.document.title}
+                                        type={doc.document.id}
+
+                                        visible={doc.document.visibile}
+                                        activeTab={activeTab}
+                                        handleDownload={() => handleDownload(doc.document.id, doc.document.title)}
+
+                                        doc={doc.document}
+
+                                    />
+                                ))}
+                            {(activeTab === 'My Files' && documents.length > 0) &&
+                                documents.map((doc, index) => (
+                                    <FileItem fontSize={fontSize} darkMode={darkMode}
                                         key={index}
                                         title={doc.title}
                                         type={doc.id}
-                                        downloadDocument={() => downloadDocument(doc.id, doc.title)}
+                                        visible={doc.visibile}
+
+                                        handleDownload={() => handleDownload(doc.id, doc.title)}
                                         handleDelete={() => handleDelete(doc.id)}
                                         doc={doc}
-                                    />
-                                ))}
-                            {(activeTab === 'Shortlist Documents' && shortlistDocuments.length > 0) &&
-                                shortlistDocuments.map((doc, index) => (
-                                    <FileItem darkMode={darkMode} fontSize={fontSize}
-                                        key={index}
-                                        title={doc.title}
-                                        type={doc.applicantName}
-                                        downloadDocument={() => downloadDocument(doc.id, doc.title)}
-
-                                        doc={doc}
+                                        handleShareClick={handleShareClick}
                                     />
                                 ))}
                         </FileList>
                     </FileSection>
-                    <FormSection darkMode={darkMode} fontSize={fontSize}>
-                        <Form darkMode={darkMode} fontSize={fontSize}>
-                            <Title darkMode={darkMode} fontSize={fontSize}>Add Documents</Title>
-                            <Label darkMode={darkMode} fontSize={fontSize} htmlFor="fileUpload">Attach Documents</Label>
-                            <DropZoneWrapper darkMode={darkMode} fontSize={fontSize}>
-                                <DocumentDropZone darkMode={darkMode} fontSize={fontSize} data-testid="drop-zone-employer"
-                                    onFileDrop={handleFileDrop}
-                                    clearPreviewsTrigger={clearPreviewsTrigger}
-                                />
-                            </DropZoneWrapper>
-                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <FileTypes darkMode={darkMode} fontSize={fontSize}>Accepted File Types: .doc, .docx, .pdf only</FileTypes>
-                                <SecurityNote darkMode={darkMode} fontSize={fontSize}>
-                                    {/* Security icon */}
-                                    Secure
-                                </SecurityNote>
-                            </div>
-                            <SubmitButton darkMode={darkMode} fontSize={fontSize} onClick={handleUpload}>Upload</SubmitButton>
+                    <FormSection fontSize={fontSize} darkMode={darkMode}>
+                        <Form fontSize={fontSize} darkMode={darkMode}>
+
+                            {!shareMode ? (
+                                <>
+                                    <Title fontSize={fontSize} darkMode={darkMode}>Add Documents</Title>
+                                    <Label fontSize={fontSize} darkMode={darkMode} htmlFor="fileUpload">Attach Documents</Label>
+                                    <DropZoneWrapper fontSize={fontSize} darkMode={darkMode}>
+                                        <DocumentDropZone fontSize={fontSize} darkMode={darkMode}
+                                            onFileDrop={handleFileDrop}
+                                            clearPreviewsTrigger={clearPreviewsTrigger}
+                                        />
+                                    </DropZoneWrapper>
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                        }}
+                                    >
+                                        <FileTypes fontSize={fontSize} darkMode={darkMode}>
+                                            Accepted File Types: .doc, .docx, .pdf, xlsx only
+                                        </FileTypes>
+                                        <SecurityNote fontSize={fontSize} darkMode={darkMode}>
+                                            <img
+                                                loading="lazy"
+                                                src="https://cdn.builder.io/api/v1/image/assets/TEMP/8b7ec72c66d30f8ec5c35d4cec5db08f1877f1a7d86ea8b6c08df8054b4a9a85?apiKey=d66532d056b14640a799069157705b77&"
+                                                alt=""
+                                            />
+                                            Secure
+                                        </SecurityNote>
+                                    </div>
+                                    <ButtonContainerUpload>
+                                        <SubmitButton fontSize={fontSize} darkMode={darkMode} onClick={handleUpload}>Upload</SubmitButton>
+
+                                    </ButtonContainerUpload>
+                                </>
+                            ) : (
+
+                                <>
+                                    <Title fontSize={fontSize} darkMode={darkMode}>Share {selectedDocumentName}</Title>
+                                    <EmailInput fontSize={fontSize}
+                                        darkMode={darkMode}
+                                        type="text"
+                                        value={searchQuery}
+                                        onChange={handleSearchChange}
+                                        placeholder="Search emails"
+                                    />
+                                    <EmailInput fontSize={fontSize} darkMode={darkMode}
+                                        type="text"
+                                        value={emailInput}
+                                        onChange={handleEmailInputChange}
+                                        onKeyDown={handleAddEmail}
+                                        placeholder="Enter email and press Enter"
+                                    />
+                                    <ScrollableContainer fontSize={fontSize} darkMode={darkMode}>
+                                        <EmailList fontSize={fontSize} darkMode={darkMode}>
+                                            {filteredEmailList.map((email, index) => (
+                                                <EmailItem fontSize={fontSize} darkMode={darkMode} key={index}><ProfileImage src={email.profile_image} alt={userImage} />
+
+                                                    {email.email}
+                                                    <RemoveEmailButton
+                                                        fontSize={fontSize}
+                                                        darkMode={darkMode}
+                                                        onClick={(e) => handleRemoveEmailClick(e, index)}
+                                                    >
+                                                        X
+                                                    </RemoveEmailButton>
+                                                </EmailItem>
+                                            ))}
+                                        </EmailList>
+                                    </ScrollableContainer>
+                                    <ShareBackContainer> <ShareButton fontSize={fontSize} darkMode={darkMode} onClick={handleShare}>Share</ShareButton>
+                                        <BackButton fontSize={fontSize} darkMode={darkMode} onClick={handleBackToDocuments}>Back to Upload Documents</BackButton></ShareBackContainer>
+                                </>
+                            )}
+
                         </Form>
                     </FormSection>
                 </Content>
@@ -449,6 +404,20 @@ return(
         </NavBar>
     );
 };
+
+
+
+
+const DropZoneWrapper = styled.div`
+    gap: 20px;
+    display: flex;
+    @media (max-width: 991px) {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+    }
+`;
+
 
 
 export default Document;

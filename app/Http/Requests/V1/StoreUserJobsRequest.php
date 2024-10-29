@@ -24,10 +24,12 @@ class StoreUserJobsRequest extends FormRequest
         return [
             'user_id' => ['required', 'exists:users,id'],
             'jobs_id' => ['required', 'exists:jobs,id'],
+            'document_id' => ['nullable', 'exists:documents,id'],
             'resume' => ['nullable'],
             'status' => ['required'],
             'start_date' => ['nullable', 'date'],
             'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
+
         ];
     }
     protected function prepareForValidation()

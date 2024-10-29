@@ -16,34 +16,61 @@ const ModalBackdrop = styled.div`
 
 const ModalContent = styled.div`
   background-color: ${({ darkMode }) => (darkMode ? '#333' : '#fff')};
-  padding: 20px;
+  padding: 25px;
   border-radius: 8px;
-  width: 400px;
-  max-width: 90%;
+  width: 90%;
+  max-width: 600px; /* Increased max-width for a wider modal */
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
   color: ${({ darkMode }) => (darkMode ? '#fff' : '#333')};
+  transition: width 0.3s ease;
+
+  @media (min-width: 768px) {
+    padding: 30px;
+  }
+
+  @media (min-width: 1024px) {
+    max-width: 700px; /* Even wider on larger screens */
+    padding: 35px;
+  }
 `;
 
 const ModalHeader = styled.h2`
   margin: 0 0 20px 0;
+  font-size: 1.5em;
   color: ${({ darkMode }) => (darkMode ? '#ddd' : '#333')};
+
+  @media (max-width: 480px) {
+    font-size: 1.3em;
+  }
 `;
 
 const ModalText = styled.p`
   margin: 0 0 20px 0;
   font-size: 16px;
   color: ${({ darkMode }) => (darkMode ? '#ccc' : '#666')};
+
+  @media (max-width: 480px) {
+    font-size: 14px;
+  }
 `;
 
 const ButtonGroup = styled.div`
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+
+  @media (min-width: 480px) {
+    flex-direction: row;
+    gap: 15px;
+    justify-content: center;
+  }
 `;
 
 const Button = styled.button`
-  padding: 10px 20px;
-  font-size: 16px;
+  padding: 12px 20px;
+  font-size: 15px;
   color: #fff;
   background-color: ${({ primary, darkMode }) =>
     primary
@@ -54,8 +81,9 @@ const Button = styled.button`
       ? '#555'
       : '#ccc'};
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 
   &:hover {
     background-color: ${({ primary, darkMode }) =>
@@ -66,30 +94,38 @@ const Button = styled.button`
         : darkMode
         ? '#444'
         : '#b3b3b3'};
+    transform: scale(1.04);
+  }
+
+  @media (max-width: 480px) {
+    width: 100%; /* Full width on small screens */
+    font-size: 14px;
+    padding: 10px;
   }
 `;
 
-const ConfirmModal = ({  onClose, onConfirm, darkMode }) => {
-
-
-  return (
-    <ModalBackdrop>
-      <ModalContent darkMode={darkMode}>
-        <ModalHeader darkMode={darkMode}>Confirm Update</ModalHeader>
-        <ModalText darkMode={darkMode}>
-          Are you sure you want to send the updated interview time to the student?
-        </ModalText>
-        <ButtonGroup>
-          <Button darkMode={darkMode} onClick={onClose}>
-            Cancel
-          </Button>
-          <Button primary darkMode={darkMode} onClick={onConfirm}>
-            Confirm
-          </Button>
-        </ButtonGroup>
-      </ModalContent>
-    </ModalBackdrop>
-  );
-};
+const ConfirmModal = ({ onClose, onConfirm, onUpdateWithoutNotification, darkMode, headerText, modalText }) => {
+    return (
+      <ModalBackdrop>
+        <ModalContent darkMode={darkMode}>
+          <ModalHeader darkMode={darkMode}>{headerText || 'Confirm Action'}</ModalHeader>
+          <ModalText darkMode={darkMode}>
+            {modalText || 'Are you sure you want to proceed with this action?'}
+          </ModalText>
+          <ButtonGroup>
+            <Button darkMode={darkMode} onClick={onClose}>
+              Cancel
+            </Button>
+            <Button primary darkMode={darkMode} onClick={onConfirm}>
+              Confirm
+            </Button>
+            <Button darkMode={darkMode} onClick={onUpdateWithoutNotification}>
+              Update Without Notifying
+            </Button>
+          </ButtonGroup>
+        </ModalContent>
+      </ModalBackdrop>
+    );
+  };
 
 export default ConfirmModal;

@@ -111,3 +111,20 @@ export const CancelButton = styled(Button)`
 }
 
 `;
+
+
+export const Select = styled.select`
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid ${({ darkMode }) => (darkMode ? '#555' : '#ccc')};
+  border-radius: 4px;
+  background-color: ${({ darkMode }) => (darkMode ? '#555' : '#fff')};
+  color: ${({ darkMode }) => (darkMode ? '#fff' : '#000')};
+  font-size: ${({ fontSize }) => fontSize || '16px'};
+  outline: none;
+
+  &:focus {
+    border-color: ${({ darkMode }) => (darkMode ? '#bbb' : '#888')};
+  }
+`;

@@ -52,7 +52,7 @@ const Dropzone = ({ onDrop }) => {
     const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
     return (
-        <DropzoneContainer {...getRootProps()}>
+        <DropzoneContainer fontSize={fontSize} darkMode={darkMode} {...getRootProps()}>
             <input {...getInputProps()} />
             <p>Drop a profile image here</p>
         </DropzoneContainer>
@@ -296,7 +296,7 @@ function Profile() {
                                 <ReflectionDocuments fontSize={fontSize} darkMode={darkMode} />
 
                     </ProfileWrapper>
-                    <InputSection><LeftSide> <FieldTitle fontSize={fontSize} darkMode={darkMode}>Description</FieldTitle> <Input fontSize={fontSize} darkMode={darkMode}
+                    <InputSection fontSize={fontSize} darkMode={darkMode}><LeftSide> <FieldTitle fontSize={fontSize} darkMode={darkMode}>Description</FieldTitle> <Input fontSize={fontSize} darkMode={darkMode}
                                     name="description"
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
@@ -337,7 +337,7 @@ function Profile() {
                                 onChange={(e) => setPronouns(e.target.value)}
                             />
 
-<FieldTitle>Company</FieldTitle>
+<FieldTitle fontSize={fontSize} darkMode={darkMode}>Company</FieldTitle>
                         <Input fontSize={fontSize} darkMode={darkMode}
                             type="text"
                             value={companyName}

@@ -16,6 +16,7 @@ import { DndProvider } from "react-dnd";
 import {
     getInterviewsForInterviewer,
     postInterview,
+    patchInterview,
     selectInterviewsStatus,
     selectInterviews,
     sendInterviewTimeChanged
@@ -62,6 +63,8 @@ const Interviews = () => {
     const darkMode = useSelector(state => state.accessibility.darkMode);
     const fontSize = useSelector(state => state.accessibility.textSize);
     const [selectedEvent, setSelectedEvent] = useState(null);
+    const [confirmAction, setConfirmAction] = useState(null);
+
 
     useEffect(() => {
         dispatch(getUser());
@@ -78,7 +81,10 @@ const Interviews = () => {
 
     const handlePurpleButtonClick = (event) => {
         setShowConfirmModal(true);
-        setSelectedEvent(event)
+        setSelectedEvent(event);
+
+        // Differentiate the action for the confirmation modal
+        setConfirmAction("sendInterviewTimeChanged");
     };
 
     const handleCloseConfirmModal = () => {
@@ -146,99 +152,105 @@ const Interviews = () => {
         return `${year}-${month}-${day}`;
     }
 
-    const handleEventResize = async ({ event, start, end }) => {
+    const formatDateTime = (dateTime) => {
+        const year = dateTime.getFullYear();
+        const month = String(dateTime.getMonth() + 1).padStart(2, "0");
+        const day = String(dateTime.getDate()).padStart(2, "0");
+        const hours = String(dateTime.getHours()).padStart(2, "0");
+        const minutes = String(dateTime.getMinutes()).padStart(2, "0");
+        const seconds = String(dateTime.getSeconds()).padStart(2, "0");
 
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    };
 
+    const handleEventResize = ({ event, start, end }) => {
+        // Set the selected event and new proposed time for confirmation
+        setSelectedEvent({ ...event, start, end });
+        setConfirmAction("updateTime");
+        setShowConfirmModal(true);
+    };
 
-        const formatDateTime = (dateTime) => {
-            const year = dateTime.getFullYear();
-            const month = String(dateTime.getMonth() + 1).padStart(2, "0");
-            const day = String(dateTime.getDate()).padStart(2, "0");
-            const hours = String(dateTime.getHours()).padStart(2, "0");
-            const minutes = String(dateTime.getMinutes()).padStart(2, "0");
-            const seconds = String(dateTime.getSeconds()).padStart(2, "0");
+    const handleEventDrop = ({ event, start, end }) => {
+        // Set the selected event and new proposed time for confirmation
+        setSelectedEvent({ ...event, start, end });
+        setConfirmAction("updateTime");
+        setShowConfirmModal(true);
+    };
 
-            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-        };
+    const handleUpdateWithoutNotification = async () => {
+        if (!selectedEvent) return;
 
         try {
-
             const payload = {
-                title: event.title,
-                start_date: formatDateTime(start),
-                end_date: formatDateTime(end),
-                status: event.status,
-                description: event.description,
-                interviewee_id: event.intervieweeId,
-                interviewer_id: event.interviewerId,
+                title: selectedEvent.title,
+                start_date: formatDateTime(selectedEvent.start),
+                end_date: formatDateTime(selectedEvent.end),
+                status: selectedEvent.status,
+                description: selectedEvent.description,
+                interviewee_id: selectedEvent.intervieweeId,
+                interviewer_id: selectedEvent.interviewerId,
+                proposed_time: formatDateTime(selectedEvent.start),
             };
 
+            // Update the interview time in the backend without notification
+            await axios.put(`${appUrl}/api/v1/interviews/${selectedEvent.id}`, payload);
 
-            const response = await axios.put(
-                `${appUrl}/api/v1/interviews/${event.id}`,
-                payload
-            );
-
-
-
-
+            // Update local events state with the new times
             const updatedEvents = events.map((existingEvent) =>
-                existingEvent.id === event.id ? { ...existingEvent, start, end } : existingEvent
+                existingEvent.id === selectedEvent.id ? { ...existingEvent, start: selectedEvent.start, end: selectedEvent.end } : existingEvent
             );
-
             setEvents(updatedEvents);
         } catch (error) {
-            console.error("Error updating event:", error);
+            console.error("Error updating event without notification:", error);
+        } finally {
+            setShowConfirmModal(false);
         }
     };
 
-
-    const handleEventDrop = async ({ event, start, end }) => {
-
-        const formatDateTime = (dateTime) => {
-            const year = dateTime.getFullYear();
-            const month = String(dateTime.getMonth() + 1).padStart(2, "0");
-            const day = String(dateTime.getDate()).padStart(2, "0");
-            const hours = String(dateTime.getHours()).padStart(2, "0");
-            const minutes = String(dateTime.getMinutes()).padStart(2, "0");
-            const seconds = String(dateTime.getSeconds()).padStart(2, "0");
-
-            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-        };
-
-
+    const handleUpdateTimeConfirm = async () => {
+        if (!selectedEvent) return;
 
         try {
-
             const payload = {
-                title: event.title,
-                start_date: formatDateTime(start),
-                end_date: formatDateTime(end),
-                status: event.status,
-                description: event.description,
-                interviewee_id: event.intervieweeId,
-                interviewer_id: event.interviewerId,
+                title: selectedEvent.title,
+                start_date: formatDateTime(selectedEvent.start),
+                end_date: formatDateTime(selectedEvent.end),
+                status: selectedEvent.status,
+                description: selectedEvent.description,
+                interviewee_id: selectedEvent.intervieweeId,
+                interviewer_id: selectedEvent.interviewerId,
+                proposed_time: formatDateTime(selectedEvent.start),
             };
 
+            // Update the interview time in the backend
+            await axios.put(`${appUrl}/api/v1/interviews/${selectedEvent.id}`, payload);
 
+            // Dispatch to send notification about the updated interview time
+            dispatch(
+                sendInterviewTimeChanged({
+                    studentId: selectedEvent.intervieweeId,
+                    jobTitle: selectedEvent.title,
+                    newTime: formatDateTime(selectedEvent.start),
+                    endTime: formatDateTime(selectedEvent.end), // Optional end time
+                })
+            ).then(response => {
+                console.log('Interview time updated and email sent:', response);
+            }).catch(error => {
+                console.error("Failed to send email:", error);
+            });
 
-            const response = await axios.put(
-                `${appUrl}/api/v1/interviews/${event.id}`,
-                payload
-            );
-
-
-
-
+            // Update local events state with the new times
             const updatedEvents = events.map((existingEvent) =>
-                existingEvent.id === event.id ? { ...existingEvent, start, end } : existingEvent
+                existingEvent.id === selectedEvent.id ? { ...existingEvent, start: selectedEvent.start, end: selectedEvent.end } : existingEvent
             );
-
             setEvents(updatedEvents);
         } catch (error) {
             console.error("Error updating event:", error);
+        } finally {
+            setShowConfirmModal(false);
         }
     };
+
 
     const openModal = (day) => {
         setSelectedDate(day);
@@ -394,6 +406,58 @@ const Interviews = () => {
         return <LoadingScreen><Spinner /></LoadingScreen>;
     }
 
+    console.log(events)
+
+    const handleUpdateToProposedTimeConfirm = () => {
+        if (!selectedEvent || !selectedEvent.proposedTime) return;
+
+        const formattedProposedTime = moment(selectedEvent.proposedTime).format("YYYY-MM-DD HH:mm:ss");
+
+        // Add 1 hour to the proposed time for the end date
+        const endDate = moment(selectedEvent.proposedTime).add(1, 'hours').format("YYYY-MM-DD HH:mm:ss");
+
+        // Patch interview to set proposed time as the new start time and reset proposedTime to null
+        dispatch(
+            patchInterview({
+                interviewId: selectedEvent.id,
+                startDate: formattedProposedTime,
+                endDate: endDate, // Added end date with 1 hour added
+                proposedTime: null // Reset proposedTime to null
+            })
+        ).then(() => {
+            // Dispatch email notification after the update
+            dispatch(
+                sendInterviewTimeChanged({
+                    studentId: selectedEvent.intervieweeId,
+                    jobTitle: selectedEvent.title,
+                    newTime: formattedProposedTime,
+                    endTime: endDate, // Optionally include the end time in the email
+                })
+            ).then(response => {
+                console.log('Interview time updated and email sent:', response);
+            }).catch(error => {
+                console.error("Failed to send email:", error);
+            });
+
+            // Refresh the interviews after the update
+            dispatch(getInterviewsForInterviewer({ interviewerId: userId }));
+        }).catch(error => {
+            console.error("Error updating interview:", error);
+        });
+
+        setShowConfirmModal(false);
+    };
+
+
+    const handleUpdateToProposedTime = (event) => {
+        setShowConfirmModal(true);
+        setSelectedEvent(event);
+
+        // Differentiate the action for the confirmation modal
+        setConfirmAction("updateToProposedTime");
+    };
+
+
     return (
         <NavBar header={"Interviews"}>
             <GlobalStyles darkMode={darkMode} fontSize={fontSize} />
@@ -447,28 +511,44 @@ const Interviews = () => {
                         )}
                     </ShortlistsContainer> */}
                     <EventsContainer darkMode={darkMode} fontSize={fontSize}>
-                        <EventsHeader darkMode={darkMode} fontSize={fontSize}>All Events</EventsHeader>
-                        {events && events.length > 0 ? (
-                            events.map((event) => (
-                                <Event darkMode={darkMode} fontSize={fontSize} key={event.id}>
-                                    <DeleteButton darkMode={darkMode} fontSize={fontSize} onClick={() => handleDeleteClick(event)}>X</DeleteButton>
-                                    <div>Title: {event.title}</div>
-                                    <div>Description: {event.description}</div>
-                                    <div>
-                                        Start Date: {moment(event.start).format("YYYY-MM-DD HH:mm:ss")}
-                                    </div>
-                                    <div>
-                                        End Date: {moment(event.end).format("YYYY-MM-DD HH:mm:ss")}
-                                    </div>
-                                    <PurpleButton fontSize={fontSize} onClick={() => handlePurpleButtonClick(event)}>
-                                        Send Updated Interview Time
-                                    </PurpleButton>
-                                </Event>
-                            ))
-                        ) : (
-                            <NoEventsMessage>No events found</NoEventsMessage>
-                        )}
-                    </EventsContainer>
+    <EventsHeader darkMode={darkMode} fontSize={fontSize}>All Events</EventsHeader>
+    {events && events.length > 0 ? (
+        events.map((event) => (
+            <Event darkMode={darkMode} fontSize={fontSize} key={event.id}>
+                <DeleteButton darkMode={darkMode} fontSize={fontSize} onClick={() => handleDeleteClick(event)}>X</DeleteButton>
+                <div>Title: {event.title}</div>
+                <div>Description: {event.description}</div>
+                <div>
+                    Start Date: {moment(event.start).format("YYYY-MM-DD HH:mm:ss")}
+                </div>
+                <div>
+                    End Date: {moment(event.end).format("YYYY-MM-DD HH:mm:ss")}
+                </div>
+
+                {/* Conditionally render proposed time if it exists */}
+                {event.proposedTime !== event.startDate && event.proposedTime != null && (
+                    <>
+                        <div>
+                            <strong>Proposed Time:</strong> {moment(event.proposedTime).format("YYYY-MM-DD HH:mm:ss")}
+                        </div>
+
+                        {/* Render 'Update to Proposed Time' button if proposed time is not null */}
+                        <PurpleButton fontSize={fontSize} onClick={() => handleUpdateToProposedTime(event)}>
+                            Update to Proposed Time
+                        </PurpleButton>
+                    </>
+                )}
+
+                {/* Existing button for sending updated interview time */}
+                <PurpleButton fontSize={fontSize} onClick={() => handlePurpleButtonClick(event)}>
+                    Send Updated Interview Time
+                </PurpleButton>
+            </Event>
+        ))
+    ) : (
+        <NoEventsMessage>No events found</NoEventsMessage>
+    )}
+</EventsContainer>
                 </Container>
             </MainContainer>
             {showModal && (
@@ -480,14 +560,28 @@ const Interviews = () => {
                 />
 
             )}
-  {showConfirmModal && (
-                <ConfirmModal
-                    darkMode={darkMode}
-                    fontSize={fontSize}
-                    onClose={handleCloseConfirmModal}
-                    onConfirm={handleConfirm}
-                />
-            )}
+{showConfirmModal && (
+    <ConfirmModal
+        darkMode={darkMode}
+        onClose={handleCloseConfirmModal}
+        onConfirm={
+            confirmAction === "updateTime"
+                ? handleUpdateTimeConfirm
+                : confirmAction === "updateToProposedTime"
+                ? handleUpdateToProposedTimeConfirm
+                : handleConfirm
+        }
+        onUpdateWithoutNotification={handleUpdateWithoutNotification}
+        headerText={confirmAction === "updateTime" ? "Confirm Time Update" : "Confirm Update"}
+        modalText={
+            confirmAction === "updateTime"
+                ? "Are you sure you want to update the interview time after resizing or moving?"
+                : "Are you sure you want to send the updated interview time to the student?"
+        }
+    />
+)}
+
+
         </NavBar>
     );
 };

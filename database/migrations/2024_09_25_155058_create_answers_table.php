@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('answers', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('question_id')->constrained()->onDelete('cascade'); // Foreign key linking to questions table
+            $table->string('answer_text'); // The text of the answer
+            $table->boolean('is_correct')->default(false); // To mark if this answer is the correct one
             $table->timestamps();
         });
     }

@@ -56,7 +56,7 @@ export const SearchSection = styled.section`
     border-radius: 10px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     padding: 20px;
-    margin-top: 20px;
+    
 
     transition: box-shadow 0.3s ease, transform 0.3s ease;
 

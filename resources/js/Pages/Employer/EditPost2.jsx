@@ -10,6 +10,7 @@ import {
     updateJobFormData,
     selectJobFormData,
     resetJobFormData,
+    patchJobWithQuestions
 } from "@/Features/jobs/jobsSlice";
 import {
     Container,
@@ -35,6 +36,8 @@ import {
     ButtonGroup,
     ActionButton,
     SubmitButton,
+    StyledQuill,
+    NoSkillsText
 } from "./Styling/EditPost2.styles";
 import { usePage } from "@inertiajs/react";
 
@@ -55,7 +58,7 @@ function EditPost2() {
 
     const handleSubmit = (e) => {
         // Dispatch postJob action with jobFormData
-        dispatch(patchJob(jobFormData));
+        dispatch(patchJobWithQuestions(jobFormData));
         dispatch(resetJobFormData());
     };
 
@@ -79,15 +82,19 @@ function EditPost2() {
         dispatch(updateJobFormData({ skills: updatedSkills }));
     };
 
+    const handleDescriptionChange = (content, delta, source, editor) => {
+        dispatch(updateJobFormData({ description: content }));
+    };
+
+    console.log(jobFormData)
+
     return (
         <NavBar header={"Edit Postings"}>
             <Container darkMode={darkMode} fontSize={fontSize}>
                 <Card darkMode={darkMode} fontSize={fontSize}>
                     <FormWrapper darkMode={darkMode} fontSize={fontSize}>
                         <Title darkMode={darkMode} fontSize={fontSize}>Edit Your Posting</Title>
-                        <Subtitle darkMode={darkMode} fontSize={fontSize}>
-                            Edit your selected posting's information.
-                        </Subtitle>
+
                         <FormContainer darkMode={darkMode} fontSize={fontSize}>
                             <SectionTitle darkMode={darkMode} fontSize={fontSize}>
                                 Part 2 of 2: Job Details
@@ -101,11 +108,12 @@ function EditPost2() {
                                 expectations.
                             </SectionDescription>
                             <Form darkMode={darkMode} fontSize={fontSize}>
-                                <InputField darkMode={darkMode} fontSize={fontSize}
-                                    name="description"
-                                    value={jobFormData.description}
-                                    onChange={handleInputChange}
-                                />
+                            <StyledQuill darkMode={darkMode} fontSize={fontSize}
+                                value={jobFormData.description}
+                                onChange={handleDescriptionChange}
+                                theme="snow"
+                            />
+
                             </Form>
                             <HorizontalRule darkMode={darkMode} fontSize={fontSize} />
                             <SectionHeading darkMode={darkMode} fontSize={fontSize}>Add Skills</SectionHeading>
@@ -120,19 +128,24 @@ function EditPost2() {
                                 onChange={handleSkillChange}
                                 onKeyDown={handleSkillKeyDown}
                             />
-                            <TagContainer darkMode={darkMode} fontSize={fontSize}>
-                                {jobFormData.skills.map((skill, index) => (
-                                    <Tag darkMode={darkMode} fontSize={fontSize} key={index}>
-                                        <TagName darkMode={darkMode} fontSize={fontSize}>{skill}</TagName>
-                                        <TagIcon darkMode={darkMode} fontSize={fontSize}
-                                            loading="lazy"
-                                            src="https://cdn.builder.io/api/v1/image/assets/TEMP/f4297c66e6d9622e462ebb187a46dd67cf9ee2c5dfcfd5088583249a1e3bfc3e?apiKey=d66532d056b14640a799069157705b77&"
-                                            alt={`${skill} Icon`}
-                                            onClick={() => removeSkill(skill)}
-                                        />
-                                    </Tag>
-                                ))}
-                            </TagContainer>
+                          <TagContainer darkMode={darkMode} fontSize={fontSize}>
+    {Array.isArray(jobFormData?.skills) && jobFormData?.skills.length > 0 ? (
+        jobFormData.skills.map((skill, index) => (
+            <Tag darkMode={darkMode} fontSize={fontSize} key={index}>
+                <TagName darkMode={darkMode} fontSize={fontSize}>{skill}</TagName>
+                <TagIcon darkMode={darkMode} fontSize={fontSize}
+                    loading="lazy"
+                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/f4297c66e6d9622e462ebb187a46dd67cf9ee2c5dfcfd5088583249a1e3bfc3e?apiKey=d66532d056b14640a799069157705b77&"
+                    alt={`${skill} Icon`}
+                    onClick={() => removeSkill(skill)}
+                />
+            </Tag>
+        ))
+    ) : (
+        <NoSkillsText>No skills available</NoSkillsText> /* Optional message if no skills */
+    )}
+</TagContainer>
+
                             <HorizontalRule darkMode={darkMode} fontSize={fontSize} />
                             <ButtonGroup darkMode={darkMode} fontSize={fontSize}>
                                 <Link darkMode={darkMode} fontSize={fontSize} href={`/employer/editpost1/${jobId}`}>
@@ -151,5 +164,7 @@ function EditPost2() {
         </NavBar>
     );
 }
+
+
 
 export default EditPost2;

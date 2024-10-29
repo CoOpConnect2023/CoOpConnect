@@ -156,16 +156,13 @@ function Jobs() {
                 <SearchContainer darkMode={darkMode} fontSize={fontSize}>
                     <SearchInnerContainer darkMode={darkMode} fontSize={fontSize}>
                         <SubHeading darkMode={darkMode} fontSize={fontSize}>Search for Job Postings</SubHeading>
-                        <TextDescription darkMode={darkMode} fontSize={fontSize}>
-                            Get amazing opportunities through jobs at CO-OP
-                            Connect!
-                        </TextDescription>
+
                         <SearchForm darkMode={darkMode} fontSize={fontSize} onSubmit={handleSearch}>
                             <SearchField darkMode={darkMode} fontSize={fontSize}>
                             <SearchIcon icon={faSearch} darkMode={darkMode} fontSize={fontSize} />
                                 <SearchInput darkMode={darkMode} fontSize={fontSize}
                                     type="text"
-                                    placeholder="Job Titles, Keywords"
+                                    placeholder="Search by Job Titles, Keywords"
                                     value={searchTerm}
                                     onChange={(e) =>
                                         setSearchTerm(e.target.value)
@@ -183,6 +180,7 @@ function Jobs() {
                                         setLocation(e.target.value)
                                     }
                                     aria-label="Location"
+                                    placeholder="Search by Location"
                                 />
                             </SearchField>
                             <SearchButton darkMode={darkMode} fontSize={fontSize} type="submit">View Jobs</SearchButton>
@@ -199,10 +197,10 @@ function Jobs() {
                 {featuredJob.title}
             </JobTitle>
             <CompanyInfo darkMode={darkMode} fontSize={fontSize}>
-                <CompanyImage darkMode={darkMode} fontSize={fontSize}
+                {/* <CompanyImage darkMode={darkMode} fontSize={fontSize}
                     src="https://cdn.builder.io/api/v1/image/assets/TEMP/b8ae9cd831463a8906ed092974d8aff01723eb0ccd0c5c446d59bc3e96d9c74c?apiKey=d66532d056b14640a799069157705b77&"
                     alt="company logo"
-                />
+                /> */}
                 <CompanyDetails darkMode={darkMode} fontSize={fontSize}>
                     <CompanyName darkMode={darkMode} fontSize={fontSize}>
                         {featuredJob?.user?.company}
@@ -259,6 +257,7 @@ function Jobs() {
                                                 <div>{job?.user?.company}</div>
                                                 <div>{job.location}</div>
                                             </JobMeta>
+                                            {job.skills &&
                                             <SkillsList darkMode={darkMode} fontSize={fontSize}>
                                                 {job.skills.map(
                                                     (tag, index) => (
@@ -268,9 +267,12 @@ function Jobs() {
                                                     )
                                                 )}
                                             </SkillsList>
-                                            <JobDescription darkMode={darkMode} fontSize={fontSize}>
-                                                {job.description}
-                                            </JobDescription>
+                                            }
+                                            <JobDescription
+  darkMode={darkMode}
+  fontSize={fontSize}
+  dangerouslySetInnerHTML={{ __html: job.description }}
+/>
                                             <Divider darkMode={darkMode} fontSize={fontSize} />
                                             <Link darkMode={darkMode} fontSize={fontSize} href={`/student/viewpost/${job.id}`}>   <ViewButton darkMode={darkMode} fontSize={fontSize}>
                                                 VIEW POSTING

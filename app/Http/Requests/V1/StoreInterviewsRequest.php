@@ -30,6 +30,7 @@ class StoreInterviewsRequest extends FormRequest
             'description' => ['required'],
             'interviewee_id' => ['required', 'exists:users,id'],
             'interviewer_id' => ['required', 'exists:users,id'],
+            'proposed_time' => ['nullable', 'date'],
         ];
     }
 
@@ -40,6 +41,8 @@ class StoreInterviewsRequest extends FormRequest
             'end_date' => $this->endDate,
             'interviewee_id' => $this->intervieweeId,
             'interviewer_id' => $this->interviewerId,
+            'proposed_time' => $this->proposedTime,
+            
         ]));
     }
 }

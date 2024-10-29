@@ -372,18 +372,20 @@ export const ProfileDetailSection = styled.div`
 
 
 export const DropzoneContainer = styled.div`
-    border: 2px dashed #6b538c;
+    border: 2px dashed ${({ darkMode }) => (darkMode ? '#888' : '#6b538c')};
     border-radius: 10px;
     padding: 20px;
     width: 100%;
     text-align: center;
-    color: #6b538c;
+    color: ${({ darkMode }) => (darkMode ? '#ccc' : '#6b538c')};
     font-family: Poppins, sans-serif;
     font-size: 14px;
     font-weight: 500;
     letter-spacing: 0.1px;
     cursor: pointer;
     transition: background-color 0.2s ease-in-out;
+
+    background-color: ${({ darkMode }) => (darkMode ? '#333' : '#fff')};
 
     &:hover {
         background-color: ${({ darkMode }) => (darkMode ? '#444' : '#f3e8ff')};

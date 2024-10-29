@@ -97,8 +97,13 @@ const ViewApplications = () => {
                         <b>Location:</b> {app.location}
                     </p>
                     <p>
-                        <b>Description:</b> {app.description}
-                    </p>
+                    <b>Description:</b>{" "}
+                    <span
+                        dangerouslySetInnerHTML={{
+                            __html: app.description
+                        }}
+                    />
+                </p>
                     {app.status === "Interview" && (
                         <ButtonGroup fontSize={fontSize} darkMode={darkMode}>
                             <ActionButton fontSize={fontSize} darkMode={darkMode}onClick={() => handleAccept(app.id)}>

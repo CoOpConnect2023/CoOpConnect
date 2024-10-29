@@ -24,10 +24,32 @@ class JobsResource extends JsonResource
             'jobType' => $this->job_type,
             'company' => $this->company,
             'userId' => $this->user_id,
-            'startDate' => $this->start_date,  // Added start_date
-            'endDate' => $this->end_date,      // Added end_date
+            'startDate' => $this->start_date,
+            'endDate' => $this->end_date,
             'users' => $this->whenLoaded('users'),
             'applications' => ApplicationResource::collection($this->whenLoaded('applications')),
+
+            // Include questions and their answers
+            'questions' => $this->whenLoaded('questions', function () {
+                return $this->questions->map(function ($question) {
+                    return [
+                        'id' => $question->id,
+                        'question_text' => $question->question_text,
+                        'jobs_id' => $question->jobs_id,
+                        'question_type' => $question->question_type,
+
+                        // Include answers for the question
+                        'answers' => $question->answers->map(function ($answer) {
+                            return [
+                                'id' => $answer->id,
+                                'answer_text' => $answer->answer_text,
+                                'is_correct' => $answer->is_correct,
+                            ];
+                        })
+                    ];
+                });
+            }),
         ];
     }
 }
+

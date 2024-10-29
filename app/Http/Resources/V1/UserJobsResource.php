@@ -23,8 +23,9 @@ class UserJobsResource extends JsonResource
             'status' => $this->status,
             'message' => $this->message,
             'timeSlots' => $this->timeSlots,
-            'startDate' => $this->start_date,  
+            'startDate' => $this->start_date,
             'endDate' => $this->end_date,
+            'documentId' => $this->document_id,
         ];
     }
 }

@@ -199,6 +199,15 @@ const UploadUsers = ({ fontSize, darkMode }) => {
                 </CardList>
                 <ButtonContainer fontSize={fontSize} darkMode={darkMode}>
                     <Button fontSize={fontSize} darkMode={darkMode} onClick={uploadFile}>Upload File</Button>
+                    <Button
+                            as="a"
+                            href={appUrl + "/files/UploadAllTemplate.xlsx"}
+                            download="UploadTemplate.xlsx"
+                            fontSize={fontSize}
+                            darkMode={darkMode}
+                        >
+                            Download Template
+                        </Button>
                     {file && <ClearButton fontSize={fontSize} darkMode={darkMode} onClick={clearFile}>Clear Current File</ClearButton>}
                 </ButtonContainer>
                 {successMessage && <SuccessMessage fontSize={fontSize} darkMode={darkMode}>Data uploaded successfully!</SuccessMessage>}

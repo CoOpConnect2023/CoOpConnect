@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
     const em = parseFloat(emValue);
@@ -12,11 +14,78 @@ export const Container = styled.section`
     align-self: stretch;
     display: flex;
 flex: 1;
+width: 100%;
     flex-direction: column;
     padding: 20px;
     background-color: ${({ darkMode }) => (darkMode ? "#333" : "#fff")};
     color: ${({ darkMode }) => (darkMode ? "#f1f1f1" : "#000")};
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+`;
+
+export const StyledQuill = styled(ReactQuill)`
+    .ql-container {
+        background-color: ${({ darkMode }) => (darkMode ? "#333333" : "#ffffff")};
+        color: ${({ darkMode }) => (darkMode ? "#f1f1f1" : "#2C2C2C")};
+        border: 2px solid ${({ darkMode }) => (darkMode ? "#555" : "#cbd2e0")};
+        border-radius: 6px;
+        transition: background-color 0.5s ease, color 0.5s ease;
+        font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+    }
+
+    .ql-toolbar {
+        background-color: ${({ darkMode }) => (darkMode ? "#444" : "#fff")};
+        border: 2px solid ${({ darkMode }) => (darkMode ? "#555" : "#cbd2e0")};
+        border-radius: 6px;
+        transition: background-color 0.5s ease;
+    }
+
+    /* Editor Area */
+    .ql-editor {
+        min-height: 150px;
+        font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+        line-height: 1.5;
+        margin-bottom: 20px;
+        color: ${({ darkMode }) => (darkMode ? "#f1f1f1" : "#2C2C2C")};
+        flex-grow: 1;
+    }
+
+    /* Toolbar Button Hover */
+    .ql-toolbar button:hover {
+        background-color: ${({ darkMode }) => (darkMode ? "#5a4175" : "#e0e0e0")};
+    }
+
+    /* Specifically target the Normal text button in the toolbar */
+    .ql-toolbar .ql-picker.ql-font .ql-picker-label {
+        color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#2C2C2C")}; /* Color fix for dark mode */
+    }
+
+    .ql-toolbar .ql-picker.ql-font .ql-picker-options {
+        background-color: ${({ darkMode }) => (darkMode ? "#444" : "#fff")}; /* Dropdown background */
+    }
+
+    .ql-toolbar .ql-picker.ql-font .ql-picker-label::before {
+        color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#2C2C2C")}; /* Ensures the 'normal' label is visible */
+    }
+
+    .ql-toolbar .ql-active {
+        color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")}; /* Active state */
+    }
+
+    /* Normal text picker selected and hover states */
+    .ql-toolbar .ql-picker-item:hover,
+    .ql-toolbar .ql-picker-item.ql-selected {
+        color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
+    }
+
+    /* Icon stroke color */
+    .ql-snow .ql-stroke {
+        stroke: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#2C2C2C")};
+    }
+
+    /* Icon fill color */
+    .ql-snow .ql-fill {
+        fill: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#2C2C2C")};
+    }
 `;
 
 export const Card = styled.article`
@@ -38,8 +107,8 @@ export const Card = styled.article`
 
 export const FormWrapper = styled.div`
     display: flex;
+flex: 1;
 
-    width: 720px;
     max-width: 100%;
     flex-direction: column;
     @media (max-width: 991px) {
@@ -49,7 +118,7 @@ export const FormWrapper = styled.div`
 
 export const Title = styled.h1`
     color: ${({ darkMode }) => (darkMode ? "#B7A1E5" : "#6b538c")};
-    align-self: center;
+    align-self: start;
     font: 600 32px Poppins, sans-serif;
     font-size: ${({ fontSize }) => calculateFontSize(32, fontSize)};
 `;
@@ -85,6 +154,7 @@ export const Form = styled.form`
     border-radius: 6px;
     background-color: ${({ darkMode }) => (darkMode ? "#333" : "#fff")};
     display: flex;
+    flex: 1;
     margin-top: 12px;
     flex-direction: column;
     padding: 12px;
@@ -273,3 +343,11 @@ export const SubmitButton = styled.button`
         white-space: initial;
     }
 `;
+
+export const NoSkillsText = styled.p`
+    color: ${({ darkMode }) => (darkMode ? '#aaa' : '#555')}; /* Softer color for dark/light mode */
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+    text-align: center; /* Center align the text */
+    margin-top: 20px; /* Add some margin at the top */
+`;
+

@@ -8,7 +8,7 @@ import UserPanel from "./UserPanel";
 import MessageContent from "./MessageContent";
 import { MainContainer, Content, Column, LeftColumn, Column2, RightColumn, MessageContainer, ScrollableContainer, BackButton } from '../../Styling/Chat.styles';
 
-export default function Chat({
+export default function Chat({ userInfo,
   newMessage, setNewMessage, brandNewMessage, setBrandNewMessage,
   handleSendNewMessage, recipientEmail, setRecipientEmail, shortlists,
   conversations, selectedConversation, messages, handleSendMessage,
@@ -29,7 +29,7 @@ export default function Chat({
   const handleBackToConversations = () => {
 
     setConversationsID(null);
-    
+
   };
 
   return (
@@ -53,7 +53,7 @@ export default function Chat({
         {!isMobile || conversationID ? (
           <Column2 darkMode={darkMode} fontSize={fontSize}>
             <RightColumn darkMode={darkMode} fontSize={fontSize}>
-              {selectedConversation && <UserPanel darkMode={darkMode} fontSize={fontSize} conversation={selectedConversation} currentUser={currentUser} />}
+              {selectedConversation && <UserPanel messages={messages}  userInfo={userInfo} darkMode={darkMode} fontSize={fontSize} conversation={selectedConversation} currentUser={currentUser} />}
               <ScrollableContainer darkMode={darkMode} fontSize={fontSize}>
                 <MessageContainer darkMode={darkMode} fontSize={fontSize}>
                   {messages.map((message, index) => (

@@ -81,9 +81,9 @@ const Home = () => {
                     </Link>
                 </CreateJobSection>
                 <CurrentPostingsSection darkMode={darkMode} fontSize={fontSize} >
-                    <SectionTitle darkMode={darkMode} fontSize={fontSize} >Current Company Postings</SectionTitle>
+                    <SectionTitle darkMode={darkMode} fontSize={fontSize} >Current Postings</SectionTitle>
                     <EditingInstructions darkMode={darkMode} fontSize={fontSize} >
-                        View or edit your company's current job postings.
+                        View or edit your current job postings.
                     </EditingInstructions>
                     {jobsStatus === "loading" && <p>Loading...</p>}
                     {jobs.length > 0 && (
@@ -100,17 +100,24 @@ const Home = () => {
 };
 
 const JobPosting = ({ post, darkMode, fontSize }) => {
+
+    console.log(post)
     return (
         <JobCard darkMode={darkMode} fontSize={fontSize} data-test-id={`job-card-${post.id}`}>
             <JobCardTitle darkMode={darkMode} fontSize={fontSize}>{post.title}</JobCardTitle>
             <CompanyName darkMode={darkMode} fontSize={fontSize}>{post.company.name}</CompanyName>
             <Location darkMode={darkMode} fontSize={fontSize}>{post.location}</Location>
+            { post?.skills &&
             <SkillsList darkMode={darkMode} fontSize={fontSize}>
-                {post.skills.map((tag, index) => (
+                {post?.skills?.map((tag, index) => (
                     <SkillBadge darkMode={darkMode} fontSize={fontSize} key={index}>{tag}</SkillBadge>
                 ))}
             </SkillsList>
-            <JobDescriptionText darkMode={darkMode} fontSize={fontSize}>{post.description}</JobDescriptionText>
+}
+            <JobDescriptionText
+                darkMode={darkMode}
+                fontSize={fontSize}
+                dangerouslySetInnerHTML={{ __html: post.description }}/>
             <Divider  darkMode={darkMode} fontSize={fontSize}/>
             <CardButtons darkMode={darkMode} fontSize={fontSize}>
                 <Link darkMode={darkMode} fontSize={fontSize} href={`/employer/viewpost/${post.id}`}>

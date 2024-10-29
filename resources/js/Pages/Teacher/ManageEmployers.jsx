@@ -29,7 +29,7 @@ function EmployersPage() {
     }, [dispatch]);
 
 
-    console.log(companies)
+
     useEffect(() => {
         if (user?.id) {
             dispatch(getEmployers(user.id));
@@ -44,7 +44,7 @@ function EmployersPage() {
 
     const handleCreateEmployer = async () => {
         try {
-            
+
             await dispatch(createEmployer({
                 teacher_id: user.id,
                 employer_email: newEmployer.email,
@@ -172,7 +172,7 @@ function EmployersPage() {
                                     name="email"
                                     value={newEmployer.email}
                                     onChange={handleInputChange}
-                                    placeholder="Employer Email"
+                                    placeholder="Employer Email - If the employer has an account, you can use this field only to add them."
                                 />
                                 <Input
                                     fontSize={fontSize}

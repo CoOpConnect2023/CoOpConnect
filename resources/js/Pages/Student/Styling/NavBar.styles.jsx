@@ -1,6 +1,7 @@
 import styled, { keyframes, css } from 'styled-components';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { navButtonLightBackground, navDarkBackground, navLightBackground } from '@/Layouts/Global.styles';
+
+import { navButtonLightBackground, navDarkBackground, navLightBackground, lightTheme, darkTheme } from '@/Layouts/Global.styles';
 
 
 const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
@@ -224,7 +225,7 @@ export const UserProfile = styled.div`
   position: relative;
   transition: transform 0.3s ease, opacity 0.3s ease;
 
-  
+
   @media (max-width: 991px) {
 justify-content: space-around;
 gap: none;
@@ -746,6 +747,36 @@ export const IconContainer = styled.div`
     height: 100%;
 
     color: ${({ darkMode }) => (darkMode ? "#fff" : "#6B538C")};
+
+  }
+`;
+
+
+export const NavContainerAbsolute = styled.nav`
+  align-items: center;
+  border: 1px solid rgba(123, 117, 127, 1);
+transition: background-color 0.5s ease, color 0.5s ease;
+  background-color: ${({ darkMode }) => (darkMode ? navDarkBackground : lightTheme.colors.navBackground)};
+  display: flex;
+  flex-direction: column;
+  width: 90px;
+  padding: 30px 20px 20px;
+  border-radius: 0 10px 10px 0;
+  height: 100vh;
+  z-index: 1000;
+  position: fixed;
+
+  @media (max-width: 991px) {
+    align-items: center;
+    display: flex;
+    width: 100vw;
+    height: 12vh;
+    border-radius: 10px 10px 0 0;
+    border-bottom: 1px solid rgba(123, 117, 127, 1);
+    flex-direction: row;
+    justify-content: space-around;
+    padding 10px;
+    margin-bottom: 1vh;
 
   }
 `;

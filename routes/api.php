@@ -14,12 +14,15 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MessagingController;
 use App\Http\Controllers\Api\V1\MessagesController;
 use App\Http\Controllers\Api\V1\ConversationController;
-use App\Http\Controllers\DocumentsController;
+use App\Http\Controllers\Api\V1\DocumentsController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Api\V1\ApplicationController;
 use App\Http\Controllers\Api\V1\ShortlistController;
 use App\Http\Controllers\Api\V1\TeacherEmployerController;
 use App\Http\Controllers\Api\V1\CompaniesController;
+use App\Http\Controllers\Api\V1\UserDocumentsController;
+use App\Http\Controllers\Api\V1\QuestionsController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -66,9 +69,7 @@ Route::middleware('auth:sanctum')->get('/check-application/{jobId}', [Applicatio
 
 
 
-Route::post('/uploaddocs', [DocumentsController::class, 'upload']);
-Route::get('/fetchdocs', [DocumentsController::class, 'fetchDoc']);
-Route::delete("/deletedoc/{id}", [DocumentsController::class, "deleteDoc"]);
+
 
 Route::get('/user-id', function () {
     // Eager load the 'company' relation
@@ -83,7 +84,7 @@ Route::get('/employers/teacher/{teacherId}', [UserController::class, 'getEmploye
 
 
 
-Route::get('/download/{id}', [DocumentsController::class, 'download'])->name('file.download');
+
 
 Route::post('/update-profile/{user}', [UserController::class, 'updateProfile'])->name('profile.update')->middleware('auth');
 Route::post('/update-preferences', [UserController::class, 'updatePreferences']);
@@ -104,16 +105,38 @@ Route::post('/applications', [ApplicationController::class, 'store'])->name('app
 Route::get('/applications/{application}', [ApplicationController::class, 'show'])->name('applications.show');
 
 
-Route::delete("/deletedoc/{doc_id}", [DocumentsController::class, "deleteDoc"]);
+
 Route::middleware('auth:sanctum')->put('/change-password', [UserController::class, 'changePassword']);
 
 
+//===================API V1====================================================
+Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1', 'middleware' => 'auth:sanctum'], function () {
 
-Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], function () {
+    Route::apiResource('documents', DocumentsController::class);
+    Route::post('/uploaddocs', [DocumentsController::class, 'upload']);
+    Route::get('/fetchdocs', [DocumentsController::class, 'fetchDoc']);
+    Route::delete("/deletedoc/{id}", [DocumentsController::class, "deleteDoc"]);
+    Route::delete("/deletedoc/{doc_id}", [DocumentsController::class, "deleteDoc"]);
+    Route::get('/download/{id}', [DocumentsController::class, 'download'])->name('file.download');
+    Route::get('/userdocuments/shared-documents-with-me/{userId}', [UserDocumentsController::class, 'getDocumentsSharedWithUser']);
+    Route::get('/users/{userId}/documents', [DocumentsController::class, 'getAllUserDocuments']);
+
+
+    Route::post('/jobs/{jobId}/responses', [QuestionsController::class, 'storeResponses']);
+
+    Route::get('/user-jobs', [UserJobsController::class, 'getUserJobsByStatus']);
+
+
+
+
+
     Route::get('/jobs/user/{userId}', [JobsController::class, 'getJobsforUser']);
     Route::get('/jobs/search', [JobsController::class, 'searchJobs'])->name('jobs.search');
     Route::get('/jobs/match', [JobsController::class, 'matchSkills'])->name('jobs.match');
     Route::apiResource('jobs', JobsController::class);
+    Route::post('/jobs/jobwithquestions', [JobsController::class, 'storeJobWithQuestions']);
+    Route::patch('/jobs/{job}/jobwithquestions', [JobsController::class, 'updateJobWithQuestions']);
+
 
     Route::get('/courses/user/{userId}', [CoursesController::class, 'getCourseforUser']);
     Route::get('/courses/teacher/{userId}', [CoursesController::class, 'getCoursesForTeacher']);
@@ -167,7 +190,9 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
 
 
     Route::apiResource('schools', SchoolController::class);
-
+    Route::apiResource('questions', QuestionsController::class);
+    Route::post('/questions/{question}/response', [QuestionsController::class, 'storeResponse']);
+    Route::get('/jobs/{jobId}/questions', [QuestionsController::class, 'getQuestionsByJob']);
     Route::apiResource('token', TokenController::class);
     Route::get('/userjobs/list/{jobsId}', [UserJobsController::class, 'getUserDetails'])->name('jobs.getUserDetails');
     Route::get('/userjobs/user/{userJobsId}', [UserJobsController::class, 'getSingleUserDetails'])->name('jobs.getSingleUserDetails');
@@ -176,9 +201,10 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
     Route::get('/userjobs/interviews', [UserJobsController::class, 'getInterviews'])->name('jobs.getInterviews');
     Route::get('/userjobs/owned', [UserJobsController::class, 'getOwnedUserJobs'])->name('userjobs.getOwnedUserJobs');
     Route::patch('/userjobs/{userJobsId}/edit-hired-student', [UserJobsController::class, 'editHiredStudent']);
+    Route::get('/user-jobs', [UserJobsController::class, 'getUserJobsByStatus']);
 
     Route::apiResource('userjobs', UserJobsController::class);
-
+    Route::post('/send-hire-email', [NotificationController::class, 'sendHireEmail']);
 
 
 
@@ -186,15 +212,25 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
 
     Route::apiResource('courses', CoursesController::class);
     Route::apiResource('usercourses', UserCoursesController::class);
+    Route::apiResource('userdocuments', UserDocumentsController::class);
+    Route::get('/userdocuments/shared-documents/{userId}', [UserDocumentsController::class, 'getSharedDocumentsForUser']);
+    Route::post('/userdocuments/share', [UserDocumentsController::class, 'createUserDocumentsByEmails']);
+
     Route::apiResource('reflections', ReflectionsController::class);
     Route::get('/myreflections', [ReflectionsController::class, 'showforuser']);
 
     Route::apiResource('interviews', InterviewsController::class);
     Route::post('/send-interview-time-changed', [InterviewsController::class, 'sendInterviewTimeChanged']);
+    Route::post('/send-interview-time-request', [InterviewsController::class, 'sendInterviewChangeRequest']);
+
 
     Route::apiResource('applications', ApplicationController::class);
     Route::apiResource('shortlists', ShortListController::class);
     Route::apiResource('teacheremployers', TeacherEmployerController::class);
     Route::apiResource('companies', CompaniesController::class);
     Route::delete('teacheremployers/{teacherId}/{employerId}', [TeacherEmployerController::class, 'destroy']);
+
+
+
+
 });

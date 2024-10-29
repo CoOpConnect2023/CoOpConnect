@@ -10,7 +10,7 @@ const MobileHeader = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  background-color: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "var(--Schemes-Background, #fff7ff)")};
+  background-color: ${({ darkMode }) => (darkMode ? "#8C51D6" : "var(--Schemes-Background, #8C51D6)")};
   padding: 10px 20px;
   z-index: 1000;
 `;
@@ -24,10 +24,11 @@ const Hamburger = styled.div`
   flex-direction: column;
   cursor: pointer;
 
+
   span {
     width: 25px;
     height: 3px;
-    background-color: ${({ darkMode }) => (darkMode ? "#fff" : "#000")};
+    background-color: ${({ darkMode }) => (darkMode ? "#fff" : "#fff")};
     margin: 4px 0;
     transition: all 0.3s ease;
   }
@@ -52,7 +53,7 @@ const NavLinks = styled.div`
   top: 100%;
   right: 0;
   width: 40%; /* Limit the width to 40% of the screen */
-  background-color: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "#fff")};
+
   overflow: hidden;
   max-height: ${({ isOpen }) => (isOpen ? '300px' : '0')};
   opacity: ${({ isOpen }) => (isOpen ? '1' : '0')};

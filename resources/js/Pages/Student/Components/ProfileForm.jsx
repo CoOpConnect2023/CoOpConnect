@@ -363,7 +363,7 @@ const handleStatusChange = (e) => {
           />
         </ProfileDetailItem>
         <ProfileDetailItem fontSize={fontSize} darkMode={darkMode}>
-          <DetailLabel fontSize={fontSize} darkMode={darkMode}>Preferred Pronouns</DetailLabel>
+          <DetailLabel fontSize={fontSize} darkMode={darkMode}>Pronouns</DetailLabel>
           <DetailValue fontSize={fontSize} darkMode={darkMode}
             type="text"
             name="pronouns"

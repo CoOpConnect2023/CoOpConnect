@@ -47,6 +47,8 @@ export default function Home() {
         return <LogoLoadingComponent fontSize={fontSize} darkMode={darkMode}/>;;
     }
 
+    console.log(students)
+
 
     return (
         <>

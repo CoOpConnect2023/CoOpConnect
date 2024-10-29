@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import downarrow from "@/Pages/Images/Icon.svg";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
     const em = parseFloat(emValue);
@@ -8,6 +10,73 @@ const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
     if (emValue === '1.12em') return `${basePixelSize * em * 1.7}px`;
     return `${basePixelSize * em * factor}px`;
 };
+
+export const StyledQuill = styled(ReactQuill)`
+    .ql-container {
+        background-color: ${({ darkMode }) => (darkMode ? "#333333" : "#ffffff")};
+        color: ${({ darkMode }) => (darkMode ? "#f1f1f1" : "#2C2C2C")};
+        border: 2px solid ${({ darkMode }) => (darkMode ? "#555" : "#cbd2e0")};
+        border-radius: 6px;
+        transition: background-color 0.5s ease, color 0.5s ease;
+        font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+    }
+
+    .ql-toolbar {
+        background-color: ${({ darkMode }) => (darkMode ? "#444" : "#fff")};
+        border: 2px solid ${({ darkMode }) => (darkMode ? "#555" : "#cbd2e0")};
+        border-radius: 6px;
+        transition: background-color 0.5s ease;
+    }
+
+    /* Editor Area */
+    .ql-editor {
+        min-height: 150px;
+        font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+        line-height: 1.5;
+        margin-bottom: 20px;
+        color: ${({ darkMode }) => (darkMode ? "#f1f1f1" : "#2C2C2C")};
+        flex-grow: 1;
+    }
+
+    /* Toolbar Button Hover */
+    .ql-toolbar button:hover {
+        background-color: ${({ darkMode }) => (darkMode ? "#5a4175" : "#e0e0e0")};
+    }
+
+    /* Specifically target the Normal text button in the toolbar */
+    .ql-toolbar .ql-picker.ql-font .ql-picker-label {
+        color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#2C2C2C")}; /* Color fix for dark mode */
+    }
+
+    .ql-toolbar .ql-picker.ql-font .ql-picker-options {
+        background-color: ${({ darkMode }) => (darkMode ? "#444" : "#fff")}; /* Dropdown background */
+    }
+
+    .ql-toolbar .ql-picker.ql-font .ql-picker-label::before {
+        color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#2C2C2C")}; /* Ensures the 'normal' label is visible */
+    }
+
+    .ql-toolbar .ql-active {
+        color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")}; /* Active state */
+    }
+
+    /* Normal text picker selected and hover states */
+    .ql-toolbar .ql-picker-item:hover,
+    .ql-toolbar .ql-picker-item.ql-selected {
+        color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6b538c")};
+    }
+
+    /* Icon stroke color */
+    .ql-snow .ql-stroke {
+        stroke: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#2C2C2C")};
+    }
+
+    /* Icon fill color */
+    .ql-snow .ql-fill {
+        fill: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#2C2C2C")};
+    }
+`;
+
 
 export const Container = styled.section`
     align-self: stretch;
@@ -42,7 +111,7 @@ height: 100%;
 
 export const FormWrapper = styled.div`
     display: flex;
-
+flex-grow: 1;
     width: 100%;
     height: 100%;
 
@@ -77,11 +146,14 @@ export const Form = styled.form`
     border-radius: 10px;
     border: 1px solid ${({ darkMode }) => (darkMode ? '#777' : '#000')};
     display: flex;
-    margin-top: 30px;
+    width: 100%;
+    height: 100%;
+    flex-grow: 1;
+    
     flex-direction: column;
     background-color: ${({ darkMode }) => (darkMode ? '#333333' : '#fff')};
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2d3648')};
-    padding: 20px;
+    padding: 2%;
     @media (max-width: 991px) {
         max-width: 100%;
     }
@@ -99,6 +171,7 @@ export const SectionTitle = styled.h2`
 export const FormRow = styled.div`
     display: flex;
     gap: 20px;
+flex-grow: 1;
      align-items: flex-start;
     margin: 20px 20px 0 0;
     @media (max-width: 991px) {
@@ -110,6 +183,7 @@ export const FormRow = styled.div`
 export const FormField = styled.div`
     display: flex;
     width: 50%;
+
     flex-direction: column;
     justify-content: flex-end;
     align-items: flex-start;
@@ -220,7 +294,7 @@ export const ButtonContainerPost = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: flex-start;
+margin-top: 10px;
     gap: 8px;
-    flex-shrink: 0;
+
 `;

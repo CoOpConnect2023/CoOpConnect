@@ -262,30 +262,45 @@ export const getUserJob = createAsyncThunk(
 
 export const postUserJob = createAsyncThunk(
     "userJobs/postUserJob",
-    async (params) => {
+    async (params, { rejectWithValue }) => {
         // Destructure and set default status to "Pending" if it's not provided in params
-        const { userId, jobsId, resume, startDate, endDate, status = "Pending" } = params;
+        const { userId, jobsId, resume, startDate, endDate, status = "Pending", document_id } = params;
 
-        console.log("Posting user job with parameters:", { userId, jobsId, resume, startDate, endDate, status });
+        try {
+            console.log("Posting user job with parameters:", { userId, jobsId, resume, startDate, endDate, status, document_id });
 
-        const response = await axios({
-            url: "/userjobs",
-            method: "POST",
-            data: {
-                userId,
-                jobsId,
-                resume,
-                status, // Use the provided status or the default "Pending"
-                startDate,
-                endDate
-            },
-        });
+            const response = await axios({
+                url: "/userjobs",
+                method: "POST",
+                data: {
+                    userId,
+                    jobsId,
+                    resume,
+                    status, // Use the provided status or the default "Pending"
+                    startDate,
+                    endDate,
+                    document_id,
+                },
+            });
 
-        console.log("Response from posting user job:", response.data.data);
+            console.log("Response from posting user job:", response.data.data);
 
-        return response.data.data;
+            return response.data.data;
+
+        } catch (error) {
+            console.error("Error posting user job:", error);
+
+            if (error.response && error.response.data) {
+                // If the server sent a response with error data, return it
+                return rejectWithValue(error.response);
+            } else {
+                // Otherwise, return a general error message
+                return rejectWithValue("An error occurred while posting the job.");
+            }
+        }
     }
 );
+
 
 
 
@@ -346,6 +361,7 @@ export const checkUserJob = createAsyncThunk(
             url: `/userjobs?userId[eq]=${userId}&jobsId[eq]=${jobsId}`,
             method: "GET",
         });
+        console.log(response.data.data)
         return response.data.data;
     }
 );

@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Filters\V1\NotificationFilter;
 use App\Mail\JobApplicationAccepted;
+use App\Mail\HireNotification;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\StudentAcceptedInterview;
 use App\Mail\StudentDeclinedInterview;
@@ -57,7 +58,7 @@ class NotificationController extends Controller
 
             return new NotificationResource($notification);
         } catch (\Exception $e) {
-            
+
 
 
             // Return a JSON response with the error message and 422 status code
@@ -195,6 +196,17 @@ public function declineInterview(Request $request)
 
 
     return response()->json(['message' => 'Interview declined and notification sent']);
+}
+
+public function sendHireEmail(Request $request)
+{
+    $applicant = User::find($request->applicantId);
+    $jobTitle = $request->jobTitle;
+    $message = $request->message;
+
+    Mail::to($applicant->email)->send(new HireNotification($applicant, $jobTitle, $message));
+
+    return response()->json(['status' => 'Hire email sent']);
 }
 
 

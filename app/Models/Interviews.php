@@ -17,6 +17,7 @@ class Interviews extends Model
         'description',
         'interviewee_id',
         'interviewer_id',
+        'proposed_time',
     ];
 
     public function interviewee()

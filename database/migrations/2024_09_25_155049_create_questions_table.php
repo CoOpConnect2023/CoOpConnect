@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('jobs_id')->constrained()->onDelete('cascade'); // Link to the jobs table
+            $table->string('question_text'); // The actual question text
+            $table->enum('question_type', ['text', 'multipleChoice'])->default('text'); // Question type
             $table->timestamps();
         });
     }

@@ -147,7 +147,7 @@ class JobApplicationAccepted extends Mailable
                             <div class="content">
                                 <p>Please confirm your availability through your account on our platform.</p>
                                 <p>We look forward to speaking with you soon!</p>
-                                <a href="http://coop-connect.us-east-2.elasticbeanstalk.com/" class="button">Go to COOP CONNECT</a>
+                                
                             </div>
                             <div class="footer">
                                 <p>&copy; ' . date('Y') . ' COOP CONNECT. All rights reserved.</p>

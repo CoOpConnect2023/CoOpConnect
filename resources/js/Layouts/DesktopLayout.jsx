@@ -9,8 +9,12 @@ const Header = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  background-color: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "var(--Schemes-Background, #fff7ff)")};
+  background-color: ${({ darkMode }) => (darkMode ? "#8D54D6" : "#8D54D6")}; /* Changed to #8450C9 */
   padding: 10px 20px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10;
 `;
 
 const Logo = styled.img`
@@ -21,7 +25,7 @@ const NavLinks = styled.div`
   display: flex;
   flex-direction: row;
   gap: 10px;
-  color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6B538C")};
+  color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#ffffff")}; /* Links changed to white */
 `;
 
 const AuthLinks = styled.div`
@@ -33,38 +37,44 @@ const AuthLinks = styled.div`
 
 const LinkButton = styled(Link)`
   font-weight: 600;
-  color: ${({ darkMode }) => (darkMode ? "white" : "#6B538C")};
+  color: ${({ darkMode, isActive }) => (isActive ? "#fff" : (darkMode ? "#EDDCFF" : "#ffffff"))}; /* Change link colors */
   padding: 10px 20px;
   border: none;
-  border-radius: 25px;
-  background: ${({ darkMode, bgColor }) => bgColor || (darkMode ? "linear-gradient(45deg, #6B538C, #9C85D8)" : "linear-gradient(45deg, #D3BDF2, #EDDCFF)")};
+  border-radius: 15px;
+  background: none; /* Background removed for regular links */
   text-align: center;
   text-decoration: none;
   font-size: 1rem;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease-in-out;
   cursor: pointer;
+  position: relative;
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+    color: ${({ darkMode }) => (darkMode ? "#D3BDF2" : "#D3BDF2")}; /* Hover color */
   }
 
-  &:focus {
-    outline: 2px solid red;
-    border-radius: 4px;
-  }
-
-  &:active {
-    transform: translateY(0);
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  /* Add line underneath the active link */
+  &:after {
+    content: "";
+    display: ${({ isActive }) => (isActive ? "block" : "none")};
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #ffffff; /* White underline */
   }
 `;
 
+const SignInButton = styled(LinkButton)`
+  background: ${({ darkMode }) => (darkMode ? "linear-gradient(45deg, #8B65BA, #9C85D8)" : "linear-gradient(45deg, #D3BDF2, #EDDCFF)")}; /* Keep the same as the original Sign In button */
+  color: ${({ darkMode }) => (darkMode ? "white" : "#6B538C")};
+`;
+
 const navLinks = [
-  { label: "Contact Us", href: "./contactus" },
-  { label: "About Us", href: "./about" },
-  { label: "Guide", href: "./guide" },
+    { label: "Home", href: "/" },
+  { label: "Contact Us", href: "/contactus" },
+  { label: "About Us", href: "/about" },
+  { label: "Guide", href: "/guide" },
   { label: "Back to Home", href: "/" },
 ];
 
@@ -96,9 +106,8 @@ export default function DesktopLayout({ auth }) {
       </Link>
       <NavLinks darkMode={darkMode}>
         {navLinks.map(link => (
-          // Conditionally render the Back to Home link only if not on the home page
           link.label === "Back to Home" && url === "/" ? null : (
-            <LinkButton key={link.label} href={link.href} darkMode={darkMode}>
+            <LinkButton key={link.label} href={link.href} darkMode={darkMode} isActive={url === link.href}>
               {link.label}
             </LinkButton>
           )
@@ -106,15 +115,13 @@ export default function DesktopLayout({ auth }) {
       </NavLinks>
       <AuthLinks>
         {auth.user ? (
-          <LinkButton href={userLinks.dashboard} darkMode={darkMode}>
+          <SignInButton href={userLinks.dashboard} darkMode={darkMode}>
             Dashboard
-          </LinkButton>
+          </SignInButton>
         ) : (
-          <>
-            <LinkButton href={route("login")} darkMode={darkMode}>
-              Sign In
-            </LinkButton>
-          </>
+          <SignInButton href={route("login")} darkMode={darkMode}>
+            Sign In
+          </SignInButton>
         )}
       </AuthLinks>
     </Header>

@@ -55,6 +55,7 @@ export const MainContainer = styled.main`
         max-width: 100%;
         padding: 0 20px;
         flex-direction: column;
+        width: 100%;
 `;
 
 export const SearchContainer = styled.section`
@@ -121,6 +122,7 @@ export const TextDescription = styled.p`
 
 export const SearchForm = styled.form`
     justify-content: center;
+    flex-direction: column;
     border-radius: 10px;
     border: 1px solid ${({ darkMode }) => (darkMode ? '#555' : '#7b757f')};
     display: flex;

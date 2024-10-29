@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { updateUserPreferences } from "@/Features/users/userSlice";
 import styled from "styled-components";
+import { useTheme } from "@/ThemeContext";
 import {
     AppContainer,
     NavContainer,
@@ -36,7 +37,8 @@ import {
     Footer,
     IconContainer,
     CloseButton,
-    FontSizer
+    FontSizer,
+    NavContainerAbsolute
 } from "../Styling/NavBar.styles";
 import logo from "@/Pages/Images/puzzle.svg";
 import briefcase from "@/Pages/Images/briefcase.svg";
@@ -53,7 +55,7 @@ import { useForm } from '@inertiajs/react';
 import settings from "@/Pages/Images/settings.svg";
 import { Link } from "@inertiajs/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBell, faMap, faTimes, faList, faSun, faMoon, faPlus, faMinus, faTextHeight, faChevronDown} from "@fortawesome/free-solid-svg-icons";
+import { faBell, faMap, faTimes, faList, faSun, faMoon, faPlus, faMinus, faTextHeight, faChevronDown, faUserCheck } from "@fortawesome/free-solid-svg-icons";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleDarkMode, setTextSize, increaseFontSize, decreaseFontSize } from "@/Features/accessibility/accessibilitySlice";
 import { getMyNotifications, patchNotification } from "@/Features/notifications/notificationsSlice";
@@ -129,6 +131,7 @@ function Sidebar() {
     const [previousDarkMode, setPreviousDarkMode] = useState(darkMode);
     const [previousFontSize, setPreviousFontSize] = useState(fontSize);
     const [activeTab, setActiveTab] = useState("/");
+    const { theme } = useTheme();
     useEffect(() => {
         const path = window.location.pathname;
 
@@ -182,7 +185,7 @@ function Sidebar() {
   };
     return (
         <aside>
-           <NavContainer fontSize={fontSize} darkMode={darkMode}>
+             <NavContainerAbsolute fontSize={fontSize} darkMode={darkMode}>
            <Link fontSize={fontSize} darkMode={darkMode} href="/" onClick={() => handleTabClick("/")}>
           <Logo
     fontSize={fontSize}
@@ -235,6 +238,9 @@ function Sidebar() {
                 <IconContainer fontSize={fontSize} darkMode={darkMode} data-test-id="map-link" onClick={toggleFooterVisibility}>
                     <FontAwesomeIcon fontSize={fontSize} darkMode={darkMode} icon={faMap} className="fa-icon"  />
                 </IconContainer>
+            </NavContainerAbsolute>
+           <NavContainer fontSize={fontSize} darkMode={darkMode}>
+
             </NavContainer>
             <Footer fontSize={fontSize} darkMode={darkMode} isVisible={footerVisible}>
         <CloseButton fontSize={fontSize} darkMode={darkMode} onClick={closeFooter}>
@@ -338,18 +344,24 @@ const hasUnreadMessages =
                 )}
                 <UserProfile fontSize={fontSize} darkMode={darkMode}>
 
-                    <NotificationIcon fontSize={fontSize} darkMode={darkMode} onClick={handleDarkModeToggle}
+                    <NotificationIcon fontSize={fontSize} darkMode={darkMode} onClick={handleDarkModeToggle} onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleDarkModeToggle()}
+                        tabIndex="0"
+                        aria-label="Toggle dark mode"
                     >{darkMode ? <FontAwesomeIcon icon={faMoon} /> : <FontAwesomeIcon icon={faSun} />}
 
 
                     </NotificationIcon>
                     <NotificationIcon fontSize={fontSize} darkMode={darkMode} onClick={toggleNotificationModal}
-                        hasUnreadMessages={hasUnreadMessages}><FontAwesomeIcon icon={faBell} />
+                        hasUnreadMessages={hasUnreadMessages} onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && toggleNotificationModal(e)}
+                        tabIndex="0"
+                        aria-label="View notifications"><FontAwesomeIcon icon={faBell} />
 
 
                     </NotificationIcon>
                     <FontToggler />
-                    <UserDetails fontSize={fontSize} darkMode={darkMode} onClick={toggleProfileModal}>
+                    <UserDetails fontSize={fontSize} darkMode={darkMode} onClick={toggleProfileModal}  onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && toggleProfileModal()}
+                        tabIndex="0"
+                        aria-label="User menu">
                         {user && user.profile_image ? (
                             <Avatar fontSize={fontSize} darkMode={darkMode}
                                 src={user.profile_image}
@@ -431,29 +443,45 @@ const FontToggler = () => {
     const darkMode = useSelector((state) => state.accessibility.darkMode);
 
     const increaseFont = () => {
-        if (fontSize !== '1.12em') { // Compare against 'large' instead of "1.12em"
+        if (fontSize !== '1.12em') {
             dispatch(increaseFontSize());
         }
     };
 
     const decreaseFont = () => {
-        if (fontSize !== '1em') { // Compare against 'small' instead of "1em"
+        if (fontSize !== '1em') {
             dispatch(decreaseFontSize());
+        }
+    };
+
+    const handleKeyDown = (e, action) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault(); // Prevents page scrolling when space is pressed
+            action();
         }
     };
 
     return (
         <FontSizer fontSize={fontSize} darkMode={darkMode}>
-            <FontAwesomeIcon fontSize={fontSize} darkMode={darkMode}
-                onClick={() => { decreaseFont(); }}
+            <FontAwesomeIcon
+                onClick={decreaseFont}
+                onKeyDown={(e) => handleKeyDown(e, decreaseFont)}
+                tabIndex="0"
                 icon={faMinus}
+                aria-label="Decrease font size"
+                role="button"
             />
-            <FontAwesomeIcon fontSize={fontSize} darkMode={darkMode}
+            <FontAwesomeIcon
                 icon={faTextHeight}
+                aria-hidden="true" // Decorative, so it doesn’t need to be focusable
             />
-            <FontAwesomeIcon fontSize={fontSize} darkMode={darkMode}
-                onClick={() => { increaseFont(); }}
+            <FontAwesomeIcon
+                onClick={increaseFont}
+                onKeyDown={(e) => handleKeyDown(e, increaseFont)}
+                tabIndex="0"
                 icon={faPlus}
+                aria-label="Increase font size"
+                role="button"
             />
         </FontSizer>
     );

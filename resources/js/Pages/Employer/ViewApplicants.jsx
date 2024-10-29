@@ -3,18 +3,22 @@ import styled from "styled-components";
 import NavBar from "./Components/NavBar";
 import { patchUserJob, selectApplicants, getUserDetails } from "@/Features/userJobs/userJobsSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { downloadDocument } from '@/Features/documents/documentsSlice';
 import { usePage } from "@inertiajs/react";
 import { selectJob, selectSingleJob } from "@/Features/jobs/jobsSlice";
 import { postNotification } from "@/Features/notifications/notificationsSlice";
 import { getUser, selectUser } from "@/Features/users/userSlice";
+import { useTheme } from "@/ThemeContext";
 // Decline Modal Component
-const DeclineModal = ({ applicant, onClose, onSubmit, darkMode, fontSize, rejectType }) => {
+const DeclineModal = ({ applicant, onClose, onSubmit, fontSize, rejectType }) => {
     const [message, setMessage] = useState("");
 
     const handleSubmit = () => {
         onSubmit(message, rejectType);
         onClose();
     };
+
+
 
     return (
         <Modal darkMode={darkMode} fontSize={fontSize}>
@@ -91,13 +95,17 @@ const ViewApplicants = () => {
     const [activeTab, setActiveTab] = useState("Pending");
     const [selectedApplicant, setSelectedApplicant] = useState(null);
     const [isDeclineModalOpen, setIsDeclineModalOpen] = useState(false);
-    const darkMode = useSelector(state => state.accessibility.darkMode);
+
     const fontSize = useSelector(state => state.accessibility.textSize);
     const user = useSelector(selectUser);
     const dispatch = useDispatch();
     const applicants = useSelector(selectApplicants);
     const job = useSelector(selectSingleJob);
     const [isHireModalOpen, setIsHireModalOpen] = useState(false);
+
+    const { theme, darkMode } = useTheme();
+
+
 
     useEffect(() => {
         dispatch(getUserDetails({ jobsId: jobId }));
@@ -110,6 +118,8 @@ const ViewApplicants = () => {
         setSelectedApplicant(applicant);
         setIsDeclineModalOpen(true);
     };
+
+
 
     const handleDeclineSubmit = async (message, rejectType) => {
         try {
@@ -140,7 +150,7 @@ const ViewApplicants = () => {
                 })
             ).unwrap();
 
-            alert("Applicant has been successfully rejected and notified.");
+            
         } catch (error) {
             console.error("Error in processing rejection:", error);
             alert("An error occurred while rejecting the applicant. Please try again.");
@@ -160,7 +170,6 @@ const ViewApplicants = () => {
                     userJobsId: selectedApplicant.id,
                     status: "Hired",
                     message: message,
-                    
                 })
             ).unwrap();
 
@@ -176,12 +185,20 @@ const ViewApplicants = () => {
                 })
             ).unwrap();
 
-            alert("Applicant has been successfully hired and notified.");
+            // Send hire email to the candidate
+            await axios.post("/send-hire-email", {
+                applicantId: selectedApplicant.userId,
+                jobTitle: job.title,
+                message: message,
+            });
+
+            alert("Applicant has been successfully hired, notified, and emailed.");
         } catch (error) {
             console.error("Error in processing hire:", error);
             alert("An error occurred while hiring the applicant. Please try again.");
         }
     };
+
 
 
 
@@ -214,14 +231,31 @@ const ViewApplicants = () => {
                     <TableData darkMode={darkMode} fontSize={fontSize}>{applicant.userId}</TableData>
                     <TableData darkMode={darkMode} fontSize={fontSize}>{applicant.email}</TableData>
                     <TableData>
-                        <ResumeLink
-                            href={applicant.resume}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            darkMode={darkMode} fontSize={fontSize}
-                        >
-                            View Resume
-                        </ResumeLink>
+                        {(!applicant.resume || applicant.resume === "") && applicant.document?.path ? (
+                            <ResumeLink
+                                href="#"
+                                onClick={() =>
+                                    dispatch(
+                                        downloadDocument({
+                                            id: applicant.document.id,
+                                            title: applicant.document.title || 'resume.pdf',
+                                        })
+                                    )
+                                }
+                                darkMode={darkMode} fontSize={fontSize}
+                            >
+                                Download Resume
+                            </ResumeLink>
+                        ) : (
+                            <ResumeLink
+                                href={applicant.resume || "#"}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                darkMode={darkMode} fontSize={fontSize}
+                            >
+                                View Resume
+                            </ResumeLink>
+                        )}
                     </TableData>
 
                     {applicant.status === "Pending" && (
@@ -257,12 +291,17 @@ const ViewApplicants = () => {
         <NavBar header={"View Applicants"}>
             {job && (
                 <>
-                    <JobDetails darkMode={darkMode} fontSize={fontSize}>
-                        <p><b>Position:</b> {job.title}</p>
-                        <p><b>Company:</b> {job?.company?.name}</p>
-                        <p><b>Location:</b> {job.location}</p>
-                        <p><b>Description:</b> {job.description}</p>
-                    </JobDetails>
+                   <JobDetails darkMode={darkMode} fontSize={fontSize}>
+    <p><b>Position:</b> {job.title}</p>
+    <p><b>Company:</b> {job?.company?.name}</p>
+    <p><b>Location:</b> {job.location}</p>
+    <p><b>Description:</b></p>
+
+    <TruncatedHTML darkMode={darkMode} fontSize={fontSize}
+        dangerouslySetInnerHTML={{ __html: job.description }}
+    />
+</JobDetails>
+
                     <Container darkMode={darkMode} fontSize={fontSize}>
                         <Tabs darkMode={darkMode} fontSize={fontSize}>
                             {tabs.map((tab) => (
@@ -371,14 +410,14 @@ const Tab = styled.div`
     padding: 10px 20px;
     margin: 0 10px;
     cursor: pointer;
-    background: ${({ $active, darkMode }) => ($active ? "#6c4bcf" : darkMode ? "#B7A1E5" : "#6c4bcf")};
-    color: ${({ $active, darkMode }) => ($active ? "#FFF" : darkMode ? "#FFF" : "#FFF")};
+    background: ${({ $active }) => ($active ? "#6c4bcf" : "#B7A1E5")}; /* Same color regardless of mode */
+    color: ${({ $active }) => ($active ? "#FFF" : "#FFF")}; /* Always white */
     border-radius: 5px;
     user-select: none;
     font-size: ${({ fontSize }) => fontSize};
 
     &:hover {
-        background: ${({ $active, darkMode }) => ($active ? (darkMode ? "#0056b3" : "#0056b3") : darkMode ? "#4a4a4a" : "#c7c7c7")};
+        background: ${({ $active }) => ($active ? "#0056b3" : "#c7c7c7")}; /* Consistent hover colors */
     }
 
     @media (max-width: 768px) {
@@ -399,6 +438,8 @@ const JobDetails = styled.div`
 
 const TableContainer = styled.div`
     overflow-x: auto;
+    overflow-y: auto;
+    max-height: 60vh;
 `;
 
 const Table = styled.table`
@@ -514,4 +555,34 @@ const Input = styled.input`
 const Actions = styled.div`
     display: flex;
     justify-content: flex-end;
+`;
+
+
+export const TruncatedHTML = styled.div`
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2; /* Limit to 2 lines */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#260e44')}; /* Adjust colors for dark mode */
+    font-size: ${({ fontSize }) => fontSize || '16px'};
+    line-height: 1.5;
+
+    ul {
+        list-style-type: disc;
+        padding-left: 20px;
+    }
+
+    ol {
+        list-style-type: decimal;
+        padding-left: 20px;
+    }
+
+    li {
+        margin-bottom: 5px;
+    }
+
+    @media (max-width: 768px) {
+        font-size: ${({ fontSize }) => fontSize || '14px'};
+    }
 `;

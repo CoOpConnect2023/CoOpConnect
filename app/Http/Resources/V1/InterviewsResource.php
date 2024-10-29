@@ -23,6 +23,7 @@ class InterviewsResource extends JsonResource
             'description' => $this->description,
             'intervieweeId' => $this->interviewee_id,
             'interviewerId' => $this->interviewer_id,
+            'proposedTime' => $this->proposed_time,
         ];
     }
 }

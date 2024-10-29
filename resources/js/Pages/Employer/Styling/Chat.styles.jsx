@@ -1,4 +1,5 @@
 import styled, { keyframes } from "styled-components";
+import { navButtonLightBackground, navDarkBackground, navLightBackground, lightTheme, darkTheme } from '@/Layouts/Global.styles';
 
 // Function to calculate font size dynamically
 const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
@@ -35,7 +36,7 @@ export const MainContainer = styled.div`
     align-self: stretch;
     border-radius: 10px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    background-color: ${({ darkMode }) => (darkMode ? "#2c2c2c" : "#FFF")};
+    background-color: ${({ darkMode }) => (darkMode ? darkTheme.colors.background : lightTheme.colors.background)};
     transition: background-color 0.5s ease;
     padding: 20px;
     height: 100%; /* Make sure it stretches to the bottom */
@@ -101,7 +102,7 @@ flex-grow: 1;
 export const RightColumn = styled.div`
     border-radius: 10px;
     border: 1px solid rgba(123, 117, 127, 1);
-    background-color: ${({ darkMode }) => (darkMode ? "#2c2c2c" : "#fff7ff")};
+     background-color: ${({ darkMode }) => (darkMode ? darkTheme.background : lightTheme.textBlack)};
     transition: background-color 0.5s ease;
     display: flex;
     flex-direction: column;
@@ -136,7 +137,7 @@ export const ScrollableContainer = styled.div`
 `;
 
 export const BackButton = styled.button`
-  background-color: ${({ darkMode }) => (darkMode ? "#6B538C" : "#9C85D8")};
+  background-color: ${({ darkMode }) => (darkMode ? lightTheme.colors.button.default : darkTheme.colors.button.default)};
   color: white;
   border: none;
   border-radius: 8px;
@@ -149,7 +150,7 @@ export const BackButton = styled.button`
   text-align: center;
 
   &:hover {
-    background-color: ${({ darkMode }) => (darkMode ? "#8A76BD" : "#B3A1E1")};
+    background-color: ${({ darkMode }) => (darkMode ? lightTheme.colors.button.hover : darkTheme.colors.button.hover)};
     transform: translateY(-2px);
   }
 

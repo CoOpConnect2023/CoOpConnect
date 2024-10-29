@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import styled, { css } from 'styled-components';
 import Checkbox from '@/Components/Checkbox';
 import GuestLayout from '@/Layouts/GuestLayout';
 import InputError from '@/Components/InputError';
@@ -9,6 +10,97 @@ import { Head, Link, useForm } from '@inertiajs/react';
 //import './Login.css';
 import logo from './Images/COOPCONNECTLOGO.png';
 import './Login.scss';
+import background from "@/Pages/Images/Landing-removebg.png";
+import darkbackground from "../Images/Landing-removebg.png";
+import { useSelector } from "react-redux";
+import LandingLayout from "@/Layouts/LandingLayout";
+
+
+const PageTitle = ({ title }) => {
+    useEffect(() => {
+      document.title = title;
+    }, [title]);
+
+    return null;
+  };
+
+
+
+
+const Container = styled.div`
+  ${({ darkMode }) => css`
+    background-image:
+      linear-gradient(
+        to bottom,
+        rgba(131, 70, 210, 1), /* #8346D2 solid */
+        ${darkMode ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.3)'}
+      ),
+      url(${darkMode ? darkbackground : background});
+    height: 100vh;
+    background-size: cover;
+    background-position: bottom;
+  `}
+`;
+
+
+const ContentWrapper = styled.div`
+  min-height: 70vh;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 5px;
+`;
+
+const TextContainer = styled.div`
+  font-weight: bold;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+`;
+
+const Title = styled.h1`
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 3.25rem;
+  color: ${({ darkMode }) => (darkMode ? "#FFF" : "#FFF")};
+`;
+
+const Subtitle = styled.h2`
+  margin-top: 1rem;
+  font-size: 2.25rem;
+  font-weight: 400;
+  margin-bottom: 1rem;
+  color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6B538C")};
+  span {
+    color: ${({ darkMode }) => (darkMode ? "#FFF" : "#FFF")};
+  }
+`;
+
+const Button = styled.button`
+  background-color: #6B538C;
+  border-radius: 8px;
+  color: white;
+  padding: 8px 16px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  opacity: 1;
+  &:hover {
+    opacity: 0.8;
+  }
+`;
+
+
+
+
+
+
+
 
 export default function Login({ status, canResetPassword, error }) {  // Add the `error` prop
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -16,6 +108,7 @@ export default function Login({ status, canResetPassword, error }) {  // Add the
         password: '',
         remember: false,
     });
+    const darkMode = useSelector(state => state.accessibility.darkMode);
 
     useEffect(() => {
         return () => {
@@ -36,7 +129,12 @@ export default function Login({ status, canResetPassword, error }) {  // Add the
         window.location.href = '/auth/linkedin/redirect';
     };
 
-    return (
+    return (<>
+<Container darkMode={darkMode}>
+      <PageTitle title="Welcome" />
+      <div>
+
+        <ContentWrapper>
         <GuestLayout className="login-layout">
             <Head title="Log in" />
 
@@ -144,7 +242,7 @@ export default function Login({ status, canResetPassword, error }) {  // Add the
                             </PrimaryButton>
                         </div>
 
-                        <div className="mt-4 text-center">
+                        {/* <div className="mt-4 text-center">
                             Don't have an account?{" "}
                             <Link
                                 href={route("register")}
@@ -196,10 +294,21 @@ export default function Login({ status, canResetPassword, error }) {  // Add the
                                     </Link>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </form>
                 </div>
             </div>
         </GuestLayout>
+        </ContentWrapper>
+      </div>
+    </Container>
+
+
+
+
+
+
+    </>
+
     );
 }

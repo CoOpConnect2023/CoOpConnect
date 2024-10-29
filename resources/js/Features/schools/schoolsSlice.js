@@ -107,6 +107,24 @@ export const getSchools = createAsyncThunk(
     }
 );
 
+export const postSchool = createAsyncThunk(
+    "schools/postSchool",
+    async (newSchoolData, { rejectWithValue }) => {
+        try {
+            const response = await axios.post(`/schools`, newSchoolData);
+            return response.data.data; // Assuming the response contains the new school data in `data`
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.error("Error response from server:", error.response.data);
+                return rejectWithValue(error.response.data.message);
+            }
+            console.error("Network or other error:", error.message);
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
+
 export const getPercentages = createAsyncThunk(
     "percentages/getPercentages",
     async (userID) => {
@@ -277,6 +295,17 @@ export const schoolsSlice = createSlice({
             })
             .addCase(getSchools.rejected, (state, action) => {
                 state.status.schoolslist = "failed";
+            })
+
+            .addCase(postSchool.pending, (state) => {
+                state.status.schools = "loading";
+            })
+            .addCase(postSchool.fulfilled, (state, action) => {
+                state.schoolslist = [...state.schoolslist, action.payload]; // Add the newly created school to the list
+                state.status.schools = "succeeded";
+            })
+            .addCase(postSchool.rejected, (state) => {
+                state.status.schools = "failed";
             })
 
             .addCase(getCourses.pending, (state, action) => {

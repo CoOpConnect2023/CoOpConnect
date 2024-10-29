@@ -6,6 +6,7 @@ import { getUserJobsByUserId, selectUserJobs, deleteUserJob, editHiredStudent, p
 import { selectJobs, getJobsforUser, getJobsforEmployer } from "@/Features/jobs/jobsSlice";
 import { selectUser, getStudents, selectAllStudents } from "@/Features/users/userSlice";
 import { MainContainer, Section, SectionTitle, StyledTable, LoadingScreen } from "../Teacher/Styling/ManageStudents.styles";
+import StudentDetailsModal from "./Components/StudentDetailsModal";
 
 // Styled components
 const LargeButton = styled.button`
@@ -29,18 +30,23 @@ const RedButton = styled(LargeButton)`
     background-color: #c0392b;
   }
 `;
-
 const Input = styled.input`
   padding: 0.5em;
   font-size: 1.1em;
   width: 100%;
-  border: 1px solid #ccc;
+  border: 1px solid ${({ darkMode }) => (darkMode ? "#555" : "#ccc")}; /* Darker border for dark mode */
+  background-color: ${({ darkMode }) => (darkMode ? "#333" : "#fff")}; /* Dark background for dark mode */
+  color: ${({ darkMode }) => (darkMode ? "#f5f5f5" : "#2C2C2C")}; /* Lighter text for dark mode, darker for light mode */
   border-radius: 4px;
   margin-bottom: 10px;
 
   &:focus {
-    border-color: #B7A1E5;
+    border-color: ${({ darkMode }) => (darkMode ? "#D6BCFA" : "#B7A1E5")}; /* Adjusted focus border color for dark mode */
     outline: none;
+  }
+
+  &::placeholder {
+    color: ${({ darkMode }) => (darkMode ? "#888" : "#aaa")}; /* Placeholder color for better contrast */
   }
 `;
 
@@ -52,8 +58,8 @@ const Dropdown = styled.div`
 
 const DropdownItems = styled.div`
   position: absolute;
-  background-color: white;
-  border: 1px solid #ccc;
+  background-color: ${({ darkMode }) => (darkMode ? "#333" : "#fff")}; /* Dark background for dark mode */
+  border: 1px solid ${({ darkMode }) => (darkMode ? "#555" : "#ccc")}; /* Adjust border for dark mode */
   border-radius: 4px;
   z-index: 1;
   width: 100%;
@@ -64,10 +70,13 @@ const DropdownItems = styled.div`
 const DropdownItem = styled.div`
   padding: 8px;
   cursor: pointer;
-  background-color: ${({ isHighlighted }) => (isHighlighted ? "#eee" : "#fff")};
+  background-color: ${({ darkMode, isHighlighted }) =>
+    isHighlighted ? (darkMode ? "#444" : "#eee") : darkMode ? "#333" : "#fff"}; /* Highlighted and normal backgrounds for dark mode */
+
+  color: ${({ darkMode }) => (darkMode ? "#f5f5f5" : "#2C2C2C")}; /* Adjust text color for dark mode */
 
   &:hover {
-    background-color: #ddd;
+    background-color: ${({ darkMode }) => (darkMode ? "#555" : "#ddd")}; /* Adjust hover background color for dark mode */
   }
 `;
 
@@ -95,6 +104,7 @@ function HiredStudentsPage() {
     startDate: '',
     endDate: ''
   });
+  const [selectedStudent, setSelectedStudent] = useState(null);
 
   const statusOptions = ['Hired', 'Pending', 'Interviewing', 'Rejected'];
 
@@ -240,6 +250,17 @@ function HiredStudentsPage() {
     }
   };
 
+  const handleViewClick = (studentId) => {
+    const student = hiredStudentsState.find(s => s.id === studentId);
+    setSelectedStudent(student); // Set the selected student for viewing
+  }
+
+  const closeModal = () => {
+    setSelectedStudent(null); // Close the modal
+  };
+
+  console.log(hiredStudentsState)
+
   return (
     <NavBar header={"Hired Students"}>
       <MainContainer fontSize={fontSize} darkMode={darkMode}>
@@ -264,6 +285,7 @@ function HiredStudentsPage() {
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Status</th>
+                    <th>View Student</th>
                     <th>Edit/Save</th>
                     <th>Delete/Cancel</th>
                   </tr>
@@ -353,6 +375,13 @@ function HiredStudentsPage() {
                           )}
                         </td>
                         <td>
+
+                            <LargeButton onClick={() => handleViewClick(student.id)}>
+                              View
+                            </LargeButton>
+
+                        </td>
+                        <td>
                           {editStudentId === student.id ? (
                             <LargeButton onClick={() => handleEditHiredStudent(student.id)}>
                               Save
@@ -404,7 +433,7 @@ function HiredStudentsPage() {
                             setNewStudent({ ...newStudent, position: e.target.value });
                             setShowJobSuggestions(e.target.value.length > 0);
                           }}
-                          placeholder="Start typing position..."
+                          placeholder="Job Position..."
                         />
                         {showJobSuggestions && (
                           <DropdownItems>
@@ -436,7 +465,7 @@ function HiredStudentsPage() {
                             setNewStudent({ ...newStudent, email: e.target.value });
                             setShowEmailSuggestions(e.target.value.length > 0);
                           }}
-                          placeholder="Start typing student email..."
+                          placeholder="Student Email"
                         />
                         {showEmailSuggestions && (
                           <DropdownItems>
@@ -471,6 +500,10 @@ function HiredStudentsPage() {
           </>
         )}
       </MainContainer>
+
+      {selectedStudent && (
+        <StudentDetailsModal student={selectedStudent} onClose={closeModal} />
+      )}
     </NavBar>
   );
 }

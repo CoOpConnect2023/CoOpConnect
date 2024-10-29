@@ -363,10 +363,11 @@ public function deleteUser(Request $request, $id)
                     $validator = Validator::make($userData, [
                         'name' => 'required|string',
                         'email' => 'required|email|unique:users,email',
-                        'class' => 'required|string',
+                        'class' => 'nullable|string',
                         'password' => 'required|string|min:6',
                         'role' => 'required|string',
                         'school_id' => 'nullable|exists:schools,id',
+                        'company_id' => 'nullable|exists:companies,id',
                     ]);
 
                     if ($validator->fails()) {
@@ -461,13 +462,13 @@ public function deleteUser(Request $request, $id)
 
 
         $existingJob = Jobs::where('title', $jobData['title'])
-            ->where('company', $jobData['company'])
+            ->where('company_id', $jobData['company_id'])
             ->first();
 
         if ($existingJob) {
             Log::info('Skipping job creation, job already exists with title and company:', [
                 'title' => $jobData['title'],
-                'company' => $jobData['company']
+                'company_id' => $jobData['company_id']
             ]);
             continue;
         }
@@ -482,7 +483,7 @@ public function deleteUser(Request $request, $id)
             'location' => 'required|string',
             'posting_status' => ['required', Rule::in(['Open', 'Closed'])],
             'job_type' => 'required|string',
-            'company' => 'required|string',
+            'company_id' => 'required|exists:companies,id',
             'user_id' => 'required|exists:users,id',
         ]);
 

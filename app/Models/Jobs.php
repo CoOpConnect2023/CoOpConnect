@@ -25,6 +25,7 @@ class Jobs extends Model
         'company_id',
         'start_date',
         'end_date',
+        'question_id',
     ];
 
     public function users()

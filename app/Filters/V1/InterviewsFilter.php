@@ -16,6 +16,7 @@ class InterviewsFilter extends ApiFilter
         'description' => ['eq'],
         'intervieweeId' => ['eq'],
         'interviewerId' => ['eq'],
+        'proposed_time' => ['eq'],
     ];
 
     protected $columnMap = [

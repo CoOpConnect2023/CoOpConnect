@@ -60,13 +60,13 @@ function Home() {
                 <CompanyName darkMode={darkMode} fontSize={fontSize}  >{job.company.name}</CompanyName>
 
                 <Location darkMode={darkMode} fontSize={fontSize} >{job.location}</Location>
-
+{ job.skills &&
                 <SkillsList darkMode={darkMode} fontSize={fontSize} >
                     {job.skills.map((tag, index) => (
                         <SkillBadge darkMode={darkMode} fontSize={fontSize}   key={index}>{tag}</SkillBadge>
                     ))}
-                </SkillsList>
-                <JobDescription darkMode={darkMode} fontSize={fontSize}>{job.description}</JobDescription>
+                </SkillsList>}
+                <JobDescription dangerouslySetInnerHTML={{ __html: job.description }} darkMode={darkMode} fontSize={fontSize}/>
                 <Divider darkMode={darkMode} fontSize={fontSize} />
                 <Link darkMode={darkMode} fontSize={fontSize} href={`/student/viewpost/${job.id}`}>
                     <JobButton darkMode={darkMode} fontSize={fontSize}>VIEW POSTING</JobButton>
@@ -93,16 +93,16 @@ function Home() {
                 <JobsSection darkMode={darkMode} fontSize={fontSize}>
                     <JobsHeader darkMode={darkMode} fontSize={fontSize}>Recommended Jobs</JobsHeader>
                     <JobsSubHeader darkMode={darkMode} fontSize={fontSize}>
-                        <u>View</u> some of these recommended jobs!
-                    </JobsSubHeader>
+    <u>View</u> some of these recommended jobs! Update your skills on your <Link href="/student/profile" style={{ color: darkMode ? '#EDDCFF' : '#8A76BD' }}>profile</Link> to see more suggestions.
+</JobsSubHeader>
+
                     <JobListings darkMode={darkMode} fontSize={fontSize}>
                         {jobsStatus === "loading" ? (
                             <EmptyMessage darkMode={darkMode} fontSize={fontSize}>Loading...</EmptyMessage>
                         ) : jobs.length === 0 ? (
                             <EmptyMessage darkMode={darkMode} fontSize={fontSize}>
-                                Add some skills to your profile to see some jobs
-                                to apply for
-                            </EmptyMessage>
+    Add some skills to your <Link href="/student/profile" style={{ color: darkMode ? '#fff' : '#000' }}>profile</Link> to see some jobs to apply for.
+</EmptyMessage>
                         ) : (
                             jobs.map((job, index) => (
                                 <JobCard  key={index} job={job} />

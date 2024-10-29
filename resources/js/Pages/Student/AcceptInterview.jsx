@@ -157,10 +157,13 @@ const AcceptInterview = () => {
                 {job && (
                     <>
                         <JobInfo fontSize={fontSize} darkMode={darkMode}>
-                            <h2>Job Title: {job.title}</h2>
-                            <h3>Job Company: {job.company}</h3>
-                            <p>Job Description: {job.description}</p>
-                        </JobInfo>
+    <h2>Job Title: {job.title}</h2>
+    <h3>Job Company: {job.company.name}</h3>
+    <p>
+        Job Description:
+        <span dangerouslySetInnerHTML={{ __html: job.description }} />
+    </p>
+</JobInfo>
                         <EmployerMessage fontSize={fontSize} darkMode={darkMode}>
                             <p>Message from the employer: {job.message}</p>
                         </EmployerMessage>

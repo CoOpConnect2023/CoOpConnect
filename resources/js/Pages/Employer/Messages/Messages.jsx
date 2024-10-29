@@ -41,6 +41,7 @@ export default function Messages() {
     const userInfo = user;
     const currentUser = userInfo?.id;
 
+
     useEffect(() => {
         if (conversationID !== null) {
             dispatch(getMessages({ conversationID }));
@@ -137,6 +138,7 @@ export default function Messages() {
                         setConversationsID={setConversationsID}
                         currentUser={currentUser}
                         conversationID={conversationID}
+                        userInfo={userInfo}
                     />
                 </ChatContainer>
             </NavBar>

@@ -48,7 +48,7 @@ const UserModal = ({ isOpen, onClose, user, fontSize, darkMode }) => {
         {user.updated_at && <p><strong>Updated:</strong> {user.updated_at}</p>}
         {user.status && <p><strong>Status:</strong> {user.status}</p>}
         {user.role && <p><strong>Role:</strong> {user.role}</p>}
-        {user.company && <p><strong>Company:</strong> {user.company}</p>}
+        
         {user.description && <p><strong>Description:</strong> {user.description}</p>}
         {user.contactPhone && <p><strong>Phone:</strong> {user.contactPhone}</p>}
         {user.principalName && <p><strong>Principal Name:</strong> {user.principalName}</p>}

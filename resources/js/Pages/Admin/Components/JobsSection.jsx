@@ -3,12 +3,15 @@ import JobsCardComponent from './JobsCard';
 import StatusChart from './StatusChart';
 import { useState } from "react";
 import UserModal from './ViewUserModal';
-import { SectionContainer, SectionTitle, SectionContent, CardList, SchoolSearchInput } from '../Styling/Section.styles';
-
-const JobsSectionComponent = ({ title, percentages, users, handleDeleteUser, fontSize, darkMode }) => {
+import AddJobModal from './AddNewJobModal';
+import { SectionContainer, SectionTitle, SectionContent, CardList, SchoolSearchInput, SearchAndButtonContainer } from '../Styling/Section.styles';
+import { Button } from '../Styling/Card.styles';
+const appUrl = import.meta.env.VITE_APP_URL;
+const JobsSectionComponent = ({ title, percentages, users, handleDeleteUser, fontSize, darkMode, companies, schools }) => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const [isAddJobModalOpen, setIsAddJobModalOpen] = useState(false);
 
     const openModal = (user) => {
         setSelectedUser(user);
@@ -23,6 +26,14 @@ const JobsSectionComponent = ({ title, percentages, users, handleDeleteUser, fon
         setSearchQuery(event.target.value); // Update search query as user types
     };
 
+    const openAddJobModal = () => {
+        setIsAddJobModalOpen(true); // Open the add user modal
+    };
+
+    const closeAddJobModal = () => {
+        setIsAddJobModalOpen(false); // Close the add user modal
+    };
+
     // Filter users based on the search query
     const filteredUsers = users?.filter(user =>
         user?.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -31,12 +42,14 @@ const JobsSectionComponent = ({ title, percentages, users, handleDeleteUser, fon
         user?.jobType?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         user?.skills?.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase())) ||
         user?.id?.toString().includes(searchQuery.toLowerCase()) ||
-        user?.userId?.toString().includes(searchQuery.toLowerCase())
+        user?.userId?.toString().includes(searchQuery.toLowerCase())||
+        user?.description?.toString().includes(searchQuery.toLowerCase())
     );
 
     return (
         <SectionContainer fontSize={fontSize} darkMode={darkMode}>
             <SectionTitle fontSize={fontSize} darkMode={darkMode}>{title}</SectionTitle>
+<SearchAndButtonContainer>
             <SchoolSearchInput
                 fontSize={fontSize}
                 darkMode={darkMode}
@@ -45,6 +58,7 @@ const JobsSectionComponent = ({ title, percentages, users, handleDeleteUser, fon
                 value={searchQuery}
                 onChange={handleSearchChange}
             />
+            <Button fontSize={fontSize} darkMode={darkMode} onClick={openAddJobModal}>Add New Job</Button></SearchAndButtonContainer>
             <SectionContent fontSize={fontSize} darkMode={darkMode}>
                 <CardList fontSize={fontSize} darkMode={darkMode}>
                     {filteredUsers && filteredUsers.map(user => (
@@ -72,6 +86,7 @@ const JobsSectionComponent = ({ title, percentages, users, handleDeleteUser, fon
                             companyName={user.company?.name} // Fix: access company name directly
                             companyDescription={user.company?.description} // Fix: access company description
                             jobType={user.jobType}
+                            jobTitle={user.title}
                             skills={user.skills}
                             created={user.created_at}
                             updated={user.updated_at}
@@ -87,6 +102,17 @@ const JobsSectionComponent = ({ title, percentages, users, handleDeleteUser, fon
                 isOpen={isModalOpen}
                 onClose={closeModal}
                 user={selectedUser}
+            />
+
+<AddJobModal
+                fontSize={fontSize}
+                darkMode={darkMode}
+                companies={companies}
+                schools={schools}
+                isOpen={isAddJobModalOpen}
+                onClose={closeAddJobModal}
+                appUrl={appUrl}
+
             />
         </SectionContainer>
     );

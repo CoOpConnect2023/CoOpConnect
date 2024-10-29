@@ -14,7 +14,7 @@ const appUrl = import.meta.env.VITE_APP_URL;
 
 
 
-const Section = ({ title, percentages, users, handleDeleteUser, fontSize, darkMode, type }) => {
+const Section = ({ title, percentages, users, handleDeleteUser, fontSize, darkMode, type, companies, schools }) => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [isViewModalOpen, setIsViewModalOpen] = useState(false);
     const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false); // State to handle add user modal
@@ -50,6 +50,8 @@ const Section = ({ title, percentages, users, handleDeleteUser, fontSize, darkMo
         user?.positiontitle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         user?.company_name?.toLowerCase().includes(searchQuery.toLowerCase())
     );
+
+    console.log(companies);
 
     return (
         <SectionContainer fontSize={fontSize} darkMode={darkMode}>
@@ -111,6 +113,8 @@ const Section = ({ title, percentages, users, handleDeleteUser, fontSize, darkMo
             <AddUserModal
                 fontSize={fontSize}
                 darkMode={darkMode}
+                companies={companies}
+                schools={schools}
                 isOpen={isAddUserModalOpen}
                 onClose={closeAddUserModal}
                 appUrl={appUrl}

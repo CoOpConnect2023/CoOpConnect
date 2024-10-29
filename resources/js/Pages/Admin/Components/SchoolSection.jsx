@@ -3,15 +3,18 @@ import SchoolCardComponent from './SchoolCard';
 import StatusChart from './StatusChart';
 import { useState, useEffect } from "react";
 import UserModal from './ViewUserModal';
-import { SectionContainer, SectionTitle, SectionContent, CardList, SchoolSearchInput, StatusContainer } from '../Styling/Section.styles';
+import { SectionContainer, SectionTitle, SectionContent, CardList, SchoolSearchInput, StatusContainer, SearchAndButtonContainer } from '../Styling/Section.styles';
+import { Button } from '../Styling/Card.styles';
+import AddSchoolModal from './AddNewSchoolModal';
+
+const appUrl = import.meta.env.VITE_APP_URL;
 
 
-
-
-const SchoolSectionComponent = ({ title, percentages, users, handleDeleteUser, fontSize, darkMode }) => {
+const SchoolSectionComponent = ({ title, percentages, users, handleDeleteUser, fontSize, darkMode, companies, schools }) => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const [isAddSchoolModalOpen, setIsAddSchoolModalOpen] = useState(false);
 
     const openModal = (user) => {
         setSelectedUser(user);
@@ -26,6 +29,14 @@ const SchoolSectionComponent = ({ title, percentages, users, handleDeleteUser, f
         setSearchQuery(event.target.value); // Update search query as user types
     };
 
+    const openAddSchoolModal = () => {
+        setIsAddSchoolModalOpen(true); // Open the add School modal
+    };
+
+    const closeAddSchoolModal = () => {
+        setIsAddSchoolModalOpen(false); // Close the add user modal
+    };
+
     // Filter users based on the search query
     const filteredUsers = users?.filter(user =>
         user?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -38,6 +49,7 @@ const SchoolSectionComponent = ({ title, percentages, users, handleDeleteUser, f
     return (
         <SectionContainer fontSize={fontSize} darkMode={darkMode}>
             <SectionTitle fontSize={fontSize} darkMode={darkMode}>{title}</SectionTitle>
+            <SearchAndButtonContainer>
             <SchoolSearchInput
                 fontSize={fontSize}
                 darkMode={darkMode}
@@ -46,6 +58,8 @@ const SchoolSectionComponent = ({ title, percentages, users, handleDeleteUser, f
                 value={searchQuery}
                 onChange={handleSearchChange}
             />
+<Button fontSize={fontSize} darkMode={darkMode} onClick={openAddSchoolModal}>Add a School</Button>
+</SearchAndButtonContainer>
             <SectionContent fontSize={fontSize} darkMode={darkMode}>
                 <CardList fontSize={fontSize} darkMode={darkMode}>
                     {filteredUsers && filteredUsers.map(user => (
@@ -82,7 +96,19 @@ const SchoolSectionComponent = ({ title, percentages, users, handleDeleteUser, f
                 onClose={closeModal}
                 user={selectedUser}
             />
+
+<AddSchoolModal
+                fontSize={fontSize}
+                darkMode={darkMode}
+                companies={companies}
+                schools={schools}
+                isOpen={isAddSchoolModalOpen}
+                onClose={closeAddSchoolModal}
+                appUrl={appUrl}
+
+            />
         </SectionContainer>
+
     );
 };
 

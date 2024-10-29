@@ -30,7 +30,7 @@ const fadeIn = keyframes`
 `;
 
 export const PurpleButton = styled.button`
-  background-color: #6E3AA7;
+  background-color: #B6A1E5;
   color: #fff;
   border: none;
   padding: 8px 15px;
@@ -38,6 +38,7 @@ export const PurpleButton = styled.button`
   border-radius: 4px;
   font-size: ${({ fontSize }) => fontSize || '1em'};
   margin-top: 10px;
+  margin-right: 1%;
 
   &:hover {
     background-color: #5b2a8b;
@@ -372,21 +373,24 @@ export const NoShortlistsMessage = styled.p`
 
 
 export const GlobalStyles = createGlobalStyle`
+  /* Style all buttons in the date navigation (Month, Week, Day, Today, etc.) */
   .rbc-btn-group button {
-    font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)}; /* Adjust the font size */ca
-    color: ${({ darkMode }) => (darkMode ? "#FFF" : "#6B538C")}; /* Change the text color */
+    font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
+    color: ${({ darkMode }) => (darkMode ? "#FFF" : "#6B538C")}; /* Main color for labels */
     transition: color 0.3s, background-color 0.3s;
   }
 
   .rbc-btn-group button:hover {
-    color: ${({ darkMode }) => (darkMode ? "#FFFFFF" : "#543b6f")}; /* Change color on hover */
+    color: ${({ darkMode }) => (darkMode ? "#FFFFFF" : "#543b6f")}; /* Hover color */
   }
 
+  /* Active button style */
   .rbc-btn-group .rbc-active {
-    background-color: ${({ darkMode }) => (darkMode ? "#6B538C" : "#6B538C")}; /* Active background color */
-    color: #FFFFFF; /* Active text color */
+    background-color: ${({ darkMode }) => (darkMode ? "#6B538C" : "#6B538C")};
+    color: #FFFFFF; /* Ensure text stays white on active */
   }
 
+  /* Toolbar label color (e.g., displaying current date or view mode) */
   .rbc-toolbar-label {
     font-size: ${({ fontSize }) => calculateFontSize(24, fontSize)};
     color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6B538C")};

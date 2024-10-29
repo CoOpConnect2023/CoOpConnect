@@ -1,6 +1,7 @@
 import styled, { keyframes, css } from 'styled-components';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { navButtonLightBackground, navDarkBackground, navLightBackground } from '@/Layouts/Global.styles';
+import { navButtonLightBackground, navDarkBackground, navLightBackground, lightTheme, darkTheme } from '@/Layouts/Global.styles';
+import { useTheme } from '@/ThemeContext';
 
 
 const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
@@ -20,6 +21,8 @@ const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
 
     return `${basePixelSize * em * factor}px`;
 };
+
+
 // Keyframes for vibration animation
 const vibration = keyframes`
   0% { transform: translateX(0); }
@@ -91,7 +94,7 @@ const getFontSize = (size) => {
 
 export const AppContainer = styled.div`
   display: flex;
-  background-color: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "var(--Schemes-Background, #fff7ff)")};
+  background-color: ${({ darkMode }) => (darkMode ? darkTheme.colors.background : lightTheme.colors.background)};
   gap: 0px;
 transition: background-color 0.5s ease, color 0.5s ease;
   flex-direction: row;
@@ -109,7 +112,7 @@ export const NavContainer = styled.nav`
   align-items: center;
   border: 1px solid rgba(123, 117, 127, 1);
 transition: background-color 0.5s ease, color 0.5s ease;
-  background-color: ${({ darkMode }) => (darkMode ? navDarkBackground : navLightBackground)};
+  background-color: ${({ darkMode }) => (darkMode ? navDarkBackground : lightTheme.colors.navBackground)};
   display: flex;
   flex-direction: column;
   width: 90px;
@@ -132,6 +135,36 @@ transition: background-color 0.5s ease, color 0.5s ease;
 
   }
 `;
+
+export const NavContainerAbsolute = styled.nav`
+  align-items: center;
+  border: 1px solid rgba(123, 117, 127, 1);
+transition: background-color 0.5s ease, color 0.5s ease;
+  background-color: ${({ darkMode }) => (darkMode ? navDarkBackground : lightTheme.colors.navBackground)};
+  display: flex;
+  flex-direction: column;
+  width: 90px;
+  padding: 30px 20px 20px;
+  border-radius: 0 10px 10px 0;
+  height: 100vh;
+  z-index: 1000;
+  position: fixed;
+
+  @media (max-width: 991px) {
+    align-items: center;
+    display: flex;
+    width: 100vw;
+    height: 12vh;
+    border-radius: 10px 10px 0 0;
+    border-bottom: 1px solid rgba(123, 117, 127, 1);
+    flex-direction: row;
+    justify-content: space-around;
+    padding 10px;
+    margin-bottom: 1vh;
+
+  }
+`;
+
 
 export const Logo = styled.img`
   aspect-ratio: 1.25;
@@ -269,7 +302,7 @@ export const NotificationIcon = styled.div`
   height: 40px;
  color: ${({ darkMode }) => (darkMode ? "#FFF" : "#000")};
   background-color: ${({ darkMode }) => (darkMode ? navDarkBackground : navButtonLightBackground)};
-  border: 2px solid ${({ darkMode }) => (darkMode ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 1)')};
+  border: 2px solid ${({ darkMode }) => (darkMode ? darkTheme.colors.text : lightTheme.colors.text)};
   border-radius: 50%;
   display: flex;
   justify-content: center;

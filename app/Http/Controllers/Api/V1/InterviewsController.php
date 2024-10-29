@@ -11,6 +11,7 @@ use App\Http\Resources\V1\InterviewsCollection;
 use Illuminate\Http\Request;
 use App\Filters\V1\InterviewsFilter;
 use App\Mail\InterviewTimeChanged;
+use App\Mail\InterviewUpdateRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 
@@ -76,4 +77,36 @@ class InterviewsController extends Controller
 
         return response()->json(['message' => 'Interview time update email sent successfully.']);
     }
+
+    public function sendInterviewChangeRequest(Request $request)
+    {
+        // Validate incoming request
+        $validated = $request->validate([
+            'employer_id' => 'required|exists:users,id', // Employer who will receive the email
+            'student_id' => 'required|exists:users,id',  // Student who has the interview
+            'job_title' => 'required|string',            // Job title for the interview
+            'new_time' => 'required|date',               // New time for the interview
+            'interview_id' => 'required|exists:interviews,id' // The ID of the interview being updated
+        ]);
+
+        // Fetch employer and student details
+        $employer = User::findOrFail($validated['employer_id']);
+        $student = User::findOrFail($validated['student_id']);
+
+        // Update the interview with the new time
+        $interview = Interviews::findOrFail($validated['interview_id']);
+        $interview->proposed_time = $validated['new_time'];
+        $interview->save();
+
+        // Send email to employer
+        Mail::to($employer->email)->send(new InterviewUpdateRequest(
+            $employer,
+            $student,                       // Pass student details
+            $validated['job_title'],        // Job title
+            $validated['new_time']          // New interview time
+        ));
+
+        return response()->json(['message' => 'Interview time update email sent successfully.']);
+    }
+
 }

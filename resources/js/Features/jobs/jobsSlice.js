@@ -5,6 +5,7 @@ axios.defaults.baseURL = `${appUrl}/api/v1`;
 
 const initialState = {
     jobs: [],
+    allUserJobs: [],
     job: "",
     jobFormData: {
         jobsId: "",
@@ -82,6 +83,16 @@ export const jobsSlice = createSlice({
             })
             .addCase(getJobsforEmployer.rejected, (state, action) => {
                 state.status.jobs = "failed";
+            })
+            .addCase(getAllJobsForEmployer.pending, (state, action) => {
+                state.status.allUserJobs = "loading";
+            })
+            .addCase(getAllJobsForEmployer.fulfilled, (state, action) => {
+                state.allUserJobs = action.payload;
+                state.status.jobs = "succeeded";
+            })
+            .addCase(getAllJobsForEmployer.rejected, (state, action) => {
+                state.status.allUserJobs = "failed";
             })
             .addCase(getUsersForJob.pending, (state, action) => {
                 state.status.jobs = "loading";
@@ -190,6 +201,7 @@ export const selectJob = createAsyncThunk("jobs/selectJob", async (params) => {
         url: `/jobs/${jobId}`,
         method: "GET",
     });
+    console.log(response.data.data);
     return response.data.data;
 });
 
@@ -217,6 +229,25 @@ export const getJobsforEmployer = createAsyncThunk(
         return response.data.data;
     }
 );
+
+
+export const getAllJobsForEmployer = createAsyncThunk(
+    "jobs/getAllJobsForEmployer",
+    async ({ jobIds }, { rejectWithValue }) => {
+        try {
+            const response = await axios.get(`/user-jobs`, {
+                params: {
+                    job_ids: jobIds, // Pass jobIds directly as an array
+                },
+            });
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data || error.message);
+        }
+    }
+);
+
+
 
 export const getUsersForJob = createAsyncThunk(
     "jobs/getUsersForJob",
@@ -278,6 +309,8 @@ export const postJob = createAsyncThunk(
           jobType,
           company_id,
           userId,
+          startDate,
+          endDate
         } = params;
 
         console.log('Posting job with the following data:', {
@@ -289,6 +322,8 @@ export const postJob = createAsyncThunk(
             jobType,
             company_id,
             userId,
+            startDate,
+            endDate
           });
 
         const response = await axios({
@@ -303,6 +338,8 @@ export const postJob = createAsyncThunk(
             jobType,
             company_id,
             userId,
+            startDate,
+            endDate,
           },
         });
         return response.data.data;
@@ -321,6 +358,144 @@ export const postJob = createAsyncThunk(
       }
     }
   );
+
+
+  export const postJobWithQuestions = createAsyncThunk(
+    "jobs/postJobWithQuestions",
+    async (params, { rejectWithValue }) => {
+      try {
+        const {
+          title,
+          description,
+          location,
+          postingStatus,
+          jobType,
+          company_id,
+          questions, // This should include the questions and answers array
+          startDate,
+          endDate,
+          skills
+        } = params;
+
+        console.log("Posting job and questions with the following data:", {
+          title,
+          description,
+          location,
+          postingStatus,
+          jobType,
+          company_id,
+          questions,
+          startDate,
+          endDate,
+          questions,
+          skills
+        });
+
+        // Perform the API request
+        const response = await axios({
+          url: "/jobs/jobwithquestions", // Assuming this is the endpoint for posting jobs with questions
+          method: "POST",
+          data: {
+            title,
+            description,
+            location,
+            postingStatus,
+            jobType,
+            company_id,
+            startDate,
+            endDate,
+            questions,
+            skills,
+          },
+        });
+
+        // Return the response data
+        return response.data.data;
+      } catch (err) {
+        // Handle errors and reject the value with the error message
+        if (err.response) {
+          // Server responded with a status other than 2xx
+          return rejectWithValue(err.response);
+        } else if (err.request) {
+          // Request was made but no response received
+          return rejectWithValue("No response from server. Please try again.");
+        } else {
+          // Something else happened while setting up the request
+          return rejectWithValue(err.message);
+        }
+      }
+    }
+  );
+
+
+  export const patchJobWithQuestions = createAsyncThunk(
+    "jobs/patchJobWithQuestions",
+    async (params, { rejectWithValue }) => {
+      try {
+        const {
+          jobsId, // Include the jobId to update the correct job
+          title,
+          description,
+          location,
+          postingStatus,
+          jobType,
+          company_id,
+          questions, // Include the questions and answers array
+          startDate,
+          endDate,
+          skills
+        } = params;
+
+        console.log("Updating job and questions with the following data:", {
+          jobsId,
+          title,
+          description,
+          location,
+          postingStatus,
+          jobType,
+          company_id,
+          questions,
+          startDate,
+          endDate,
+          skills,
+        });
+
+        // Perform the API request
+        const response = await axios({
+          url: `/jobs/${jobsId}/jobwithquestions`, // PATCH endpoint for updating jobs with questions
+          method: "PATCH",
+          data: {
+            title,
+            description,
+            location,
+            postingStatus,
+            jobType,
+            company_id,
+            startDate,
+            endDate,
+            skills,
+            questions, // Send the questions along with the job data
+          },
+        });
+
+        console.log(response.data.data)
+        return response.data.data;
+      } catch (err) {
+        // Handle errors and reject the value with the error message
+        if (err.response) {
+          // Server responded with a status other than 2xx
+          return rejectWithValue(err.response);
+        } else if (err.request) {
+          // Request was made but no response received
+          return rejectWithValue("No response from server. Please try again.");
+        } else {
+          // Something else happened while setting up the request
+          return rejectWithValue(err.message);
+        }
+      }
+    }
+  );
+
 
 export const putJob = createAsyncThunk("jobs/putJob", async (params) => {
     const {
@@ -361,6 +536,7 @@ export const patchJob = createAsyncThunk("jobs/patchJob", async (params) => {
         postingStatus,
         jobType,
         company,
+        companyId,
         startDate,
         endDate
     } = params;
@@ -379,7 +555,7 @@ export const patchJob = createAsyncThunk("jobs/patchJob", async (params) => {
             location,
             postingStatus,
             jobType,
-            company,
+            companyId,
             startDate,
             endDate
         },
@@ -394,7 +570,7 @@ export const patchJob = createAsyncThunk("jobs/patchJob", async (params) => {
         location,
         postingStatus,
         jobType,
-        company,
+        companyId,
         startDate,
         endDate
     });
@@ -441,6 +617,7 @@ export const applyJob = createAsyncThunk(
 );
 
 export const selectJobs = (state) => state.jobs.jobs;
+export const selectAllUserJobs = (state) => state.jobs.allUserJobs;
 export const selectSingleJob = (state) => state.jobs.job;
 export const selectJobsStatus = (state) => state.jobs.status.jobs;
 // Action creators are generated for each case reducer function

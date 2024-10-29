@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { keyframes, styled } from "styled-components";
 import NavBar from "./Components/NavBar";
+import { storeResponses } from "@/Features/questions/questionsSlice";
+import { selectQuestions, getQuestionsWithAnswersAndResponsesByJobId } from "@/Features/questions/questionsSlice";
 import {
     selectJob,
     selectSingleJob,
@@ -11,6 +13,10 @@ import {
     checkUserJob,
     selectCheckUserJobs,
 } from "@/Features/userJobs/userJobsSlice";
+
+import { getAllUserDocuments, selectDocuments } from "@/Features/documents/documentsSlice";
+
+import { getDocumentsForUserWithUser } from "@/Features/userdocumentsSlice/userDocumentsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { usePage, Link } from "@inertiajs/react";
 
@@ -32,12 +38,14 @@ const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
     return `${basePixelSize * em * factor}px`;
 };
 
-function ViewPost() {
+const ViewPost = () => {
     const { props } = usePage();
     const { jobId, userId } = props;
 
     const dispatch = useDispatch();
     const job = useSelector(selectSingleJob);
+    const questions = useSelector(selectQuestions);
+    const documents = useSelector(selectDocuments);
     const jobStatus = useSelector(selectJobsStatus);
     const fontSize = useSelector((state) => state.accessibility.textSize);
     const darkMode = useSelector((state) => state.accessibility.darkMode);
@@ -46,32 +54,86 @@ function ViewPost() {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [resumeLink, setResumeLink] = useState("");
+    const [responses, setResponses] = useState({});
+    const [resumeLinkOption, setResumeLinkOption] = useState(true);
+    const [selectedDocumentId, setSelectedDocumentId] = useState("");
+
+    // Fetch the job details
+    useEffect(() => {
+        dispatch(selectJob({ jobId }));
+    }, [dispatch, jobId]);
 
     useEffect(() => {
-        dispatch(selectJob({ jobId: jobId }));
-    }, [dispatch]);
+        if (userId) {
+            dispatch(getAllUserDocuments({ userId }));
+        }
+    }, [dispatch, userId]);
 
+    // Check if the user has applied for the job
     useEffect(() => {
-        dispatch(checkUserJob({ userId: userId, jobsId: jobId }));
-    }, [dispatch, job]);
+        dispatch(checkUserJob({ userId, jobsId: jobId }));
+    }, [dispatch, userId, jobId]);
+
+    // Fetch questions, answers, and responses for the job
+    useEffect(() => {
+        dispatch(getQuestionsWithAnswersAndResponsesByJobId(jobId));
+    }, [dispatch, jobId]);
+
+    // Filter user-specific responses
+    const userResponses = Object.keys(responses)
+        .filter((questionId) => responses[questionId].user_id === userId)
+        .reduce((filteredResponses, questionId) => {
+            filteredResponses[questionId] = responses[questionId];
+            return filteredResponses;
+        }, {});
+
+    // Handle response change for text input or answer selection
+    const handleResponseChange = (questionId, answerOrResponse) => {
+        setResponses((prevResponses) => ({
+            ...prevResponses,
+            [questionId]: answerOrResponse,
+        }));
+    };
 
     const handleApply = () => {
         setIsModalOpen(true);
     };
 
     const handleApplyNow = () => {
-        dispatch(
-            postUserJob({
-                jobsId: Number(jobId),
-                userId: userId,
-                resume: resumeLink,
+        if (!resumeLink && !selectedDocumentId) {
+            alert("Please provide either a resume link or select a document.");
+            return;
+        }
+
+        const applicationData = {
+            jobsId: Number(jobId),
+            userId,
+            resume: resumeLink,
+            document_id: selectedDocumentId,
+        };
+
+        dispatch(postUserJob(applicationData))
+            .then(() => {
+                return dispatch(storeResponses({
+                    jobId,
+                    userId,
+                    responses: Object.keys(responses).map((questionId) => ({
+                        question_id: questionId,
+                        response_text: typeof responses[questionId] === 'string' ? responses[questionId] : null,
+                        answer_id: typeof responses[questionId] === 'number' ? responses[questionId] : null
+                    }))
+                }));
             })
-        ).then((response) => {
-            dispatch(checkUserJob({ userId: userId, jobsId: jobId }));
-        });
+            .then(() => {
+                dispatch(checkUserJob({ userId, jobsId: jobId }));
+            })
+            .catch((error) => {
+                console.error("Error applying for the job or submitting responses:", error);
+            });
 
         setIsModalOpen(false);
     };
+    console.log(responses)
 
     return (
         <NavBar fontSize={fontSize} darkMode={darkMode} header={"Job Posting View"}>
@@ -80,56 +142,122 @@ function ViewPost() {
                     <JobPostingCard fontSize={fontSize} darkMode={darkMode}>
                         <JobInfo fontSize={fontSize} darkMode={darkMode}>
                             <JobInfoLeft fontSize={fontSize} darkMode={darkMode}>
-                                {/* <CompanyLogo
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/c18c37d4baea2f5cbd4d392adacf6fa12686c4c99b1f2a12d132c4a3ef4a5899?apiKey=d66532d056b14640a799069157705b77&"
-                                    alt="Company Logo"
-                                /> */}
                                 <JobDetails fontSize={fontSize} darkMode={darkMode}>
                                     <JobTitle fontSize={fontSize} darkMode={darkMode}>{job.title}</JobTitle>
                                     <CompanyName fontSize={fontSize} darkMode={darkMode}>{job?.user?.company?.name}</CompanyName>
-                                    <JobDescription fontSize={fontSize} darkMode={darkMode}>
-                                        {job.description}
-                                    </JobDescription>
+                                    <p><b>Start Date:</b> {job.startDate ? new Date(job.startDate).toLocaleDateString() : 'N/A'}</p>
+                                    <p><b>End Date:</b> {job.endDate ? new Date(job.endDate).toLocaleDateString() : 'N/A'}</p>
+                                    <JobDescription dangerouslySetInnerHTML={{ __html: job.description }} fontSize={fontSize} darkMode={darkMode} />
                                 </JobDetails>
                             </JobInfoLeft>
                             <JobInfoRight fontSize={fontSize} darkMode={darkMode}>
-                                <StatusTag fontSize={fontSize} darkMode={darkMode}>
-                                    Posting Status: {job.postingStatus}
-                                </StatusTag>
+                                <StatusTag fontSize={fontSize} darkMode={darkMode}>Posting Status: {job.postingStatus}</StatusTag>
                                 <JobTypeTag fontSize={fontSize} darkMode={darkMode}>Job Type: {job.jobType}</JobTypeTag>
-                                <LocationTag fontSize={fontSize} darkMode={darkMode}>
-                                    Work Location: {job.location}
-                                </LocationTag>
+                                <LocationTag fontSize={fontSize} darkMode={darkMode}>Work Location: {job.location}</LocationTag>
                             </JobInfoRight>
+                            {!applied && job.postingStatus != "Closed" &&
+                            <QuestionsContainer fontSize={fontSize} darkMode={darkMode}>
+                                {questions.map((question) => (
+                                    <QuestionComponent fontSize={fontSize} darkMode={darkMode}
+                                        key={question.id}
+                                        question={question}
+                                        handleResponseChange={handleResponseChange}
+                                        applied={applied}
+                                        userResponses={userResponses} // Pass only the user-specific responses
+                                    />
+                                ))}
+                            </QuestionsContainer>
+                            }
+                            {job.postingStatus != "Closed" &&
                             <ActionButtons fontSize={fontSize} darkMode={darkMode}>
-                                <ActionButton fontSize={fontSize} darkMode={darkMode}
+
+
+                                <ActionButton
+                                    fontSize={fontSize}
+                                    darkMode={darkMode}
                                     onClick={handleApply}
                                     disabled={applied}
                                 >
                                     {applied ? "Applied" : "Apply"}
                                 </ActionButton>
+
                             </ActionButtons>
+                        }
                         </JobInfo>
                     </JobPostingCard>
                 </Container>
             </MainContainer>
+
+            {/* Modal for applying */}
             {isModalOpen && (
                 <ModalBackdrop fontSize={fontSize} darkMode={darkMode}>
                     <ModalContent fontSize={fontSize} darkMode={darkMode}>
-                        <ModalHeader fontSize={fontSize} darkMode={darkMode}>Apply for Job </ModalHeader>
+                        <ModalHeader fontSize={fontSize} darkMode={darkMode}>Apply for Job</ModalHeader>
                         <ModalBody fontSize={fontSize} darkMode={darkMode}>
-                            <LabelWithSpace fontSize={fontSize} darkMode={darkMode} data-test-id="resume-link-label">
-                                Resume Link:
-                                <SpacedInput
-                                    type="text"
-                                    value={resumeLink}
-                                    onChange={(e) => setResumeLink(e.target.value)}
-                                    data-test-id="resume-link-input"
-                                    fontSize={fontSize}
-                                    darkMode={darkMode}
-                                />
+                            <LabelWithSpace fontSize={fontSize} darkMode={darkMode}>
+                                Select Document or Enter Resume Link:
+                                <SelectToggle>
+                                    <button
+                                        onClick={() => setResumeLinkOption(true)}
+                                        style={{
+                                            backgroundColor: resumeLinkOption ? "#773dc3" : "#ddd",
+                                            color: resumeLinkOption ? "#fff" : "#000",
+                                            padding: '5px',
+                                            borderRadius: '5px',
+                                            border: 'none',
+                                            cursor: 'pointer',
+                                        }}
+                                    >
+                                        Enter Resume Link
+                                    </button>
+                                    <button
+                                        onClick={() => setResumeLinkOption(false)}
+                                        style={{
+                                            backgroundColor: !resumeLinkOption ? "#773dc3" : "#ddd",
+                                            color: !resumeLinkOption ? "#fff" : "#000",
+                                            padding: '5px',
+                                            borderRadius: '5px',
+                                            border: 'none',
+                                            cursor: 'pointer',
+                                        }}
+                                    >
+                                        Select from Documents
+                                    </button>
+                                </SelectToggle>
                             </LabelWithSpace>
+
+                            {resumeLinkOption ? (
+                                <LabelWithSpace fontSize={fontSize} darkMode={darkMode} data-test-id="resume-link-label">
+                                    Resume Link:
+                                    <SpacedInput
+                                        type="text"
+                                        value={resumeLink}
+                                        onChange={(e) => setResumeLink(e.target.value)}
+                                        data-test-id="resume-link-input"
+                                        fontSize={fontSize}
+                                        darkMode={darkMode}
+                                    />
+                                </LabelWithSpace>
+                            ) : (
+                                <LabelWithSpace fontSize={fontSize} darkMode={darkMode}>
+                                    Select a Document:
+                                    <DocumentSelect
+                                        value={selectedDocumentId}
+                                        onChange={(e) => setSelectedDocumentId(e.target.value)}
+                                        fontSize={fontSize}
+                                        darkMode={darkMode}
+                                    >
+                                        <option value="">Select Document</option>
+                                        {documents.map((document) => (
+                                            <option key={document.id} value={document.id}>
+                                                {document.title}
+                                            </option>
+                                        ))}
+                                    </DocumentSelect>
+                                </LabelWithSpace>
+                            )}
                         </ModalBody>
+
                         <ModalFooter fontSize={fontSize} darkMode={darkMode}>
                             <ModalButton fontSize={fontSize} darkMode={darkMode} onClick={() => setIsModalOpen(false)}>
                                 Cancel
@@ -143,7 +271,59 @@ function ViewPost() {
             )}
         </NavBar>
     );
-}
+};
+
+
+const QuestionComponent = ({ question, handleResponseChange, darkMode, fontSize }) => {
+    return (
+        <QuestionCard fontSize={fontSize} darkMode={darkMode}>
+            <QuestionText fontSize={fontSize} darkMode={darkMode}>{question.question_text}</QuestionText>
+            {question.question_type === 'multipleChoice' ? (
+                <AnswersContainer fontSize={fontSize} darkMode={darkMode}>
+                    {question.answers.length > 0 ? (
+                        question.answers.map((answer) => (
+                            <AnswerComponent fontSize={fontSize} darkMode={darkMode}
+                                key={answer.id}
+                                answer={answer}
+                                questionId={question.id}
+                                handleResponseChange={handleResponseChange}
+                            />
+                        ))
+                    ) : (
+                        <NoDataText fontSize={fontSize} darkMode={darkMode}>No answers available for this question.</NoDataText>
+                    )}
+                </AnswersContainer>
+            ) : (
+                // If it's a text question, display an input field
+                <TextInputContainer fontSize={fontSize} darkMode={darkMode}>
+                    <TextInput fontSize={fontSize} darkMode={darkMode}
+                        type="text"
+                        placeholder="Enter your response..."
+                        onChange={(e) => handleResponseChange(question.id, e.target.value)}
+                    />
+                </TextInputContainer>
+            )}
+        </QuestionCard>
+    );
+};
+
+// Component to render individual answers for multiple choice questions
+const AnswerComponent = ({ answer, questionId, handleResponseChange, darkMode, fontSize }) => {
+    return (
+        <AnswerCard fontSize={fontSize} darkMode={darkMode}>
+            <label>
+                <input
+                    type="radio"
+                    name={`question-${questionId}`} // Ensure answers are grouped by question
+                    value={answer.id}
+                    onChange={() => handleResponseChange(questionId, answer.id)} // Call when the answer is selected
+                />
+                {answer.answer_text}
+            </label>
+        </AnswerCard>
+    );
+};
+
 
 const MainContainer = styled.div`
     display: flex;
@@ -153,7 +333,7 @@ const MainContainer = styled.div`
     flex-shrink: 0;
     border-radius: 10px;
     width: 100%;
-    flex:1;
+    flex: 1;
     transition: background-color 0.5s ease, color 0.5s ease;
     background-color: ${({ darkMode }) => (darkMode ? '#121212' : '#fff')};
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
@@ -164,8 +344,8 @@ const Container = styled.section`
     align-self: center;
     transition: background-color 0.5s ease, color 0.5s ease;
     display: flex;
-    width: 788px;
-    max-width: 100%;
+flex: 1;
+    width: 100%;
     flex-direction: column;
     padding: 10px 10px 0;
     background-color: ${({ darkMode }) => (darkMode ? '#121212' : '#fff')};
@@ -177,11 +357,14 @@ const JobPostingCard = styled.article`
     display: flex;
     flex-direction: column;
     justify-content: center;
+    position: relative;
     transition: background-color 0.5s ease, color 0.5s ease;
     border-radius: 10px;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
     background-color: ${({ darkMode }) => (darkMode ? '#2C2C2C' : '#eddcff')};
     padding: 20px;
+    flex: 1;
+    width: 100%;
     margin-top: 20px;
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#260e44')};
     font-size: ${({ fontSize }) => calculateFontSize(32, fontSize)};
@@ -274,6 +457,9 @@ const JobInfoRight = styled.div`
     letter-spacing: 0.15px;
     line-height: 150%;
     padding: 10px 20px;
+     /* Make the section absolute */
+    bottom: 0; /* Stick it to the bottom of the container */
+    width: 100%; /* Ensure it spans the full width */
     @media (max-width: 991px) {
         flex-wrap: wrap;
         padding: 0 20px;
@@ -471,5 +657,125 @@ const SpacedInput = styled.input`
     color: ${({ darkMode }) => (darkMode ? 'black' : 'black')};
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
 `;
+
+const QuestionsContainer = styled.div`
+    margin-top: 20px;
+    max-height: 50vh; /* Maintain a view height limit for scrolling */
+    overflow-y: auto;
+    padding-right: 15px; /* Increased padding for better separation from scrollbar */
+    padding-left: 10px;
+    scrollbar-width: thin; /* Makes the scrollbar thinner */
+    scrollbar-color: ${({ darkMode }) => (darkMode ? '#888' : '#ccc')} transparent;
+    width: 100%; /* Ensure it takes up full width */
+    box-sizing: border-box; /* Include padding within width */
+`;
+
+const QuestionCard = styled.div`
+    background-color: ${({ darkMode }) => (darkMode ? '#2b2b2b' : '#f0f0f0')}; /* Softer dark/light background */
+    color: ${({ darkMode }) => (darkMode ? '#fff' : '#000')}; /* Light text on dark, dark text on light */
+    padding: 20px; /* Increased padding for spacing */
+    border-radius: 10px; /* Slightly larger border radius for smoother appearance */
+    margin-bottom: 20px; /* Increased margin for better separation between questions */
+    box-shadow: ${({ darkMode }) => (darkMode ? '0 4px 6px rgba(0, 0, 0, 0.3)' : '0 4px 6px rgba(0, 0, 0, 0.1)')}; /* Light shadow for better depth */
+    transition: background-color 0.3s ease; /* Smooth transition for background color changes */
+`;
+const QuestionText = styled.h4`
+    font-size: 18px;
+    font-weight: bold;
+`;
+
+const AnswersContainer = styled.div`
+    margin-top: 10px;
+`;
+
+const AnswerCard = styled.div`
+    background-color: ${({ isCorrect }) => (isCorrect ? '#d4edda' : '#f8f9fa')}; // Green background if correct, default otherwise
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    border: 1px solid ${({ isCorrect }) => (isCorrect ? '#28a745' : '#ccc')}; // Green border if correct
+`;
+
+const AnswerText = styled.p`
+    font-weight: ${({ isCorrect }) => (isCorrect ? 'bold' : 'normal')}; // Bold if the answer is correct
+    color: ${({ isCorrect }) => (isCorrect ? '#28a745' : '#333')}; // Green color if correct, default color otherwise
+`;
+
+const CorrectIndicator = styled.span`
+    color: #28a745;
+    margin-left: 5px;
+    font-weight: bold;
+`;
+
+const ResponseCount = styled.p`
+    font-size: 12px;
+    color: #6c757d;
+`;
+
+const ResponsesContainer = styled.div`
+    margin-top: 10px;
+`;
+
+const ResponseText = styled.p`
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    color: #333;
+`;
+
+const NoDataText = styled.p`
+    font-size: 16px;
+    color: gray;
+    margin: 10px 0;
+`;
+
+const TextInputContainer = styled.div`
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+`;
+
+// Styled component for the text input field
+const TextInput = styled.input`
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: ${({ darkMode }) => (darkMode ? '#2c2c2c' : '#fff')};
+    color: ${({ darkMode }) => (darkMode ? '#fff' : '#000')};
+
+    &:focus {
+        outline: none;
+        border-color: ${({ darkMode }) => (darkMode ? '#555' : '#007bff')};
+    }
+`
+
+const DocumentSelect = styled.select`
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: ${({ darkMode }) => (darkMode ? '#2c2c2c' : '#fff')};
+    color: ${({ darkMode }) => (darkMode ? '#fff' : '#000')};
+
+    &:focus {
+        outline: none;
+        border-color: ${({ darkMode }) => (darkMode ? '#555' : '#007bff')};
+    }
+`;
+
+const SelectToggle = styled.div`
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 20px;
+`;
+
+
 
 export default ViewPost;

@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 import { Head } from "@inertiajs/react";
 import LandingLayout from '@/Layouts/LandingLayout';
 import { useSelector } from 'react-redux';
+import background from "@/Pages/Images/Landing-removebg.png";
 import adminDashboard from '../Images/admin-dashboard.png';
 import studentuserprofile from '../Images/studentprofile.png';
 import studentdocument from '../Images/studentdocument.png';
@@ -35,6 +36,7 @@ const ParentContainer = styled.div`
 
   min-height: 100vh;
   width: 100%;
+
 `;
 
 const GuideContainer = styled.div`
@@ -44,6 +46,16 @@ const GuideContainer = styled.div`
   gap: 20px;
   padding: 20px;
   flex-grow: 1;
+  background-image:
+    linear-gradient(
+      to bottom,
+      rgba(131, 70, 210, 1), /* #8346D2 solid */
+      ${({ darkMode }) => (darkMode ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.3)')} /* Adjust contrast */
+    ),
+    url(${background});
+      background-repeat: no-repeat;
+  background-position: bottom;
+  background-size: cover;
 
   width: 100%;
   ${({ darkMode }) => css`

@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { Link } from '@inertiajs/inertia-react';  // Import Link from Inertia.js
-import background from "@/Pages/Images/Landing.png";
-import darkbackground from "../Images/DarkBackground.png";
+import background from "@/Pages/Images/Landing-removebg.png";
+import darkbackground from "../Images/Landing-removebg.png";
 import LandingLayout from "@/Layouts/LandingLayout";
 import { useSelector } from "react-redux";
 
@@ -19,13 +19,19 @@ const PageTitle = ({ title }) => {
 
 const Container = styled.div`
   ${({ darkMode }) => css`
-    background-image: url(${darkMode ? darkbackground : background});
+    background-image:
+      linear-gradient(
+        to bottom,
+        rgba(131, 70, 210, 1), /* #8346D2 solid */
+        ${darkMode ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.3)'}
+      ),
+      url(${darkMode ? darkbackground : background});
     height: 100vh;
     background-size: cover;
-    background-repeat: no-repeat;
     background-position: bottom;
   `}
 `;
+
 
 const ContentWrapper = styled.div`
   min-height: 70vh;
@@ -51,7 +57,7 @@ const Title = styled.h1`
   font-family: 'Poppins', sans-serif;
   font-weight: 700;
   font-size: 3.25rem;
-  color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6B538C")};
+  color: ${({ darkMode }) => (darkMode ? "#FFF" : "#FFF")};
 `;
 
 const Subtitle = styled.h2`
@@ -61,7 +67,7 @@ const Subtitle = styled.h2`
   margin-bottom: 1rem;
   color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6B538C")};
   span {
-    color: ${({ darkMode }) => (darkMode ? "#D3BDF2" : "#9C85D8")};
+    color: ${({ darkMode }) => (darkMode ? "#FFF" : "#FFF")};
   }
 `;
 

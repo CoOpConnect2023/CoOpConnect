@@ -5,9 +5,13 @@ import Section from './Components/Section';
 import SchoolSectionComponent from "./Components/SchoolSection";
 import CourseSectionComponent from "./Components/CoursesSection";
 import JobsSectionComponent from "./Components/JobsSection";
+import CompaniesSectionComponent from "./Components/CompanySection";
+
 import NavBar from './Components/NavBar';
 import { getPercentages, getSchools, selectPercentages, selectPercentagesStatus, deleteSchool } from '@/Features/schools/schoolsSlice';
 import { getUser, getAllUsers, selectAllUsers, selectUser, deleteUser } from '@/Features/users/userSlice';
+import { getAllCompanies, selectCompanies, deleteCompany } from "@/Features/companies/companySlice";
+
 import { getCourses, deleteCourse } from "@/Features/courses/coursesSlice";
 import { getJobs, deleteAJob } from "@/Features/jobs/jobsSlice";
 import UploadUsers from "./Components/UploadUsers";
@@ -23,6 +27,7 @@ const AdminDashboard = () => {
     const fontSize = useSelector(state => state.accessibility.textSize);
     const schoolsList = useSelector(state => state.schools.schoolslist);
     const coursesList = useSelector(state => state.courses.courses);
+    const companiesList = useSelector(state => state.companies.companies);
     const jobsList = useSelector(state => state.jobs.jobs);
 
     const [categorizedUsers, setCategorizedUsers] = useState({});
@@ -34,9 +39,10 @@ const AdminDashboard = () => {
         dispatch(getSchools());
         dispatch(getCourses());
         dispatch(getJobs());
+        dispatch(getAllCompanies())
     }, [dispatch]);
 
-    console.log(jobsList);
+
 
     const categorizeUsersByRole = (users) => {
         return users.reduce((acc, user) => {
@@ -92,6 +98,11 @@ const AdminDashboard = () => {
 
     };
 
+    const handleDeleteCompany = (jobId) => {
+        dispatch(deleteCompany(jobId));
+
+    };
+
 
 
     return (
@@ -106,6 +117,8 @@ const AdminDashboard = () => {
                             darkMode={darkMode}
                             handleDeleteUser={handleDeleteUser}
                             users={admins}
+                            schools={schoolsList}
+                            companies={companiesList}
                             title="Admin Users"
                             type="admin"
                         />
@@ -114,6 +127,8 @@ const AdminDashboard = () => {
                             darkMode={darkMode}
                             handleDeleteUser={handleDeleteUser}
                             users={students}
+                            schools={schoolsList}
+                            companies={companiesList}
                             title="Current Students"
                             type="student"
                         />
@@ -122,6 +137,8 @@ const AdminDashboard = () => {
                             darkMode={darkMode}
                             handleDeleteUser={handleDeleteUser}
                             users={employee}
+                            schools={schoolsList}
+                            companies={companiesList}
                             title="Current Employers"
                             type="employee"
                         />
@@ -130,6 +147,8 @@ const AdminDashboard = () => {
                             darkMode={darkMode}
                             handleDeleteUser={handleDeleteUser}
                             users={teachers}
+                            schools={schoolsList}
+                            companies={companiesList}
                             title="Current Teachers"
                             type="teacher"
                         />
@@ -138,6 +157,8 @@ const AdminDashboard = () => {
                             darkMode={darkMode}
                             handleDeleteUser={handleDeleteSchool}
                             users={schoolsList}
+                            schools={schoolsList}
+                            companies={companiesList}
                             title="Current Schools"
                             type="school"
                         />
@@ -146,6 +167,9 @@ const AdminDashboard = () => {
                             title="Current Courses"
                             fontSize={fontSize}
                             darkMode={darkMode}
+                            schools={schoolsList}
+                            companies={companiesList}
+                            teachers={teachers}
                             handleDeleteUser={handleDeleteCourse}
                             type="course"
                         />
@@ -154,8 +178,20 @@ const AdminDashboard = () => {
                             title="Current Jobs"
                             fontSize={fontSize}
                             darkMode={darkMode}
+                            schools={schoolsList}
+                            companies={companiesList}
                             handleDeleteUser={handleDeleteJob}
                             type="job"
+                        />
+                          <CompaniesSectionComponent
+                            users={companiesList}
+                            title="Current Companies"
+                            fontSize={fontSize}
+                            darkMode={darkMode}
+                            schools={schoolsList}
+                            companies={companiesList}
+                            handleDeleteUser={handleDeleteCompany}
+                            type="company"
                         />
                     </Content>
                 )}

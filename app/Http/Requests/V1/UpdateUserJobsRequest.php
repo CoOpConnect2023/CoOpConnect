@@ -25,6 +25,7 @@ class UpdateUserJobsRequest extends FormRequest
             return [
                 'user_id' => ['required', 'exists:users_id'],
                 'jobs_id' => ['required', 'exists:jobs_id'],
+                'document_id' => ['nullable', 'exists:documents,id'],
                 'resume' => ['required'],
                 'status' => ['required'],
                 'message' => ['required'],
@@ -36,11 +37,12 @@ class UpdateUserJobsRequest extends FormRequest
             return [
                 'user_id' => ['sometimes', 'required', 'exists:users,id'],
                 'jobs_id' => ['sometimes', 'required', 'exists:jobs,id'],
+                'document_id' => ['nullable', 'exists:documents,id'],
                 'resume' => ['sometimes', 'required'],
                 'status' => ['sometimes', 'required'],
                 'message' => ['sometimes', 'required'],
                 'timeSlots' => ['sometimes', 'required'],
-                'start_date' => ['nullable', 'date'], 
+                'start_date' => ['nullable', 'date'],
                 'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
             ];
         }

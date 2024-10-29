@@ -4,6 +4,9 @@ import styled from "styled-components";
 import NavBar from "./Components/NavBar";
 import { Link } from "@inertiajs/react";
 import { useDispatch, useSelector } from "react-redux";
+import ReactQuill from 'react-quill'; // Importing ReactQuill
+import 'react-quill/dist/quill.snow.css';
+
 import {
     updateJobFormData,
     selectJobFormData,
@@ -26,6 +29,7 @@ import {
     SubmitButton,
     BackButton,
     ButtonContainerPost,
+    StyledQuill,
 } from "./Styling/Post1.styles";
 
 import {
@@ -70,7 +74,7 @@ function Post1() {
     }, []);
 
 
-    console.log(user)
+    console.log(jobFormData);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -104,12 +108,16 @@ function Post1() {
         dispatch(updateJobFormData({ skills: updatedSkills }));
     };
 
+    const handleDescriptionChange = (content, delta, source, editor) => {
+        dispatch(updateJobFormData({ description: content }));
+    };
+
     return (
         <NavBar header={"Posting Jobs"}>
             <Container darkMode={darkMode} fontSize={fontSize}>
                 <Card darkMode={darkMode} fontSize={fontSize}>
                     <FormWrapper darkMode={darkMode} fontSize={fontSize}>
-                        <Title darkMode={darkMode} fontSize={fontSize}>Create a New Posting</Title>
+                        
 
                         <Form darkMode={darkMode} fontSize={fontSize}>
                             <SectionTitle darkMode={darkMode} fontSize={fontSize}>
@@ -130,7 +138,7 @@ function Post1() {
                                     />
                                 </FormField>
                                 <FormField darkMode={darkMode} fontSize={fontSize}>
-                                    <Label  darkMode={darkMode} fontSize={fontSize} htmlFor="workplaceType">
+                                    <Label darkMode={darkMode} fontSize={fontSize} htmlFor="workplaceType">
                                         Workplace Type *
                                     </Label>
                                     <Select darkMode={darkMode} fontSize={fontSize}
@@ -148,7 +156,7 @@ function Post1() {
 
                             </FormRow>
                             <FormRow darkMode={darkMode} fontSize={fontSize}>
-                            <FormField darkMode={darkMode} fontSize={fontSize}>
+                                <FormField darkMode={darkMode} fontSize={fontSize}>
                                     <Label darkMode={darkMode} fontSize={fontSize} htmlFor="jobLocation">
                                         Job Location *
                                     </Label>
@@ -161,50 +169,48 @@ function Post1() {
                                         onChange={handleInputChange}
                                     />
                                 </FormField>
-<FormField darkMode={darkMode} fontSize={fontSize}>
+                                <FormField darkMode={darkMode} fontSize={fontSize}>
 
-<Label darkMode={darkMode} fontSize={fontSize}> Add some skill keywords to the job.</Label>
+                                    <Label darkMode={darkMode} fontSize={fontSize}> Add some skill keywords to the job.</Label>
 
-                            <Input darkMode={darkMode} fontSize={fontSize}
-                                id="skillInput"
-                                name="skills"
-                                value={currentSkill}
-                                onChange={handleSkillChange}
-                                onKeyDown={handleSkillKeyDown}
-                            />
-                            <TagContainer darkMode={darkMode} fontSize={fontSize}>
-                                {jobFormData.skills.map((skill, index) => (
-                                    <Tag darkMode={darkMode} fontSize={fontSize} key={index}>
-                                        <TagName darkMode={darkMode} fontSize={fontSize}>{skill}</TagName>
-                                        <TagIcon darkMode={darkMode} fontSize={fontSize}
-                                            loading="lazy"
-                                            src="https://cdn.builder.io/api/v1/image/assets/TEMP/f4297c66e6d9622e462ebb187a46dd67cf9ee2c5dfcfd5088583249a1e3bfc3e?apiKey=d66532d056b14640a799069157705b77&"
-                                            alt={`${skill} Icon`}
-                                            onClick={() => removeSkill(skill)}
-                                        />
-                                    </Tag>
-                                ))}
-                            </TagContainer>
+                                    <Input darkMode={darkMode} fontSize={fontSize}
+                                        id="skillInput"
+                                        name="skills"
+                                        value={currentSkill}
+                                        onChange={handleSkillChange}
+                                        onKeyDown={handleSkillKeyDown}
+                                    />
+                                    <TagContainer darkMode={darkMode} fontSize={fontSize}>
+                                        {jobFormData.skills.map((skill, index) => (
+                                            <Tag darkMode={darkMode} fontSize={fontSize} key={index}>
+                                                <TagName darkMode={darkMode} fontSize={fontSize}>{skill}</TagName>
+                                                <TagIcon darkMode={darkMode} fontSize={fontSize}
+                                                    loading="lazy"
+                                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/f4297c66e6d9622e462ebb187a46dd67cf9ee2c5dfcfd5088583249a1e3bfc3e?apiKey=d66532d056b14640a799069157705b77&"
+                                                    alt={`${skill} Icon`}
+                                                    onClick={() => removeSkill(skill)}
+                                                />
+                                            </Tag>
+                                        ))}
+                                    </TagContainer>
 
-                            </FormField>
+                                </FormField>
 
                             </FormRow>
                             <SectionHeading darkMode={darkMode} fontSize={fontSize}>
                                 Add a Job Description
                             </SectionHeading>
                             <SectionDescription darkMode={darkMode} fontSize={fontSize}>
-                                Describe the contents of the job. Include
-                                details about the daily tasks, requirements, and
-                                expectations.
+                                Describe the contents of the job. Include details about the daily tasks, requirements, and expectations.
                             </SectionDescription>
-                            <Form darkMode={darkMode} fontSize={fontSize}>
-                                <InputField darkMode={darkMode} fontSize={fontSize}
-                                    name="description"
-                                    value={jobFormData.description}
-                                    onChange={handleInputChange}
-                                    data-test-id="description-input"
-                                />
-                            </Form>
+                            <StyledQuill darkMode={darkMode} fontSize={fontSize}
+                                value={jobFormData.description}
+                                onChange={handleDescriptionChange}
+                                theme="snow"
+                            />
+
+
+
                             <HorizontalRule darkMode={darkMode} fontSize={fontSize} />
                             <ButtonContainerPost darkMode={darkMode} fontSize={fontSize}>
                                 <Link darkMode={darkMode} fontSize={fontSize} href="/employer/home">

@@ -29,6 +29,7 @@ class InterviewsFactory extends Factory
             'description' => $this->faker->paragraph,
             'interviewee_id' => User::factory(),
             'interviewer_id' => User::factory(),
+            'proposed_time' => null
         ];
     }
 }

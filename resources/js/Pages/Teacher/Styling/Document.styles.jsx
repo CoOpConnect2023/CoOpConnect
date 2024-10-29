@@ -39,17 +39,24 @@ export const Wrapper = styled.main`
     animation: ${fadeIn} 0.8s ease-in-out;
     background-color: ${({ darkMode }) => (darkMode ? "#1C1C1C" : "#fff")};
     transition: background-color 0.3s;
-    border-color: rgba(123, 117, 127, 1);
-    border-style: solid;
-    border-width: 1px;
+
+    border-color: rgba(123, 117, 127, 0.5); /* Softer border color with transparency */
+
+border: 2px solid ${({ darkMode }) => (darkMode ? "#444" : "#e2e8f0")};
+    border-radius: 8px; /* Add border-radius for rounded corners */
+   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
 `;
+
+
 
 export const Content = styled.div`
     display: flex;
     flex: 1;
     justify-content: center;
     height: 100%;
+    min-height: 0;
     @media (max-width: 991px) {
         flex-direction: column;
          min-height: 100vh;
@@ -62,12 +69,15 @@ export const FileSection = styled.section`
     flex-direction: column;
     flex: 1;
     align-self: stretch;
-    padding: ${({ fontSize }) => calculateFontSize(20, fontSize)} 0px;
+    padding: ${({ fontSize }) => calculateFontSize(10, fontSize)} 0px;
     border-radius: 10px;
     background: ${({ darkMode }) => (darkMode ? "#2D2D2D" : "#fff")};
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
     transition: background-color 0.3s;
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+    width: 100%;
+flex-grow: 1;
+
 
     @media (max-width: 991px) {
         padding: 0;
@@ -82,6 +92,7 @@ export const FileSection = styled.section`
 export const SectionHeader = styled.header`
     display: flex;
     justify-content: center;
+    width: 100%;
     margin-bottom: ${({ fontSize }) => calculateFontSize(40, fontSize)};
 `;
 
@@ -96,6 +107,7 @@ export const TabList = styled.nav`
     color: ${({ darkMode }) => (darkMode ? "#E0E0E0" : "#334155")};
     transition: border-color 0.3s, color 0.3s;
 
+
     @media (max-width: 991px) {
         flex-wrap: wrap;
     }
@@ -104,13 +116,14 @@ export const TabList = styled.nav`
 export const TabItem = styled.div`
     padding: 6px 20px;
     position: relative;
-    color: ${({ darkMode, active }) => (active ? (darkMode ? "#EDDCFF" : "#0f172a") : (darkMode ? "#CCCCCC" : "#334155"))};
+    color: ${({ darkMode, active }) => (active ? (darkMode ? "#EDDCFF" : "#0f172a") : (darkMode ? "#B6A1E5" : "#334155"))};
     border-bottom: ${({ active }) => (active ? "2px solid #6b538c" : "none")};
     transition: color 0.3s, border-bottom 0.3s;
 
+
     &.active {
-        border-bottom: 2px solid #6b538c;
-        color: #0f172a;
+        border-bottom: 2px solid #B6A1E5;
+        color: #B6A1E5;
     }
 `;
 
@@ -118,9 +131,11 @@ export const FileList = styled.div`
     display: flex;
     flex-direction: column;
     gap: ${({ fontSize }) => calculateFontSize(20, fontSize)};
-    padding: 0 ${({ fontSize }) => calculateFontSize(80, fontSize)};
-    flex-grow: 1;
+    padding: 0 ${({ fontSize }) => calculateFontSize(10, fontSize)};
+
 width: 100%;
+overflow-y: auto;
+     max-height: calc(100vh - 28vh);
     @media (max-width: 991px) {
         padding: 0 ${({ fontSize }) => calculateFontSize(20, fontSize)};
     }
@@ -133,15 +148,17 @@ export const FileContainer = styled.article`
     border: 1px solid ${({ darkMode }) => (darkMode ? "#555555" : "#7b757f")};
     border-radius: 10px;
     width: 100%;
+
+
     transition: transform 0.5s ease, border-color 0.3s;
 
 
     &:hover {
-        transform: scale(1.01);
+
     }
 
     @media (max-width: 991px) {
-        flex-wrap: wrap;
+        flex-direction: column;
 
     }
 `;
@@ -158,6 +175,7 @@ export const FileDetails = styled.div`
 
     display: flex;
     flex-direction: row;
+    flex-grow: 1;
     justify-content: space-between;
     gap: ${({ fontSize }) => calculateFontSize(10, fontSize)};
 `;
@@ -180,18 +198,24 @@ export const FileActions = styled.div`
     display: flex;
     gap: ${({ fontSize }) => calculateFontSize(10, fontSize)};
     align-self: end;
+
+    @media (max-width: 1024px) {
+       flex-direction: column;
+    }
+
+
 `;
 
 export const ActionButton = styled.button`
     display: flex;
     align-items: center;
     gap: ${({ fontSize }) => calculateFontSize(8, fontSize)};
-    padding: ${({ fontSize }) => calculateFontSize(6, fontSize)} ${({ fontSize }) => calculateFontSize(12, fontSize)};
+    padding: ${({ fontSize }) => calculateFontSize(8, fontSize)} ${({ fontSize }) => calculateFontSize(12, fontSize)};
     font-size: ${({ fontSize }) => calculateFontSize(10, fontSize)};
     font-weight: 600;
-    border-radius: 10px;
+    border-radius: 8px;
     cursor: pointer;
-    background-color: ${({ outline, darkMode }) => (outline ? "transparent" : darkMode ? "#543e6c" : "#6b538c")};
+    background-color: ${({ outline, darkMode }) => (outline ? "transparent" : darkMode ? "#543e6c" : "#B6A1E5")};
     color: ${({ outline, darkMode }) => (outline ? (darkMode ? "#EDDCFF" : "#6b538c") : "#fff")};
     border: ${({ outline, darkMode }) => (outline ? (darkMode ? "1px solid #EDDCFF" : "1px solid #6b538c") : "none")};
     transition: transform 0.5s ease, background-color 0.3s, color 0.3s, border-color 0.3s;
@@ -312,7 +336,7 @@ export const SubmitButton = styled.button`
     font-size: ${({ fontSize }) => calculateFontSize(18, fontSize)};
     font-weight: 600;
     color: #fff;
-    background: ${({ darkMode }) => (darkMode ? "#543e6c" : "#6b538c")};
+    background: ${({ darkMode }) => (darkMode ? "#543e6c" : "#B6A1E5")};
     border: none;
     border-radius: ${({ fontSize }) => calculateFontSize(6, fontSize)};
     cursor: pointer;
@@ -396,4 +420,172 @@ export const PreviewImage = styled.img`
     border-radius: 5px;
     margin-bottom: ${({ fontSize }) => calculateFontSize(10, fontSize)};
 `;
+
+export const ShareSection = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 20px;
+    width: 100%;
+    background-color: ${({ darkMode }) => (darkMode ? '#333' : '#f9f9f9')};
+    border-radius: 10px;
+    box-shadow: ${({ darkMode }) => (darkMode ? '0 4px 12px rgba(0, 0, 0, 0.5)' : '0 4px 12px rgba(0, 0, 0, 0.1)')};
+`;
+
+export const BackButton = styled.button`
+    background-color: ${({ darkMode }) => (darkMode ? '#B6A1E5' : '#B6A1E5')};
+    color: ${({ darkMode }) => (darkMode ? '#fff' : '#fff')};
+    padding: 10px 20px;
+    font-size: ${({ fontSize }) => fontSize || '1em'};
+    border: 1px solid ${({ darkMode }) => (darkMode ? '#555' : '#ccc')};
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: background-color 0.3s ease; /* Smooth transition for hover */
+    margin-top: 1%;
+
+    &:hover {
+        background-color: #FF4D4D; /* Red background on hover */
+        color: #fff; /* Ensure text remains white */
+    }
+`;
+
+export const EmailInput = styled.input`
+    width: 100%;
+    padding: 12px 15px;
+    font-size: ${({ fontSize }) => fontSize || '1em'};
+    border: 1px solid ${({ darkMode }) => (darkMode ? '#666' : '#ddd')};
+    border-radius: 5px;
+    margin-top: 1%;
+    background-color: ${({ darkMode }) => (darkMode ? '#444' : '#fff')};
+    color: ${({ darkMode }) => (darkMode ? '#fff' : '#000')};
+    &:focus {
+        outline: none;
+        border-color: ${({ darkMode }) => (darkMode ? '#888' : '#bbb')};
+    }
+`;
+
+export const ScrollableContainer = styled.div`
+    width: 100%;
+    max-height: 45vh; /* Set max height */
+    overflow-y: auto;  /* Enable vertical scrolling */
+    padding: 12px 15px;
+    font-size: ${({ fontSize }) => fontSize || '1em'};
+    border: 1px solid ${({ darkMode }) => (darkMode ? '#666' : '#ddd')};
+    border-radius: 5px;
+    margin-bottom: 20px;
+    margin-top: 1%;
+    background-color: ${({ darkMode }) => (darkMode ? '#444' : '#fff')};
+    color: ${({ darkMode }) => (darkMode ? '#fff' : '#000')};
+`;
+
+
+export const EmailList = styled.ul`
+    list-style-type: none;
+    padding: 0;
+    margin: 0 0 20px;
+    width: 100%;
+`;
+
+export const EmailItem = styled.li`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: ${({ darkMode }) => (darkMode ? '#555' : '#f1f1f1')};
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+    color: ${({ darkMode }) => (darkMode ? '#fff' : '#000')};
+    border-radius: 5px;
+    margin-bottom: 10px;
+`;
+
+export const RemoveEmailButton = styled.button`
+    background-color: ${({ darkMode }) => (darkMode ? '#ff6666' : '#ff4d4d')};
+    font-size: ${({ fontSize }) => calculateFontSize(12, fontSize)};
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    &:hover {
+        background-color: ${({ darkMode }) => (darkMode ? '#ff3333' : '#ff1a1a')};
+    }
+`;
+
+export const ShareButton = styled.button`
+    background-color: ${({ darkMode }) => (darkMode ? '#B6A1E5' : '#B6A1E5')};
+    color: white;
+    font-size: ${({ fontSize }) => fontSize || '1em'};
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    &:hover {
+        background-color: ${({ darkMode }) => (darkMode ? '#47a38e' : '#47a38e')};
+    }
+`;
+
+export const ButtonContainerUpload = styled.div`
+display: flex;
+gap: 1%;
+`
+
+export const ToggleSwitch = styled.div`
+    width: 50px;
+    height: 24px;
+    background-color: ${({ isVisible, darkMode }) => (isVisible ? (darkMode ? '#B6A1E5' : '#B6A1E5') : '#ccc')};
+    border-radius: 24px;
+    cursor: pointer;
+    position: relative;
+`;
+
+export const Slider = styled.div`
+    position: absolute;
+    top: 2px;
+    left: ${({ isVisible }) => (isVisible ? '26px' : '2px')};
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border-radius: 50%;
+    transition: 0.4s;
+`;
+
+export const ShareBackContainer = styled.div`
+display: flex;
+flex-direction: column;
+
+`
+
+export const ProfileImage = styled.img`
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin-right: 8px;
+
+  @media (max-width: 768px) {
+    width: 28px;
+    height: 28px;
+  }
+
+  @media (max-width: 480px) {
+    width: 24px;
+    height: 24px;
+  }
+`;
+
+
+export const VisibilityLabel = styled.span`
+    font-size: ${({ fontSize }) => calculateFontSize(12, fontSize)};
+    color: ${({ darkMode }) => (darkMode ? '#fff' : '#000')};
+    margin-right: 10px;
+`;
+
+export const VisibilityContainer = styled.div`
+display:flex;
+flex-direction: column;
+align-items: center;
+gap: 1%;
+`
 

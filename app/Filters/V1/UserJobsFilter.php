@@ -17,6 +17,8 @@ class UserJobsFilter extends ApiFilter
         'timeSlots' => ['eq'],
         'startDate' => ['eq'],
         'endDate' => ['eq'],
+        'documentId' => ['eq'],
+
 
 
     ];
@@ -24,9 +26,11 @@ class UserJobsFilter extends ApiFilter
     protected $columnMap = [
         'userId' => 'user_id',
         'jobsId' => 'jobs_id',
+        'documentId' => 'document_id',
         'timeSlots' => 'time_slots',
         'startDate' => 'start_date',
         'endDate' => 'end_date',
+
     ];
 
     protected $operatorMap = [

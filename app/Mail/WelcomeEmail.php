@@ -165,9 +165,9 @@ class WelcomeEmail extends Mailable
                                     <h2>Getting Started</h2>
                                     <p>Here are a few resources to help you get started:</p>
                                     <ul>
-                                        <li><a href="' . url('/user-guide') . '">User Guide</a> - Learn how to navigate the platform once you have logged in.</li>
-                                        <li><a href="' . url('/support') . '">Support</a> - Need help? Visit our support center.</li>
-                                        <li><a href="' . url('/faq') . '">FAQ</a> - Find answers to common questions.</li>
+                                        <li><a href="' . url('/guide') . '">User Guide</a> - Learn how to navigate the platform once you have logged in.</li>
+                                        <li><a href="' . url('/contact') . '">Support</a> - Need help? Visit our support center.</li>
+                                        <li><a href="' . url('/about') . '">FAQ</a> - Find answers to common questions.</li>
                                     </ul>
                                 </div>
                                 <div class="information-section">

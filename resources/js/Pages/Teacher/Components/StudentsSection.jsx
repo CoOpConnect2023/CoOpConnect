@@ -52,7 +52,14 @@ const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
                       <StudentName darkMode={darkMode} fontSize={fontSize}>{student.name}</StudentName>
                     </StudentImageWrapper>
                   </td>
-                  <td>{student.class}</td>
+                  <CourseList>
+  {student.courses && student.courses.length > 0
+    ? student.courses
+        .slice(0, 2) // Display only the first two courses
+        .map(course => course.name)
+        .join(', ') + (student.courses.length > 2 ? ', ...' : '') // Add "..." if there are more than two
+    : 'No courses'}
+</CourseList>
                   <td style={{ textAlign: "center" }}>{student.email}</td>
                   <td style={{ textAlign: "center" }}>{student.id}</td>
                   <td>
@@ -197,8 +204,8 @@ export const StudentViewButton = styled.button`
   color: #fff;
   font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
   font-weight: 500;
-  padding: ${({ fontSize }) => calculateFontSize(4, fontSize)} ${({ fontSize }) => calculateFontSize(8, fontSize)};
-  height: ${({ fontSize }) => calculateFontSize(24, fontSize)};
+  padding: ${({ fontSize }) => calculateFontSize(8, fontSize)} ${({ fontSize }) => calculateFontSize(8, fontSize)};
+  height: ${({ fontSize }) => calculateFontSize(30, fontSize)};
   cursor: pointer;
   transition: background-color 0.3s, padding 0.3s, height 0.3s;
 
@@ -209,6 +216,17 @@ export const StudentViewButton = styled.button`
   @media (max-width: 768px) {
     font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
     padding: ${({ fontSize }) => calculateFontSize(3, fontSize)} ${({ fontSize }) => calculateFontSize(6, fontSize)};
+  }
+`;
+
+const CourseList = styled.td`
+  max-width: 150px; // Adjust this width as needed for mobile
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  @media (max-width: 768px) {
+    max-width: 100px; // Adjust width for smaller screens
   }
 `;
 

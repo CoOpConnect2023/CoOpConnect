@@ -11,27 +11,55 @@ const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
 export const MainContainer = styled.div`
     display: flex;
     flex-direction: column;
+    flex: 1;
     align-items: center;
-    justify-content: flex-start; /* Ensure items start from the top */
+    justify-content: flex-start;
     width: 100%;
-    min-height: 100vh; /* Ensure the container covers the full viewport height */
-    
+    min-height: 75vh;
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
-    padding: 20px; /* Add padding for better spacing */
+    padding: 10px;
 `;
 
 export const Container = styled.section`
     display: flex;
     flex-direction: column;
     width: 100%;
-
-    flex-grow: 1;
-    padding: 20px;
+    height: 100%;
+    align-items: stretch;
+    flex: 1;
+    padding: 1%;
     background-color: ${({ darkMode }) => (darkMode ? '#2C2C2C' : '#fff')};
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
-    border-radius: 12px; /* Smooth corners */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transition: background-color 0.5s ease;
+`;
+
+export const JobPostingCard = styled.article`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch; /* Allow children to stretch full width */
+    width: 100%;
+    flex: 1;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    background-color: ${({ darkMode }) => (darkMode ? '#444' : '#f8f8ff')};
+    padding: 30px;
+    transition: background-color 0.5s ease;
+`;
+
+export const JobInfo = styled.section`
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 1;
+    width: 100%;
+    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#260e44')};
+    font-weight: 400;
+    @media (max-width: 991px) {
+        flex-wrap: wrap;
+    }
 `;
 
 
@@ -46,35 +74,7 @@ export const Title = styled.h2`
     }
 `;
 
-export const JobPostingCard = styled.article`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center; /* Center contents */
-    width: 100%;
-    border-radius: 12px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Softer shadow for depth */
-    background-color: ${({ darkMode }) => (darkMode ? '#444' : '#f8f8ff')}; /* Slightly softer background */
-    padding: 30px; /* Increased padding for a spacious feel */
-    margin-top: 20px;
-    transition: background-color 0.5s ease;
 
-    @media (max-width: 991px) {
-        padding: 20px;
-    }
-`;
-
-
-export const JobInfo = styled.section`
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#260e44')};
-    font-weight: 400;
-    @media (max-width: 991px) {
-        flex-wrap: wrap;
-    }
-`;
 
 export const JobInfoLeft = styled.div`
     display: flex;
@@ -133,6 +133,20 @@ export const JobDescription = styled.p`
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
     line-height: 24px;
     font-family: 'Poppins', sans-serif;
+
+      ul {
+        list-style-type: disc;
+        padding-left: 20px; /* Add some padding for indentation */
+    }
+
+    ol {
+        list-style-type: decimal;
+        padding-left: 20px; /* Add some padding for indentation */
+    }
+
+    li {
+        margin-bottom: 5px; /* Space out list items */
+    }
     @media (max-width: 991px) {
         max-width: 100%;
     }
@@ -325,5 +339,18 @@ export const ActionButton = styled.button`
 
     &:hover {
         background-color: var(--Palettes-Primary-30, #542a93);
+    }
+`;
+
+export const JobDates = styled.div`
+display: flex;
+gap: 5px;
+    margin-top: 15px;
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
+    color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
+    flex-direction: row;
+
+    p {
+        margin: 5px 0;
     }
 `;

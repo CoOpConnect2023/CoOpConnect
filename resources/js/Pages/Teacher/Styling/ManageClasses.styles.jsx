@@ -34,7 +34,7 @@ export const MainContainer = styled.div`
   background-color: ${({ darkMode }) => (darkMode ? "#1C1C1C" : "#fff")};
   transition: background-color 0.3s;
   font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
-
+padding: 10px;
    @media (max-width: 768px) {
     min-height: 80vh; /* Adjust for smaller screens */
   }
@@ -94,12 +94,14 @@ export const FormContainer = styled.div`
   transition: background-color 0.3s;
   font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
   width: 98%;
+
   align-self: center;
 `;
 
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
+  padding: 10px;
   gap: ${({ fontSize }) => calculateFontSize(10, fontSize)};
    background-color: ${({ darkMode }) => (darkMode ? "#1C1C1C" : "#fff")};
   font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};

@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import NavBar from "./Components/NavBar";
 import Modal from "../Profile/Partials/AddEventModal";
+import EditModal from "../Profile/Partials/EditEventModal";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import { Calendar, momentLocalizer } from "react-big-calendar";
@@ -12,12 +13,15 @@ import moment from "moment";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
+import { postNotification } from "@/Features/notifications/notificationsSlice";
 import {
     getInterviewsForInterviewee,
     postInterview,
     selectInterviewsStatus,
     selectInterviews,
     deleteInterview,
+    patchInterview,
+    sendInterviewChangeRequest
 } from "@/Features/interviews/interviewsSlice";
 import { getUser, selectUser } from "@/Features/users/userSlice";
 import {
@@ -39,7 +43,8 @@ import {
     Event,
     NoEventsMessage,
     DeleteButton,
-    GlobalStyles
+    GlobalStyles,
+    PurpleButton
 } from "./Styling/Interviews.styles";
 
 const localizer = momentLocalizer(moment);
@@ -48,7 +53,9 @@ const DnDCalendar = withDragAndDrop(Calendar);
 const Interviews = () => {
     const dispatch = useDispatch();
     const [showModal, setShowModal] = useState(false);
+    const [showDateModal, setShowDateModal] = useState(false);
     const [selectedDate, setSelectedDate] = useState(null);
+    const [selectedEvent, setSelectedEvent] = useState(null);
     const user = useSelector(selectUser);
     const userId = user?.id;
     const [events, setEvents] = useState([]);
@@ -203,6 +210,17 @@ const Interviews = () => {
         setShowModal(false);
     };
 
+    const openDateEditModal = (event) => {
+        setSelectedEvent(event);
+        console.log(event)
+        setShowDateModal(true);
+    };
+
+    const closeDateEditModal = (event ) => {
+
+        setShowDateModal(false);
+    };
+
     const handleAddEvent = (title, description, start, end) => {
 
 
@@ -299,6 +317,63 @@ const Interviews = () => {
         };
     };
 
+
+    const handleEventUpdateRequest = ({ id, title, start, interviewer, interviewee, initialStart}) => {
+
+        console.log("Raw start date:", start);
+
+        // Format the start date
+        const formattedStart = `${start.getFullYear()}-${String(
+            start.getMonth() + 1
+        ).padStart(2, "0")}-${String(start.getDate()).padStart(2, "0")} ${String(
+            start.getHours()
+        ).padStart(2, "0")}:${String(start.getMinutes()).padStart(2, "0")}:${String(
+            start.getSeconds()
+        ).padStart(2, "0")}`;
+
+        // Log the formatted start and end times
+        console.log("Formatted Start:", formattedStart);
+
+        // Dispatch the patchInterview action
+        dispatch(
+           sendInterviewChangeRequest({
+                newTime: formattedStart,
+                interviewId: id,
+                jobTitle: title,
+                employerId: interviewer,
+                studentId: interviewee,
+
+            })
+        )
+        .then(() => {
+            console.log("Patch interview successful");
+
+            // Send notification after successful interview update
+            dispatch(postNotification({
+                from_user_id: interviewee,
+                to_user_id: interviewer, // Assuming userJob contains the userId of the job applicant
+                viewed: false,
+                content: `The student has requested the interview for ${title} be updated from ${initialStart} to ${start}. Please confirm or deny the request in the calendar.`,
+                type: "Other",
+
+            }));
+
+            // Fetch updated interviews for interviewee
+            console.log("Fetching updated interviews for interviewee:", userId);
+            dispatch(getInterviewsForInterviewee({
+                intervieweeId: userId,
+            }));
+        })
+        .catch((error) => {
+            console.error("Error updating interview:", error);
+        });
+
+        // Close the modal and log it
+        console.log("Closing modal");
+        closeModal();
+    };
+
+
     return (
         <NavBar  header={"Interviews"}>
             <GlobalStyles darkMode={darkMode} fontSize={fontSize} />
@@ -330,7 +405,7 @@ const Interviews = () => {
     <EventsHeader darkMode={darkMode} fontSize={fontSize}>All Events</EventsHeader>
     {events && events.length > 0 ? (
         events.map((event) => {
-            
+
             return (
                 <Event darkMode={darkMode} fontSize={fontSize} key={event.id}>
                     {(event.interviewerId === event.intervieweeId || event.interviewerId === user.id) && (
@@ -344,9 +419,13 @@ const Interviews = () => {
                     <div>
                         End Date: {moment(event.end).format("YYYY-MM-DD HH:mm:ss")}
                     </div>
+                    <PurpleButton fontSize={fontSize} onClick={() => openDateEditModal(event)}>
+                                        Request Updated Interview Time
+                                    </PurpleButton>
                 </Event>
             );
         })
+
     ) : (
         <NoEventsMessage darkMode={darkMode} fontSize={fontSize}>No events found</NoEventsMessage>
     )}
@@ -360,6 +439,17 @@ const Interviews = () => {
                     defaultDate={new Date(getTodayDate())}
                 />
             )}
+
+{showDateModal && (
+                <EditModal darkMode={darkMode} fontSize={fontSize}
+                    onClose={closeDateEditModal}
+                    onSubmit={handleEventUpdateRequest}
+                    defaultDate={new Date(getTodayDate())}
+                    event={selectedEvent}
+                />
+            )}
+
+
         </NavBar>
     );
 };

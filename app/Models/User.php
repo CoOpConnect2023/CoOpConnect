@@ -169,5 +169,17 @@ public function company()
     return $this->belongsTo(Company::class, 'company_id'); // Assumes the foreign key is 'company_id'
 }
 
+public function sharedDocuments()
+{
+    return $this->belongsToMany(Document::class, 'document_user');
+}
+
+
+public function sharedWithUsers()
+{
+    return $this->belongsToMany(User::class, 'document_user');
+}
+
+
 
 }

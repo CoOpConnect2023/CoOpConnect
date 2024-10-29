@@ -56,10 +56,10 @@ export const CreateJobSection = styled.section`
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     background-color: ${({ darkMode }) => (darkMode ? '#2C2C2C' : '#fff')};
     display: flex;
-    margin-top: 40px;
+    
     flex-direction: column;
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#7b757f')};
-    padding: 20px 10px;
+    padding: 10px;
     transition: background-color 0.5s ease;
 
     @media (max-width: 991px) {
@@ -95,6 +95,20 @@ export const JobDescription = styled.p`
     font: 400 22px/28px Poppins, sans-serif;
     font-size: ${({ fontSize }) => calculateFontSize(22, fontSize)};
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
+
+      ul {
+        list-style-type: disc;
+        padding-left: 20px; /* Add some padding for indentation */
+    }
+
+    ol {
+        list-style-type: decimal;
+        padding-left: 20px; /* Add some padding for indentation */
+    }
+
+    li {
+        margin-bottom: 5px; /* Space out list items */
+    }
 
     @media (max-width: 768px) {
         font-size: ${({ fontSize }) => calculateFontSize(18, fontSize)};
@@ -267,20 +281,38 @@ export const Tag = styled.span`
 `;
 
 export const JobDescriptionText = styled.p`
+    display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 2; /* Limit to 2 lines */
+    overflow: hidden; /* Ensures that excess content is hidden */
+    text-overflow: ellipsis; /* Adds the ellipsis (...) at the end of the text */
+
     color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#260e44')};
     text-align: center;
-    text-overflow: ellipsis;
     letter-spacing: 0.25px;
     margin-top: 15px;
     font: 400 14px/20px Poppins, sans-serif;
     font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
 
+    ul {
+        list-style-type: disc;
+        padding-left: 20px;
+    }
+
+    ol {
+        list-style-type: decimal;
+        padding-left: 20px;
+    }
+
+    li {
+        margin-bottom: 5px;
+    }
+
     @media (max-width: 768px) {
         font-size: ${({ fontSize }) => calculateFontSize(12, fontSize)};
     }
 `;
+
 
 export const Divider = styled.div`
     background-color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#260e44')};
@@ -299,10 +331,7 @@ export const CardButtons = styled.div`
     letter-spacing: 0.5px;
     transition:  transform 0.3s ease;
 
-    &:hover {
 
-        transform: scale(1.05);
-    }
 `;
 
 export const ViewPostingButton = styled.button`
@@ -316,6 +345,7 @@ export const ViewPostingButton = styled.button`
 
     &:hover {
         background-color: ${({ darkMode }) => (darkMode ? '#5a4175' : '#5a4175')};
+        transform: scale(1.05);
     }
 
     @media (max-width: 768px) {
@@ -335,6 +365,7 @@ export const EditPostingButton = styled.button`
 
     &:hover {
         background-color: ${({ darkMode }) => (darkMode ? '#5a4175' : '#5a4175')};
+        transform: scale(1.05);
     }
 
     @media (max-width: 768px) {

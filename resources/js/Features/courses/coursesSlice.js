@@ -68,7 +68,7 @@ export const coursesSlice = createSlice({
                 state.status.putCourse = "succeeded";
             })
 
-            
+
             .addCase(putCourse.rejected, (state, action) => {
                 state.status.putCourse = "failed";
             })
@@ -131,7 +131,8 @@ export const getCoursesForUser = createAsyncThunk(
 export const postCourse = createAsyncThunk(
     "courses/postCourse",
     async (params) => {
-        const { name, startDate, endDate } = params;
+        const { name, startDate, endDate, teacherId,
+            schoolId, } = params;
         const response = await axios({
             url: "/courses",
             method: "POST",
@@ -139,6 +140,8 @@ export const postCourse = createAsyncThunk(
                 name,
                 startDate,
                 endDate,
+                teacherId,
+                schoolId,
             },
         });
         return response.data.data;

@@ -14,6 +14,8 @@ export const Container = styled.section`
     display: flex;
     flex-direction: column;
     padding: 20px;
+    flex: 1;
+width: 100%;
     background-color: ${({ darkMode }) => (darkMode ? "#333" : "#fff")};
     color: ${({ darkMode }) => (darkMode ? "#f1f1f1" : "#000")};
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
@@ -25,6 +27,7 @@ export const Card = styled.article`
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     background-color: ${({ darkMode }) => (darkMode ? "#444" : "#fff")};
     display: flex;
+    flex: 1;
     justify-content: center;
     padding: 20px 10px;
     color: ${({ darkMode }) => (darkMode ? "#f1f1f1" : "#000")};
@@ -37,8 +40,8 @@ export const Card = styled.article`
 
 export const FormWrapper = styled.div`
     display: flex;
-    margin-bottom: 257px;
-    width: 720px;
+    width: 100%;
+flex: 1;
     max-width: 100%;
     flex-direction: column;
     @media (max-width: 991px) {
@@ -48,7 +51,7 @@ export const FormWrapper = styled.div`
 
 export const Title = styled.h1`
     color: ${({ darkMode }) => (darkMode ? "#B7A1E5" : "#6b538c")};
-    align-self: center;
+    align-self: start;
     font: 600 32px Poppins, sans-serif;
     font-size: ${({ fontSize }) => calculateFontSize(32, fontSize)};
 `;
@@ -68,6 +71,7 @@ export const Form = styled.form`
     border-radius: 10px;
     border: 1px solid ${({ darkMode }) => (darkMode ? "#666" : "#000")};
     display: flex;
+    flex: 1;
     margin-top: 30px;
     flex-direction: column;
     color: ${({ darkMode }) => (darkMode ? "#f1f1f1" : "#2d3648")};
@@ -100,13 +104,13 @@ export const FormRow = styled.div`
 
 export const FormField = styled.div`
     display: flex;
-    width: 320px;
+    width: 50%;
     flex-direction: column;
     justify-content: flex-end;
     align-items: flex-start;
     gap: 8px;
     flex-shrink: 0;
-
+position: relative;
     @media (max-width: 991px) {
         width: 100%;
     }
@@ -196,3 +200,32 @@ export const SubmitButton = styled.button`
         white-space: initial;
     }
 `;
+export const Dropdown = styled.ul`
+    position: absolute;
+    top: 100%; /* Places dropdown right below the input */
+    left: 0;
+    right: 0;
+    z-index: 1000; /* Ensures it appears above other content */
+    background-color: ${({ darkMode }) => (darkMode ? "#333" : "#fff")}; /* Dark mode background */
+    border: 1px solid ${({ darkMode }) => (darkMode ? "#666" : "#ccc")}; /* Dark mode border */
+    max-height: 200px;
+    overflow-y: auto;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-radius: 4px;
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)}; /* Font size calculation */
+`;
+
+export const DropdownItem = styled.li`
+    padding: 8px 12px;
+    cursor: pointer;
+    color: ${({ darkMode }) => (darkMode ? "#f1f1f1" : "#000")}; /* Dark mode text color */
+    background-color: ${({ darkMode }) => (darkMode ? "#444" : "#fff")}; /* Dark mode background */
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)}; /* Font size calculation */
+
+    &:hover {
+        background-color: ${({ darkMode }) => (darkMode ? "#555" : "#f0f0f0")}; /* Hover background for dark and light modes */
+    }
+`;
+

@@ -11,9 +11,9 @@ const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
 export const Container = styled.section`
 
     display: flex;
-
+flex: 1;
     width: 100%;
-    height: 100vh;
+
     flex-direction: column;
     padding: 1%;
     background-color: ${({ darkMode }) => (darkMode ? '#121212' : '#ffffff')};
@@ -25,7 +25,7 @@ export const Container = styled.section`
 export const Card = styled.article`
     align-items: center;
     border-radius: 10px;
-
+flex: 1;
     width: 100%;
     height: 100%;
     background-color: ${({ darkMode }) => (darkMode ? '#444' : '#fff')};
@@ -74,7 +74,8 @@ export const FormContainer = styled.div`
     border-radius: 10px;
     border: 1px solid ${({ darkMode }) => (darkMode ? '#777' : '#000')};
     display: flex;
-    margin-top: 30px;
+    flex: 1;
+
     flex-direction: column;
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2d3648')};
     padding: 20px;
@@ -88,6 +89,7 @@ export const FormContainer = styled.div`
 export const Form = styled.form`
     border: 2px solid ${({ darkMode }) => (darkMode ? '#555' : '#7b757f')};
     border-radius: 6px;
+    flex: 1;
     background-color: ${({ darkMode }) => (darkMode ? '#444' : '#fff')};
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
     display: flex;
@@ -244,7 +246,7 @@ export const ButtonGroup = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: flex-end;
     gap: 8px;
     flex-shrink: 0;
     margin-top: 1vh;
@@ -332,9 +334,21 @@ export const OptionWrapper = styled.div`
 
 // Styled component for the correct option checkbox
 export const CorrectOptionCheckbox = styled.input`
-    margin-left: 10px;
-    margin-right: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid ${({ darkMode }) => (darkMode ? "#D6BCFA" : "#ccc")};
+  border-radius: 50%;
+  outline: none;
+  cursor: pointer;
+
+  &:checked {
+    background-color: ${({ darkMode }) => (darkMode ? "#D6BCFA" : "#6B21A8")};
+  }
 `;
+
 
 
 
@@ -347,6 +361,8 @@ export const QuestionList = styled.ul`
 
 // Styled component for each question item
 export const QuestionItem = styled.li`
+display: flex;
+justify-content: space-between;
     margin-bottom: 12px;
     font-size: ${({ fontSize }) => (fontSize === 'large' ? '1.1em' : '1em')};
     color: ${({ darkMode }) => (darkMode ? '#EDDCFF' : '#333')};
@@ -373,3 +389,28 @@ export const CorrectTag = styled.span`
     font-weight: bold;
     margin-left: 8px;
 `;
+
+export const RemoveQuestionButton = styled.button`
+    background-color: ${({ darkMode }) => (darkMode ? "#ff4c4c" : "#e63946")};  /* Red background */
+    border: none;
+    color: #fff;  /* White color for the "X" */
+    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};  /* Adjust font size */
+    cursor: pointer;
+    border-radius: 50%;  /* Make the button circular */
+    width: 30px;  /* Set fixed width */
+    height: 30px;  /* Set fixed height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+
+    &:hover {
+        background-color: ${({ darkMode }) => (darkMode ? "#ff6b6b" : "#ff4d4d")};  /* Lighter red on hover */
+    }
+
+    &:focus {
+        outline: none;  /* Remove outline on focus */
+    }
+`;
+
+

@@ -69,6 +69,17 @@ export const interviewsSlice = createSlice({
                 state.status.postInterview = "succeeded";
 
             })
+            .addCase(sendInterviewChangeRequest.rejected, (state, action) => {
+                state.status.sendInterviewChangeRequest = "failed";
+            })
+            .addCase(sendInterviewChangeRequest.pending, (state, action) => {
+                state.status.sendInterviewChangeRequest = "loading";
+            })
+            .addCase(sendInterviewChangeRequest.fulfilled, (state, action) => {
+                state.sendInterviewChangeRequest = action.payload;
+                state.status.sendInterviewChangeRequest = "succeeded";
+
+            })
             .addCase(postInterview.rejected, (state, action) => {
                 state.status.postInterview = "failed";
             })
@@ -224,7 +235,19 @@ export const patchInterview = createAsyncThunk(
             description,
             intervieweeId,
             interviewerId,
+            proposedTime,
         } = params;
+        console.log("Sending data to patchInterview:", {
+            interviewId,
+            title,
+            startDate,
+            endDate,
+            status,
+            description,
+            intervieweeId,
+            interviewerId,
+            proposedTime,
+        });
         const response = await axios({
             url: `/interviews/${interviewId}`,
             method: "PATCH",
@@ -236,6 +259,7 @@ export const patchInterview = createAsyncThunk(
                 description,
                 intervieweeId,
                 interviewerId,
+                proposedTime,
             },
         });
         return response.data.data;
@@ -278,6 +302,31 @@ export const sendInterviewTimeChanged = createAsyncThunk(
         return response.data.message;
     }
 );
+
+export const sendInterviewChangeRequest = createAsyncThunk(
+    "interview/sendInterviewChangeRequest",
+    async ({ employerId, studentId, jobTitle, newTime, interviewId }, { rejectWithValue }) => {
+        try {
+            const response = await axios.post("/send-interview-time-request", {
+                employer_id: employerId,
+                student_id: studentId,
+                job_title: jobTitle,
+                new_time: newTime,
+                interview_id: interviewId,
+            });
+
+            return response.data;
+        } catch (error) {
+            // Handle error
+            if (error.response && error.response.data) {
+                return rejectWithValue(error.response.data);
+            } else {
+                return rejectWithValue(error.message);
+            }
+        }
+    }
+);
+
 
 
 

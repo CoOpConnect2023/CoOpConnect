@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useForm } from '@inertiajs/react';
+import { useTheme } from "@/ThemeContext";
 import {
     AppContainer,
     NavContainer,
@@ -34,7 +35,8 @@ import {
     IconContainer,
     Footer,
     CloseButton,
-    FontSizer
+    FontSizer,
+    NavContainerAbsolute
 } from "../Styling/NavBar.styles";
 import logo from "@/Pages/Images/puzzle.svg";
 import briefcase from "@/Pages/Images/briefcase.svg";
@@ -110,6 +112,7 @@ function Sidebar() {
     const fontSize = useSelector(state => state.accessibility.textSize);
     const [previousDarkMode, setPreviousDarkMode] = useState(darkMode);
     const [previousFontSize, setPreviousFontSize] = useState(fontSize);
+    const { theme } = useTheme();
 
 
     const convertFontSizeToString = (fontSize) => {
@@ -167,30 +170,30 @@ function Sidebar() {
 
     return (
         <aside>
-            <NavContainer fontSize={fontSize} darkMode={darkMode}>
+            <NavContainerAbsolute fontSize={fontSize} darkMode={darkMode} theme={theme}>
 
 
-                <Link fontSize={fontSize} darkMode={darkMode} href="/" onClick={() => handleTabClick("/")}>
-                    <Logo
-                        fontSize={fontSize}
-                        darkMode={darkMode}
-                        src={darkMode ? whitelogo : logo}
-                        alt="Logo"
-                        loading="lazy"
-                        active={activeTab === "/"}
-                    />
-                </Link>
-                <Divider fontSize={fontSize} darkMode={darkMode} />
+<Link theme={theme} fontSize={fontSize} darkMode={darkMode} href="/" onClick={() => handleTabClick("/")}>
+    <Logo theme={theme}
+        fontSize={fontSize}
+        darkMode={darkMode}
+        src={darkMode ? whitelogo : logo}
+        alt="Logo"
+        loading="lazy"
+        active={activeTab === "/"}
+    />
+</Link>
+<Divider theme={theme} fontSize={fontSize} darkMode={darkMode} />
 
-                <Link fontSize={fontSize} darkMode={darkMode} data-test-id="home-link" href="/employer/home" >
-                    <IconButton onClick={() => handleTabClick("/employer/home")} fontSize={fontSize} darkMode={darkMode} active={activeTab === "/employer/home"}>
-                        <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitebriefcase : briefcase} alt="Icon 1" loading="lazy" />
-                    </IconButton>
-                </Link>
+<Link theme={theme} fontSize={fontSize} darkMode={darkMode} data-test-id="home-link" href="/employer/home" >
+    <IconButton theme={theme} onClick={() => handleTabClick("/employer/home")} fontSize={fontSize} darkMode={darkMode} active={activeTab === "/employer/home"}>
+        <Icon theme={theme} fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitebriefcase : briefcase} alt="Icon 1" loading="lazy" />
+    </IconButton>
+</Link>
 
-                <Link fontSize={fontSize} darkMode={darkMode} data-test-id="home-link" href="/employer/hiredstudents" onClick={() => handleTabClick("/employer/hiredstudents")}>
-    <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/employer/hiredstudents"}>
-        <FontAwesomeIcon
+<Link theme={theme} fontSize={fontSize} darkMode={darkMode} data-test-id="home-link" href="/employer/hiredstudents" onClick={() => handleTabClick("/employer/hiredstudents")}>
+    <IconButton theme={theme} fontSize={fontSize} darkMode={darkMode} active={activeTab === "/employer/hiredstudents"}>
+        <FontAwesomeIcon theme={theme}
             icon={faUserCheck}
             style={{ fontSize: `calc(${fontSize} + 0.4em)` }}  // Slightly larger than fontSize
             color={darkMode ? '#ffffff' : '#000000'}
@@ -199,34 +202,40 @@ function Sidebar() {
     </IconButton>
 </Link>
 
-                <Link fontSize={fontSize} darkMode={darkMode} data-test-id="messages-link" href="/employer/messages" onClick={() => handleTabClick("/employer/messages")}>
-                    <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/employer/messages"}>
-                        <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitemessage : message} alt="" loading="lazy" />
-                    </IconButton>
-                </Link>
-                <Link fontSize={fontSize} darkMode={darkMode} data-test-id="interviews-link" href="/employer/interviews" onClick={() => handleTabClick("/employer/interviews")} >
-                    <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/employer/interviews"}>
-                        <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitecalendar : calendar} alt="" loading="lazy" />
-                    </IconButton>
-                </Link>
-                <Link fontSize={fontSize} darkMode={darkMode} href="/employer/profile" onClick={() => handleTabClick("/employer/profile")} data-test-id="profile-link">
-                    <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/employer/profile"}>
-                        <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whiteuser : user} alt="" loading="lazy" />
-                    </IconButton>
-                </Link>
-                <Link fontSize={fontSize} darkMode={darkMode} data-test-id="settings-link" href="/employer/settings" onClick={() => handleTabClick("/employer/settings")}>
-                    <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/employer/settings"}>
-                        <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitesettings : settings} alt="" loading="lazy" />
-                    </IconButton>
-                </Link>
+<Link theme={theme} fontSize={fontSize} darkMode={darkMode} data-test-id="messages-link" href="/employer/messages" onClick={() => handleTabClick("/employer/messages")}>
+    <IconButton theme={theme} fontSize={fontSize} darkMode={darkMode} active={activeTab === "/employer/messages"}>
+        <Icon theme={theme} fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitemessage : message} alt="" loading="lazy" />
+    </IconButton>
+</Link>
+<Link theme={theme} fontSize={fontSize} darkMode={darkMode} data-test-id="interviews-link" href="/employer/interviews" onClick={() => handleTabClick("/employer/interviews")} >
+    <IconButton theme={theme} fontSize={fontSize} darkMode={darkMode} active={activeTab === "/employer/interviews"}>
+        <Icon theme={theme} fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitecalendar : calendar} alt="" loading="lazy" />
+    </IconButton>
+</Link>
+<Link theme={theme} fontSize={fontSize} darkMode={darkMode} href="/employer/profile" onClick={() => handleTabClick("/employer/profile")} data-test-id="profile-link">
+    <IconButton theme={theme} fontSize={fontSize} darkMode={darkMode} active={activeTab === "/employer/profile"}>
+        <Icon theme={theme} fontSize={fontSize} darkMode={darkMode} src={darkMode ? whiteuser : user} alt="" loading="lazy" />
+    </IconButton>
+</Link>
+<Link theme={theme} fontSize={fontSize} darkMode={darkMode} data-test-id="settings-link" href="/employer/settings" onClick={() => handleTabClick("/employer/settings")}>
+    <IconButton theme={theme} fontSize={fontSize} darkMode={darkMode} active={activeTab === "/employer/settings"}>
+        <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitesettings : settings} alt="" loading="lazy" />
+    </IconButton>
+</Link>
 
-                <IconContainer fontSize={fontSize} darkMode={darkMode} data-test-id="map-link" onClick={toggleFooterVisibility}>
-                    <FontAwesomeIcon fontSize={fontSize} darkMode={darkMode} icon={faMap} className="fa-icon" />
-                </IconContainer>
+<IconContainer theme={theme} fontSize={fontSize} darkMode={darkMode} data-test-id="map-link" onClick={toggleFooterVisibility}>
+    <FontAwesomeIcon theme={theme} fontSize={fontSize} darkMode={darkMode} icon={faMap} className="fa-icon" />
+</IconContainer>
+</NavContainerAbsolute>
+
+            <NavContainer fontSize={fontSize} darkMode={darkMode} theme={theme}>
+
+
+
             </NavContainer>
-            <Footer fontSize={fontSize} darkMode={darkMode} isVisible={footerVisible}>
-                <CloseButton fontSize={fontSize} darkMode={darkMode} onClick={closeFooter}>
-                    <FontAwesomeIcon fontSize={fontSize} darkMode={darkMode} icon={faTimes} />
+            <Footer theme={theme} fontSize={fontSize} darkMode={darkMode} isVisible={footerVisible}>
+                <CloseButton theme={theme} fontSize={fontSize} darkMode={darkMode} onClick={closeFooter}>
+                    <FontAwesomeIcon theme={theme} fontSize={fontSize} darkMode={darkMode} icon={faTimes} />
                 </CloseButton>
                 <p>HTML Sitemap: <a href="/">Home</a> | <a href="/about">About</a> | <a href="/employer/home">Employer Home</a> | <a href="/employer/messages">Employer Messages</a> | <a href="/employer/interviews">Employer Schedule</a> | <a href="/employer/profile">Employer Profile</a> | <a href="/employer/settings">Employer Settings</a> | <a href="/employer/documents">Employer Documents</a> </p>
             </Footer>
@@ -251,15 +260,16 @@ function Header({ header }) {
     const [animate, setAnimate] = useState(true);
     const [isExpanded, setIsExpanded] = React.useState(false);
     const { post } = useForm();
+    const { theme } = useTheme();
     const altAvatarSrc = "https://cdn.builder.io/api/v1/image/assets/TEMP/c449c761188f38db922c89455e070256b822a267e33f51baa6901c76b73a4e78?apiKey=d66532d056b14640a799069157705b77&";
 
     useEffect(() => {
         const timer = setTimeout(() => {
-          setAnimate(false); // Disable animation after it has been played once
+            setAnimate(false); // Disable animation after it has been played once
         }, 500); // Match the duration of the animation
 
         return () => clearTimeout(timer); // Cleanup the timer
-      }, []);
+    }, []);
 
     useEffect(() => {
         dispatch(getUser());
@@ -333,18 +343,24 @@ function Header({ header }) {
                 )}
                 <UserProfile fontSize={fontSize} darkMode={darkMode}>
 
-                    <NotificationIcon fontSize={fontSize} darkMode={darkMode} onClick={handleDarkModeToggle}
+                    <NotificationIcon fontSize={fontSize} darkMode={darkMode} onClick={handleDarkModeToggle} onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleDarkModeToggle()}
+                        tabIndex="0"
+                        aria-label="Toggle dark mode"
                     >{darkMode ? <FontAwesomeIcon icon={faMoon} /> : <FontAwesomeIcon icon={faSun} />}
 
 
                     </NotificationIcon>
                     <NotificationIcon fontSize={fontSize} darkMode={darkMode} onClick={toggleNotificationModal}
-                        hasUnreadMessages={hasUnreadMessages}><FontAwesomeIcon icon={faBell} />
+                        hasUnreadMessages={hasUnreadMessages} onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && toggleNotificationModal(e)}
+                        tabIndex="0"
+                        aria-label="View notifications"><FontAwesomeIcon icon={faBell} />
 
 
                     </NotificationIcon>
                     <FontToggler />
-                    <UserDetails fontSize={fontSize} darkMode={darkMode} onClick={toggleProfileModal}>
+                    <UserDetails fontSize={fontSize} darkMode={darkMode} onClick={toggleProfileModal}  onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && toggleProfileModal()}
+                        tabIndex="0"
+                        aria-label="User menu">
                         {user && user.profile_image ? (
                             <Avatar fontSize={fontSize} darkMode={darkMode}
                                 src={user.profile_image}
@@ -396,7 +412,7 @@ function MainContent({ header, children }) {
     return (
         <Main>
             <ContentContainer>
-                 <Header header={header} />
+                <Header header={header} />
 
                 {children}
             </ContentContainer>
@@ -409,11 +425,12 @@ function NavBar({ header, children }) {
     const isMobile = windowSize.width <= 991;
     const darkMode = useSelector(state => state.accessibility.darkMode);
     const fontSize = useSelector(state => state.accessibility.textSize);
+    const { theme } = useTheme();
 
     return (
-        <AppContainer fontSize={fontSize} darkMode={darkMode}>
+        <AppContainer theme={theme} fontSize={fontSize} darkMode={darkMode}>
             <Sidebar />
-            <MainContent header={header}>{children}</MainContent>
+            <MainContent theme={theme} header={header}>{children}</MainContent>
         </AppContainer>
     );
 }
@@ -426,29 +443,45 @@ const FontToggler = () => {
     const darkMode = useSelector((state) => state.accessibility.darkMode);
 
     const increaseFont = () => {
-        if (fontSize !== '1.12em') { // Compare against 'large' instead of "1.12em"
+        if (fontSize !== '1.12em') {
             dispatch(increaseFontSize());
         }
     };
 
     const decreaseFont = () => {
-        if (fontSize !== '1em') { // Compare against 'small' instead of "1em"
+        if (fontSize !== '1em') {
             dispatch(decreaseFontSize());
+        }
+    };
+
+    const handleKeyDown = (e, action) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault(); // Prevents page scrolling when space is pressed
+            action();
         }
     };
 
     return (
         <FontSizer fontSize={fontSize} darkMode={darkMode}>
-            <FontAwesomeIcon fontSize={fontSize} darkMode={darkMode}
-                onClick={() => { decreaseFont(); }}
+            <FontAwesomeIcon
+                onClick={decreaseFont}
+                onKeyDown={(e) => handleKeyDown(e, decreaseFont)}
+                tabIndex="0"
                 icon={faMinus}
+                aria-label="Decrease font size"
+                role="button"
             />
-            <FontAwesomeIcon fontSize={fontSize} darkMode={darkMode}
+            <FontAwesomeIcon
                 icon={faTextHeight}
+                aria-hidden="true" // Decorative, so it doesn’t need to be focusable
             />
-            <FontAwesomeIcon fontSize={fontSize} darkMode={darkMode}
-                onClick={() => { increaseFont(); }}
+            <FontAwesomeIcon
+                onClick={increaseFont}
+                onKeyDown={(e) => handleKeyDown(e, increaseFont)}
+                tabIndex="0"
                 icon={faPlus}
+                aria-label="Increase font size"
+                role="button"
             />
         </FontSizer>
     );
@@ -466,6 +499,7 @@ function NotificationModal({
     const dispatch = useDispatch();
     const darkMode = useSelector((state) => state.accessibility.darkMode);
     const fontSize = useSelector((state) => state.accessibility.textSize);
+    const { theme } = useTheme();
     const notifications = useSelector((state) => state.notifications.myNotifications);
 
 
@@ -498,9 +532,9 @@ function NotificationModal({
 
 
     return (
-        <NotificationModalContainer fontSize={fontSize} darkMode={darkMode} isOpen={isOpen}>
+        <NotificationModalContainer theme={theme} fontSize={fontSize} darkMode={darkMode} isOpen={isOpen}>
             {(conversations === null || conversations.length === 0) && (notifications === null || notifications.length === 0) ? (
-                <NoNotificationsMessage fontSize={fontSize} darkMode={darkMode}>
+                <NoNotificationsMessage theme={theme} fontSize={fontSize} darkMode={darkMode}>
                     No new notifications
                 </NoNotificationsMessage>
             ) : (
@@ -510,19 +544,19 @@ function NotificationModal({
                         const otherUser = conversation.users.find(user => user.id !== currentUser?.id);
 
                         return (
-                            <Conversation fontSize={fontSize} darkMode={darkMode} key={conversation.id}>
-                                <ConversationInfo fontSize={fontSize} darkMode={darkMode}>
+                            <Conversation theme={theme} fontSize={fontSize} darkMode={darkMode} key={conversation.id}>
+                                <ConversationInfo theme={theme} fontSize={fontSize} darkMode={darkMode}>
                                     <div>From: {otherUser ? otherUser.name : 'Unknown'}</div>
                                 </ConversationInfo>
-                                <MessagesList fontSize={fontSize} darkMode={darkMode}>
+                                <MessagesList theme={theme} fontSize={fontSize} darkMode={darkMode}>
                                     {conversation.messages.map((message) => (
-                                        <Message fontSize={fontSize} darkMode={darkMode} key={message.id}>
+                                        <Message theme={theme} fontSize={fontSize} darkMode={darkMode} key={message.id}>
                                             <div>Message: {message.content}</div>
                                             <div>Received: {formatDate(message.created_at)}</div>
-                                            <Button fontSize={fontSize} darkMode={darkMode} onClick={() => handleMarkAsRead(message.id, conversation.id)}>
+                                            <Button theme={theme} fontSize={fontSize} darkMode={darkMode} onClick={() => handleMarkAsRead(message.id, conversation.id)}>
                                                 Mark as Read
                                             </Button>
-                                            <Button fontSize={fontSize} darkMode={darkMode} onClick={handleRedirect}>
+                                            <Button theme={theme} fontSize={fontSize} darkMode={darkMode} onClick={handleRedirect}>
                                                 Go to Messages
                                             </Button>
                                         </Message>
@@ -535,17 +569,17 @@ function NotificationModal({
                     {notifications && notifications.length > 0 && notifications
                         .filter(notification => !notification.viewed)  // Filter for notifications that have been viewed
                         .map((notification) => (
-                            <Conversation fontSize={fontSize} darkMode={darkMode} key={notification.id}>
-                                <ConversationInfo fontSize={fontSize} darkMode={darkMode}>
-                                    <MessagesList fontSize={fontSize} darkMode={darkMode}>
-                                        <Message fontSize={fontSize} darkMode={darkMode}>
+                            <Conversation theme={theme} fontSize={fontSize} darkMode={darkMode} key={notification.id}>
+                                <ConversationInfo theme={theme} fontSize={fontSize} darkMode={darkMode}>
+                                    <MessagesList theme={theme} fontSize={fontSize} darkMode={darkMode}>
+                                        <Message theme={theme} fontSize={fontSize} darkMode={darkMode}>
                                             <div>{notification.content}</div>
                                             <div>Received: {formatDate(notification.created_at)}</div>
                                             {notification.interview_date && (
                                                 <div>Interview Date: {formatDate(notification.interview_date)}</div>
                                             )}
                                             {!notification.viewed && (
-                                                <Button
+                                                <Button theme={theme}
                                                     fontSize={fontSize}
                                                     darkMode={darkMode}
                                                     onClick={() => markAsRead(notification.id)}

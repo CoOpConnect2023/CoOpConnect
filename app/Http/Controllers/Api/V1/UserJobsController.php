@@ -61,25 +61,33 @@ class UserJobsController extends Controller
     }
 
     public function getUserDetails($jobsId)
-    {
-        $userJobs = UserJobs::where('jobs_id', $jobsId)->get();
+{
+    $userJobs = UserJobs::where('jobs_id', $jobsId)->with('document')->get(); // Load the related document
 
-        $users = $userJobs->map(function ($userJob) {
-            return [
-                'id' => $userJob->id,
-                'name' => $userJob->user->name,
-                'email' => $userJob->user->email,
-                'resume' => $userJob->resume,
-                'status' => $userJob->status,
-                'timeSlots' => $userJob->time_slots,
-                'startDate' => $userJob->start_date,
-                'endDate' => $userJob->end_date,
-                'userId' => $userJob->user_id,
-            ];
-        });
+    $users = $userJobs->map(function ($userJob) {
+        return [
+            'id' => $userJob->id,
+            'name' => $userJob->user->name,
+            'email' => $userJob->user->email,
+            'resume' => $userJob->resume,
+            'status' => $userJob->status,
+            'timeSlots' => $userJob->time_slots,
+            'startDate' => $userJob->start_date,
+            'endDate' => $userJob->end_date,
+            'userId' => $userJob->user_id,
+            'documentId' => $userJob->document_id,
+            'document' => $userJob->document ? [
+                'id' => $userJob->document->id,
+                'title' => $userJob->document->title,
+                'path' => $userJob->document->path,
+                'type' => $userJob->document->type,
+            ] : null, // Include document details if available
+        ];
+    });
 
-        return response()->json($users);
-    }
+    return response()->json($users);
+}
+
 
     public function getSingleUserDetails($userJobsId)
     {
@@ -179,7 +187,7 @@ class UserJobsController extends Controller
             $query->where('user_id', $userId);
         })
         ->where('status', 'Hired') // Filter by status 'Hired'
-        ->with(['job.company', 'user']) // Eager load the job and user relationships
+        ->with(['job.company', 'user.school']) // Eager load the job and user relationships
         ->get();
 
         return response()->json($userJobs);
@@ -225,6 +233,28 @@ class UserJobsController extends Controller
     // Return a success response with the updated UserJob
     return response()->json(['message' => 'Hired student and job updated successfully', 'userJob' => $userJob], 200);
 }
+
+
+
+public function getUserJobsByStatus(Request $request)
+{
+    // Retrieve job IDs from the query string
+    $jobIds = $request->query('job_ids');
+
+    // Validate if job IDs were provided as an array
+    if (is_array($jobIds) && !empty($jobIds)) {
+        // Retrieve user jobs where job ID is in the specified array and status is 'Pending' or 'Interview'
+        $userJobs = UserJobs::whereIn('jobs_id', $jobIds)
+            ->whereIn('status', ['Pending', 'Interview'])
+            ->with(['job.company', 'user.school']) // Eager load related job and user data
+            ->get();
+
+        return response()->json($userJobs);
+    } else {
+        return response()->json(['error' => 'No valid job IDs provided'], 400);
+    }
+}
+
 
 
 

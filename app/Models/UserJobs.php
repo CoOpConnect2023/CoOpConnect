@@ -18,11 +18,12 @@ class UserJobs extends Model
     protected $fillable = [
         'user_id',
         'jobs_id',
+        'document_id',
         'resume',
         'status',
         'time_slots',
         'message',
-        'start_date',   
+        'start_date',
         'end_date',
     ];
 
@@ -34,5 +35,10 @@ class UserJobs extends Model
     public function job()
     {
         return $this->belongsTo(Jobs::class, 'jobs_id');
+    }
+
+    public function document()
+    {
+        return $this->belongsTo(Document::class, 'document_id'); // Add the relationship to the Document model
     }
 }
