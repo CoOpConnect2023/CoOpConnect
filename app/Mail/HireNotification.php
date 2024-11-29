@@ -95,7 +95,7 @@ class HireNotification extends Mailable
                                     <p>We look forward to your success in this new role. Please coordinate with the employer for next steps.</p>
                                 </div>
                                 <div class="footer">
-                                    <p>&copy; ' . date('Y') . ' COOP CONNECT. All rights reserved.</p>
+                                    <p>&copy; ' . date('Y') . ' CoopConnect. All rights reserved.</p>
                                 </div>
                             </div>
                         </body>

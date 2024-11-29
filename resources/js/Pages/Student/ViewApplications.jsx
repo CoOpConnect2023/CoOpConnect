@@ -29,7 +29,7 @@ const ViewApplications = () => {
         dispatch(getSingleJobDetails({ userJobsId }));
     }, [dispatch, userJobsId]);
 
-    const tabs = ["Pending", "Interview", "Scheduled", "Declined", "Rejected"];
+    const tabs = ["Pending", "Interview", "Scheduled", "Declined", "Rejected", "All"];
 
     const handleAccept = (id) => {
         // Handle the accept action
@@ -82,35 +82,46 @@ const ViewApplications = () => {
         }).format(date);
     };
 
+    
+
     const renderApplications = () => {
         return jobs
-            .filter((app) => app.status === activeTab)
+            .filter((app) => activeTab === "All" || app.status === activeTab) // Include all jobs if activeTab is "All"
             .map((app) => (
                 <ApplicationCard fontSize={fontSize} darkMode={darkMode} key={app.id}>
                     <h3>
                         <b>Position:</b> {app.title}
                     </h3>
                     <p>
-                        <b>Company:</b> {app?.user?.company}
+                        <b>Company:</b> {app.company.name}
                     </p>
                     <p>
                         <b>Location:</b> {app.location}
                     </p>
                     <p>
-                    <b>Description:</b>{" "}
-                    <span
-                        dangerouslySetInnerHTML={{
-                            __html: app.description
-                        }}
-                    />
-                </p>
+                        <b>Description:</b>{" "}
+                        <span
+                            dangerouslySetInnerHTML={{
+                                __html: app.description,
+                            }}
+                        />
+                    </p>
                     {app.status === "Interview" && (
                         <ButtonGroup fontSize={fontSize} darkMode={darkMode}>
-                            <ActionButton fontSize={fontSize} darkMode={darkMode}onClick={() => handleAccept(app.id)}>
-                                Accept
-                            </ActionButton>
-                            <ActionButton fontSize={fontSize} darkMode={darkMode} onClick={() => handleDecline(app.id)}>
+
+                            <ActionButton
+                                fontSize={fontSize}
+                                darkMode={darkMode}
+                                onClick={() => handleDecline(app.id)}
+                            >
                                 Decline
+                            </ActionButton>
+                            <ActionButton
+                                fontSize={fontSize}
+                                darkMode={darkMode}
+                                onClick={() => handleAccept(app.id)}
+                            >
+                                Accept
                             </ActionButton>
                         </ButtonGroup>
                     )}
@@ -259,7 +270,7 @@ const ApplicationCard = styled.div`
 
 const ButtonGroup = styled.div`
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     margin-top: 10px;
     font-size: ${({ fontSize = '1em' }) => calculateFontSize(BASE_PIXEL_SIZE, fontSize)};
 

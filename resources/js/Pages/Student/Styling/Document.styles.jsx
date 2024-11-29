@@ -91,7 +91,7 @@ flex-grow: 1;
 
 export const SectionHeader = styled.header`
     display: flex;
-    justify-content: center;
+
     width: 100%;
     margin-bottom: ${({ fontSize }) => calculateFontSize(40, fontSize)};
 `;
@@ -101,6 +101,7 @@ export const TabList = styled.nav`
     justify-content: space-between;
     border: 1px solid ${({ darkMode }) => (darkMode ? "#444444" : "#000")};
     border-radius: 6px;
+    width: 100%;
     padding: ${({ fontSize }) => calculateFontSize(5, fontSize)} ${({ fontSize }) => calculateFontSize(10, fontSize)};
     font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
     font-weight: 500;

@@ -201,6 +201,18 @@ export const JobList = styled.div`
     }
 `;
 
+export const ClearButton = styled.button`
+    background: transparent;
+    border: none;
+    color: ${({ darkMode }) => (darkMode ? "#FFF" : "#000")};
+    font-size: 1rem;
+    cursor: pointer;
+    margin-left: 5px;
+    &:hover {
+        color: ${({ darkMode }) => (darkMode ? "#EDDCFF" : "#6B538C")};
+    }
+`;
+
 export const JobColumn = styled.div`
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -210,11 +222,10 @@ export const JobColumn = styled.div`
     background-color: ${({ darkMode }) => (darkMode ? '#2C2C2C' : '#fff')};
     transition: background-color 0.5s ease, color 0.5s ease;
     padding: 16px;
-    border: 1px solid ${({ darkMode }) => (darkMode ? '#555' : '#ddd')};
-    border-radius: 8px;
+
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
-    max-height: 86vh;
+    max-height: 83vh;
 
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
 
@@ -228,6 +239,11 @@ export const JobColumn = styled.div`
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     }
 `;
+
+export const JobColumnAndTitle = styled.div`
+display: flex;
+flex-direction: column;
+`
 
 export const JobCard = styled.article`
    display: flex;
@@ -429,7 +445,7 @@ export const ApplyButton = styled.button`
     line-height: 24px;
     font-style: normal;
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
-    width: 26%;
+    width: 100%;
 `;
 
 export const JobFullDescription = styled.p`

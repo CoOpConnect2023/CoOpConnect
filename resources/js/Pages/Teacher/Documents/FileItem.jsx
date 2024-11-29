@@ -32,7 +32,7 @@ export const FileItem = ({ title, type, handleDownload, doc, handleDelete, userN
     const [isEditing, setIsEditing] = useState(false);
     const [newTitle, setNewTitle] = useState(title);
     const dispatch = useDispatch();
-console.log(doc)
+
 
 
 const toggleVisibility = () => {

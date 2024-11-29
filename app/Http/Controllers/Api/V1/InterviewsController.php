@@ -32,9 +32,29 @@ class InterviewsController extends Controller
      */
     public function store(StoreInterviewsRequest $request)
     {
-        return new InterviewsResource(Interviews::create($request->all()));
-    }
+        $data = $request->all();
 
+        // Check if `interviewee_id` is an email
+        if (filter_var($data['interviewee_id'], FILTER_VALIDATE_EMAIL)) {
+            // Attempt to find the user by email
+            $user = User::where('email', $data['interviewee_id'])->first();
+
+            if (!$user) {
+                // If the user does not exist, return an error response
+                return response()->json([
+                    'message' => 'The email provided for the interviewee does not exist.',
+                ], 422);
+            }
+
+            // Replace `interviewee_id` with the user's ID
+            $data['interviewee_id'] = $user->id;
+        }
+
+        // Create the interview with the resolved data
+        $interview = Interviews::create($data);
+
+        return new InterviewsResource($interview);
+    }
     /**
      * Display the specified resource.
      */

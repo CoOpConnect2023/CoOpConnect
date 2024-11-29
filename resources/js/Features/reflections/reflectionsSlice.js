@@ -31,6 +31,17 @@ export const reflectionsSlice = createSlice({
             .addCase(getReflections.rejected, (state, action) => {
                 state.status.reflections = "failed";
             })
+
+            .addCase(getSchoolReflections.pending, (state, action) => {
+                state.status.reflections = "loading";
+            })
+            .addCase(getSchoolReflections.fulfilled, (state, action) => {
+                state.reflections = action.payload;
+                state.status.reflections = "succeeded";
+            })
+            .addCase(getSchoolReflections.rejected, (state, action) => {
+                state.status.reflections = "failed";
+            })
             .addCase(selectReflection.pending, (state, action) => {
                 state.status.reflections = "loading";
             })
@@ -103,9 +114,11 @@ export const reflectionsSlice = createSlice({
                 state.status.deleteReflection = "loading";
             })
             .addCase(deleteReflection.fulfilled, (state, action) => {
-
-                return state.myreflections.filter(reflection => reflection.id !== action.payload);
-              })
+                state.myreflections = state.myreflections.filter(
+                    (reflection) => reflection.id !== action.payload
+                );
+                state.status.deleteReflection = "succeeded"; // Optional to track the status
+            })
             .addCase(deleteReflection.rejected, (state, action) => {
                 state.status.deleteReflection = "failed";
             });
@@ -123,6 +136,17 @@ export const getReflections = createAsyncThunk(
     }
 );
 
+export const getSchoolReflections = createAsyncThunk(
+    "reflections/getSchoolReflections",
+    async () => {
+        const response = await axios({
+            url: "/studentreflections",
+            method: "GET",
+        });
+        return response.data.data;
+    }
+);
+
 export const getMyReflections = createAsyncThunk(
     "reflections/getMyReflections",
     async () => {
@@ -130,7 +154,7 @@ export const getMyReflections = createAsyncThunk(
             url: "/myreflections",
             method: "GET",
         });
-        
+
         return response.data.data;
     }
 );
@@ -239,7 +263,7 @@ export const deleteReflection = createAsyncThunk(
             method: "DELETE",
             data: { reflectionId },
         });
-        return response.data.data;
+        return reflectionId;
     }
 );
 

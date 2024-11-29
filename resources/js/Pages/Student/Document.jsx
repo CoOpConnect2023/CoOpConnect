@@ -276,11 +276,18 @@ const Document = () => {
             <Wrapper fontSize={fontSize} darkMode={darkMode}>
                 <Content fontSize={fontSize} darkMode={darkMode}>
                     <FileSection fontSize={fontSize} darkMode={darkMode}>
-                        <SectionHeader fontSize={fontSize} darkMode={darkMode}>
-                            <TabMenu fontSize={fontSize} darkMode={darkMode}
+                        <SectionHeader style={{
+        display: 'flex',
+
+        width: '100%'
+    }} fontSize={fontSize} darkMode={darkMode}>
+                            <TabMenu style={{
+        display: 'flex',
+
+        width: '100%'
+    }} fontSize={fontSize} darkMode={darkMode}
                                 tabs={[
-                                    "Progress Reports",
-                                    "Student Logs",
+
                                     "Shared With Me",
                                     "My Files",
                                 ]}

@@ -24,7 +24,7 @@ class StudentDeclinedInterview extends Mailable
      * @param $studentName
      * @param $employerName
      * @param $jobTitle
-     * 
+     *
      */
     public function __construct($studentName, $employerName, $jobTitle)
     {
@@ -102,7 +102,7 @@ class StudentDeclinedInterview extends Mailable
                                     <p>Dear ' . e($this->employerName) . ',</p>
                                     <p>The student <strong>' . e($this->studentName) . '</strong> has declined your interview request for the position <strong>' . e($this->jobTitle) . '</strong>.</p>
 
-                                    <p>Please consider other candidates or reach out to the student on COOP Connect for further inquiries.</p>
+                                    <p>Please consider other candidates or reach out to the student on the platform for further inquiries.</p>
                                 </div>
                                 <div class="footer">
                                     <p>If you have any questions, feel free to reach out to our support team.</p>

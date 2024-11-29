@@ -3,6 +3,8 @@ import styled, { keyframes } from "styled-components";
 import { useDropzone } from 'react-dropzone';
 import { spin, ProfileWrapper, ProfileHeader, ProfileSection, ProfileContainer, ProfileImageWrapper, ProfileImage, ProfileBio, BioHeader, ProfileDetail, ProfileDetailItem, DetailLabel, DetailValue, EditProfileButton, ClearProfileButton, DropzoneContainer, SkillsContainer, SkillChip, AddSkillButton, LoadingScreen, Spinner, AutocompleteList, AutocompleteItem, BioValue, ProfileDetailOne, ProfileDetailTwo, StatusRadioButton, StatusContainer, StatusLabel } from "../Styling/ProfileForm.styles";
 import { useSelector, useDispatch } from "react-redux";
+import { usePrompt } from "@/Hooks/usePrompt";
+import { useBeforeUnload } from "@/Hooks/useBeforeUnload";
 import {
 
     selectUserStatus,
@@ -41,7 +43,15 @@ const ProfileForm = ({fontSize, darkMode}) => {
         working: false,
     });
 
-console.log(user)
+    const [isDirty, setIsDirty] = useState(false);
+
+
+    usePrompt("You have unsaved changes. Do you really want to leave?", isDirty);
+    useBeforeUnload(isDirty);
+
+    const handleInputChange = (e) => {
+      setIsDirty(true); // Mark as dirty when any input changes
+    };
 
 
 const handleStatusChange = (e) => {
@@ -176,6 +186,7 @@ const handleStatusChange = (e) => {
           setFilteredCourses([]);
         }
       }
+      setIsDirty(true);
     };
 
     const handleSchoolSelect = (school) => {
@@ -188,56 +199,68 @@ const handleStatusChange = (e) => {
     };
 
     const handleSubmit = async () => {
-      try {
-        const formData = new FormData();
+        try {
+          const formData = new FormData();
 
-        if (droppedImage instanceof File) {
-          formData.append("profile_image", droppedImage);
-        } else if (typeof droppedImage === "string") {
-          const response = await fetch(droppedImage);
-          const blob = await response.blob();
-          formData.append("profile_image", blob, "profile_image.png");
-        }
-
-        formData.append("description", user.description);
-        formData.append("name", user.name);
-        formData.append("email", user.email);
-        formData.append("role", user.role);
-        formData.append("school_id", user.school_id);
-        formData.append("positiontitle", user.positiontitle);
-        formData.append("skills", JSON.stringify(user.skills));
-        formData.append("searching", user.searching);
-        formData.append("interviewing", user.interviewing);
-        formData.append("working", user.working);
-        formData.append("pronouns", user.pronouns);
-
-        const coursesData = user.courses.map((course) => ({
-          id: course.id,
-          name: course.name,
-          startDate: course.startDate,
-          endDate: course.endDate,
-          teacherID: course.teacherID,
-          schoolID: course.schoolID,
-        }));
-        formData.append("courses", JSON.stringify(coursesData));
-
-        const response = await axios.post(
-          `${appUrl}/api/update-profile/${user.id}`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
+          if (droppedImage instanceof File) {
+            formData.append("profile_image", droppedImage);
+          } else if (typeof droppedImage === "string") {
+            const response = await fetch(droppedImage);
+            const blob = await response.blob();
+            formData.append("profile_image", blob, "profile_image.png");
           }
-        );
 
+          formData.append("description", user.description);
+          formData.append("name", user.name);
+          formData.append("email", user.email);
+          formData.append("role", user.role);
+          formData.append("school_id", user.school_id);
+          formData.append("positiontitle", user.positiontitle);
+          formData.append("skills", JSON.stringify(user.skills));
+          formData.append("searching", user.searching);
+          formData.append("interviewing", user.interviewing);
+          formData.append("working", user.working);
+          formData.append("pronouns", user.pronouns);
 
-        window.location.reload(); // Reload page or handle state update as needed
-      } catch (error) {
-        console.error("Error updating profile:", error);
-      }
-    };
+          const coursesData = user.courses.map((course) => ({
+            id: course.id,
+            name: course.name,
+            startDate: course.startDate,
+            endDate: course.endDate,
+            teacherID: course.teacherID,
+            schoolID: course.schoolID,
+          }));
+          formData.append("courses", JSON.stringify(coursesData));
+
+          // Make the API request to save the profile
+          const response = await axios.post(
+            `${appUrl}/api/update-profile/${user.id}`,
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+            }
+          );
+
+          // Re-fetch the updated user data
+          const updatedUserResponse = await axios.get(`${appUrl}/api/user-id/courses`);
+          const updatedUserData = updatedUserResponse.data.user;
+
+          // Update the user state
+          setUser(updatedUserData);
+
+          // Reset the dirty state
+          setIsDirty(false);
+
+          // Optional: Show success message
+          
+        } catch (error) {
+          console.error("Error updating profile:", error);
+          alert("Failed to update profile. Please try again.");
+        }
+      };
 
     const handleClear = () => {
       setUser({ ...user, profile_image: null });
@@ -327,13 +350,8 @@ const handleStatusChange = (e) => {
             />
           </ProfileDetailItem>
           <ProfileDetailItem fontSize={fontSize} darkMode={darkMode}>
-            <DetailLabel fontSize={fontSize} darkMode={darkMode}>Account Type</DetailLabel>
-            <DetailValue fontSize={fontSize} darkMode={darkMode}
-              type="text"
-              name="role"
-              value={user.role}
-              onChange={handleChange}
-            />
+
+
           </ProfileDetailItem>
           <ProfileDetailItem fontSize={fontSize} darkMode={darkMode}>
           <DetailLabel fontSize={fontSize} darkMode={darkMode}>Education Institute</DetailLabel>
@@ -354,13 +372,13 @@ const handleStatusChange = (e) => {
           )}
         </ProfileDetailItem>
         <ProfileDetailItem fontSize={fontSize} darkMode={darkMode}>
-          <DetailLabel fontSize={fontSize} darkMode={darkMode}>Preferred Position Title</DetailLabel>
+          {/* <DetailLabel fontSize={fontSize} darkMode={darkMode}>Preferred Position Title</DetailLabel>
           <DetailValue fontSize={fontSize} darkMode={darkMode}
             type="text"
             name="positiontitle"
             value={user.positiontitle}
             onChange={handleChange}
-          />
+          /> */}
         </ProfileDetailItem>
         <ProfileDetailItem fontSize={fontSize} darkMode={darkMode}>
           <DetailLabel fontSize={fontSize} darkMode={darkMode}>Pronouns</DetailLabel>
@@ -370,7 +388,41 @@ const handleStatusChange = (e) => {
             value={user.pronouns}
             onChange={handleChange}
           />
-        </ProfileDetailItem></ProfileDetailOne>
+        </ProfileDetailItem>
+        <ProfileDetailItem fontSize={fontSize} darkMode={darkMode}>
+                        <DetailLabel fontSize={fontSize} darkMode={darkMode}>
+                            Current Status
+                        </DetailLabel>
+                        <StatusContainer fontSize={fontSize}>
+                            <StatusLabel fontSize={fontSize} darkMode={darkMode}>
+                                <StatusRadioButton
+                                    name="searching"
+                                    checked={status.searching}
+                                    onChange={handleStatusChange}
+                                    darkMode={darkMode}
+                                />
+                                Searching
+                            </StatusLabel>
+                            <StatusLabel fontSize={fontSize} darkMode={darkMode}>
+                                <StatusRadioButton
+                                    name="interviewing"
+                                    checked={status.interviewing}
+                                    onChange={handleStatusChange}
+                                    darkMode={darkMode}
+                                />
+                                Interviewing
+                            </StatusLabel>
+                            <StatusLabel fontSize={fontSize} darkMode={darkMode}>
+                                <StatusRadioButton
+                                    name="working"
+                                    checked={status.working}
+                                    onChange={handleStatusChange}
+                                    darkMode={darkMode}
+                                />
+                                Working
+                            </StatusLabel>
+                        </StatusContainer>
+                    </ProfileDetailItem></ProfileDetailOne>
         <ProfileDetailTwo>
 
         <ProfileDetailItem fontSize={fontSize} darkMode={darkMode}>
@@ -436,40 +488,7 @@ const handleStatusChange = (e) => {
 
           </SkillsContainer>
         </ProfileDetailItem>
-        <ProfileDetailItem fontSize={fontSize} darkMode={darkMode}>
-                        <DetailLabel fontSize={fontSize} darkMode={darkMode}>
-                            Current Status
-                        </DetailLabel>
-                        <StatusContainer fontSize={fontSize}>
-                            <StatusLabel fontSize={fontSize} darkMode={darkMode}>
-                                <StatusRadioButton
-                                    name="searching"
-                                    checked={status.searching}
-                                    onChange={handleStatusChange}
-                                    darkMode={darkMode}
-                                />
-                                Searching
-                            </StatusLabel>
-                            <StatusLabel fontSize={fontSize} darkMode={darkMode}>
-                                <StatusRadioButton
-                                    name="interviewing"
-                                    checked={status.interviewing}
-                                    onChange={handleStatusChange}
-                                    darkMode={darkMode}
-                                />
-                                Interviewing
-                            </StatusLabel>
-                            <StatusLabel fontSize={fontSize} darkMode={darkMode}>
-                                <StatusRadioButton
-                                    name="working"
-                                    checked={status.working}
-                                    onChange={handleStatusChange}
-                                    darkMode={darkMode}
-                                />
-                                Working
-                            </StatusLabel>
-                        </StatusContainer>
-                    </ProfileDetailItem>
+
         </ProfileDetailTwo>
       </ProfileDetail>
       <EditProfileButton fontSize={fontSize} darkMode={darkMode} onClick={handleSubmit}>Save Profile Changes</EditProfileButton>

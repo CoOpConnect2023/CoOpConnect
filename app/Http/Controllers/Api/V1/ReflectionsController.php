@@ -11,6 +11,7 @@ use App\Http\Resources\V1\ReflectionsCollection;
 use Illuminate\Http\Request;
 use App\Filters\V1\ReflectionsFilter;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ReflectionsController extends Controller
 {
@@ -65,4 +66,33 @@ class ReflectionsController extends Controller
     {
         $reflection->delete();
     }
+
+    public function getReflectionsBySchool(Request $request)
+{
+    try {
+        // Get the authenticated user's school_id
+        $schoolId = auth()->user()->school_id;
+
+        // Fetch reflections for all users in the same school
+        $reflections = Reflections::whereHas('user', function ($query) use ($schoolId) {
+            $query->where('school_id', $schoolId); // Filter by school_id, not user_id
+        })->with('user') // Eager load user data
+          ->orderBy('created_at', 'desc') // Sort by created_at
+          ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $reflections,
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to fetch reflections.',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+
+
+
 }

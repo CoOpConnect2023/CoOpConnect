@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import NavBar from './Components/NavBar';
-import { Container, Title, ReflectionItem, ReflectionInfo, ReflectionTitle, ReflectionSize, ButtonGroup, ViewButton, ShareButton, DeleteButton, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, CloseButton } from './Styling/MyReflections.styles';
-import { getMyReflections, selectMyReflections, deleteReflection } from '@/Features/reflections/reflectionsSlice';
+import { Container, Title, ReflectionItem, ReflectionInfo, ReflectionTitle, ReflectionSize, ButtonGroup, ViewButton, ShareButton, DeleteButton, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, CloseButton } from '../Student/Styling/MyReflections.styles';
+import { getMyReflections, getSchoolReflections, selectMyReflections, selectReflections, deleteReflection } from '@/Features/reflections/reflectionsSlice';
 
 
 
@@ -13,16 +13,16 @@ const Reflections = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
     const dispatch = useDispatch();
-    const reflections = useSelector(selectMyReflections);
+    const reflections = useSelector(selectReflections);
     const darkMode = useSelector(state => state.accessibility.darkMode);
     const fontSize = useSelector(state => state.accessibility.textSize);
 
     useEffect(() => {
-        dispatch(getMyReflections());
+        dispatch(getSchoolReflections());
 
     }, [dispatch]);
 
-
+console.log(reflections)
 
     const handleDelete = async (id) => {
         try {
@@ -30,7 +30,7 @@ const Reflections = () => {
             await dispatch(deleteReflection({ reflectionId: id })).unwrap();
 
             // Fetch updated reflections
-            await dispatch(getMyReflections());
+            await dispatch(getSchoolReflections());
             setIsConfirmDeleteOpen(null)
         } catch (error) {
             console.error('Error deleting reflection:', error);
@@ -82,8 +82,8 @@ const Reflections = () => {
                             </ReflectionInfo>
                             <ButtonGroup darkMode={darkMode} fontSize={fontSize}>
                                 <ViewButton darkMode={darkMode} fontSize={fontSize} onClick={() => openModal(reflection)}>View</ViewButton>
-                                <ShareButton darkMode={darkMode} fontSize={fontSize}>Share</ShareButton>
-                                <DeleteButton darkMode={darkMode} fontSize={fontSize} onClick={() => openConfirmDeleteModal(reflection)}>Delete</DeleteButton>
+                                {/* <ShareButton darkMode={darkMode} fontSize={fontSize}>Share</ShareButton>
+                                <DeleteButton darkMode={darkMode} fontSize={fontSize} onClick={() => openConfirmDeleteModal(reflection)}>Delete</DeleteButton> */}
                             </ButtonGroup>
                         </ReflectionItem>
                     ))
@@ -94,7 +94,7 @@ const Reflections = () => {
                         <ModalContent darkMode={darkMode} fontSize={fontSize}>
                             <ModalHeader darkMode={darkMode} fontSize={fontSize}>
                                 <h2>Confirm Delete</h2>
-                               
+
                             </ModalHeader>
                             <ModalBody darkMode={darkMode} fontSize={fontSize}>
                                 <p>Are you sure you want to delete Reflection #{selectedReflection?.id}?</p>

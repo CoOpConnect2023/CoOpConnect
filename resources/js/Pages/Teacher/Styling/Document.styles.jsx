@@ -106,7 +106,7 @@ export const TabList = styled.nav`
     font-weight: 500;
     color: ${({ darkMode }) => (darkMode ? "#E0E0E0" : "#334155")};
     transition: border-color 0.3s, color 0.3s;
-
+width: 100%;
 
     @media (max-width: 991px) {
         flex-wrap: wrap;

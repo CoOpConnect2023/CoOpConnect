@@ -30,8 +30,8 @@ class UpdateInterviewsRequest extends FormRequest
                 'end_date' => ['required', 'date'],
                 'status' => ['required', Rule::in(['scheduled', 'completed', 'canceled'])],
                 'description' => ['required'],
-                'interviewee_id' => ['required', 'exists:users,id'],
-                'interviewer_id' => ['required', 'exists:users,id'],
+                'interviewee_id' => ['nullable'],
+                'interviewer_id' => ['nullable'],
                 'proposed_time' => ['nullable', 'date'],
             ];
         } else {

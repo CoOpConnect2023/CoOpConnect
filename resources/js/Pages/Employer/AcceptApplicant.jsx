@@ -46,14 +46,14 @@ const AcceptApplicant = () => {
     const dispatch = useDispatch();
     const applicants = useSelector(selectApplicants);
     const jobs = useSelector(selectJobs);
-    const allUserJobs = useSelector(selectAllUserJobs)
+    const allUserJobs = useSelector(selectAllUserJobs);
     const applicant = useSelector(selectApplicant);
     const userJob = useSelector(selectUserJob);
     const data = useSelector(selectInterviews);
 
     const { props } = usePage();
     const { applicantId } = props;
-    console.log(userJob)
+  
 
     useEffect(() => {
         dispatch(getSingleUserDetails({ userJobsId: applicantId }));
@@ -72,8 +72,7 @@ const AcceptApplicant = () => {
         if (jobs && jobs.length > 0) {
             const jobIds = jobs.map((job) => job.id);
 
-            // Log jobIds to the console
-            console.log("Extracted Job IDs:", jobIds);
+
 
             // Dispatch action with jobIds
             dispatch(getAllJobsForEmployer({ jobIds }));
@@ -88,63 +87,73 @@ const AcceptApplicant = () => {
 
 
 
-    console.log(jobs, allUserJobs, data)
+
 
     const availableTimeSlots = allUserJobs
-    .filter((item) => Array.isArray(item.time_slots) && item.time_slots.length > 0 && item.status !== "Rejected")
-    .flatMap((item) => item.time_slots); // Flatten directly here
-
-// Create events for the calendar based on the time slots
-const events = [
-    // Process time slots from allUserJobs
-    ...allUserJobs
         .filter((item) => Array.isArray(item.time_slots) && item.time_slots.length > 0 && item.status !== "Rejected")
-        .flatMap((item) =>
-            item.time_slots.map((slot) => {
-                const start = new Date(slot);
+        .flatMap((item) => item.time_slots); // Flatten directly here
+
+    // Create events for the calendar based on the time slots
+    const events = [
+        // Process time slots from allUserJobs
+        ...allUserJobs
+            .filter((item) => Array.isArray(item.time_slots) && item.time_slots.length > 0 && item.status !== "Rejected")
+            .flatMap((item) =>
+                item.time_slots.map((slot) => {
+                    const start = new Date(slot);
+                    if (isNaN(start)) {
+                        console.warn(`Invalid date encountered: ${slot}`);
+                        return null; // Skip invalid dates
+                    }
+                    const end = new Date(start.getTime() + 60 * 60 * 1000); // 1-hour duration
+
+                    // Set the title based on the job status and format the date
+                    const statusText = item.status === "Pending" ? "Pending Confirmation" : "Interview Booked";
+                    const formattedDate = moment(start).format("hh:mm A, MMM Do YYYY");
+
+                    return {
+                        id: `${item.id}-${slot}`, // Unique ID based on job ID and time slot
+                        title: `${statusText} - ${formattedDate}`,
+                        start,
+                        end,
+                    };
+                })
+            )
+            .filter(event => event !== null), // Remove any null events caused by invalid dates
+
+        // Process startDate from data.interviews
+        ...data.interviews
+            .map((interview) => {
+                const start = new Date(interview.startDate);
                 if (isNaN(start)) {
-                    console.warn(`Invalid date encountered: ${slot}`);
+                    console.warn(`Invalid interview startDate encountered: ${interview.startDate}`);
                     return null; // Skip invalid dates
                 }
                 const end = new Date(start.getTime() + 60 * 60 * 1000); // 1-hour duration
 
-                // Set the title based on the job status and format the date
-                const statusText = item.status === "Pending" ? "Pending Confirmation" : "Interview Booked";
+                // Create a formatted title for the interview start date
                 const formattedDate = moment(start).format("hh:mm A, MMM Do YYYY");
-
                 return {
-                    id: `${item.id}-${slot}`, // Unique ID based on job ID and time slot
-                    title: `${statusText} - ${formattedDate}`,
+                    id: `interview-${interview.startDate}`, // Unique ID based on the interview date
+                    title: `Interview Scheduled - ${formattedDate}`,
                     start,
                     end,
                 };
             })
-        )
-        .filter(event => event !== null), // Remove any null events caused by invalid dates
+            .filter(event => event !== null) // Remove any null events caused by invalid dates
+    ];
 
-    // Process startDate from data.interviews
-    ...data.interviews
-        .map((interview) => {
-            const start = new Date(interview.startDate);
-            if (isNaN(start)) {
-                console.warn(`Invalid interview startDate encountered: ${interview.startDate}`);
-                return null; // Skip invalid dates
-            }
-            const end = new Date(start.getTime() + 60 * 60 * 1000); // 1-hour duration
 
-            // Create a formatted title for the interview start date
-            const formattedDate = moment(start).format("hh:mm A, MMM Do YYYY");
-            return {
-                id: `interview-${interview.startDate}`, // Unique ID based on the interview date
-                title: `Interview Scheduled - ${formattedDate}`,
-                start,
-                end,
-            };
-        })
-        .filter(event => event !== null) // Remove any null events caused by invalid dates
-];
 
-console.log("Extracted Events:", events);
+
+    const handleDateChange = (index, value) => {
+        const today = new Date();
+        if (new Date(value) < today) {
+            alert("You cannot select a date before today.");
+            return;
+        }
+        handleTimeSlotChange(index, value);
+    };
 
     const handleTimeSlotChange = (index, value) => {
         const newTimeSlots = [...timeSlots];
@@ -268,13 +277,13 @@ console.log("Extracted Events:", events);
                                 darkMode={darkMode}
                                 fontSize={fontSize}
                                 value={slot}
-                                onChange={(value) =>
-                                    handleTimeSlotChange(index, value)
-                                }
+                                onChange={(value) => handleDateChange(index, value)}
                                 inputProps={{
                                     placeholder: "Select a time slot",
                                 }}
+                                minDate={new Date()} // Prevent selecting dates before today
                             />
+
                             <RemoveButton
                                 darkMode={darkMode}
                                 fontSize={fontSize}
@@ -285,24 +294,24 @@ console.log("Extracted Events:", events);
                             </RemoveButton>
                         </FormGroup>
                     ))}
-                     <ButtonContainer>
-                    <Button
-                        darkMode={darkMode}
-                        fontSize={fontSize}
-                        type="button"
-                        color="blue"
-                        onClick={addTimeSlot}
-                    >
-                        Add Time Slot
-                    </Button>
-                    <Button
-                        darkMode={darkMode}
-                        fontSize={fontSize}
-                        type="submit"
-                        color="green"
-                    >
-                        Send Details
-                    </Button>
+                    <ButtonContainer>
+                        <Button
+                            darkMode={darkMode}
+                            fontSize={fontSize}
+                            type="button"
+                            color="blue"
+                            onClick={addTimeSlot}
+                        >
+                            Add Time Slot
+                        </Button>
+                        <Button
+                            darkMode={darkMode}
+                            fontSize={fontSize}
+                            type="submit"
+                            color="green"
+                        >
+                            Send Details
+                        </Button>
                     </ButtonContainer>
                     {/* Calendar Section */}
                     <Wrapper darkMode={darkMode} fontSize={fontSize}>
@@ -525,7 +534,7 @@ export const ButtonContainer = styled.div`
 display: flex;
 flex-direction: row;
 justify-content: space-between;
-`
+`;
 export const RemoveButton = styled(Button)`
     background-color: #e53e3e;
 

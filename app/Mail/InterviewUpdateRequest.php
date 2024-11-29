@@ -156,7 +156,7 @@ class InterviewUpdateRequest extends Mailable
                                     <a href="' . config('app.url') . '" class="button">View Interview Details</a>
                                 </div>
                                 <div class="footer">
-                                    <p>&copy; ' . date('Y') . ' COOP CONNECT. All rights reserved.</p>
+                                    <p>&copy; ' . date('Y') . ' CoopConnect. All rights reserved.</p>
                                 </div>
                             </div>
                         </body>

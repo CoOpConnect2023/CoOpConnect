@@ -80,6 +80,18 @@ const DropdownItem = styled.div`
   }
 `;
 
+const TableHeader = styled.th`
+  cursor: pointer;
+  position: relative;
+  text-align: left;
+
+  &::after {
+    content: '${({ sortDirection }) => (sortDirection === 'asc' ? '▲' : sortDirection === 'desc' ? '▼' : '')}';
+    position: absolute;
+    right: 10px;
+  }
+`;
+
 function HiredStudentsPage() {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
@@ -96,6 +108,7 @@ function HiredStudentsPage() {
   const [emailSuggestions, setEmailSuggestions] = useState([]);
   const [showJobSuggestions, setShowJobSuggestions] = useState(false);
   const [showEmailSuggestions, setShowEmailSuggestions] = useState(false);
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const [newStudent, setNewStudent] = useState({
     name: '',
     email: '',
@@ -105,6 +118,7 @@ function HiredStudentsPage() {
     endDate: ''
   });
   const [selectedStudent, setSelectedStudent] = useState(null);
+  const [originalStudentData, setOriginalStudentData] = useState({});
 
   const statusOptions = ['Hired', 'Pending', 'Interviewing', 'Rejected'];
 
@@ -199,9 +213,15 @@ function HiredStudentsPage() {
   };
 
   const handleEditClick = (id) => {
+    const studentToEdit = hiredStudentsState.find(s => s.id === id);
     setEditStudentId(id);
-  };
 
+    // Store a backup of the original data
+    setOriginalStudentData({
+      ...originalStudentData,
+      [id]: { ...studentToEdit }, // Save original student data for the given ID
+    });
+  };
   const handleDeleteStudent = async (id) => {
     try {
       await dispatch(deleteUserJob({userJobId:id})).unwrap();
@@ -259,7 +279,38 @@ function HiredStudentsPage() {
     setSelectedStudent(null); // Close the modal
   };
 
-  console.log(hiredStudentsState)
+
+
+  const handleCancelClick = (id) => {
+    // Revert the changes by replacing the edited data with the original
+    const originalData = originalStudentData[id];
+    setHiredStudentsState(prevState =>
+      prevState.map(student => (student.id === id ? originalData : student))
+    );
+
+    setEditStudentId(null); // Exit edit mode
+  };
+
+  const handleSort = (key) => {
+    let direction = "asc";
+    if (sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc";
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortedStudents = React.useMemo(() => {
+    if (!sortConfig.key) return hiredStudentsState;
+    return [...hiredStudentsState].sort((a, b) => {
+      const aValue = sortConfig.key.split(".").reduce((obj, keyPart) => obj[keyPart], a);
+      const bValue = sortConfig.key.split(".").reduce((obj, keyPart) => obj[keyPart], b);
+
+      if (aValue < bValue) return sortConfig.direction === "asc" ? -1 : 1;
+      if (aValue > bValue) return sortConfig.direction === "asc" ? 1 : -1;
+      return 0;
+    });
+  }, [hiredStudentsState, sortConfig]);
+
 
   return (
     <NavBar header={"Hired Students"}>
@@ -277,9 +328,24 @@ function HiredStudentsPage() {
               <StyledTable fontSize={fontSize} darkMode={darkMode}>
                 <thead>
                   <tr>
-                    <th>Student ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
+                  <TableHeader
+            onClick={() => handleSort("user_id")}
+            sortDirection={sortConfig.key === "user_id" ? sortConfig.direction : null}
+          >
+            Student ID
+          </TableHeader>
+          <TableHeader
+            onClick={() => handleSort("user.name")}
+            sortDirection={sortConfig.key === "user.name" ? sortConfig.direction : null}
+          >
+            Name
+          </TableHeader>
+          <TableHeader
+            onClick={() => handleSort("user.email")}
+            sortDirection={sortConfig.key === "user.email" ? sortConfig.direction : null}
+          >
+            Email
+          </TableHeader>
                     <th>Company</th>
                     <th>Position</th>
                     <th>Start Date</th>
@@ -292,7 +358,7 @@ function HiredStudentsPage() {
                 </thead>
                 <tbody>
                   {hiredStudentsState.length > 0 ? (
-                    hiredStudentsState.map((student, index) => (
+                    sortedStudents.map((student, index) => (
                       <tr key={index}>
                         <td>{student.user_id}</td>
                         <td>{student.user.name}</td>
@@ -394,9 +460,9 @@ function HiredStudentsPage() {
                         </td>
                         <td>
                           {editStudentId === student.id ? (
-                            <LargeButton onClick={() => setEditStudentId(null)}>
-                              Cancel
-                            </LargeButton>
+                            <LargeButton onClick={() => handleCancelClick(student.id)}>
+                            Cancel
+                          </LargeButton>
                           ) : (
                             <RedButton onClick={() => handleDeleteStudent(student.id)}>
                               Delete

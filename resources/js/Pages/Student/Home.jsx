@@ -41,7 +41,7 @@ function Home() {
     const darkMode = useSelector(state => state.accessibility.darkMode);
     const fontSize = useSelector(state => state.accessibility.textSize);
 
-    console.log(jobs)
+
 
     useEffect(() => {
         dispatch(
@@ -80,11 +80,9 @@ function Home() {
             <MainContainer darkMode={darkMode} fontSize={fontSize} >
                 <SearchSection darkMode={darkMode} fontSize={fontSize}>
                     <SearchTitle darkMode={darkMode} fontSize={fontSize}>Search for Job Postings</SearchTitle>
-                    <Tagline darkMode={darkMode} fontSize={fontSize}>
-                        Get amazing through jobs at CO-OP Connect!
-                    </Tagline>
+
                     <Description darkMode={darkMode} fontSize={fontSize}>
-                        To search for new opportunities, access View Jobs below. To view and apply to recommended jobs based on your profile skills, click view posting on any corresponding job below.
+                        To search for new opportunities, select View Jobs below.
                     </Description>
                     <Link darkMode={darkMode} fontSize={fontSize} href="/student/jobs">
                         <Button darkMode={darkMode} fontSize={fontSize}>View Jobs</Button>

@@ -29,10 +29,10 @@ const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
           <StyledTable darkMode={darkMode} fontSize={fontSize}>
             <thead>
               <tr>
-                <th>Student</th>
-                <th>Classroom</th>
-                <th style={{ textAlign: "center" }}>Email</th>
-                <th style={{ textAlign: "center" }}>Student ID</th>
+                <th style={{ textAlign: "left" }}>Student</th>
+                <th style={{ textAlign: "left" }}>Classroom</th>
+                <th style={{ textAlign: "left" }}>Email</th>
+                <th style={{ textAlign: "left" }}>Student ID</th>
                 <th></th>
               </tr>
             </thead>
@@ -60,8 +60,8 @@ const calculateFontSize = (basePixelSize, emValue, factor = 1.5) => {
         .join(', ') + (student.courses.length > 2 ? ', ...' : '') // Add "..." if there are more than two
     : 'No courses'}
 </CourseList>
-                  <td style={{ textAlign: "center" }}>{student.email}</td>
-                  <td style={{ textAlign: "center" }}>{student.id}</td>
+                  <td style={{ textAlign: "left" }}>{student.email}</td>
+                  <td style={{ textAlign: "left" }}>{student.id}</td>
                   <td>
                     <Link href="/teacher/students">
                       <StudentViewButton darkMode={darkMode} fontSize={fontSize}>
@@ -107,6 +107,7 @@ export const SectionTitle = styled.h1`
   font: 500 ${({ fontSize }) => calculateFontSize(24, fontSize)} Poppins, sans-serif;
   transition: color 0.3s;
   margin-bottom: 20px;
+    text-align: left;
 
   @media (max-width: 768px) {
     font-size: ${({ fontSize }) => calculateFontSize(20, fontSize)};
@@ -128,9 +129,8 @@ export const TableContainer = styled.div`
 
 export const StyledTable = styled.table`
   width: 100%; /* Ensure the table takes up full width */
-
   border-collapse: collapse;
-  text-align: left;
+  text-align: left; /* Set default alignment to left */
   border-radius: 10px;
   border: 1px solid ${({ darkMode }) => (darkMode ? "#555555" : "#e2e8f0")};
   background: ${({ darkMode }) => (darkMode ? "#3C3C3C" : "#fff")};
@@ -140,6 +140,7 @@ export const StyledTable = styled.table`
   th, td {
     padding: 12px;
     font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
+    text-align: left; /* Ensure left alignment in both headers and cells */
   }
 
   th {
@@ -153,7 +154,7 @@ export const StyledTable = styled.table`
     th, td {
       padding: 8px;
       font-size: ${({ fontSize }) => calculateFontSize(12, fontSize)};
-
+      text-align: left; /* Maintain left alignment on smaller screens */
     }
   }
 `;

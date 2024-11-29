@@ -114,6 +114,7 @@ export const ProfileBio = styled.div`
     display: flex;
     flex-direction: column;
     width: 100%;
+    gap: 10px;
 
 `;
 
@@ -125,7 +126,7 @@ export const BioValue = styled.input`
     font-size: ${({ fontSize }) => calculateFontSize(16, fontSize, 1.5, 'rem')};
     font-family: Poppins, sans-serif;
     height: 100%;
-    width: 80%;
+    width: 95%;
     align-self: center;
 `;
 

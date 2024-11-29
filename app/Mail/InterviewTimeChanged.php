@@ -131,7 +131,7 @@ class InterviewTimeChanged extends Mailable
                                     <a href="' . config('app.url') . '" style="display: inline-block; padding: 10px 20px; margin-top: 20px; font-size: 16px; color: #ffffff; background-color: #6E3AA7; border-radius: 5px; text-align: center; text-decoration: none;">View Interview Details</a>
                                 </div>
                                 <div class="footer">
-                                    <p>&copy; ' . date('Y') . ' COOP CONNECT. All rights reserved.</p>
+                                    <p>&copy; ' . date('Y') . ' CoopConnect. All rights reserved.</p>
                                 </div>
                             </div>
                         </body>

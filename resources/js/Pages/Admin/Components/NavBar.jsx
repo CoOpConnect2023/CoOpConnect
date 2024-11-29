@@ -128,7 +128,7 @@ function Sidebar() {
             <Icon fontSize={fontSize} darkMode={darkMode} src={calendar} alt="" loading="lazy" />
           </IconButton>
         </Link>
-        <Link fontSize={fontSize} darkMode={darkMode} href="/teacher/profile">
+        {/* <Link fontSize={fontSize} darkMode={darkMode} href="/teacher/profile">
           <IconButton fontSize={fontSize} darkMode={darkMode}>
             <Icon fontSize={fontSize} darkMode={darkMode} src={user} alt="" loading="lazy" />
           </IconButton>
@@ -137,7 +137,7 @@ function Sidebar() {
           <IconButton fontSize={fontSize} darkMode={darkMode}>
             <Icon fontSize={fontSize} darkMode={darkMode} src={settings} alt="" loading="lazy" />
           </IconButton>
-        </Link>
+        </Link> */}
         <IconContainer fontSize={fontSize} darkMode={darkMode} data-test-id="map-link" onClick={toggleFooterVisibility}>
                     <FontAwesomeIcon fontSize={fontSize} darkMode={darkMode} icon={faMap} className="fa-icon" />
                 </IconContainer>

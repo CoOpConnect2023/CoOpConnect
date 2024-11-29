@@ -329,6 +329,15 @@ const Interviews = () => {
         };
     };
 
+    const formats = {
+        agendaHeaderFormat: ({ start, end }, culture, localizer) =>
+          `${localizer.format(start, 'MMMM DD, YYYY', culture)} – ${localizer.format(
+            end,
+            'MMMM DD, YYYY',
+            culture
+          )}`,
+      };
+
     return (
         <NavBar header={"Interviews"}>
            <GlobalStyles darkMode={darkMode} fontSize={fontSize} /> <MainContainer fontSize={fontSize} darkMode={darkMode}>
@@ -351,6 +360,7 @@ const Interviews = () => {
                                     startAccessor={"start"}
                                     endAccessor="end"
                                     eventPropGetter={eventStyleGetter}
+                                    formats={formats}
                                 />
                             </DndProvider>
                         </CalendarDiv>
@@ -365,11 +375,11 @@ const Interviews = () => {
                                     <div>Title: {event.title}</div>
                                     <div>Description: {event.description}</div>
                                     <div>
-                                        Start Date: {moment(event.start).format("YYYY-MM-DD HH:mm:ss")}
-                                    </div>
-                                    <div>
-                                        End Date: {moment(event.end).format("YYYY-MM-DD HH:mm:ss")}
-                                    </div>
+        Start Date: {moment(event.start).format("MMMM D, YYYY HH:mm")}
+    </div>
+    <div>
+        End Date: {moment(event.end).format("MMMM D, YYYY HH:mm")}
+    </div>
                                 </Event>
                             ))
                         ) : (

@@ -28,6 +28,7 @@ import {
     ActionButton,
      JobDates
 } from "./Styling/ViewPost.styles";
+
 import { useDispatch, useSelector } from "react-redux";
 import { usePage, Link } from "@inertiajs/react";
 
@@ -35,6 +36,8 @@ function ViewPost() {
     const { props } = usePage();
     const { jobId } = props;
     const questions = useSelector(selectQuestions);
+    const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+
     const darkMode = useSelector(state => state.accessibility.darkMode);
     const fontSize = useSelector(state => state.accessibility.textSize);
 
@@ -55,8 +58,17 @@ function ViewPost() {
     const [isModalOpen, setModalOpen] = useState(false);
     const [selectedResponses, setSelectedResponses] = useState([]);
 
-    const handleDelete = () => {
+    const openDeleteModal = () => {
+        setDeleteModalOpen(true);
+    };
+
+    const closeDeleteModal = () => {
+        setDeleteModalOpen(false);
+    };
+
+    const handleDeleteConfirm = () => {
         dispatch(deleteJob({ jobId: jobId }));
+        setDeleteModalOpen(false); // Close the modal after deletion
     };
 
     // Function to open modal and show responses
@@ -75,7 +87,7 @@ function ViewPost() {
         <NavBar header={"Job Postings"}>
             <MainContainer darkMode={darkMode} fontSize={fontSize}>
                 <Container darkMode={darkMode} fontSize={fontSize}>
-                    
+
                         <JobInfo darkMode={darkMode} fontSize={fontSize}>
                             <JobInfoLeft darkMode={darkMode} fontSize={fontSize}>
                                 <JobDetails darkMode={darkMode} fontSize={fontSize}>
@@ -93,19 +105,21 @@ function ViewPost() {
                             </JobInfoRight>
 
                             <QuestionsContainer>
+                            <JobTitle darkMode={darkMode} fontSize={fontSize}>Applicant Qualification Questions</JobTitle>
                                 {questions.map((question) => (
                                     <QuestionComponent darkMode={darkMode} fontSize={fontSize} key={question.id} question={question} openModal={openModal} />
                                 ))}
                             </QuestionsContainer>
 
                             <ActionButtons darkMode={darkMode} fontSize={fontSize}>
-                                <Link darkMode={darkMode} fontSize={fontSize} href={`/employer/viewapplicants/${jobId}`}>
-                                    <ActionButton darkMode={darkMode} fontSize={fontSize}>View Applicants</ActionButton>
-                                </Link>
-                                <Link darkMode={darkMode} fontSize={fontSize} href={`/employer/home`}>
-                                    <ActionButton darkMode={darkMode} fontSize={fontSize} onClick={handleDelete}>
+
+
+                                    <ActionButton darkMode={darkMode} fontSize={fontSize}  onClick={openDeleteModal}>
                                         Delete Job Posting
                                     </ActionButton>
+
+                                <Link darkMode={darkMode} fontSize={fontSize} href={`/employer/viewapplicants/${jobId}`}>
+                                    <ActionButton darkMode={darkMode} fontSize={fontSize}>View Applicants</ActionButton>
                                 </Link>
                             </ActionButtons>
                         </JobInfo>
@@ -130,6 +144,41 @@ function ViewPost() {
         </ModalContent>
     </Modal>
 )}
+
+{isDeleteModalOpen && (
+                <ModalOverlay darkMode={darkMode} onClick={closeDeleteModal}>
+                    <ModalContent
+                        darkMode={darkMode}
+                        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
+                    >
+                        <ModalHeader darkMode={darkMode} fontSize={fontSize}>
+                            Confirm Delete
+                            <CloseButton onClick={closeDeleteModal}>&times;</CloseButton>
+                        </ModalHeader>
+                        <ModalBody darkMode={darkMode} fontSize={fontSize}>
+                            Are you sure you want to delete this job posting? This action cannot be undone.
+                        </ModalBody>
+                        <ModalFooter darkMode={darkMode} fontSize={fontSize}>
+                            <ActionButton
+                                darkMode={darkMode}
+                                fontSize={fontSize}
+                                onClick={closeDeleteModal}
+                            >
+                                Cancel
+                            </ActionButton>
+                            <Link darkMode={darkMode} fontSize={fontSize} href={`/employer/home`}>
+                            <ActionButton
+                                darkMode={darkMode}
+                                fontSize={fontSize}
+                                onClick={handleDeleteConfirm}
+                                style={{ backgroundColor: "red" }}
+                            >
+                                Confirm
+                            </ActionButton></Link>
+                        </ModalFooter>
+                    </ModalContent>
+                </ModalOverlay>
+            )}
 
                 </Container>
             </MainContainer>
@@ -337,6 +386,61 @@ const NoDataText = styled.p`
     text-align: center; /* Center align the message */
 `;
 
+export const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999; /* Ensure the modal is above other elements */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+
+
+// Modal header
+export const ModalHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  font-size: ${({ fontSize }) => fontSize || "1.2em"};
+  font-weight: bold;
+`;
+
+// Modal body
+export const ModalBody = styled.div`
+  margin-bottom: 20px;
+  line-height: 1.5;
+`;
+
+// Modal footer
+export const ModalFooter = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+`;
+
+// Close button
+
+// Button for actions like cancel and confirm
+export const Button = styled.button`
+  background-color: ${({ color }) => color || "#6c757d"}; /* Default color */
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: ${({ fontSize }) => fontSize || "1em"};
+  flex: 1; /* Ensures equal button sizes in ModalFooter */
+
+  &:hover {
+    background-color: ${({ color }) => (color === "red" ? "#c0392b" : color === "green" ? "#27ae60" : "#5a6268")};
+  }
+`;
 
 
 

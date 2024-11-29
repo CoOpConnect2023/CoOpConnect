@@ -73,7 +73,7 @@ function StudentStatus({ fontSize, percentages }) {
             cy="50%" // Center the chart vertically
             labelLine={false}
             label={({ value }) => `${value}%`}
-            outerRadius="80%"
+            outerRadius="75%"
             fill="#8884d8"
             dataKey="value"
           >

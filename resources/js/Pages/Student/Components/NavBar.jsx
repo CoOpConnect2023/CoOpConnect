@@ -38,7 +38,9 @@ import {
     IconContainer,
     CloseButton,
     FontSizer,
-    NavContainerAbsolute
+    NavContainerAbsolute,
+    TooltipWrapper,
+    SitemapLink
 } from "../Styling/NavBar.styles";
 import logo from "@/Pages/Images/puzzle.svg";
 import briefcase from "@/Pages/Images/briefcase.svg";
@@ -55,7 +57,7 @@ import { useForm } from '@inertiajs/react';
 import settings from "@/Pages/Images/settings.svg";
 import { Link } from "@inertiajs/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBell, faMap, faTimes, faList, faSun, faMoon, faPlus, faMinus, faTextHeight, faChevronDown, faUserCheck } from "@fortawesome/free-solid-svg-icons";
+import { faBell, faMap, faTimes, faList, faSun, faMoon, faPlus, faMinus, faTextHeight, faChevronDown, faUserCheck, faFolder, faStickyNote } from "@fortawesome/free-solid-svg-icons";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleDarkMode, setTextSize, increaseFontSize, decreaseFontSize } from "@/Features/accessibility/accessibilitySlice";
 import { getMyNotifications, patchNotification } from "@/Features/notifications/notificationsSlice";
@@ -185,69 +187,138 @@ function Sidebar() {
   };
     return (
         <aside>
-             <NavContainerAbsolute fontSize={fontSize} darkMode={darkMode}>
-           <Link fontSize={fontSize} darkMode={darkMode} href="/" onClick={() => handleTabClick("/")}>
-          <Logo
-    fontSize={fontSize}
-    darkMode={darkMode}
-    src={darkMode ? whitelogo : logo}
-    alt="Logo"
-    loading="lazy"
-    active={activeTab === "/"}
-  />
-</Link>
+            <NavContainerAbsolute fontSize={fontSize} darkMode={darkMode}>
+
+                <Link fontSize={fontSize} darkMode={darkMode} href="/" onClick={() => handleTabClick("/")}>
+                    <TooltipWrapper>
+                        <Logo
+                            fontSize={fontSize}
+                            darkMode={darkMode}
+                            src={darkMode ? whitelogo : logo}
+                            alt="Logo"
+                            loading="lazy"
+                            active={activeTab === "/"}
+                        />
+                        <span className="tooltip-text">Home</span>
+                    </TooltipWrapper>
+                </Link>
+
                 <Divider fontSize={fontSize} darkMode={darkMode} />
+
                 <Link fontSize={fontSize} darkMode={darkMode} data-test-id="home-link" href="/student/home" onClick={() => handleTabClick("/student/home")}>
                     <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/student/home"}>
-                    <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitebriefcase : briefcase} alt="Icon 1" loading="lazy" />
+                        <TooltipWrapper>
+                            <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitebriefcase : briefcase} alt="Dashboard Icon" loading="lazy" />
+                            <span className="tooltip-text">Dashboard</span>
+                        </TooltipWrapper>
                     </IconButton>
                 </Link>
+
                 <Link fontSize={fontSize} darkMode={darkMode} data-test-id="viewapplications-link" href="/student/viewapplications" onClick={() => handleTabClick("/student/viewapplications")}>
                     <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/student/viewapplications"}>
-                    <FontAwesomeIcon
-  fontSize={fontSize}
-  icon={faList}
-  style={{
-    fontSize: '1.5rem',
-    color: darkMode ? 'white' : 'black'
-  }}
-/>
+                        <TooltipWrapper>
+                            <FontAwesomeIcon
+                                fontSize={fontSize}
+                                icon={faList}
+                                style={{ fontSize: '1.5rem', color: darkMode ? 'white' : 'black' }}
+                            />
+                            <span className="tooltip-text">View Applications</span>
+                        </TooltipWrapper>
                     </IconButton>
                 </Link>
+
                 <Link fontSize={fontSize} darkMode={darkMode} data-test-id="messages-link" href="/student/messages" onClick={() => handleTabClick("/student/messages")}>
                     <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/student/messages"}>
-                    <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitemessage : message} alt="" loading="lazy" />
+                        <TooltipWrapper>
+                            <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitemessage : message} alt="Messages Icon" loading="lazy" />
+                            <span className="tooltip-text">Messages</span>
+                        </TooltipWrapper>
                     </IconButton>
                 </Link>
+
                 <Link fontSize={fontSize} darkMode={darkMode} data-test-id="interviews-link" href="/student/interviews" onClick={() => handleTabClick("/student/interviews")}>
                     <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/student/interviews"}>
-                    <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitecalendar : calendar} alt="" loading="lazy" />
+                        <TooltipWrapper>
+                            <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitecalendar : calendar} alt="Interviews Icon" loading="lazy" />
+                            <span className="tooltip-text">Interviews</span>
+                        </TooltipWrapper>
                     </IconButton>
                 </Link>
-                <Link fontSize={fontSize} darkMode={darkMode} href="/student/profile" onClick={() => handleTabClick("/student/profile")} data-test-id="profile-link">
+
+                <Link theme={theme} fontSize={fontSize} darkMode={darkMode} data-test-id="documents-link" href="/student/documents" onClick={() => handleTabClick("/student/documents")}>
+                <IconButton theme={theme} fontSize={fontSize} darkMode={darkMode} active={activeTab === "/student/documents"}>
+                    <TooltipWrapper>
+                        <FontAwesomeIcon
+                            theme={theme}
+                            icon={faFolder}
+                            style={{ fontSize: `calc(${fontSize} + 0.6em)`, color: darkMode ? '#ffffff' : '#000000' }}
+                            alt="Documents Icon"
+                        />
+                        <span className="tooltip-text">Documents</span>
+                    </TooltipWrapper>
+                </IconButton>
+            </Link>
+
+            <Link theme={theme} fontSize={fontSize} darkMode={darkMode} data-test-id="reflections-link" href="/student/reflections" onClick={() => handleTabClick("/student/reflections")}>
+                <IconButton theme={theme} fontSize={fontSize} darkMode={darkMode} active={activeTab === "/student/reflections"}>
+                    <TooltipWrapper>
+                        <FontAwesomeIcon
+                            theme={theme}
+                            icon={faStickyNote}
+                            style={{ fontSize: `calc(${fontSize} + 0.6em)`, color: darkMode ? '#ffffff' : '#000000' }}
+                            alt="Reflections Icon"
+                        />
+                        <span className="tooltip-text">Reflections</span>
+                    </TooltipWrapper>
+                </IconButton>
+            </Link>
+
+
+                {/* <Link fontSize={fontSize} darkMode={darkMode} href="/student/profile" onClick={() => handleTabClick("/student/profile")} data-test-id="profile-link">
                     <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/student/profile"}>
-                    <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whiteuser : user} alt="" loading="lazy" />
+                        <TooltipWrapper>
+                            <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whiteuser : user} alt="Profile Icon" loading="lazy" />
+                            <span className="tooltip-text">Profile</span>
+                        </TooltipWrapper>
                     </IconButton>
                 </Link>
+
                 <Link fontSize={fontSize} darkMode={darkMode} data-test-id="settings-link" href="/student/settings" onClick={() => handleTabClick("/student/settings")}>
                     <IconButton fontSize={fontSize} darkMode={darkMode} active={activeTab === "/student/settings"}>
-                    <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitesettings : settings} alt="" loading="lazy" />
+                        <TooltipWrapper>
+                            <Icon fontSize={fontSize} darkMode={darkMode} src={darkMode ? whitesettings : settings} alt="Settings Icon" loading="lazy" />
+                            <span className="tooltip-text">Settings</span>
+                        </TooltipWrapper>
                     </IconButton>
-                </Link>
+                </Link> */}
 
-                <IconContainer fontSize={fontSize} darkMode={darkMode} data-test-id="map-link" onClick={toggleFooterVisibility}>
-                    <FontAwesomeIcon fontSize={fontSize} darkMode={darkMode} icon={faMap} className="fa-icon"  />
-                </IconContainer>
+                <TooltipWrapper style={{ marginTop: 'auto' }}>
+                    <IconContainer fontSize={fontSize} darkMode={darkMode} data-test-id="map-link" onClick={toggleFooterVisibility}>
+                        <FontAwesomeIcon fontSize={fontSize} icon={faMap} className="fa-icon" />
+                        <span className="tooltip-text">Sitemap</span>
+                    </IconContainer>
+                </TooltipWrapper>
             </NavContainerAbsolute>
-           <NavContainer fontSize={fontSize} darkMode={darkMode}>
 
-            </NavContainer>
+            <NavContainer fontSize={fontSize} darkMode={darkMode}></NavContainer>
+
             <Footer fontSize={fontSize} darkMode={darkMode} isVisible={footerVisible}>
-        <CloseButton fontSize={fontSize} darkMode={darkMode} onClick={closeFooter}>
-          <FontAwesomeIcon fontSize={fontSize} darkMode={darkMode} icon={faTimes} />
-        </CloseButton>
-        <p>HTML Sitemap: <a href="/">Home</a> | <a href="/about">About</a> | <a href="/student/home">Student Home</a> | <a href="/student/home">Student Home</a> | <a href="/student/messages">Student Messages</a> | <a href="/student/interviews">Student Schedule</a> | <a href="/student/profile">Student Profile</a> | <a href="/student/settings">Student Settings</a> | <a href="/student/documents">Student Documents</a> | <a href="/student/reflections">Student Reflections</a> | <a href="/student/viewapplications">Student Applications</a> </p>
-      </Footer>
+                <CloseButton fontSize={fontSize} darkMode={darkMode} onClick={closeFooter}>
+                    <FontAwesomeIcon fontSize={fontSize} icon={faTimes} />
+                </CloseButton>
+                <p>Sitemap:
+                    <SitemapLink href="/" darkMode={darkMode}>Home</SitemapLink> |
+                    <SitemapLink href="/about" darkMode={darkMode}>About</SitemapLink> |
+                    <SitemapLink href="/student/home" darkMode={darkMode}>Student Home</SitemapLink> |
+                    <SitemapLink href="/student/messages" darkMode={darkMode}>Student Messages</SitemapLink> |
+                    <SitemapLink href="/student/interviews" darkMode={darkMode}>Student Schedule</SitemapLink> |
+                    <SitemapLink href="/student/profile" darkMode={darkMode}>Student Profile</SitemapLink> |
+                    <SitemapLink href="/student/settings" darkMode={darkMode}>Student Settings</SitemapLink> |
+                    <SitemapLink href="/student/documents" darkMode={darkMode}>Student Documents</SitemapLink> |
+                    <SitemapLink href="/student/reflections" darkMode={darkMode}>Student Reflections</SitemapLink> |
+                    <SitemapLink href="/student/viewapplications" darkMode={darkMode}>Student Applications</SitemapLink>
+                </p>
+            </Footer>
         </aside>
     );
 }
@@ -339,7 +410,7 @@ const hasUnreadMessages =
             <HeaderContainer fontSize={fontSize} darkMode={darkMode}>
             {!isMobile && (
                     <Title fontSize={fontSize} darkMode={darkMode}>
-                        {possessiveName} {header}
+                         {header}
                     </Title>
                 )}
                 <UserProfile fontSize={fontSize} darkMode={darkMode}>
@@ -471,10 +542,8 @@ const FontToggler = () => {
                 aria-label="Decrease font size"
                 role="button"
             />
-            <FontAwesomeIcon
-                icon={faTextHeight}
-                aria-hidden="true" // Decorative, so it doesn’t need to be focusable
-            />
+          <>A</>
+          <>a</>
             <FontAwesomeIcon
                 onClick={increaseFont}
                 onKeyDown={(e) => handleKeyDown(e, increaseFont)}

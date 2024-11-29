@@ -68,7 +68,8 @@ export default function Chat({ userInfo,
                   ))}
                 </MessageContainer>
               </ScrollableContainer>
-              <TypeMessage darkMode={darkMode} fontSize={fontSize} newMessage={newMessage} setNewMessage={setNewMessage} onSendMessage={handleSendMessage} />
+              {conversationID &&
+              <TypeMessage darkMode={darkMode} fontSize={fontSize} newMessage={newMessage} setNewMessage={setNewMessage} onSendMessage={handleSendMessage} />}
             </RightColumn>
           </Column2>
         ) : null}

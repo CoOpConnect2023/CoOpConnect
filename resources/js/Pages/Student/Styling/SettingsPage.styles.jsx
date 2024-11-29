@@ -20,7 +20,7 @@ export const Main = styled.main`
     border: 2px solid ${({ darkMode }) => (darkMode ? "#444" : "#e2e8f0")};
     flex-direction: column;
     padding: 20px;
-    width: 70%;
+   width: 100%;
     animation: ${fadeIn} 0.8s ease-in-out;
     transition: background-color 0.5s ease, color 0.5s ease;
     font-size: ${({ fontSize }) => fontSize};

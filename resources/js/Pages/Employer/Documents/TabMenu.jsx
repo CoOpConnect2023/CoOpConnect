@@ -10,12 +10,12 @@ export const TabMenu = ({ activeTab, handleTabChange }) => {
 
     return (
         <TabList fontSize={fontSize} darkMode={darkMode}>
-            <TabItem fontSize={fontSize} darkMode={darkMode} onClick={() => handleTabChange("Progress Reports")} className={activeTab === "Progress Reports" ? "active" : ""}>
+            {/* <TabItem fontSize={fontSize} darkMode={darkMode} onClick={() => handleTabChange("Progress Reports")} className={activeTab === "Progress Reports" ? "active" : ""}>
                 Progress Reports
             </TabItem>
             <TabItem fontSize={fontSize} darkMode={darkMode} onClick={() => handleTabChange("Student Logs")} className={activeTab === "Student Logs" ? "active" : ""}>
                 Student Logs
-            </TabItem>
+            </TabItem> */}
             <TabItem fontSize={fontSize} darkMode={darkMode} onClick={() => handleTabChange("Shared With Me")} className={activeTab === "Shared With Me" ? "active" : ""}>
                 Shared With Me
             </TabItem>

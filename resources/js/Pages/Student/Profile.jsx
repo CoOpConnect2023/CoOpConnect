@@ -21,10 +21,10 @@ export default function Profile() {
                 <ProfileContainer fontSize={fontSize} darkMode={darkMode}>
                     <ProfileForm fontSize={fontSize} darkMode={darkMode} />
                 </ProfileContainer>
-                <RightContainer fontSize={fontSize} darkMode={darkMode}>
+                {/* <RightContainer fontSize={fontSize} darkMode={darkMode}>
                     <Matches fontSize={fontSize} darkMode={darkMode} />
                     <ReflectionDocuments fontSize={fontSize} darkMode={darkMode} />
-                </RightContainer>
+                </RightContainer> */}
             </MainContainer>
         </NavBar>
     );

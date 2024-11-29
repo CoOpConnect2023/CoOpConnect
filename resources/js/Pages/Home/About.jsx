@@ -111,7 +111,7 @@ export default function About({ auth }) {
           <Column>
             <SectionTitle>Our Mission</SectionTitle>
             <Text darkMode={darkMode}>
-              At Co-op Connect, we strive to bridge the gap between <strong>education</strong> and the <strong>workplace</strong>.
+              At CoopConnect, we strive to bridge the gap between <strong>education</strong> and the <strong>workplace</strong>.
               Our mission is to empower students, educators, and employers by providing a platform where they can <strong>collaborate, learn, and grow together</strong>.
             </Text>
 
@@ -134,7 +134,7 @@ export default function About({ auth }) {
 
           {/* Right Column */}
           <Column>
-            <SectionTitle>Why Co-op Connect?</SectionTitle>
+            <SectionTitle>Why CoopConnect?</SectionTitle>
             <Text darkMode={darkMode}>
               What sets us apart is our commitment to creating lasting connections. We're not just a platform; we’re a community.
             </Text>

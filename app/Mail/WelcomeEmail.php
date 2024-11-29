@@ -40,7 +40,7 @@ class WelcomeEmail extends Mailable
             ['id' => $this->user->id, 'hash' => sha1($this->user->email)]
         );
 
-         return $this->subject('Welcome to COOP CONNECT!')
+         return $this->subject('Welcome to CoopConnect!')
                     ->html(
                         '<!DOCTYPE html>
                         <html>
@@ -89,6 +89,7 @@ class WelcomeEmail extends Mailable
                                 .verify-email {
                                     margin: 20px 0;
                                     text-align: center;
+                                    width: 100%;
                                 }
                                 .verify-email a {
                                     display: inline-block;
@@ -99,10 +100,12 @@ class WelcomeEmail extends Mailable
                                     text-decoration: none;
                                     font-size: 16px;
                                     margin-top: 10px;
+                                    width: 100%;
                                 }
                                 .reset-password {
                                     margin: 20px 0;
                                     text-align: center;
+                                    width: 100%;
                                 }
                                 .reset-password a {
                                     display: inline-block;
@@ -113,6 +116,7 @@ class WelcomeEmail extends Mailable
                                     text-decoration: none;
                                     font-size: 16px;
                                     margin-top: 10px;
+                                    width: 100%;
                                 }
                                 .information-section {
                                     padding: 10px 0;

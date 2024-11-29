@@ -75,7 +75,7 @@ const navLinks = [
   { label: "Contact Us", href: "/contactus" },
   { label: "About Us", href: "/about" },
   { label: "Guide", href: "/guide" },
-  { label: "Back to Home", href: "/" },
+  
 ];
 
 export default function DesktopLayout({ auth }) {

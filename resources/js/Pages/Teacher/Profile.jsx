@@ -3,6 +3,8 @@ import styled, { keyframes } from "styled-components";
 import NavBar from "./Components/NavBar";
 import { useDropzone } from 'react-dropzone';
 import { useSelector, useDispatch } from "react-redux";
+import { usePrompt } from "@/Hooks/usePrompt";
+import { useBeforeUnload } from "@/Hooks/useBeforeUnload";
 import {
 
     selectUserStatus,
@@ -70,6 +72,16 @@ function Profile() {
     const [droppedFile, setDroppedFile] = useState(null);
     const [filteredSchools, setFilteredSchools] = useState([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
+    const [isDirty, setIsDirty] = useState(false);
+
+
+    usePrompt("You have unsaved changes. Do you really want to leave?", isDirty);
+    useBeforeUnload(isDirty);
+
+    const handleInputChange = (e) => {
+      setIsDirty(true); // Mark as dirty when any input changes
+    };
+
 
     const handleDrop = (acceptedFiles) => {
         if (acceptedFiles && acceptedFiles.length > 0) {
@@ -155,12 +167,13 @@ function Profile() {
                 })
             );
             setShowSuccessMessage(true);
-
+            setIsDirty(false);
             setTimeout(() => {
                 setShowSuccessMessage(false);
             }, 2000);
         } catch (error) {
             console.error("Error updating profile:", error);
+            setIsDirty(false);
         }
     };
 
@@ -196,7 +209,7 @@ function Profile() {
         <NavBar darkMode={darkMode} fontSize={fontSize} header={"My Profile"}>
             <Main darkMode={darkMode} fontSize={fontSize}>
                 <Section darkMode={darkMode} fontSize={fontSize}>
-                    <Title darkMode={darkMode} fontSize={fontSize}>Teacher Profile</Title>
+
                     <ProfileWrapper darkMode={darkMode} fontSize={fontSize}>
                         <ProfileDetails darkMode={darkMode} fontSize={fontSize}>
                             <ProfileImageWrapper darkMode={darkMode} fontSize={fontSize}>
@@ -220,18 +233,15 @@ function Profile() {
                     <FieldTitle darkMode={darkMode} fontSize={fontSize}>Full Name</FieldTitle>
                     <Input darkMode={darkMode} fontSize={fontSize}
                         value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
+                        onChange={(e) => {handleInputChange(e); setFullName(e.target.value)}}
                     />
                     <FieldTitle darkMode={darkMode} fontSize={fontSize}>Email</FieldTitle>
                     <Input darkMode={darkMode} fontSize={fontSize}
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => {handleInputChange(e); setEmail(e.target.value)}}
                     />
-                    <FieldTitle darkMode={darkMode} fontSize={fontSize}>Account Type</FieldTitle>
-                    <Input darkMode={darkMode} fontSize={fontSize}
-                        value={accountType}
-                        onChange={(e) => setAccountType(e.target.value)}
-                    />
+
+
                     <FieldTitle darkMode={darkMode} fontSize={fontSize}>School</FieldTitle>
                     <Input darkMode={darkMode} fontSize={fontSize}
                         value={school}
@@ -254,12 +264,12 @@ function Profile() {
                     <FieldTitle darkMode={darkMode} fontSize={fontSize}>Specialty</FieldTitle>
                     <Input darkMode={darkMode} fontSize={fontSize}
                         value={specialty}
-                        onChange={(e) => setSpecialty(e.target.value)}
+                        onChange={(e) => {handleInputChange(e); setSpecialty(e.target.value)}}
                     />
                     <FieldTitle darkMode={darkMode} fontSize={fontSize}>Pronouns</FieldTitle>
                     <Input darkMode={darkMode} fontSize={fontSize}
                         value={pronouns}
-                        onChange={(e) => setPronouns(e.target.value)}
+                        onChange={(e) => {handleInputChange(e); setPronouns(e.target.value)}}
                     />
                     <EditProfileButton darkMode={darkMode} fontSize={fontSize} onClick={handleUpdateProfile}>
                         Save Profile Changes

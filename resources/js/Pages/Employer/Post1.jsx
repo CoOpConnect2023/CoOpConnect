@@ -10,6 +10,7 @@ import 'react-quill/dist/quill.snow.css';
 import {
     updateJobFormData,
     selectJobFormData,
+    resetJobFormData
 } from "@/Features/jobs/jobsSlice";
 import { Inertia } from "@inertiajs/inertia";
 import {
@@ -59,6 +60,8 @@ function Post1() {
 
 
     useEffect(() => {
+        dispatch(resetJobFormData());
+
         const fetchUserId = async () => {
             try {
                 const response = await axios.get(
@@ -117,7 +120,7 @@ function Post1() {
             <Container darkMode={darkMode} fontSize={fontSize}>
                 <Card darkMode={darkMode} fontSize={fontSize}>
                     <FormWrapper darkMode={darkMode} fontSize={fontSize}>
-                        
+
 
                         <Form darkMode={darkMode} fontSize={fontSize}>
                             <SectionTitle darkMode={darkMode} fontSize={fontSize}>

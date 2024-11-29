@@ -138,7 +138,7 @@ const UploadUsers = ({ fontSize, darkMode, user }) => {
 
                 // Ensure user.id is defined before calling getEmployers
                 if (user?.id) {
-                    console.log("Dispatching getEmployers with user ID:", user?.id); // Debugging statement
+                   
                     await dispatch(getEmployers(user.id));
                 } else {
                     console.error("User ID is undefined. Cannot call getEmployers.");

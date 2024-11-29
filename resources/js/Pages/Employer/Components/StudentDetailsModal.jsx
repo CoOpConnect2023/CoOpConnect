@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
+import { downloadDocument } from '@/Features/documents/documentsSlice';
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -37,22 +39,44 @@ const CloseButton = styled.button`
 `;
 
 const StudentDetailsModal = ({ student, onClose }) => {
-  if (!student) return null;
+    if (!student) return null;
+    const dispatch = useDispatch();
 
-  return (
-    <ModalOverlay>
-      <ModalContent>
-        <CloseButton onClick={onClose}>Close</CloseButton>
-        <h2>Student Details</h2>
-        <p><strong>Name:</strong> {student.user.name}</p>
-        <p><strong>Email:</strong> {student.user.email}</p>
-        <p><strong>Pronouns:</strong> {student.user.pronouns || 'Not specified'}</p>
-        <p><strong>School:</strong> {student.user.school.name || 'Not specified'}</p>
-        <p><strong>School Email:</strong> {student.user.school.email || 'Not specified'}</p>
-        <p><strong>School Location:</strong> {student.user.school.location || 'Not specified'}</p>
-      </ModalContent>
-    </ModalOverlay>
-  );
-};
+    const handleDownload = () => {
+        if (student.document) {
+          dispatch(downloadDocument({ id: student.document.id, title: student.document.title }));
+        }
+      };
+
+
+      return (
+        <ModalOverlay>
+          <ModalContent>
+            <CloseButton onClick={onClose}>Close</CloseButton>
+            <h2>Student Details</h2>
+            <p><strong>Name:</strong> {student.user.name}</p>
+            <p><strong>Email:</strong> {student.user.email}</p>
+            <p><strong>Pronouns:</strong> {student.user.pronouns || 'Not specified'}</p>
+            <p><strong>School:</strong> {student.user.school.name || 'Not specified'}</p>
+            <p><strong>School Email:</strong> {student.user.school.email || 'Not specified'}</p>
+            <p><strong>School Location:</strong> {student.user.school.location || 'Not specified'}</p>
+
+            {/* Conditionally render the download button */}
+            {student.document ? (
+              <p>
+                <strong>Document:</strong>{' '}
+                <button onClick={handleDownload}>
+                  Download {student.document.title}
+                </button>
+              </p>
+            ) : (
+              <p><strong>Document:</strong> Not available</p>
+            )}
+          </ModalContent>
+        </ModalOverlay>
+      );
+    };
+
+
 
 export default StudentDetailsModal;

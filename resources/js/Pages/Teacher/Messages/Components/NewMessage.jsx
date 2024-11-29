@@ -42,7 +42,7 @@ export default function NewMessage({ newMessage, setNewMessage, brandNewMessage,
         return <div>Loading...</div>;
     }
 
-  
+
 
     return (
         <Div4 darkMode={darkMode}
@@ -59,7 +59,7 @@ export default function NewMessage({ newMessage, setNewMessage, brandNewMessage,
         fontSize={fontSize}> <Input darkMode={darkMode}
         fontSize={fontSize}
                                 type="email"
-                                placeholder="Enter recipient's email"
+                                placeholder="Enter a new recipient's email"
                                 value={recipientEmail}
                                 onChange={handleRecipientChange}
                                 data-testid="recipient-email-input"
@@ -81,7 +81,7 @@ export default function NewMessage({ newMessage, setNewMessage, brandNewMessage,
                             <Input darkMode={darkMode}
                                 fontSize={fontSize}
                                 type="text"
-                                placeholder="Type your message"
+                                placeholder="Start a new conversation"
                                 value={brandNewMessage}
                                 onChange={handleInputChange}
                                 data-testid="message-input-teacher"

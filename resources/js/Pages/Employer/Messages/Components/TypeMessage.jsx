@@ -23,10 +23,7 @@ export default function TypeMessage({ newMessage, setNewMessage, onSendMessage, 
         fontSize={fontSize}>
                 <Div99 darkMode={darkMode}
         fontSize={fontSize}>
-                    <img
-                        loading="lazy"
-                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/b1fe555b0ffdbe13c397278b479bee6782aab134a4d597d83c876620c9e724f1?apiKey=d66532d056b14640a799069157705b77&"
-                    />
+                   
                     <Div100 darkMode={darkMode}
         fontSize={fontSize}> <Input darkMode={darkMode}
         fontSize={fontSize}
@@ -42,7 +39,7 @@ export default function TypeMessage({ newMessage, setNewMessage, onSendMessage, 
         fontSize={fontSize}>
                 <SendButton darkMode={darkMode}
         fontSize={fontSize} data-testid="type-message-send" onClick={onSendMessage}>Send</SendButton>
-                    
+
 
                 </Div101>
             </Div98>

@@ -132,7 +132,7 @@ const Document = () => {
         }
     };
 
-    console.log(sharedDocumentsWithMe);
+  
 
 
 
@@ -214,23 +214,23 @@ const Document = () => {
 
             // Check if the email is valid and doesn't already exist in the list
             if (trimmedEmail !== '' && !emailList.some(item => (typeof item === 'object' ? item.email : item) === trimmedEmail)) {
-                console.log("Adding email to list:", trimmedEmail);
+
 
                 setEmailList((prevEmails) => {
                     // Add the email in the format of { email: trimmedEmail, profile_image: null }
                     const updatedList = [...prevEmails, { email: trimmedEmail, profile_image: null }];
-                    console.log("Updated email list:", updatedList);
+
                     return updatedList;
                 });
 
                 // Reset the email input field after adding
                 setEmailInput('');
-                console.log("Email input cleared.");
+
             } else {
                 if (trimmedEmail === '') {
-                    console.log("Email input is empty after trimming.");
+
                 } else if (emailList.some(item => (typeof item === 'object' ? item.email : item) === trimmedEmail)) {
-                    console.log("Email already exists in the list:", trimmedEmail);
+
                 }
             }
         }
@@ -264,12 +264,12 @@ const Document = () => {
 
     const filteredEmailList = emailList.filter(item => item?.email && item.email.toLowerCase().includes(searchQuery.toLowerCase()));
 
-    console.log(filteredEmailList)
+
 
     const handleSearchChange = (e) => {
         setSearchQuery(e.target.value);
     };
-    console.log(sharedDocumentsWithMe);
+
 
     return (
         <NavBar header={"Documents"}>

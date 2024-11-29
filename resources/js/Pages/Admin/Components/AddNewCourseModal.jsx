@@ -61,7 +61,7 @@ const AddCourseModal = ({ isOpen, onClose, fontSize, darkMode, schools, teachers
                 },
             })).unwrap();
 
-            console.log('Course added successfully:', result);
+           
 
             // Dispatch getCourses after successfully adding a course
             await dispatch(getCourses());
@@ -69,7 +69,7 @@ const AddCourseModal = ({ isOpen, onClose, fontSize, darkMode, schools, teachers
             onClose(); // Close modal on success
         } catch (error) {
             if (error.response && error.response.status === 422) {
-                console.log('Validation errors:', error.response.data.errors);
+
                 setErrorMessage('Validation failed. Please check the input fields.');
             } else {
                 console.error('Error adding course:', error);

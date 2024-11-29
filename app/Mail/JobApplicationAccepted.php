@@ -147,10 +147,10 @@ class JobApplicationAccepted extends Mailable
                             <div class="content">
                                 <p>Please confirm your availability through your account on our platform.</p>
                                 <p>We look forward to speaking with you soon!</p>
-                                
+
                             </div>
                             <div class="footer">
-                                <p>&copy; ' . date('Y') . ' COOP CONNECT. All rights reserved.</p>
+                                <p>&copy; ' . date('Y') . ' CoopConnect. All rights reserved.</p>
                             </div>
                         </div>
                     </body>

@@ -62,7 +62,7 @@ export default function NewMessage({ newMessage, setNewMessage, handleSendNewMes
         fontSize={fontSize}> <Input darkMode={darkMode}
         fontSize={fontSize}
                                 type="email"
-                                placeholder="Enter recipient's email"
+                                placeholder="Enter a new recipient's email"
                                 value={recipientEmail}
                                 onChange={handleRecipientChange}
                                 data-testid="recipient-email-input"
@@ -83,7 +83,7 @@ export default function NewMessage({ newMessage, setNewMessage, handleSendNewMes
         fontSize={fontSize}><Input darkMode={darkMode}
         fontSize={fontSize}
                             type="text"
-                            placeholder="Type your message"
+                            placeholder="Start a new conversation"
                             value={brandNewMessage}
                             onChange={handleInputChange}
                             data-testid="message-input"

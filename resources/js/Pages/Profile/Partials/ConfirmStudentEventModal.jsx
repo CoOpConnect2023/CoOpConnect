@@ -58,7 +58,8 @@ const ModalText = styled.p`
 const ButtonGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  justify-content: space-around;
+
   align-items: center;
 
   @media (min-width: 480px) {
@@ -75,8 +76,8 @@ const Button = styled.button`
   background-color: ${({ primary, darkMode }) =>
     primary
       ? darkMode
-        ? '#8A76BD'
-        : '#6E3AA7'
+        ? '#B6A1E5'
+        : '#B6A1E5'
       : darkMode
       ? '#555'
       : '#ccc'};
@@ -119,7 +120,7 @@ const ConfirmModal = ({ onClose, onConfirm, onUpdateWithoutNotification, darkMod
             <Button primary darkMode={darkMode} onClick={onConfirm}>
               Confirm
             </Button>
-            <Button darkMode={darkMode} onClick={onUpdateWithoutNotification}>
+            <Button primary darkMode={darkMode} onClick={onUpdateWithoutNotification}>
               Update Without Notifying
             </Button>
           </ButtonGroup>

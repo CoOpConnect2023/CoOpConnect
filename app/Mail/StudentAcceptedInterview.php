@@ -36,7 +36,7 @@ class StudentAcceptedInterview extends Mailable
     $this->jobTitle = $jobTitle;
     $this->message = $message;
 
-    // Format the acceptedTime 
+    // Format the acceptedTime
     $this->acceptedTime = Carbon::parse($acceptedTime)
                                 ->timezone('America/New_York') // Convert to Eastern Time
                                 ->format('F jS \a\t g:i A');   // Format the time
@@ -115,7 +115,7 @@ class StudentAcceptedInterview extends Mailable
                                 </div>
                                  <div class="content">
                                     <p>If you have any questions or need further assistance, feel free to reach out to our support team.</p>
-                                    <p>Best regards,<br>The COOP Connect Team</p>
+                                    <p>Best regards,<br>The CoopConnect Team</p>
                                 </div>
                                 <div class="footer">
                                     <p>&copy; ' . date('Y') . ' COOP CONNECT. All rights reserved.</p>

@@ -15,7 +15,7 @@ export default function Settings() {
         <NavBar header={"Settings"}>
             <MainContainer  fontSize={fontSize} darkMode={darkMode}>
                 <SettingsPanel />
-                <QuickLinks darkMode={darkMode} fontSize={fontSize}  />
+                {/* <QuickLinks darkMode={darkMode} fontSize={fontSize}  /> */}
             </MainContainer>
         </NavBar>
     );

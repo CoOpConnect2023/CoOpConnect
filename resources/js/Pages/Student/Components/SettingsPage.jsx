@@ -48,7 +48,7 @@ function SettingsPanel({darkMode, fontSize}) {
     const dispatch = useDispatch();
     const user = useSelector(selectUser);
     const { post } = useForm();
-    const [activeTab, setActiveTab] = useState(null);
+    const [activeTab, setActiveTab] = useState("account");
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
@@ -65,7 +65,9 @@ function SettingsPanel({darkMode, fontSize}) {
     const userID = user?.id;
 
     const handleTabClick = (tab) => {
-        setActiveTab(activeTab === tab ? null : tab);
+        if (activeTab !== tab) {
+            setActiveTab(tab);
+        }
     };
 
     const handlePasswordChange = (e) => {
@@ -158,14 +160,14 @@ function SettingsPanel({darkMode, fontSize}) {
         <Section fontSize={fontSize} darkMode={darkMode} className="account-section">
             <AccountHeader fontSize={fontSize} darkMode={darkMode}>
                 <AccountDetail fontSize={fontSize} darkMode={darkMode} onClick={() => handleTabClick('account')} active={activeTab === 'account'}>Account</AccountDetail>
-                <AccountDetail fontSize={fontSize} darkMode={darkMode} onClick={() => handleTabClick('password')} active={activeTab === 'password'}>Password</AccountDetail>
+
                 <AccountDetail fontSize={fontSize} darkMode={darkMode} onClick={() => handleTabClick('notifications')} active={activeTab === 'notifications'}>Notifications</AccountDetail>
                 <AccountDetail fontSize={fontSize} darkMode={darkMode} onClick={() => handleTabClick('preferences')} active={activeTab === 'preferences'}>Preferences</AccountDetail>
             </AccountHeader>
 
             {activeTab === 'account' && (
                 <>
-                    <FormSection fontSize={fontSize} darkMode={darkMode}>
+                    {/* <FormSection fontSize={fontSize} darkMode={darkMode}>
                         <FormColumn fontSize={fontSize} darkMode={darkMode}>
                             <FormContent fontSize={fontSize} darkMode={darkMode}>
                                 <FormTitle fontSize={fontSize} darkMode={darkMode}>Delete Account</FormTitle>
@@ -177,7 +179,7 @@ function SettingsPanel({darkMode, fontSize}) {
                         <FormButtonColumn fontSize={fontSize}>
                             <DeleteButton fontSize={fontSize} onClick={handleDeleteAccount}>Delete Account</DeleteButton>
                         </FormButtonColumn>
-                    </FormSection>
+                    </FormSection> */}
 
                     <SettingsSection fontSize={fontSize} darkMode={darkMode}>
                         <SettingsHeader fontSize={fontSize} darkMode={darkMode}>
@@ -210,11 +212,7 @@ function SettingsPanel({darkMode, fontSize}) {
                             </SettingsControls>
                         </SettingsHeader>
                     </SettingsSection>
-                </>
-            )}
-
-            {activeTab === 'password' && (
-                <PasswordChangeForm fontSize={fontSize} darkMode={darkMode} onSubmit={handlePasswordChange}>
+                    <PasswordChangeForm fontSize={fontSize} darkMode={darkMode} onSubmit={handlePasswordChange}>
                     <FormField fontSize={fontSize} darkMode={darkMode}>
                         <Label fontSize={fontSize} darkMode={darkMode}>Current Password</Label>
                         <Input fontSize={fontSize} darkMode={darkMode}
@@ -245,7 +243,10 @@ function SettingsPanel({darkMode, fontSize}) {
                     {message && <Message fontSize={fontSize} darkMode={darkMode}>{message}</Message>}
                     <SubmitButton fontSize={fontSize} darkMode={darkMode}>Change Password</SubmitButton>
                 </PasswordChangeForm>
+                </>
             )}
+
+
 
 {activeTab === 'notifications' && (
                     <SettingsSection fontSize={fontSize} darkMode={darkMode}>
@@ -278,7 +279,7 @@ function SettingsPanel({darkMode, fontSize}) {
                             </SettingsContent>
                         </SettingsColumn>
                         <SettingsControls fontSize={fontSize} darkMode={darkMode}>
-                            <CurrentSelection fontSize={fontSize} darkMode={darkMode}>Text Size: {fontSize}</CurrentSelection>
+
                             <SettingsOptions fontSize={fontSize} darkMode={darkMode}>
                                 <OtherOptionButton fontSize={fontSize} darkMode={darkMode}
                                     onClick={() => handleTextSizeChange('small')}

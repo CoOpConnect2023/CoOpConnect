@@ -6,9 +6,9 @@ const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
     const darkMode = useSelector(state => state.accessibility.darkMode);
-    console.log('Dark Mode from Redux:', darkMode); // Log this to confirm Redux value
+
     const theme = darkMode ? darkTheme : lightTheme;
-    console.log('Dark Mode from Redux:', theme);
+   
 
     return (
       <ThemeContext.Provider value={{ darkMode, theme }}>

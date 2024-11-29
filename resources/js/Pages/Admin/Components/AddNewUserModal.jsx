@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
 import { Modal, ModalBody, ModalFooter, Input, Button, CancelButton, Select } from '../Styling/AddNewUserModal.styles';
 import styled from 'styled-components';
+import { getAllUsers } from '@/Features/users/userSlice';
 
 const roles = ['Student', 'Employee', 'Teacher', 'Admin']; // Role options
 
 const AddUserModal = ({ isOpen, onClose, fontSize, darkMode, appUrl, companies, schools }) => {
+    const dispatch = useDispatch();
     const [newUser, setNewUser] = useState({
         name: '',
         email: '',
@@ -66,6 +69,12 @@ const AddUserModal = ({ isOpen, onClose, fontSize, darkMode, appUrl, companies, 
         setIsLoading(true);
         setErrorMessage(null);
 
+        if (!newUser.name || !newUser.email || !newUser.role || !newUser.company_name || !newUser.school_name) {
+            setErrorMessage('All fields are required. Ensure you select a school and company from the list.');
+            setIsLoading(false);
+            return;
+        }
+
         try {
             const response = await axios.post(`${appUrl}/api/upload-users`, {
                 users: [{
@@ -76,15 +85,25 @@ const AddUserModal = ({ isOpen, onClose, fontSize, darkMode, appUrl, companies, 
                     password: newUser.password,
                     role: newUser.role,
                     class: "b",
+                    profile_image: "/storage/profile_images/defaultprofile.jpg"
                 }],
                 schools: [] // Additional data if needed
             });
 
-            console.log('User added successfully:', response.data);
+            dispatch(getAllUsers()); // Dispatch getAllUsers after adding the user
+            setNewUser({ // Clear the input fields
+                name: '',
+                email: '',
+                company_name: '',
+                school_name: '',
+                password: 'password',
+                role: '',
+            });
             onClose(); // Close modal on success
         } catch (error) {
             console.error('Error adding user:', error);
-            setErrorMessage('Failed to add the user. Please try again.');
+            setErrorMessage('Failed to add the user. Please ensure the email is unique and try again.');
+
         } finally {
             setIsLoading(false);
         }

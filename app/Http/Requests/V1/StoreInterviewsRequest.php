@@ -28,8 +28,8 @@ class StoreInterviewsRequest extends FormRequest
             'end_date' => ['required', 'date'],
             'status' => ['required', Rule::in(['scheduled', 'completed', 'canceled'])],
             'description' => ['required'],
-            'interviewee_id' => ['required', 'exists:users,id'],
-            'interviewer_id' => ['required', 'exists:users,id'],
+            'interviewee_id' => ['nullable'],
+            'interviewer_id' => ['nullable'],
             'proposed_time' => ['nullable', 'date'],
         ];
     }
@@ -42,7 +42,7 @@ class StoreInterviewsRequest extends FormRequest
             'interviewee_id' => $this->intervieweeId,
             'interviewer_id' => $this->interviewerId,
             'proposed_time' => $this->proposedTime,
-            
+
         ]));
     }
 }

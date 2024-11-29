@@ -11,7 +11,7 @@ export default function UserPanel({ userInfo, messages, conversation, currentUse
     }
 
     const secondUser = conversation.users.length > 1 ? conversation.users.find(user => user.id !== currentUser) : null;
-    console.log("Current User:", messages);
+   
 
     const isOnline = messages.some(message => {
         const messageTime = new Date(message.created_at);
@@ -30,7 +30,7 @@ export default function UserPanel({ userInfo, messages, conversation, currentUse
                         loading="lazy"
                         src={secondUser.profile_image}
                         alt={secondUser.name}
-                        style={{ width: '100px', height: '100px' }} // Adjust styles as needed
+                        style={{ width: '100px', height: '100px',  borderRadius: '50%', }} // Adjust styles as needed
                     />
                 ) : (
                     <Img12 darkMode={darkMode} fontSize={fontSize}
@@ -51,20 +51,12 @@ export default function UserPanel({ userInfo, messages, conversation, currentUse
 
                     <Div74 darkMode={darkMode} fontSize={fontSize}>
 
-                    {isOnline && (
-                        <>
-                        <Div75 darkMode={darkMode}
-                        fontSize={fontSize} />
-                            <Div76 darkMode={darkMode} fontSize={fontSize}>
-                                Online
-                            </Div76>
-                            </>
-                        )}
+
                     </Div74>
                 </Div72>
             </Div71>
 
-            
+
         </Div70>
     );
 }

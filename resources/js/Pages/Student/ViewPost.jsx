@@ -133,13 +133,15 @@ const ViewPost = () => {
 
         setIsModalOpen(false);
     };
-    console.log(responses)
+   
 
     return (
         <NavBar fontSize={fontSize} darkMode={darkMode} header={"Job Posting View"}>
             <MainContainer fontSize={fontSize} darkMode={darkMode}>
                 <Container fontSize={fontSize} darkMode={darkMode}>
+                    <JobTitle fontSize={fontSize} darkMode={darkMode}>Review Posting Information</JobTitle>
                     <JobPostingCard fontSize={fontSize} darkMode={darkMode}>
+
                         <JobInfo fontSize={fontSize} darkMode={darkMode}>
                             <JobInfoLeft fontSize={fontSize} darkMode={darkMode}>
                                 <JobDetails fontSize={fontSize} darkMode={darkMode}>
@@ -147,7 +149,7 @@ const ViewPost = () => {
                                     <CompanyName fontSize={fontSize} darkMode={darkMode}>{job?.user?.company?.name}</CompanyName>
                                     <p><b>Start Date:</b> {job.startDate ? new Date(job.startDate).toLocaleDateString() : 'N/A'}</p>
                                     <p><b>End Date:</b> {job.endDate ? new Date(job.endDate).toLocaleDateString() : 'N/A'}</p>
-                                    <JobDescription dangerouslySetInnerHTML={{ __html: job.description }} fontSize={fontSize} darkMode={darkMode} />
+                                    <JobDescription dangerouslySetInnerHTML={{ __html: job.description }}  darkMode={darkMode} />
                                 </JobDetails>
                             </JobInfoLeft>
                             <JobInfoRight fontSize={fontSize} darkMode={darkMode}>
@@ -156,33 +158,54 @@ const ViewPost = () => {
                                 <LocationTag fontSize={fontSize} darkMode={darkMode}>Work Location: {job.location}</LocationTag>
                             </JobInfoRight>
                             {!applied && job.postingStatus != "Closed" &&
-                            <QuestionsContainer fontSize={fontSize} darkMode={darkMode}>
-                                {questions.map((question) => (
-                                    <QuestionComponent fontSize={fontSize} darkMode={darkMode}
-                                        key={question.id}
-                                        question={question}
-                                        handleResponseChange={handleResponseChange}
-                                        applied={applied}
-                                        userResponses={userResponses} // Pass only the user-specific responses
-                                    />
-                                ))}
-                            </QuestionsContainer>
+                                <QuestionsContainer fontSize={fontSize} darkMode={darkMode}>
+                                    <JobTitle fontSize={fontSize} darkMode={darkMode}>Respond to Employer Questions</JobTitle>
+                                    {questions.map((question) => (
+                                        <QuestionComponent fontSize={fontSize} darkMode={darkMode}
+                                            key={question.id}
+                                            question={question}
+                                            handleResponseChange={handleResponseChange}
+                                            applied={applied}
+                                            userResponses={userResponses} // Pass only the user-specific responses
+                                        />
+                                    ))}
+                                </QuestionsContainer>
                             }
+
+                            {applied &&
+                            <JobTitle style={{
+      marginBottom: "10px",
+      color: darkMode ? "#FFF" : "#333",
+      textAlign: "center",
+    }}  fontSize={fontSize} darkMode={darkMode} >You have already submitted an application for this job.</JobTitle>}
                             {job.postingStatus != "Closed" &&
-                            <ActionButtons fontSize={fontSize} darkMode={darkMode}>
+                                <ActionButtons fontSize={fontSize} darkMode={darkMode}>
 
 
-                                <ActionButton
-                                    fontSize={fontSize}
-                                    darkMode={darkMode}
-                                    onClick={handleApply}
-                                    disabled={applied}
-                                >
-                                    {applied ? "Applied" : "Apply"}
-                                </ActionButton>
+                                    <ActionButton
+                                        fontSize={fontSize}
+                                        darkMode={darkMode}
+                                        onClick={handleApply}
+                                        disabled={applied}
+                                    >
+                                        {applied ? "Applied" : "Submit Application"}
+                                    </ActionButton>
 
-                            </ActionButtons>
-                        }
+                                    {applied &&
+
+                                    <Link href="/student/jobs">
+                                        <ActionButton
+                                            fontSize={fontSize}
+                                            darkMode={darkMode}
+
+                                        >
+                                            Back to Postings
+                                        </ActionButton>
+                                    </Link>
+                                    }
+
+                                </ActionButtons>
+                            }
                         </JobInfo>
                     </JobPostingCard>
                 </Container>
@@ -432,16 +455,24 @@ const CompanyName = styled.h4`
     }
 `;
 
-const JobDescription = styled.p`
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    text-overflow: ellipsis;
-    letter-spacing: 0.5px;
+const JobDescription = styled.div`
+    display: block;
     margin-top: 10px;
-    font-size: ${({ fontSize }) => calculateFontSize(16, fontSize)};
-    line-height: 24px;
-    @media (max-width: 991px) {
-        max-width: 100%;
+
+    /* Only apply styles to container content */
+    h1 {
+        font-size: 2em;
+        font-weight: bold;
+        text-decoration: underline;
+    }
+
+    p {
+        font-size: 1em;
+        margin: 0.5em 0;
+    }
+
+    strong {
+        font-weight: bold;
     }
 `;
 
@@ -522,9 +553,9 @@ const ActionButton = styled.button`
 
     &:hover {
         background-color: ${(props) =>
-            props.applied
-                ? "rgba(119, 61, 195, 0.5)"
-                : "var(--Palettes-Primary-30, #542a93)"};
+        props.applied
+            ? "rgba(119, 61, 195, 0.5)"
+            : "var(--Palettes-Primary-30, #542a93)"};
     }
 
     &:disabled {
@@ -751,7 +782,7 @@ const TextInput = styled.input`
         outline: none;
         border-color: ${({ darkMode }) => (darkMode ? '#555' : '#007bff')};
     }
-`
+`;
 
 const DocumentSelect = styled.select`
     padding: 10px;

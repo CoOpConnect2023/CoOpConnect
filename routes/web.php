@@ -61,6 +61,7 @@ Route::middleware(['auth', 'student'])->group(function () {
 Route::middleware(['auth', 'teacher'])->group(function () {
     Route::get('/teacher/home', [TeacherController::class, 'home'])->name('teacher.home');
     Route::get('/teacher/documents', [TeacherController::class, 'documents'])->name('teacher.documents');
+    Route::get('/teacher/reflections', [TeacherController::class, 'reflections'])->name('teacher.reflections');
     Route::get('/teacher/messages', [TeacherController::class, 'messages'])->name('teacher.messages');
     Route::get('/teacher/scheduling', [TeacherController::class, 'scheduling'])->name('teacher.scheduling');
     Route::get('/teacher/profile', [TeacherController::class, 'profile'])->name('teacher.profile');

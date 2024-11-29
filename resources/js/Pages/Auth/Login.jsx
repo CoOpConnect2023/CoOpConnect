@@ -1,10 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import Checkbox from '@/Components/Checkbox';
 import GuestLayout from '@/Layouts/GuestLayout';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import TextInput from '@/Components/TextInput';
 import { Head, Link, useForm } from '@inertiajs/react';
 //import './Login.css';
@@ -109,6 +110,7 @@ export default function Login({ status, canResetPassword, error }) {  // Add the
         remember: false,
     });
     const darkMode = useSelector(state => state.accessibility.darkMode);
+    const [showPassword, setShowPassword] = useState(false);
 
     useEffect(() => {
         return () => {
@@ -185,30 +187,29 @@ export default function Login({ status, canResetPassword, error }) {  // Add the
                                 className="mt-2"
                             />
                         </div>
-
                         <div className="mt-4">
-                            <InputLabel
-                                htmlFor="password"
-                                value="Password"
-                                className="input-label"
-                            />
-                            <TextInput
-                                id="password"
-                                type="password"
-                                data-testid="password-input"
-                                name="password"
-                                value={data.password}
-                                className="mt-1 block w-full"
-                                autoComplete="current-password"
-                                onChange={(e) =>
-                                    setData("password", e.target.value)
-                                }
-                            />
-                            <InputError
-                                message={errors.password}
-                                className="mt-2"
-                            />
-                        </div>
+                                    <InputLabel htmlFor="password" value="Password" className="input-label" />
+                                    <div className="relative">
+                                        <TextInput
+                                            id="password"
+                                            type={showPassword ? "text" : "password"}
+                                            data-testid="password-input"
+                                            name="password"
+                                            value={data.password}
+                                            className="mt-1 block w-full"
+                                            autoComplete="current-password"
+                                            onChange={(e) => setData("password", e.target.value)}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowPassword(prev => !prev)}
+                                            className="absolute right-2 top-2 text-gray-500 hover:text-gray-700"
+                                        >
+                                            {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                        </button>
+                                    </div>
+                                    <InputError message={errors.password} className="mt-2" />
+                                </div>
 
                         <div className="block mt-4">
                             <label className="flex items-center">

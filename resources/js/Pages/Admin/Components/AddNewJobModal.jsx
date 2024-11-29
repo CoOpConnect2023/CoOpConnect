@@ -72,7 +72,7 @@ const AddJobModal = ({ isOpen, onClose, fontSize, darkMode, companies }) => {
                 company_id: newJob.companyId // Send the company ID
             })).unwrap();
 
-            console.log('Job added successfully:', result);
+          
             onClose(); // Close modal on success
         } catch (error) {
             console.error('Error adding job:', error);

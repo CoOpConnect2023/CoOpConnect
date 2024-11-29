@@ -37,6 +37,11 @@ class TeacherController extends Controller
         return Inertia::render('Teacher/Settings');
     }
 
+    public function reflections()
+    {
+        return Inertia::render('Teacher/MyReflections');
+    }
+
     public function classes()
     {
         return Inertia::render('Teacher/ManageClasses');

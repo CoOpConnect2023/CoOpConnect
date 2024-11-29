@@ -187,7 +187,7 @@ class UserJobsController extends Controller
             $query->where('user_id', $userId);
         })
         ->where('status', 'Hired') // Filter by status 'Hired'
-        ->with(['job.company', 'user.school']) // Eager load the job and user relationships
+        ->with(['job.company', 'user.school', 'document']) // Eager load the job and user relationships
         ->get();
 
         return response()->json($userJobs);

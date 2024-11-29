@@ -104,11 +104,14 @@ function EmployersPage() {
 
     const handleModalConfirm = () => {
         handleCreateEmployer();
+
     };
 
     const handleModalCancel = () => {
         setModalVisible(false);
     };
+
+    
 
     return (
         <NavBar header={"Employers"}>
@@ -126,7 +129,7 @@ function EmployersPage() {
                             <StyledTable fontSize={fontSize} darkMode={darkMode}>
                                 <thead>
                                     <tr>
-                                        <th>Employer ID</th>
+                                        <th>Employee ID</th>
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Company</th>
@@ -163,7 +166,7 @@ function EmployersPage() {
                                     name="name"
                                     value={newEmployer.name}
                                     onChange={handleInputChange}
-                                    placeholder="Employer Name"
+                                    placeholder="Employee Name"
                                 />
                                 <Input
                                     fontSize={fontSize}
@@ -172,7 +175,7 @@ function EmployersPage() {
                                     name="email"
                                     value={newEmployer.email}
                                     onChange={handleInputChange}
-                                    placeholder="Employer Email - If the employer has an account, you can use this field only to add them."
+                                    placeholder="Employee Email - If the employer has an account, you can use this field only to add them."
                                 />
                                 <Input
                                     fontSize={fontSize}
@@ -181,7 +184,7 @@ function EmployersPage() {
                                     name="company"
                                     value={newEmployer.company}
                                     onChange={handleCompanyInputChange}
-                                    placeholder="Employer Company"
+                                    placeholder="Employee Company"
                                     list="company-options" // Enable suggestions
                                 />
                                 <datalist id="company-options">
@@ -210,8 +213,9 @@ function EmployersPage() {
                                         Are you sure you want to add this employer? A welcome email will be sent if they don’t already exist.
                                     </ModalBody>
                                     <ModalButtonContainer>
-                                        <ConfirmButton onClick={handleModalConfirm}>Confirm</ConfirmButton>
+
                                         <CancelButton onClick={handleModalCancel}>Cancel</CancelButton>
+                                        <ConfirmButton onClick={handleModalConfirm}>Confirm</ConfirmButton>
                                     </ModalButtonContainer>
                                 </ModalContainer>
                             </ModalOverlay>

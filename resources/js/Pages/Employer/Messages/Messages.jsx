@@ -77,15 +77,21 @@ export default function Messages() {
         dispatch(sendMessage({ newMessage, userInfo, conversationID }));
         setNewMessage('')
     };
-
-    const handleSendNewMessage = () => {
+    
+    const handleSendNewMessage = async () => {
         if (brandNewMessage.trim() === '') return;
 
-        dispatch(sendNewMessage({ brandNewMessage, userInfo, recipientEmail }));
-        dispatch(getConversations({ userId: currentUser }));
-        setBrandNewMessage('')
+        await dispatch(sendNewMessage({ brandNewMessage, userInfo, recipientEmail }));
+
+        setTimeout(() => {
+            dispatch(getConversations({ userId: currentUser }));
+        }, 1000);
+
+
+        setBrandNewMessage('');
         setRecipientEmail('')
     };
+
 
     useEffect(() => {
         if (currentUser) {

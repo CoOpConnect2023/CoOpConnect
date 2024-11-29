@@ -92,7 +92,7 @@ const HireModal = ({ applicant, onClose, onSubmit, darkMode, fontSize }) => {
 const ViewApplicants = () => {
     const { props } = usePage();
     const { jobId } = props;
-    const [activeTab, setActiveTab] = useState("Pending");
+    const [activeTab, setActiveTab] = useState("All");
     const [selectedApplicant, setSelectedApplicant] = useState(null);
     const [isDeclineModalOpen, setIsDeclineModalOpen] = useState(false);
 
@@ -112,7 +112,7 @@ const ViewApplicants = () => {
         dispatch(selectJob({ jobId }));
     }, [dispatch, jobId]);
 
-    const tabs = ["Pending", "Interview", "Scheduled", "Declined", "Rejected", "Hired"];
+    const tabs = ["All", "Pending", "Interview", "Scheduled", "Declined", "Rejected", "Hired"];
 
     const handleDecline = (applicant) => {
         setSelectedApplicant(applicant);
@@ -150,7 +150,7 @@ const ViewApplicants = () => {
                 })
             ).unwrap();
 
-            
+
         } catch (error) {
             console.error("Error in processing rejection:", error);
             alert("An error occurred while rejecting the applicant. Please try again.");
@@ -192,7 +192,7 @@ const ViewApplicants = () => {
                 message: message,
             });
 
-            alert("Applicant has been successfully hired, notified, and emailed.");
+
         } catch (error) {
             console.error("Error in processing hire:", error);
             alert("An error occurred while hiring the applicant. Please try again.");
@@ -224,7 +224,7 @@ const ViewApplicants = () => {
 
     const renderApplicants = () => {
         return applicants
-            .filter((applicant) => applicant.status === activeTab)
+            .filter((applicant) => activeTab === "All" || applicant.status === activeTab)
             .map((applicant) => (
                 <TableRow key={applicant.id} darkMode={darkMode} fontSize={fontSize}>
                     <TableData darkMode={darkMode} fontSize={fontSize}>{applicant.name}</TableData>
@@ -259,30 +259,30 @@ const ViewApplicants = () => {
                     </TableData>
 
                     {applicant.status === "Pending" && (
-    <TableData darkMode={darkMode} fontSize={fontSize}>
-        <Button color="green" onClick={() => handleAccept(applicant)} darkMode={darkMode} fontSize={fontSize}>
-            Accept
-        </Button>
-        <Button color="red" onClick={() => handleDecline(applicant, "pending")} darkMode={darkMode} fontSize={fontSize}>
-            Reject
-        </Button>
-    </TableData>
-)}
+                        <TableData darkMode={darkMode} fontSize={fontSize}>
+                            <Button color="green" onClick={() => handleAccept(applicant)} darkMode={darkMode} fontSize={fontSize}>
+                                Accept
+                            </Button>
+                            <Button color="red" onClick={() => handleDecline(applicant, "pending")} darkMode={darkMode} fontSize={fontSize}>
+                                Reject
+                            </Button>
+                        </TableData>
+                    )}
                     {applicant.status === "Scheduled" && (
                         <TableData darkMode={darkMode} fontSize={fontSize}>{formatDate(applicant.timeSlots)}</TableData>
 
                     )}
 
-{applicant.status === "Scheduled" && (
-    <TableData darkMode={darkMode} fontSize={fontSize}>
-        <Button color="green" onClick={() => handleHire(applicant)} darkMode={darkMode} fontSize={fontSize}>
-            Hire
-        </Button>
-        <Button color="red" onClick={() => handleDecline(applicant, "scheduled")} darkMode={darkMode} fontSize={fontSize}>
-            Reject
-        </Button>
-    </TableData>
-)}
+                    {applicant.status === "Scheduled" && (
+                        <TableData darkMode={darkMode} fontSize={fontSize}>
+                            <Button color="green" onClick={() => handleHire(applicant)} darkMode={darkMode} fontSize={fontSize}>
+                                Hire
+                            </Button>
+                            <Button color="red" onClick={() => handleDecline(applicant, "scheduled")} darkMode={darkMode} fontSize={fontSize}>
+                                Reject
+                            </Button>
+                        </TableData>
+                    )}
                 </TableRow>
             ));
     };
@@ -291,16 +291,16 @@ const ViewApplicants = () => {
         <NavBar header={"View Applicants"}>
             {job && (
                 <>
-                   <JobDetails darkMode={darkMode} fontSize={fontSize}>
-    <p><b>Position:</b> {job.title}</p>
-    <p><b>Company:</b> {job?.company?.name}</p>
-    <p><b>Location:</b> {job.location}</p>
-    <p><b>Description:</b></p>
+                    <JobDetails darkMode={darkMode} fontSize={fontSize}>
+                        <p><b>Position:</b> {job.title}</p>
+                        <p><b>Company:</b> {job?.company?.name}</p>
+                        <p><b>Location:</b> {job.location}</p>
+                        <p><b>Description:</b></p>
 
-    <TruncatedHTML darkMode={darkMode} fontSize={fontSize}
-        dangerouslySetInnerHTML={{ __html: job.description }}
-    />
-</JobDetails>
+                        <TruncatedHTML darkMode={darkMode} fontSize={fontSize}
+                            dangerouslySetInnerHTML={{ __html: job.description }}
+                        />
+                    </JobDetails>
 
                     <Container darkMode={darkMode} fontSize={fontSize}>
                         <Tabs darkMode={darkMode} fontSize={fontSize}>
@@ -324,6 +324,10 @@ const ViewApplicants = () => {
                                         <TableHeader darkMode={darkMode} fontSize={fontSize}>Student ID</TableHeader>
                                         <TableHeader darkMode={darkMode} fontSize={fontSize}>Email</TableHeader>
                                         <TableHeader darkMode={darkMode} fontSize={fontSize}>Resume</TableHeader>
+                                        {activeTab === "All" && (
+                                        <TableHeader darkMode={darkMode} fontSize={fontSize}>Actions</TableHeader>
+                                    )}
+
                                         {activeTab === "Pending" && (
                                             <TableHeader darkMode={darkMode} fontSize={fontSize}>Actions</TableHeader>
                                         )}
@@ -352,25 +356,25 @@ const ViewApplicants = () => {
                     </Container>
 
                     {isDeclineModalOpen && (
-    <DeclineModal
-        applicant={selectedApplicant}
-        onClose={() => setIsDeclineModalOpen(false)}
-        onSubmit={handleDeclineSubmit}
-        rejectType={activeTab === "Scheduled" ? "scheduled" : "pending"} // Pass the correct rejectType based on the tab
-        darkMode={darkMode}
-        fontSize={fontSize}
-    />
-)}
+                        <DeclineModal
+                            applicant={selectedApplicant}
+                            onClose={() => setIsDeclineModalOpen(false)}
+                            onSubmit={handleDeclineSubmit}
+                            rejectType={activeTab === "Scheduled" ? "scheduled" : "pending"} // Pass the correct rejectType based on the tab
+                            darkMode={darkMode}
+                            fontSize={fontSize}
+                        />
+                    )}
 
-{isHireModalOpen && (
-    <HireModal
-        applicant={selectedApplicant}
-        onClose={() => setIsHireModalOpen(false)}
-        onSubmit={handleHireSubmit}
-        darkMode={darkMode}
-        fontSize={fontSize}
-    />
-)}
+                    {isHireModalOpen && (
+                        <HireModal
+                            applicant={selectedApplicant}
+                            onClose={() => setIsHireModalOpen(false)}
+                            onSubmit={handleHireSubmit}
+                            darkMode={darkMode}
+                            fontSize={fontSize}
+                        />
+                    )}
 
                 </>
             )}

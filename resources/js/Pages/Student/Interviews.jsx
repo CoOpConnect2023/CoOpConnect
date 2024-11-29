@@ -212,7 +212,7 @@ const Interviews = () => {
 
     const openDateEditModal = (event) => {
         setSelectedEvent(event);
-        console.log(event)
+
         setShowDateModal(true);
     };
 
@@ -320,7 +320,7 @@ const Interviews = () => {
 
     const handleEventUpdateRequest = ({ id, title, start, interviewer, interviewee, initialStart}) => {
 
-        console.log("Raw start date:", start);
+
 
         // Format the start date
         const formattedStart = `${start.getFullYear()}-${String(
@@ -331,8 +331,7 @@ const Interviews = () => {
             start.getSeconds()
         ).padStart(2, "0")}`;
 
-        // Log the formatted start and end times
-        console.log("Formatted Start:", formattedStart);
+       
 
         // Dispatch the patchInterview action
         dispatch(
@@ -346,7 +345,7 @@ const Interviews = () => {
             })
         )
         .then(() => {
-            console.log("Patch interview successful");
+
 
             // Send notification after successful interview update
             dispatch(postNotification({
@@ -359,7 +358,7 @@ const Interviews = () => {
             }));
 
             // Fetch updated interviews for interviewee
-            console.log("Fetching updated interviews for interviewee:", userId);
+
             dispatch(getInterviewsForInterviewee({
                 intervieweeId: userId,
             }));
@@ -369,9 +368,19 @@ const Interviews = () => {
         });
 
         // Close the modal and log it
-        console.log("Closing modal");
+
         closeModal();
     };
+
+    const formats = {
+        agendaHeaderFormat: ({ start, end }, culture, localizer) =>
+          `${localizer.format(start, 'MMMM DD, YYYY', culture)} – ${localizer.format(
+            end,
+            'MMMM DD, YYYY',
+            culture
+          )}`,
+      };
+
 
 
     return (
@@ -397,6 +406,7 @@ const Interviews = () => {
                                     startAccessor={"start"}
                                     endAccessor="end"
                                     eventPropGetter={eventStyleGetter}
+                                    formats={formats}
                                 />
                             </DndProvider>
                         </CalendarDiv>
@@ -414,14 +424,19 @@ const Interviews = () => {
                     <div>Title: {event.title}</div>
                     <div>Description: {event.description}</div>
                     <div>
-                        Start Date: {moment(event.start).format("YYYY-MM-DD HH:mm:ss")}
-                    </div>
-                    <div>
-                        End Date: {moment(event.end).format("YYYY-MM-DD HH:mm:ss")}
-                    </div>
-                    <PurpleButton fontSize={fontSize} onClick={() => openDateEditModal(event)}>
+        Start Date: {moment(event.start).format("MMMM D, YYYY HH:mm")}
+    </div>
+    <div>
+        End Date: {moment(event.end).format("MMMM D, YYYY HH:mm")}
+    </div>
+    {event.proposedTime !== event.startDate && event.proposedTime != null &&
+
+                    <PurpleButton  style={{
+        width: '100%'
+    }} fontSize={fontSize} onClick={() => openDateEditModal(event)}>
                                         Request Updated Interview Time
-                                    </PurpleButton>
+                                    </PurpleButton>}
+
                 </Event>
             );
         })

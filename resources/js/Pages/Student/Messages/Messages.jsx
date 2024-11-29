@@ -77,15 +77,20 @@ export default function Messages() {
         setNewMessage('')
     };
 
-    const handleSendNewMessage = () => {
+    const handleSendNewMessage = async () => {
         if (brandNewMessage.trim() === '') return;
 
-        dispatch(sendNewMessage({ brandNewMessage, userInfo, recipientEmail }));
-        dispatch(getConversations({ userId: currentUser }));
-        setBrandNewMessage('')
+        await dispatch(sendNewMessage({ brandNewMessage, userInfo, recipientEmail }));
+
+        setTimeout(() => {
+            dispatch(getConversations({ userId: currentUser }));
+        }, 1000);
 
 
+        setBrandNewMessage('');
+        setRecipientEmail('')
     };
+
 
 
     useEffect(() => {
@@ -116,6 +121,10 @@ export default function Messages() {
     //     return <LoadingScreen><Spinner /></LoadingScreen>;
     // }
 
+
+    useEffect(() => {
+        console.log("Updated conversations:", conversations);
+    }, [conversations]);
 
     return (
         <PageContainer darkMode={darkMode}

@@ -32,7 +32,7 @@ const AddCompanyModal = ({ isOpen, onClose, fontSize, darkMode }) => {
             // Dispatch the postCompany action with the newCompany data
             const result = await dispatch(postCompany(newCompany)).unwrap();
 
-            console.log('Company added successfully:', result);
+           
             onClose(); // Close modal on success
         } catch (error) {
             console.error('Error adding company:', error);

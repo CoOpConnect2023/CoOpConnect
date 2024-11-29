@@ -321,12 +321,14 @@ export const ViewButton = styled.button`
 export const ActionButtons = styled.div`
     display: flex;
     justify-content: center;
-
+justify-content: space-between;
     flex-direction: row;
     gap: 10px;
 `;
 
 export const ActionButton = styled.button`
+
+
     font-family: Poppins, sans-serif;
     background-color: var(--Palettes-Primary-40, #773dc3);
     color: white;

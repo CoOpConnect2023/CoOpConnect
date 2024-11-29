@@ -2,9 +2,9 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 
-import { Div4, Div5, Div6, Div7, Div8, Div9, Div10, Div11, Div12, Div13, Div14, Img, Input, SendButton, StyledMessage, StyledSelect  } from "../../Styling/NewMessage.styles";
+import { Div4, Div5, Div6, Div7, Div8, Div9, Div10, Div11, Div12, Div13, Div14, Img, Input, SendButton, StyledMessage, StyledSelect } from "../../Styling/NewMessage.styles";
 
-export default function NewMessage({ newMessage, setNewMessage,  onSendNewMessage, recipientEmail, setRecipientEmail, shortlists, brandNewMessage, setBrandNewMessage, fontSize, darkMode}) {
+export default function NewMessage({ newMessage, setNewMessage, onSendNewMessage, recipientEmail, setRecipientEmail, shortlists, brandNewMessage, setBrandNewMessage, fontSize, darkMode }) {
 
 
     const handleInputChange = (e) => {
@@ -44,36 +44,37 @@ export default function NewMessage({ newMessage, setNewMessage,  onSendNewMessag
 
     return (
         <Div4 darkMode={darkMode}
-        fontSize={fontSize}>
+            fontSize={fontSize}>
             <Div5 darkMode={darkMode}
-                        fontSize={fontSize}>New Message</Div5>
+                fontSize={fontSize}>New Message</Div5>
             <Div6 darkMode={darkMode}
-                        fontSize={fontSize}>
+                fontSize={fontSize}>
                 <Div7 darkMode={darkMode}
-                        fontSize={fontSize}>
+                    fontSize={fontSize}>
                     <Div8 darkMode={darkMode}
                         fontSize={fontSize}>To: </Div8>
                     <Div9 darkMode={darkMode}
                         fontSize={fontSize}> {hasApplicants ? (
-      <StyledSelect darkMode={darkMode}
-      fontSize={fontSize} value={recipientEmail} onChange={handleSelectChange}>
-        {[...uniqueEmails].map(email => (
-          <option key={email} value={email}>
-            {email}
-          </option>
-        ))}
-      </StyledSelect>) : (
+                            <StyledSelect darkMode={darkMode} fontSize={fontSize} value={recipientEmail} onChange={handleSelectChange}>
+                                {[...uniqueEmails]
+                                    .sort((a, b) => a.localeCompare(b)) // Sort the emails alphabetically
+                                    .map(email => (
+                                        <option key={email} value={email}>
+                                            {email}
+                                        </option>
+                                    ))}
+                            </StyledSelect>) : (
                             <StyledMessage darkMode={darkMode}
-                            fontSize={fontSize}>
+                                fontSize={fontSize}>
                                 Add some applicants to your shortlist to message them.
                             </StyledMessage>
                         )}</Div9>
                 </Div7>
             </Div6>
             <Div10 darkMode={darkMode}
-                        fontSize={fontSize}>
+                fontSize={fontSize}>
                 <Div11 darkMode={darkMode}
-                        fontSize={fontSize}>
+                    fontSize={fontSize}>
                     <Div12 darkMode={darkMode}
                         fontSize={fontSize}>
                         {/* <Img
@@ -81,15 +82,15 @@ export default function NewMessage({ newMessage, setNewMessage,  onSendNewMessag
                             src="https://cdn.builder.io/api/v1/image/assets/TEMP/b1fe555b0ffdbe13c397278b479bee6782aab134a4d597d83c876620c9e724f1?apiKey=d66532d056b14640a799069157705b77&"
                         /> */}
                         <Div13 darkMode={darkMode}
-                        fontSize={fontSize}><Input darkMode={darkMode}
-                        fontSize={fontSize}
-                            type="text"
-                            placeholder="Type your message"
-                            value={brandNewMessage}
-                            onChange={handleInputChange}
+                            fontSize={fontSize}><Input darkMode={darkMode}
+                                fontSize={fontSize}
+                                type="text"
+                                placeholder="Type your message"
+                                value={brandNewMessage}
+                                onChange={handleInputChange}
 
-                        /></Div13><SendButton darkMode={darkMode}
-                        fontSize={fontSize} onClick={onSendNewMessage}>Send</SendButton>
+                            /></Div13><SendButton darkMode={darkMode}
+                                fontSize={fontSize} onClick={onSendNewMessage}>Send</SendButton>
                     </Div12>
                     <Div14 darkMode={darkMode}
                         fontSize={fontSize}>

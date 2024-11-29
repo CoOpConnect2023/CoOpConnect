@@ -136,8 +136,19 @@ const EditModal = ({ onClose, onSubmit, event, darkMode, fontSize }) => {
   const [initialStartTime, setEndTime] = useState(event ? event.startDate.substring(11, 16) : "");
 
 
-  console.log(event)
-  // Update state when event changes (useful for when the modal is reused with different data)
+  const handleTimeChange = (e) => {
+    const timeValue = e.target.value; // e.g., "14:03"
+    const [hours, minutes] = timeValue.split(":").map(Number);
+
+    // Ensure minutes are in 5-minute increments
+    if (minutes % 5 !== 0) {
+        const adjustedMinutes = Math.round(minutes / 5) * 5; // Round to nearest 5
+        const adjustedTime = `${String(hours).padStart(2, "0")}:${String(adjustedMinutes).padStart(2, "0")}`;
+        setStartTime(adjustedTime);
+    } else {
+        setStartTime(timeValue);
+    }
+};
   useEffect(() => {
     if (event) {
       setTitle(event.title);
@@ -153,7 +164,7 @@ const EditModal = ({ onClose, onSubmit, event, darkMode, fontSize }) => {
     const start = new Date(`${startDate}T${startTime}`);
     const initialStart = new Date(`${initialStartDate}T${initialStartTime}`);
 
-    console.log( start)
+   
     onSubmit({
       id: event.id, // Include the event ID so it can be updated in the backend
       start,
@@ -174,14 +185,15 @@ const EditModal = ({ onClose, onSubmit, event, darkMode, fontSize }) => {
         <ModalHeader fontSize={fontSize} darkMode={darkMode}>Request Updated Interview Time</ModalHeader>
 
         <Label fontSize={fontSize} darkMode={darkMode}>Start Date:</Label>
-        <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} fontSize={fontSize} darkMode={darkMode} />
+        <Input  min={new Date().toISOString().split("T")[0]} type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} fontSize={fontSize} darkMode={darkMode} />
         <Label fontSize={fontSize} darkMode={darkMode}>Start Time:</Label>
-        <Input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} fontSize={fontSize} darkMode={darkMode} />
+        <Input   type="time" value={startTime} onChange={handleTimeChange} fontSize={fontSize} darkMode={darkMode} step="300" />
 
 
         <ButtonContainer>
+        <Button onClick={onClose} fontSize={fontSize}>Cancel</Button>
           <Button onClick={handleSubmit} fontSize={fontSize}>Send</Button>
-          <Button onClick={onClose} fontSize={fontSize}>Cancel</Button>
+
         </ButtonContainer>
       </ModalWrapper>
     </>

@@ -47,7 +47,7 @@ export default function Home() {
         return <LogoLoadingComponent fontSize={fontSize} darkMode={darkMode}/>;;
     }
 
-    console.log(students)
+    
 
 
     return (
@@ -65,7 +65,7 @@ export default function Home() {
                     <StudentStatus fontSize={fontSize} darkMode={darkMode} percentages={percentages} />)}
                     </TopContainer>
                     <BottomContainer fontSize={fontSize} darkMode={darkMode}>
-                        <ReflectionDocuments fontSize={fontSize} darkMode={darkMode} />
+                        {/* <ReflectionDocuments fontSize={fontSize} darkMode={darkMode} /> */}
 
                         <AdminPanelContainer fontSize={fontSize} darkMode={darkMode}>
                             <AdminPanel fontSize={fontSize} darkMode={darkMode} />

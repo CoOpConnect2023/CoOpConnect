@@ -21,7 +21,7 @@ class TeacherEmployerResource extends JsonResource
         "teacherName" => $this->relationLoaded('teachers') ? optional($this->teachers->first())->name : null,
         "employerName" => $this->name ?? null,
         "employerEmail" => $this->email ?? null,
-        "employerCompany" => $this->company_name ?? null,
+        
 
         // Load company information
         "companyId" => $this->company_id ?? null,

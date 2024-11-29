@@ -218,6 +218,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1', 'm
 
     Route::apiResource('reflections', ReflectionsController::class);
     Route::get('/myreflections', [ReflectionsController::class, 'showforuser']);
+    Route::get('/studentreflections', [ReflectionsController::class, 'getReflectionsBySchool']);
 
     Route::apiResource('interviews', InterviewsController::class);
     Route::post('/send-interview-time-changed', [InterviewsController::class, 'sendInterviewTimeChanged']);

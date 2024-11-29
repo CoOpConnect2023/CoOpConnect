@@ -56,7 +56,7 @@ export const SearchSection = styled.section`
     border-radius: 10px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     padding: 20px;
-    
+
 
     transition: box-shadow 0.3s ease, transform 0.3s ease;
 
@@ -207,11 +207,12 @@ export const JobCardContainer = styled.article`
     animation: ${fadeInLeft} 0.5s ease forwards;
     animation-delay: ${(props) => props.index * 0.1}s;
     opacity: 0;
-    min-width: 250px;
+      max-width: 100%;
     max-width: 400px;
     max-height: 800px;
     justify-content: space-between;
     box-sizing: border-box;
+      max-width: 100%;
 
     &:hover {
         box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
@@ -267,6 +268,7 @@ export const JobDescription = styled.p`
     font-size: ${({ fontSize }) => calculateFontSize(14, fontSize)};
     color: ${({ darkMode }) => (darkMode ? '#f1f1f1' : '#2C2C2C')};
     text-overflow: ellipsis;
+     overflow-wrap: anywhere;
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 2; /* Limit to 2 lines */

@@ -133,6 +133,7 @@ const Post2 = () => {
                                         name="startDate"
                                         value={jobFormData.startDate || ''}
                                         onChange={handleInputChange}
+                                        min={new Date().toISOString().split("T")[0]}
                                     />
                                 </FormField>
                                 <FormField>
@@ -144,6 +145,7 @@ const Post2 = () => {
                                         name="endDate"
                                         value={jobFormData.endDate || ''}
                                         onChange={handleInputChange}
+                                        min={new Date().toISOString().split("T")[0]}
                                     />
                                 </FormField>
                             </FormRow>

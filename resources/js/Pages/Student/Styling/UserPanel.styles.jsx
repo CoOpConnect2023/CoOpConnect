@@ -53,6 +53,7 @@ export const Img12 = styled.img`
     object-fit: auto;
     object-position: center;
     width: 70px;
+    border-radius: 35px;
 
 `;
 

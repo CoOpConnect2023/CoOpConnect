@@ -172,13 +172,14 @@ const Modal = ({ onClose, onSubmit, defaultDate, applicants, darkMode, fontSize 
 
         {applicants && (
           <>
-            <Label fontSize={fontSize} darkMode={darkMode}>Student ID:</Label>
+            <Label fontSize={fontSize} darkMode={darkMode}>Student Email:</Label>
             <Input type="text" value={selectedApplicant} onChange={handleApplicantChange} fontSize={fontSize} darkMode={darkMode} />
           </>
         )}
         <ButtonContainer>
-          <Button onClick={handleSubmit} fontSize={fontSize}>Save</Button>
+
           <Button onClick={onClose} fontSize={fontSize}>Cancel</Button>
+          <Button onClick={handleSubmit} fontSize={fontSize}>Save</Button>
         </ButtonContainer>
       </ModalWrapper>
     </>

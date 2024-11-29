@@ -4,6 +4,8 @@ import NavBar from "./Components/NavBar";
 import ReflectionDocuments from "../Employer/Components/ReflectionDocuments";
 import { useDropzone } from "react-dropzone";
 import { useSelector, useDispatch } from "react-redux";
+import { usePrompt } from "@/Hooks/usePrompt";
+import { useBeforeUnload } from "@/Hooks/useBeforeUnload";
 import {
 
     selectUserStatus,
@@ -108,7 +110,16 @@ function Profile() {
         hiring: false,
         nothiring: false,
     });
-    console.log(user);
+    const [isDirty, setIsDirty] = useState(false);
+
+    // Add listeners for unsaved changes
+    usePrompt("You have unsaved changes. Do you really want to leave?", isDirty);
+    useBeforeUnload(isDirty);
+
+    const handleInputChange = (e) => {
+      setIsDirty(true); // Mark as dirty when any input changes
+    };
+
 
     const handleDrop = (acceptedFiles) => {
         if (acceptedFiles && acceptedFiles.length > 0) {
@@ -123,7 +134,7 @@ function Profile() {
         dispatch(getAllCompanies());
     }, [dispatch]);
 
-    console.log(companies);
+
     useEffect(() => {
         if (user) {
             setFullName(user.name || "");
@@ -244,15 +255,22 @@ function Profile() {
 
             setShowSuccessMessage(true);
 
+            // Reset isDirty after successful update
+            setIsDirty(false);
+
             setTimeout(() => {
                 setShowSuccessMessage(false);
             }, 2000);
 
-            // Dispatch getUser to refresh the user data
+            // Refresh the user data
             dispatch(getUser());
-
         } catch (error) {
             console.error("Error updating profile:", error);
+            setIsDirty(false);
+
+            // Optionally, you could handle error-specific state updates here.
+            // Example:
+            // setErrorState(true);
         }
     };
 
@@ -270,7 +288,7 @@ function Profile() {
         <NavBar header={"Profile"}>
             <Main fontSize={fontSize} darkMode={darkMode}>
                 <Section fontSize={fontSize} darkMode={darkMode}>
-                    <Title fontSize={fontSize} darkMode={darkMode}>Employer Profile</Title>
+
                     <ProfileWrapper fontSize={fontSize} darkMode={darkMode}>
 
                             <ProfileImageWrapper fontSize={fontSize} darkMode={darkMode}>
@@ -293,14 +311,14 @@ function Profile() {
 
 
 
-                                <ReflectionDocuments fontSize={fontSize} darkMode={darkMode} />
+                                {/* <ReflectionDocuments fontSize={fontSize} darkMode={darkMode} /> */}
 
                     </ProfileWrapper>
                     <InputSection fontSize={fontSize} darkMode={darkMode}><LeftSide> <FieldTitle fontSize={fontSize} darkMode={darkMode}>Description</FieldTitle> <Input fontSize={fontSize} darkMode={darkMode}
                                     name="description"
                                     value={description}
-                                    onChange={(e) => setDescription(e.target.value)}
-                                    placeholder="Add a few words about yourself..."
+                                    onChange={(e) => {handleInputChange(e);setDescription(e.target.value)}}
+                                    placeholder="Add a few words about your company."
                         />
 
 
@@ -310,38 +328,38 @@ function Profile() {
                             type="text"
                             name="name"
                             value={fullName}
-                            onChange={(e) => setFullName(e.target.value)}
+                            onChange={(e) => { handleInputChange(e); setFullName(e.target.value)}}
                         />
                         <FieldTitle fontSize={fontSize} darkMode={darkMode}>Email</FieldTitle>
                         <Input fontSize={fontSize} darkMode={darkMode}
                             type="email"
                             name="email"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e) => { handleInputChange(e); setEmail(e.target.value)}}
                         />
-                        <FieldTitle fontSize={fontSize} darkMode={darkMode}>Account Type</FieldTitle>
-                        <Input fontSize={fontSize} darkMode={darkMode} value={accountType} onChange={(e) => setAccountType(e.target.value)} />
+
+
                        </LeftSide><RightSide>
                             <FieldTitle fontSize={fontSize} darkMode={darkMode} >Position</FieldTitle>
                             <Input fontSize={fontSize} darkMode={darkMode}
                                 type="text"
                                 name="positiontitle"
                                 value={specialty}
-                                onChange={(e) => setSpecialty(e.target.value)}
+                                onChange={(e) => { handleInputChange(e);  setSpecialty(e.target.value)}}
                             />
                             <FieldTitle fontSize={fontSize} darkMode={darkMode} >Pronouns</FieldTitle>
                             <Input fontSize={fontSize} darkMode={darkMode}
                                 type="text"
                                 name="pronouns"
                                 value={pronouns}
-                                onChange={(e) => setPronouns(e.target.value)}
+                                onChange={(e) => {handleInputChange(e); setPronouns(e.target.value)}}
                             />
 
 <FieldTitle fontSize={fontSize} darkMode={darkMode}>Company</FieldTitle>
                         <Input fontSize={fontSize} darkMode={darkMode}
                             type="text"
                             value={companyName}
-                            onChange={(e) => setCompanyName(e.target.value)}
+                            onChange={(e) => { handleInputChange(e); setCompanyName(e.target.value)}}
                             placeholder="Type company name"
                         />
                  {companyName != user?.company?.name && filteredCompanies.length > 0 && (

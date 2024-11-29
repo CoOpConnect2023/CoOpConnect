@@ -69,7 +69,7 @@ const Home = () => {
         <NavBar darkMode={darkMode} fontSize={fontSize}  header={"Job Postings"}>
             <MainContainer darkMode={darkMode} fontSize={fontSize} >
                 <CreateJobSection darkMode={darkMode} fontSize={fontSize} >
-                    <JobTitle darkMode={darkMode} fontSize={fontSize} >Create a New Job Posting</JobTitle>
+                    <JobTitle darkMode={darkMode} fontSize={fontSize} >Create a New Posting</JobTitle>
                     <JobSubtitle darkMode={darkMode} fontSize={fontSize} >
                         Hire amazing students through CO-OP Connect!
                     </JobSubtitle>
@@ -77,13 +77,13 @@ const Home = () => {
                         Post a job on our platform using the below button. You can view and edit previously posted jobs below by clicking the respective links. Applicants are listed within the view section.
                     </JobDescription>
                     <Link  darkMode={darkMode} fontSize={fontSize} href="/employer/post1">
-                        <PostJobButton darkMode={darkMode} fontSize={fontSize} >Post a Job</PostJobButton>
+                        <PostJobButton darkMode={darkMode} fontSize={fontSize} >Create a New Post</PostJobButton>
                     </Link>
                 </CreateJobSection>
                 <CurrentPostingsSection darkMode={darkMode} fontSize={fontSize} >
                     <SectionTitle darkMode={darkMode} fontSize={fontSize} >Current Postings</SectionTitle>
                     <EditingInstructions darkMode={darkMode} fontSize={fontSize} >
-                        View or edit your current job postings.
+                        View or edit your current postings.
                     </EditingInstructions>
                     {jobsStatus === "loading" && <p>Loading...</p>}
                     {jobs.length > 0 && (

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->dateTime('end_date');
             $table->string('status');
             $table->text('description');
-            $table->foreignId('interviewee_id')->constrained('users');
+            $table->foreignId('interviewee_id')->nullable()->constrained('users');
             $table->foreignId('interviewer_id')->constrained('users');
             $table->dateTime('proposed_time')->nullable();
             $table->timestamps();

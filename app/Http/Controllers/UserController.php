@@ -360,6 +360,10 @@ public function deleteUser(Request $request, $id)
                     // Set the school_id to the correct value
                     $userData['school_id'] = $schoolId;
 
+                    if (empty($userData['profile_image'])) {
+                        $userData['profile_image'] = '/storage/profile_images/defaultprofile.jpg';
+                    }
+
                     $validator = Validator::make($userData, [
                         'name' => 'required|string',
                         'email' => 'required|email|unique:users,email',
@@ -368,6 +372,7 @@ public function deleteUser(Request $request, $id)
                         'role' => 'required|string',
                         'school_id' => 'nullable|exists:schools,id',
                         'company_id' => 'nullable|exists:companies,id',
+                        'profile_image' => 'nullable|string', // Add validation for profile image if needed
                     ]);
 
                     if ($validator->fails()) {

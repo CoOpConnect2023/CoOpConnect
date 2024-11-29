@@ -90,6 +90,48 @@ const getFontSize = (size) => {
     }
 };
 
+export const SitemapLink = styled.a`
+    color: ${({ darkMode }) => (darkMode ? '#ffffff' : '#000000')};
+    text-decoration: none;
+    transition: color 0.3s;
+
+    &:hover {
+        color: #8346d2; /* Customize hover color */
+        text-decoration: underline; /* Add underline on hover */
+    }
+`;
+
+
+export const TooltipWrapper = styled.div`
+    position: relative;
+    display: inline-block;
+
+    // Tooltip text styling
+    .tooltip-text {
+        visibility: hidden;
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        border-radius: 4px;
+        padding: 5px;
+        position: absolute;
+        bottom: 120%; /* Adjust based on position */
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.8em;
+        white-space: nowrap;
+        z-index: 1;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    // Show tooltip on hover
+    &:hover .tooltip-text {
+        visibility: visible;
+        opacity: 1;
+    }
+`;
+
 export const AppContainer = styled.div`
   display: flex;
   background-color: ${({ darkMode }) => (darkMode ? "#2C2C2C" : "var(--Schemes-Background, #fff7ff)")};

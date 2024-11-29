@@ -27,11 +27,15 @@ class ConversationController extends Controller
     {
 
         $conversations = Conversation::whereHas('users', function ($query) use ($user_id) {
-                $query->where('users.id', $user_id);
-            })
-            ->with(['users', 'latestMessage' => function ($query) {
+            $query->where('users.id', $user_id);
+        })
+        ->with([
+            'users.company', // Load the company relationship
+            'users.school',  // Load the school relationship
+            'latestMessage' => function ($query) {
                 $query->orderBy('created_at', 'desc');
-            }])
+            }
+        ])
             ->orderByDesc('updated_at')
             ->get();
 

@@ -201,7 +201,7 @@ export const selectJob = createAsyncThunk("jobs/selectJob", async (params) => {
         url: `/jobs/${jobId}`,
         method: "GET",
     });
-    console.log(response.data.data);
+   
     return response.data.data;
 });
 
@@ -213,7 +213,7 @@ export const getJobsforUser = createAsyncThunk(
             url: `/jobs/user/${userId}`,
             method: "GET",
         });
-        console.log(response.data.data)
+
         return response.data.data;
     }
 );
@@ -478,7 +478,6 @@ export const postJob = createAsyncThunk(
           },
         });
 
-        console.log(response.data.data)
         return response.data.data;
       } catch (err) {
         // Handle errors and reject the value with the error message
@@ -541,8 +540,7 @@ export const patchJob = createAsyncThunk("jobs/patchJob", async (params) => {
         endDate
     } = params;
 
-    // Log the params to ensure they are being passed correctly
-    console.log("Params received in patchJob:", params);
+
 
     const response = await axios({
         url: `/jobs/${jobsId}`,
@@ -576,7 +574,7 @@ export const patchJob = createAsyncThunk("jobs/patchJob", async (params) => {
     });
 
     // Log the response from the server
-    console.log("Response received from PATCH request:", response.data);
+
 
     return response.data.data;
 });
@@ -588,7 +586,7 @@ export const deleteJob = createAsyncThunk("jobs/deleteJob", async (params) => {
         url: `/jobs/${jobId}`,
         method: "DELETE",
     });
-    console.log(userId)
+
     return userId;
 });
 
@@ -598,7 +596,7 @@ export const deleteAJob = createAsyncThunk("jobs/deleteAJob", async (params) => 
         url: `/jobs/${jobId}`,
         method: "DELETE",
     });
-    console.log(userId)
+
     return jobId;
 });
 

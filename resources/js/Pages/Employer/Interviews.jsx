@@ -457,6 +457,15 @@ const Interviews = () => {
         setConfirmAction("updateToProposedTime");
     };
 
+    const formats = {
+        agendaHeaderFormat: ({ start, end }, culture, localizer) =>
+          `${localizer.format(start, 'MMMM DD, YYYY', culture)} – ${localizer.format(
+            end,
+            'MMMM DD, YYYY',
+            culture
+          )}`,
+      };
+
 
     return (
         <NavBar header={"Interviews"}>
@@ -481,6 +490,9 @@ const Interviews = () => {
                                     startAccessor={"start"}
                                     endAccessor="end"
                                     eventPropGetter={eventStyleGetter}
+                                    formats={formats}
+                                    
+                                    agendaLength={365 * 10}
                                 />
                             </DndProvider>
                         </CalendarDiv>
@@ -519,17 +531,17 @@ const Interviews = () => {
                 <div>Title: {event.title}</div>
                 <div>Description: {event.description}</div>
                 <div>
-                    Start Date: {moment(event.start).format("YYYY-MM-DD HH:mm:ss")}
-                </div>
-                <div>
-                    End Date: {moment(event.end).format("YYYY-MM-DD HH:mm:ss")}
-                </div>
+        Start Date: {moment(event.start).format("MMMM D, YYYY HH:mm")}
+    </div>
+    <div>
+        End Date: {moment(event.end).format("MMMM D, YYYY HH:mm")}
+    </div>
 
                 {/* Conditionally render proposed time if it exists */}
                 {event.proposedTime !== event.startDate && event.proposedTime != null && (
                     <>
                         <div>
-                            <strong>Proposed Time:</strong> {moment(event.proposedTime).format("YYYY-MM-DD HH:mm:ss")}
+                            <strong>Proposed Time:</strong> {moment(event.proposedTime).format("MMMM D, YYYY HH:mm")}
                         </div>
 
                         {/* Render 'Update to Proposed Time' button if proposed time is not null */}
